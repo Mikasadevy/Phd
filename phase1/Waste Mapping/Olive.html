@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Olive Pomace Waste – Lebanon Scientific Dataset & Methodology</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- MathJax for LaTeX Equations -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Merriweather', 'serif'],
+                    },
+                    colors: {
+                        'olive-dark': '#2C3E50',
+                        'olive-primary': '#486948',
+                        'olive-accent': '#6B8E23', // Olive Drab
+                        'olive-light': '#F1F8E9',
+                        'scientific-blue': '#2980B9',
+                        'waste-brown': '#8D6E63'
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+                        'glow': '0 0 15px rgba(72, 105, 72, 0.2)'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #fcfdfc;
+            background-image: radial-gradient(#e5e7eb 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+        .academic-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(5px);
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .academic-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border-color: #486948;
+        }
+        .section-header {
+            border-bottom: 2px solid #486948;
+            padding-bottom: 0.75rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        table {
+            border-collapse: separate;
+            border-spacing: 0;
+            width: 100%;
+        }
+        th {
+            background-color: #486948;
+            font-weight: 600;
+            color: #ffffff;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+            padding: 14px 16px;
+        }
+        th:first-child { border-top-left-radius: 8px; }
+        th:last-child { border-top-right-radius: 8px; }
+        
+        td {
+            padding: 14px 16px;
+            border-bottom: 1px solid #e2e8f0;
+            background-color: white;
+            transition: background-color 0.2s;
+        }
+        tr:last-child td:first-child { border-bottom-left-radius: 8px; }
+        tr:last-child td:last-child { border-bottom-right-radius: 8px; }
+        
+        tr:hover td {
+            background-color: #f1f8e9;
+        }
+        
+        .math-block {
+            background: linear-gradient(to right, #ffffff, #f8fafc);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            border-left: 5px solid #486948;
+            margin: 1.5rem 0;
+            overflow-x: auto;
+            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.03);
+        }
+        
+        /* Navigation Dot Active State (Side Nav) */
+        .side-nav-link.active span {
+            background-color: #486948;
+            transform: scale(1.25);
+            border-color: #486948;
+        }
+        .side-nav-link.active p {
+            color: #2C3E50;
+            font-weight: 700;
+        }
+
+        /* Top Nav Active State */
+        .top-nav-link.active {
+            color: #486948;
+            background-color: #F1F8E9;
+        }
+
+        /* Print Optimizations */
+        @media print {
+            body {
+                background: white;
+                background-image: none;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .academic-card {
+                break-inside: avoid;
+                box-shadow: none;
+                border: 1px solid #ccc;
+            }
+            .collapsible-content {
+                max-height: none !important;
+                display: block !important;
+            }
+            canvas {
+                max-width: 100% !important;
+            }
+            a[href]:after {
+                content: " (" attr(href) ")";
+                font-size: 0.8em;
+                color: #666;
+            }
+            /* Clean up colors for print */
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+
+        /* Collapsible Styles */
+        .collapsible-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0, 1, 0, 1);
+        }
+        .collapsible-active {
+            max-height: 3000px;
+            transition: max-height 0.5s ease-in-out;
+        }
+        .arrow-icon {
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .rotate-180 {
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+<body class="text-slate-800 antialiased relative">
+
+    <!-- Sticky Side Navigation (X-Large Screens) -->
+    <nav class="hidden 2xl:block fixed left-10 top-1/2 transform -translate-y-1/2 z-40 no-print bg-white/80 backdrop-blur p-4 rounded-xl border border-gray-200 shadow-soft">
+        <ul class="space-y-4">
+            <li>
+                <a href="#overview" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-olive-primary transition group">
+                    <span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-olive-primary transition bg-white"></span>
+                    <p class="font-medium">Overview</p>
+                </a>
+            </li>
+            <li>
+                <a href="#national-data" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-olive-primary transition group">
+                    <span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-olive-primary transition bg-white"></span>
+                    <p class="font-medium">National Data</p>
+                </a>
+            </li>
+            <li>
+                <a href="#waste-methodology" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-olive-primary transition group">
+                    <span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-olive-primary transition bg-white"></span>
+                    <p class="font-medium">Methodology</p>
+                </a>
+            </li>
+            <li>
+                <a href="#regional-distribution" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-olive-primary transition group">
+                    <span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-olive-primary transition bg-white"></span>
+                    <p class="font-medium">Regional Dist.</p>
+                </a>
+            </li>
+            <li>
+                <a href="#visualizations" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-olive-primary transition group">
+                    <span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-olive-primary transition bg-white"></span>
+                    <p class="font-medium">Visual Analysis</p>
+                </a>
+            </li>
+            <li>
+                <a href="#references" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-olive-primary transition group">
+                    <span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-olive-primary transition bg-white"></span>
+                    <p class="font-medium">References</p>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Header & Top Navigation -->
+    <header class="bg-white/90 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50 shadow-sm print:static print:border-none">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+            
+            <!-- Logo Section -->
+            <div class="flex items-center gap-3 min-w-fit">
+                <div class="bg-olive-light p-2 rounded-full border border-olive-primary/20 print:hidden">
+                    <span class="text-2xl">🫒</span>
+                </div>
+                <div>
+                    <h1 class="text-lg md:text-xl font-serif font-bold text-gray-900 leading-tight">
+                        Olive Pomace Waste
+                    </h1>
+                    <p class="hidden sm:block text-xs text-olive-primary font-medium">
+                        Lebanon Scientific Dataset 🇱🇧
+                    </p>
+                </div>
+            </div>
+
+            <!-- Top Navigation (Hidden on Mobile) -->
+            <nav class="hidden lg:flex items-center gap-1 no-print bg-gray-50/50 p-1.5 rounded-lg border border-gray-100">
+                <a href="#national-data" class="top-nav-link px-3 py-1.5 text-sm font-medium text-gray-600 rounded-md hover:bg-gray-100 transition-colors">Data</a>
+                <a href="#waste-methodology" class="top-nav-link px-3 py-1.5 text-sm font-medium text-gray-600 rounded-md hover:bg-gray-100 transition-colors">Method</a>
+                <a href="#regional-distribution" class="top-nav-link px-3 py-1.5 text-sm font-medium text-gray-600 rounded-md hover:bg-gray-100 transition-colors">Regional</a>
+                <a href="#visualizations" class="top-nav-link px-3 py-1.5 text-sm font-medium text-gray-600 rounded-md hover:bg-gray-100 transition-colors">Visuals</a>
+            </nav>
+
+            <!-- Action Button -->
+            <div class="no-print min-w-fit">
+                <button onclick="window.print()" class="flex items-center gap-2 bg-olive-dark hover:bg-gray-800 text-white px-4 py-2 rounded-lg text-xs md:text-sm font-medium transition shadow hover:shadow-lg transform hover:-translate-y-0.5">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                    <span class="hidden md:inline">Print Report</span>
+                    <span class="md:hidden">Print</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-16">
+
+        <!-- Section A: Overview -->
+        <section id="overview" class="bg-white rounded-2xl p-8 shadow-soft border border-gray-100 scroll-mt-28">
+            <h2 class="text-lg font-bold text-gray-900 mb-2 flex items-center gap-2">
+                <span>🔍</span> Executive Summary
+            </h2>
+            <div class="prose max-w-none text-gray-600">
+                <p class="text-lg leading-relaxed">
+                    This scientific dataset aggregates authoritative data on <strong>Lebanon’s olive sector</strong>, establishing a rigorous baseline for pomace waste generation. 
+                    By synthesizing data from the <em>Ministry of Agriculture (MoA)</em>, <em>FAO</em>, and peer-reviewed studies (<em>Kinab & Khoury</em>), we define the national waste baseline at <strong class="text-olive-primary bg-olive-light px-1 rounded">79,000 tonnes/year</strong>. 
+                    The methodology accounts for extraction technologies dominated by traditional and 3-phase mills, resulting in a high effective waste fraction, and distributes this load regionally.
+                </p>
+            </div>
+        </section>
+
+        <!-- Section B: National Data -->
+        <section id="national-data" class="scroll-mt-28">
+            <div class="section-header">
+                <span class="text-2xl">📊</span>
+                <h2 class="text-2xl font-serif font-bold text-olive-dark">1. National Data & Baseline Indicators</h2>
+            </div>
+            
+            <!-- Summary Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+                <!-- Cultivation Card -->
+                <div class="academic-card p-6 relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <span class="text-6xl">🚜</span>
+                    </div>
+                    <p class="text-xs font-bold text-olive-primary uppercase tracking-wider flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-olive-primary"></span> Cultivation Area
+                    </p>
+                    <p class="text-4xl font-bold text-gray-900 mt-3 tracking-tight">62,048 <span class="text-lg text-gray-500 font-normal">ha</span></p>
+                    <div class="mt-4 inline-flex items-center text-xs font-medium text-olive-dark bg-olive-light px-2 py-1 rounded">
+                        23% of agricultural land
+                    </div>
+                </div>
+
+                <!-- Production Card -->
+                <div class="academic-card p-6 relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <span class="text-6xl">🏭</span>
+                    </div>
+                    <p class="text-xs font-bold text-scientific-blue uppercase tracking-wider flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-scientific-blue"></span> National Production
+                    </p>
+                    <p class="text-4xl font-bold text-gray-900 mt-3 tracking-tight">136,176 <span class="text-lg text-gray-500 font-normal">t</span></p>
+                    <div class="mt-4 inline-flex items-center text-xs font-medium text-blue-800 bg-blue-50 px-2 py-1 rounded">
+                        Source: FAO (2023)
+                    </div>
+                </div>
+
+                <!-- Waste Card -->
+                <div class="academic-card p-6 relative overflow-hidden group border-b-4 border-b-waste-brown">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <span class="text-6xl">♻️</span>
+                    </div>
+                    <p class="text-xs font-bold text-waste-brown uppercase tracking-wider flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-waste-brown"></span> Pomace Waste
+                    </p>
+                    <p class="text-4xl font-bold text-gray-900 mt-3 tracking-tight">79,000 <span class="text-lg text-gray-500 font-normal">t/yr</span></p>
+                    <div class="mt-4 inline-flex items-center text-xs font-medium text-amber-900 bg-amber-50 px-2 py-1 rounded border border-amber-100">
+                        Critical Baseline
+                    </div>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div class="bg-white rounded-xl shadow-soft overflow-hidden border border-gray-100">
+                <div class="overflow-x-auto">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Indicator</th>
+                                <th>Value</th>
+                                <th>Source Type</th>
+                                <th>Authority</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-sm text-gray-700">
+                            <tr>
+                                <td class="font-medium flex items-center gap-2"><span class="text-lg">🌿</span> Olive Cultivation Area</td>
+                                <td class="font-mono">62,048 ha</td>
+                                <td><span class="px-2 py-1 bg-gray-100 rounded text-xs">National Survey</span></td>
+                                <td><a href="http://www.studies.gov.lb/getattachment/Sectors/Labor-and-Production/2019/AGR-19-1/Report-Survey-to-assess-MoA-support-scheme-to-the-olive-sector-1.pdf" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">MoA (2018)</a></td>
+                            </tr>
+                            <tr>
+                                <td class="font-medium flex items-center gap-2"><span class="text-lg">📉</span> Share of Cultivated Land</td>
+                                <td class="font-mono">23%</td>
+                                <td><span class="px-2 py-1 bg-gray-100 rounded text-xs">National Survey</span></td>
+                                <td><a href="http://www.studies.gov.lb/getattachment/Sectors/Labor-and-Production/2019/AGR-19-1/Report-Survey-to-assess-MoA-support-scheme-to-the-olive-sector-1.pdf" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">MoA (2018)</a></td>
+                            </tr>
+                            <tr>
+                                <td class="font-medium flex items-center gap-2"><span class="text-lg">🏗️</span> National Production</td>
+                                <td class="font-mono">136,176 t</td>
+                                <td><span class="px-2 py-1 bg-blue-50 text-blue-700 rounded text-xs">Intl. Database</span></td>
+                                <td><a href="https://www.fao.org/faostat/en/#data/QCL" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">FAO (2023)</a></td>
+                            </tr>
+                            <tr class="bg-amber-50/50">
+                                <td class="font-bold text-gray-900">
+                                    <div class="flex flex-col gap-1">
+                                        <div class="flex items-center gap-2">
+                                            <span class="text-lg">🧪</span> 
+                                            <span>% Waste Yielded from Crop</span>
+                                        </div>
+                                        <!-- Visual Indicator as requested -->
+                                        <div class="w-full bg-gray-200 rounded-full h-1.5 mt-1 max-w-[150px] print:border print:border-gray-400">
+                                            <div class="bg-olive-dark h-1.5 rounded-full print:bg-black" style="width: 58%"></div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="font-bold font-mono text-olive-dark">≈ 58%</td>
+                                <td><span class="px-2 py-1 bg-amber-100 text-amber-800 rounded text-xs">Derived Calculation</span></td>
+                                <td class="text-gray-500 italic">See Methodology ↓</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section C: Waste Methodology -->
+        <section id="waste-methodology" class="scroll-mt-28">
+            <button onclick="toggleSection('calc-methodology', 'icon-methodology')" class="w-full text-left focus:outline-none no-print">
+                <div class="flex items-center justify-between section-header cursor-pointer group">
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl">🧮</span>
+                        <h2 class="text-2xl font-serif font-bold text-olive-dark group-hover:text-olive-primary transition">
+                            2. Waste Generation Methodology
+                        </h2>
+                    </div>
+                    <div class="bg-white p-2 rounded-full shadow-sm border border-gray-100 group-hover:bg-olive-light transition">
+                        <svg id="icon-methodology" class="w-5 h-5 text-gray-500 arrow-icon transform rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </div>
+                </div>
+            </button>
+            
+            <!-- Print specific header (non interactive) -->
+            <div class="hidden print:block section-header">
+                <h2 class="text-2xl font-serif font-bold text-olive-dark">2. Waste Generation Methodology</h2>
+            </div>
+
+            <div id="calc-methodology" class="collapsible-content collapsible-active">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                    <!-- Left: Calculations -->
+                    <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                        <h3 class="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
+                            <span class="bg-blue-100 text-blue-600 p-1 rounded">A</span> Calculation Models
+                        </h3>
+                        
+                        <div class="mb-8 pl-4 border-l-2 border-gray-100">
+                            <p class="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">Theoretical Mass Balance</p>
+                            <div class="math-block shadow-inner bg-gray-50">
+                                $$ P_{pomace,theoretical} = 136,176 \times 0.30 = 40,852.8 \text{ t/year} $$
+                            </div>
+                            <p class="text-xs text-gray-500 italic">Standard generic coefficient (UNCTAD)</p>
+                        </div>
+
+                        <div class="pl-4 border-l-2 border-olive-primary">
+                            <p class="text-xs font-bold text-olive-primary uppercase tracking-wide mb-2">Lebanon-Specific Empirical Fraction</p>
+                            <div class="math-block shadow-md bg-white ring-1 ring-olive-light">
+                                $$ f_{pomace,effective} = \frac{79,000}{136,176} \approx 0.58 \text{ (58\%)} $$
+                            </div>
+                            <div class="mt-3 bg-olive-light/50 p-3 rounded text-sm text-olive-dark flex gap-2 items-start">
+                                <span class="text-lg">💡</span>
+                                <p><strong>Why 58%?</strong> Inefficient rural extraction + traditional mills = higher moisture retention in waste compared to modern standards.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Logic -->
+                    <div class="bg-gray-50 p-6 rounded-xl border border-gray-200 flex flex-col justify-center">
+                        <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span class="bg-purple-100 text-purple-600 p-1 rounded">B</span> Technology Impact Factors
+                        </h3>
+                        <ul class="space-y-4">
+                            <li class="flex items-start bg-white p-4 rounded-lg shadow-sm">
+                                <span class="flex-shrink-0 h-8 w-8 rounded-full bg-olive-primary text-white flex items-center justify-center text-sm font-bold mr-3 shadow-glow print:text-black print:border print:border-black">1</span>
+                                <div>
+                                    <p class="font-bold text-gray-800 text-sm">Traditional & 3-Phase Systems</p>
+                                    <p class="text-sm text-gray-600 mt-1">Dominant in Lebanon. Typically yield <strong>35–40%</strong> pomace by mass.</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start bg-white p-4 rounded-lg shadow-sm">
+                                <span class="flex-shrink-0 h-8 w-8 rounded-full bg-slate-400 text-white flex items-center justify-center text-sm font-bold mr-3 print:text-black print:border print:border-black">2</span>
+                                <div>
+                                    <p class="font-bold text-gray-800 text-sm">Two-Phase Systems</p>
+                                    <p class="text-sm text-gray-600 mt-1">Modern standard. Yield <strong>70–80%</strong> pomace due to wastewater retention.</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start bg-gradient-to-r from-olive-light to-white p-4 rounded-lg border border-olive-primary/20">
+                                <span class="flex-shrink-0 h-8 w-8 rounded-full bg-amber-500 text-white flex items-center justify-center text-sm font-bold mr-3 print:text-black print:border print:border-black">✓</span>
+                                <div>
+                                    <p class="font-bold text-olive-dark text-sm">Validation Conclusion</p>
+                                    <p class="text-sm text-gray-700 mt-1">Lebanon's <span class="bg-amber-100 px-1 rounded font-bold">58%</span> waste yield is empirically validated by Kinab & Khoury (2015).</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section D: Regional Distribution -->
+        <section id="regional-distribution" class="scroll-mt-28">
+            <button onclick="toggleSection('reg-methodology', 'icon-reg')" class="w-full text-left focus:outline-none no-print">
+                <div class="flex items-center justify-between section-header cursor-pointer group">
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl">🗺️</span>
+                        <h2 class="text-2xl font-serif font-bold text-olive-dark group-hover:text-olive-primary transition">
+                            3. Regional Waste Distribution
+                        </h2>
+                    </div>
+                    <div class="bg-white p-2 rounded-full shadow-sm border border-gray-100 group-hover:bg-olive-light transition">
+                        <svg id="icon-reg" class="w-5 h-5 text-gray-500 arrow-icon transform rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </div>
+                </div>
+            </button>
+            
+            <div class="hidden print:block section-header">
+                <h2 class="text-2xl font-serif font-bold text-olive-dark">3. Regional Waste Distribution</h2>
+            </div>
+
+            <div id="reg-methodology" class="collapsible-content collapsible-active">
+                <div class="bg-olive-light/30 p-6 rounded-xl border border-olive-primary/10 mb-8 text-center">
+                    <p class="text-gray-700 mb-4 font-medium">
+                        Allocation Formula based on MoA (2018) Surface Distribution
+                    </p>
+                    <div class="math-block w-full md:w-2/3 mx-auto text-center bg-white shadow-sm">
+                        $$ P_{pomace,i} = 79,000 \times \frac{\text{Olive Area Share}_i}{100} $$
+                    </div>
+                </div>
+
+                <!-- Interactive Table -->
+                <div class="bg-white rounded-xl shadow-soft overflow-hidden border border-gray-100">
+                    <div class="overflow-x-auto">
+                        <table id="regionalTable">
+                            <thead>
+                                <tr>
+                                    <th class="cursor-pointer hover:bg-olive-primary/90 transition-colors" onclick="sortTable(0)">Region <span class="opacity-50 text-xs no-print">↕</span></th>
+                                    <th class="cursor-pointer hover:bg-olive-primary/90 transition-colors text-right" onclick="sortTable(1)">Olive Area Share (%) <span class="opacity-50 text-xs no-print">↕</span></th>
+                                    <th class="cursor-pointer hover:bg-olive-primary/90 transition-colors text-right" onclick="sortTable(2)">Pomace (t/year) <span class="opacity-50 text-xs no-print">↕</span></th>
+                                    <th class="text-right">Calculation Logic</th>
+                                    <th class="text-center">Authority</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-sm text-gray-700">
+                                <tr>
+                                    <td class="font-bold text-gray-900">North Lebanon</td>
+                                    <td class="text-right"><div class="inline-block w-16 bg-gray-100 rounded text-center">28.71%</div></td>
+                                    <td class="text-right font-mono font-bold text-olive-primary">22,681</td>
+                                    <td class="text-right text-xs text-gray-400">79,000 × 0.2871</td>
+                                    <td class="text-center"><span class="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs border border-gray-200">MoA 2018</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="font-bold text-gray-900">Nabatieh</td>
+                                    <td class="text-right"><div class="inline-block w-16 bg-gray-100 rounded text-center">22.45%</div></td>
+                                    <td class="text-right font-mono font-bold text-olive-primary">17,736</td>
+                                    <td class="text-right text-xs text-gray-400">79,000 × 0.2245</td>
+                                    <td class="text-center"><span class="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs border border-gray-200">MoA 2018</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="font-bold text-gray-900">South Lebanon</td>
+                                    <td class="text-right"><div class="inline-block w-16 bg-gray-100 rounded text-center">13.61%</div></td>
+                                    <td class="text-right font-mono font-bold text-olive-primary">10,752</td>
+                                    <td class="text-right text-xs text-gray-400">79,000 × 0.1361</td>
+                                    <td class="text-center"><span class="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs border border-gray-200">MoA 2018</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="font-bold text-gray-900">Akkar</td>
+                                    <td class="text-right"><div class="inline-block w-16 bg-gray-100 rounded text-center">13.31%</div></td>
+                                    <td class="text-right font-mono font-bold text-olive-primary">10,515</td>
+                                    <td class="text-right text-xs text-gray-400">79,000 × 0.1331</td>
+                                    <td class="text-center"><span class="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs border border-gray-200">MoA 2018</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="font-bold text-gray-900">Mount Lebanon</td>
+                                    <td class="text-right"><div class="inline-block w-16 bg-gray-100 rounded text-center">10.67%</div></td>
+                                    <td class="text-right font-mono font-bold text-olive-primary">8,429</td>
+                                    <td class="text-right text-xs text-gray-400">79,000 × 0.1067</td>
+                                    <td class="text-center"><span class="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs border border-gray-200">MoA 2018</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="font-bold text-gray-900">Baalbek-Hermel</td>
+                                    <td class="text-right"><div class="inline-block w-16 bg-gray-100 rounded text-center">6.12%</div></td>
+                                    <td class="text-right font-mono font-bold text-olive-primary">4,835</td>
+                                    <td class="text-right text-xs text-gray-400">79,000 × 0.0612</td>
+                                    <td class="text-center"><span class="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs border border-gray-200">MoA 2018</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="font-bold text-gray-900">Bekaa</td>
+                                    <td class="text-right"><div class="inline-block w-16 bg-gray-100 rounded text-center">5.05%</div></td>
+                                    <td class="text-right font-mono font-bold text-olive-primary">3,990</td>
+                                    <td class="text-right text-xs text-gray-400">79,000 × 0.0505</td>
+                                    <td class="text-center"><span class="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs border border-gray-200">MoA 2018</span></td>
+                                </tr>
+                                <tr class="bg-gray-50/50">
+                                    <td class="font-bold text-gray-400">Beirut</td>
+                                    <td class="text-right text-gray-400">0.00%</td>
+                                    <td class="text-right font-mono text-gray-400">0</td>
+                                    <td class="text-right text-xs text-gray-300">-</td>
+                                    <td class="text-center text-gray-300">-</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="bg-olive-dark text-white px-6 py-3 text-xs flex justify-between items-center">
+                        <span class="flex items-center gap-2 no-print">💡 <span class="opacity-80">Tip: Click headers to sort regional data</span></span>
+                        <span class="font-bold">Total: ~79,000 tonnes</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section E: Visual Figures -->
+        <section id="visualizations" class="scroll-mt-28">
+            <div class="section-header">
+                <span class="text-2xl">📉</span>
+                <h2 class="text-2xl font-serif font-bold text-olive-dark">4. Visual Analysis & Figures</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                
+                <!-- Chart 1: Bar Chart (Regional) -->
+                <div class="academic-card p-6 break-inside-avoid">
+                    <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-6 text-center flex justify-center items-center gap-2">
+                        <span>📊</span> Regional Pomace Generation
+                    </h3>
+                    <div class="relative h-72 w-full">
+                        <canvas id="regionalBarChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Chart 2: Pie Chart (Distribution) -->
+                <div class="academic-card p-6 break-inside-avoid">
+                    <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-6 text-center flex justify-center items-center gap-2">
+                        <span>🍩</span> Surface Distribution (%)
+                    </h3>
+                    <div class="relative h-72 w-full flex justify-center">
+                        <canvas id="surfacePieChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Chart 3: Comparative -->
+                <div class="academic-card p-6 md:col-span-2 bg-gradient-to-br from-white to-gray-50 break-inside-avoid">
+                    <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-6 text-center flex justify-center items-center gap-2">
+                        <span>⚖️</span> Theoretical vs. Empirical Waste Volume
+                    </h3>
+                    <div class="relative h-72 w-full">
+                        <canvas id="comparativeChart"></canvas>
+                    </div>
+                    <p class="text-center text-xs text-gray-500 mt-4 bg-white inline-block px-4 py-2 rounded-full shadow-sm border mx-auto">
+                        <span class="font-bold text-red-500">Alert:</span> The empirical volume (79,000t) is nearly <span class="font-bold">2x</span> higher than theoretical models due to milling inefficiencies.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: Notes -->
+        <section class="bg-gradient-to-r from-olive-light to-white rounded-2xl border border-olive-primary/20 p-8 shadow-soft my-12 relative overflow-hidden break-inside-avoid">
+            <div class="absolute top-0 right-0 p-8 opacity-5">
+                <span class="text-9xl">💡</span>
+            </div>
+            <h3 class="flex items-center text-olive-dark font-serif font-bold text-xl mb-6 relative z-10">
+                <span class="bg-olive-primary text-white p-2 rounded-lg mr-3 shadow-glow">5</span>
+                Key Methodological Insights
+            </h3>
+            <ul class="space-y-4 relative z-10">
+                <li class="flex items-start">
+                    <span class="text-olive-accent mr-3 mt-1">●</span>
+                    <span class="text-gray-700 leading-relaxed"><strong>Technology Factor:</strong> Lebanon’s high pomace fraction is consistent with the dominance of traditional presses and 3-phase mills, which retain more water in the solid waste than modern 2-phase systems.</span>
+                </li>
+                <li class="flex items-start">
+                    <span class="text-olive-accent mr-3 mt-1">●</span>
+                    <span class="text-gray-700 leading-relaxed"><strong>Distribution Proxy:</strong> Regional waste distribution relies on MoA’s official olive cultivation area. This is the strongest available indicator of milling density as mill-level production statistics are unpublished.</span>
+                </li>
+                <li class="flex items-start">
+                    <span class="text-olive-accent mr-3 mt-1">●</span>
+                    <span class="text-gray-700 leading-relaxed"><strong>FAO Compliance:</strong> FAO biomass assessment guidelines specifically endorse surface area as a reliable proxy for waste modeling when sub-national production statistics are unavailable.</span>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Section 6: References -->
+        <section id="references" class="border-t border-gray-200 pt-10 scroll-mt-28">
+            <h2 class="text-xl font-bold text-gray-900 mb-8 flex items-center gap-2">
+                <span class="text-olive-primary">6.</span> References & Citations
+            </h2>
+            <div class="grid grid-cols-1 gap-4 text-sm text-gray-600">
+                
+                <div class="group p-4 rounded-lg hover:bg-white hover:shadow-md transition border border-transparent hover:border-gray-100">
+                    <p class="font-bold text-gray-900 group-hover:text-blue-700 transition">Ministry of Agriculture (MoA). (2018).</p>
+                    <p class="mb-1">Survey to Assess MoA Support Scheme to the Olive Sector.</p>
+                    <a href="http://www.studies.gov.lb/getattachment/Sectors/Labor-and-Production/2019/AGR-19-1/Report-Survey-to-assess-MoA-support-scheme-to-the-olive-sector-1.pdf" target="_blank" class="text-blue-500 hover:underline break-all text-xs flex items-center gap-1">
+                        View Document <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                    </a>
+                </div>
+
+                <div class="group p-4 rounded-lg hover:bg-white hover:shadow-md transition border border-transparent hover:border-gray-100">
+                    <p class="font-bold text-gray-900 group-hover:text-blue-700 transition">FAO. (2023).</p>
+                    <p class="mb-1">FAOSTAT – Crops and Livestock Products: Olives (tonnes).</p>
+                    <a href="https://www.fao.org/faostat/en/#data/QCL" target="_blank" class="text-blue-500 hover:underline break-all text-xs flex items-center gap-1">
+                        Access Database <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                    </a>
+                </div>
+
+                <div class="group p-4 rounded-lg hover:bg-white hover:shadow-md transition border border-transparent hover:border-gray-100">
+                    <p class="font-bold text-gray-900 group-hover:text-blue-700 transition">Kinab, E., & Khoury, R. (2015).</p>
+                    <p class="mb-1">Management of olive solid waste in Lebanon: From mill to stove. <em>Renewable & Sustainable Energy Reviews</em>.</p>
+                    <a href="https://www.sciencedirect.com/science/article/abs/pii/S1364032115007418" target="_blank" class="text-blue-500 hover:underline break-all text-xs flex items-center gap-1">
+                        Read Paper <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                    </a>
+                </div>
+
+                <div class="group p-4 rounded-lg hover:bg-white hover:shadow-md transition border border-transparent hover:border-gray-100">
+                    <p class="font-bold text-gray-900 group-hover:text-blue-700 transition">UNCTAD. (2019).</p>
+                    <p class="mb-1">National Green Export Review of Lebanon: Natural Soap and Ecotourism.</p>
+                    <a href="https://unctad.org/system/files/official-document/ditcted2018d12_en.pdf" target="_blank" class="text-blue-500 hover:underline break-all text-xs flex items-center gap-1">
+                        Download Report <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                    </a>
+                </div>
+
+                <div class="group p-4 rounded-lg hover:bg-white hover:shadow-md transition border border-transparent hover:border-gray-100">
+                    <p class="font-bold text-gray-900 group-hover:text-blue-700 transition">IOP Publishing. (2024).</p>
+                    <p class="mb-1">Review of environmental life cycle assessments and techno-economic analyses in asphalt pavements.</p>
+                    <a href="https://iopscience.iop.org/article/10.1088/2977-3504/adf74d/pdf" target="_blank" class="text-blue-500 hover:underline break-all text-xs flex items-center gap-1">
+                         View PDF <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                    </a>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-gray-900 text-gray-400 py-10 mt-12 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <div class="flex justify-center mb-4 text-3xl">🌳</div>
+            <p class="text-sm font-medium text-white">Sustainable Materials - PhD Scholar Mika - University of Bath</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // --- 1. Collapsible Logic ---
+        function toggleSection(contentId, iconId) {
+            const content = document.getElementById(contentId);
+            const icon = document.getElementById(iconId);
+            
+            if (content.classList.contains('collapsible-active')) {
+                content.classList.remove('collapsible-active');
+                icon.classList.remove('rotate-180');
+            } else {
+                content.classList.add('collapsible-active');
+                icon.classList.add('rotate-180');
+            }
+        }
+
+        // --- 2. Table Sorting Logic ---
+        function sortTable(n) {
+            var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+            table = document.getElementById("regionalTable");
+            switching = true;
+            dir = "asc"; 
+            
+            while (switching) {
+                switching = false;
+                rows = table.rows;
+                
+                for (i = 1; i < (rows.length - 1); i++) {
+                    shouldSwitch = false;
+                    x = rows[i].getElementsByTagName("TD")[n];
+                    y = rows[i+1].getElementsByTagName("TD")[n];
+                    
+                    let xVal = x.textContent.toLowerCase().replace(/,/g, '').replace(/%/g, '');
+                    let yVal = y.textContent.toLowerCase().replace(/,/g, '').replace(/%/g, '');
+                    
+                    // Check if numeric
+                    if (!isNaN(parseFloat(xVal)) && !isNaN(parseFloat(yVal))) {
+                        xVal = parseFloat(xVal);
+                        yVal = parseFloat(yVal);
+                    }
+
+                    if (dir == "asc") {
+                        if (xVal > yVal) { shouldSwitch = true; break; }
+                    } else if (dir == "desc") {
+                        if (xVal < yVal) { shouldSwitch = true; break; }
+                    }
+                }
+                if (shouldSwitch) {
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                    switchcount ++; 
+                } else {
+                    if (switchcount == 0 && dir == "asc") {
+                        dir = "desc";
+                        switching = true;
+                    }
+                }
+            }
+        }
+
+        // --- 3. Chart.js Configurations ---
+        document.addEventListener('DOMContentLoaded', function () {
+            
+            // Palette matches CSS
+            const colorPrimary = '#486948'; 
+            const colorSecondary = '#8fbc8f'; 
+            const colorAccent = '#2C3E50'; 
+            const colorHighlight = '#E74C3C'; 
+
+            const labels = ['North Lebanon', 'Nabatieh', 'South Lebanon', 'Akkar', 'Mount Lebanon', 'Baalbek-Hermel', 'Bekaa'];
+            const dataPomace = [22681, 17736, 10752, 10515, 8429, 4835, 3990];
+            const dataShare = [28.71, 22.45, 13.61, 13.31, 10.67, 6.12, 5.05];
+
+            // 1. Regional Bar Chart
+            const ctxBar = document.getElementById('regionalBarChart').getContext('2d');
+            new Chart(ctxBar, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Pomace Waste (Tonnes/Year)',
+                        data: dataPomace,
+                        backgroundColor: colorPrimary,
+                        borderRadius: 4,
+                        hoverBackgroundColor: '#6B8E23'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: 'rgba(44, 62, 80, 0.9)',
+                            padding: 12,
+                            titleFont: { size: 13 },
+                            bodyFont: { size: 14 },
+                            callbacks: {
+                                label: function(context) {
+                                    return ' ' + context.raw.toLocaleString() + ' tonnes';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: '#f3f4f6' },
+                            ticks: { font: { size: 11 } }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { font: { size: 10 } }
+                        }
+                    }
+                }
+            });
+
+            // 2. Pie Chart
+            const ctxPie = document.getElementById('surfacePieChart').getContext('2d');
+            new Chart(ctxPie, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: dataShare,
+                        backgroundColor: [
+                            '#2d4030', 
+                            '#3f5940', 
+                            '#527351', 
+                            '#668c64', 
+                            '#7aa677', 
+                            '#8fbf8b', 
+                            '#a4d9a0'  
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '65%',
+                    plugins: {
+                        legend: { 
+                            position: 'right', 
+                            labels: { usePointStyle: true, boxWidth: 8, font: { size: 11 } } 
+                        }
+                    }
+                }
+            });
+
+            // 3. Comparative Chart
+            const ctxComp = document.getElementById('comparativeChart').getContext('2d');
+            new Chart(ctxComp, {
+                type: 'bar',
+                data: {
+                    labels: ['Theoretical Mass Balance (30%)', 'Empirical Lebanon Measure (58%)'],
+                    datasets: [{
+                        label: 'Volume (Tonnes)',
+                        data: [40852, 79000],
+                        backgroundColor: ['#bdc3c7', '#E74C3C'],
+                        borderRadius: 6,
+                        barPercentage: 0.6
+                    }]
+                },
+                options: {
+                    indexAxis: 'y', 
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: 'rgba(44, 62, 80, 0.9)',
+                            padding: 12,
+                            callbacks: {
+                                afterBody: function(context) {
+                                    return context[0].dataIndex === 1 ? 'Source: Kinab & Khoury (2015)' : 'Source: UNCTAD (2019)';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            grid: { color: '#f3f4f6' },
+                            title: { display: true, text: 'Tonnes per Year' }
+                        },
+                        y: {
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+        });
+        
+        // --- 4. Sticky Nav Highlight Logic ---
+        window.addEventListener('scroll', () => {
+            let current = '';
+            const sections = document.querySelectorAll('section');
+            const sideNavLinks = document.querySelectorAll('.side-nav-link');
+            const topNavLinks = document.querySelectorAll('.top-nav-link');
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 150) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            // Side Nav Active State
+            sideNavLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+
+            // Top Nav Active State
+            topNavLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Almond Waste – Lebanon Scientific Dataset & Methodology</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- MathJax for LaTeX Equations -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Merriweather', 'serif'],
+                    },
+                    colors: {
+                        'almond-dark': '#3E2723',    // Dark Earth
+                        'almond-primary': '#795548', // Almond Brown
+                        'almond-shell': '#D7CCC8',   // Beige/Shell
+                        'almond-hull': '#558B2F',    // Green Hull
+                        'almond-light': '#EFEBE9',   // Light Background
+                        'scientific-blue': '#1565C0',
+                        'export-red': '#C62828'
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(62, 39, 35, 0.08)',
+                        'glow': '0 0 15px rgba(121, 85, 72, 0.3)'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #FAFAFA;
+            background-image: radial-gradient(#D7CCC8 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+        .academic-card {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(5px);
+            border: 1px solid #D7CCC8;
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .academic-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border-color: #795548;
+        }
+        .section-header {
+            border-bottom: 2px solid #795548;
+            padding-bottom: 0.75rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        table {
+            border-collapse: separate;
+            border-spacing: 0;
+            width: 100%;
+        }
+        th {
+            background-color: #3E2723;
+            font-weight: 600;
+            color: #ffffff;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+            padding: 14px 16px;
+        }
+        th:first-child { border-top-left-radius: 8px; }
+        th:last-child { border-top-right-radius: 8px; }
+        
+        td {
+            padding: 14px 16px;
+            border-bottom: 1px solid #EFEBE9;
+            background-color: white;
+            transition: background-color 0.2s;
+        }
+        tr:last-child td:first-child { border-bottom-left-radius: 8px; }
+        tr:last-child td:last-child { border-bottom-right-radius: 8px; }
+        
+        tr:hover td {
+            background-color: #EFEBE9;
+        }
+        
+        .math-block {
+            background: linear-gradient(to right, #ffffff, #fdfbfb);
+            padding: 1.25rem;
+            border-radius: 0.5rem;
+            border-left: 4px solid #558B2F;
+            margin: 1.5rem 0;
+            overflow-x: auto;
+            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.03);
+            font-family: 'Inter', monospace;
+            font-size: 0.95rem;
+            color: #333;
+        }
+        
+        /* Navigation Dot Active State */
+        .side-nav-link.active span {
+            background-color: #795548;
+            transform: scale(1.25);
+            border-color: #3E2723;
+        }
+        .side-nav-link.active p {
+            color: #3E2723;
+            font-weight: 700;
+        }
+
+        .top-nav-link.active {
+            color: #3E2723;
+            background-color: #D7CCC8;
+            font-weight: 600;
+        }
+
+        /* Print Optimizations */
+        @media print {
+            body { background: white; background-image: none; }
+            .no-print { display: none !important; }
+            .academic-card { break-inside: avoid; box-shadow: none; border: 1px solid #ccc; }
+            .collapsible-content { max-height: none !important; display: block !important; }
+            canvas { max-width: 100% !important; }
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+        }
+
+        .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0, 1, 0, 1); }
+        .collapsible-active { max-height: 3000px; transition: max-height 0.5s ease-in-out; }
+        .arrow-icon { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .rotate-180 { transform: rotate(180deg); }
+    </style>
+</head>
+<body class="text-slate-800 antialiased relative">
+
+    <!-- Sticky Side Navigation (Desktop) -->
+    <nav class="hidden 2xl:block fixed left-10 top-1/2 transform -translate-y-1/2 z-40 no-print bg-white/80 backdrop-blur p-4 rounded-xl border border-stone-200 shadow-soft">
+        <ul class="space-y-4">
+            <li><a href="#overview" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-almond-primary transition group"><span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-almond-primary transition bg-white"></span><p class="font-medium">Overview</p></a></li>
+            <li><a href="#national-data" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-almond-primary transition group"><span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-almond-primary transition bg-white"></span><p class="font-medium">National Data</p></a></li>
+            <li><a href="#waste-methodology" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-almond-primary transition group"><span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-almond-primary transition bg-white"></span><p class="font-medium">Methodology</p></a></li>
+            <li><a href="#regional-distribution" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-almond-primary transition group"><span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-almond-primary transition bg-white"></span><p class="font-medium">Regional Dist.</p></a></li>
+            <li><a href="#visualizations" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-almond-primary transition group"><span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-almond-primary transition bg-white"></span><p class="font-medium">Visual Analysis</p></a></li>
+            <li><a href="#references" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-almond-primary transition group"><span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-almond-primary transition bg-white"></span><p class="font-medium">References</p></a></li>
+        </ul>
+    </nav>
+
+    <!-- Header -->
+    <header class="bg-white/90 backdrop-blur-md border-b border-stone-200 sticky top-0 z-50 shadow-sm print:static print:border-none">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+            <div class="flex items-center gap-3 min-w-fit">
+                <div class="bg-almond-light p-2 rounded-full border border-almond-primary/40 print:hidden">
+                    <span class="text-2xl">🌰</span>
+                </div>
+                <div>
+                    <h1 class="text-lg md:text-xl font-serif font-bold text-gray-900 leading-tight">
+                        Almond Waste: Hulls, Shells & Pruning
+                    </h1>
+                    <p class="hidden sm:block text-xs text-almond-primary font-bold">
+                        Lebanon Scientific Dataset 🇱🇧
+                    </p>
+                </div>
+            </div>
+            <nav class="hidden lg:flex items-center gap-1 no-print bg-stone-50/50 p-1.5 rounded-lg border border-stone-100">
+                <a href="#national-data" class="top-nav-link px-3 py-1.5 text-sm font-medium text-gray-600 rounded-md hover:bg-stone-100 transition-colors">National</a>
+                <a href="#waste-methodology" class="top-nav-link px-3 py-1.5 text-sm font-medium text-gray-600 rounded-md hover:bg-stone-100 transition-colors">Method</a>
+                <a href="#regional-distribution" class="top-nav-link px-3 py-1.5 text-sm font-medium text-gray-600 rounded-md hover:bg-stone-100 transition-colors">Regional</a>
+                <a href="#visualizations" class="top-nav-link px-3 py-1.5 text-sm font-medium text-gray-600 rounded-md hover:bg-stone-100 transition-colors">Visuals</a>
+            </nav>
+            <div class="no-print min-w-fit">
+                <button onclick="window.print()" class="flex items-center gap-2 bg-almond-dark hover:bg-gray-800 text-white px-4 py-2 rounded-lg text-xs md:text-sm font-medium transition shadow hover:shadow-lg transform hover:-translate-y-0.5">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                    <span class="hidden md:inline">Print Report</span>
+                    <span class="md:hidden">Print</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-16">
+
+        <!-- Section A: Overview -->
+        <section id="overview" class="bg-white rounded-2xl p-8 shadow-soft border border-almond-shell scroll-mt-28">
+            <h2 class="text-lg font-bold text-gray-900 mb-2 flex items-center gap-2">
+                <span>🔍</span> Executive Summary
+            </h2>
+            <div class="prose max-w-none text-gray-600">
+                <p class="text-lg leading-relaxed">
+                    This scientific dataset quantifies <strong>Almond</strong> waste in Lebanon for the reference year 2023. Based on FAOSTAT production data of <strong>29,309 tonnes</strong> and authoritative regional areas from the World Bank, the model deducts kernel exports to establish a net domestic supply of <strong>~29,110 tonnes</strong>. The analysis identifies two major biomass streams: <strong>Processing Waste</strong> (Hulls & Shells: ~24,742 t) and <strong>Agricultural Waste</strong> (Prunings: ~7,271 t). These streams are heavily concentrated in the inland regions of <strong>Baalbek-Hermel (50%)</strong> and <strong>Akkar (23%)</strong>, offering high potential for bio-energy and compost valorization.
+                </p>
+            </div>
+        </section>
+
+        <!-- Section B: National Data -->
+        <section id="national-data" class="scroll-mt-28">
+            <div class="section-header">
+                <span class="text-2xl">📊</span>
+                <h2 class="text-2xl font-serif font-bold text-almond-dark">1. National Data & Baseline Indicators</h2>
+            </div>
+            
+            <!-- Summary Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+                <!-- Production Card -->
+                <div class="academic-card p-6 relative overflow-hidden group">
+                    <p class="text-xs font-bold text-almond-hull uppercase tracking-wider">Gross Production (In Shell)</p>
+                    <p class="text-3xl font-bold text-gray-900 mt-2">29,309 <span class="text-sm font-normal text-gray-500">t</span></p>
+                    <div class="mt-2 text-xs text-gray-500">Source: FAOSTAT 2023</div>
+                </div>
+
+                <!-- Export Card -->
+                <div class="academic-card p-6 relative overflow-hidden group border-l-4 border-l-export-red">
+                    <p class="text-xs font-bold text-export-red uppercase tracking-wider">Export</p>
+                    <p class="text-3xl font-bold text-gray-900 mt-2">-199 <span class="text-sm font-normal text-gray-500">t</span></p>
+                    <div class="mt-2 text-xs text-gray-500" title="29.89t kernels / 0.15 kernel ratio">In-Shell Equivalent</div>
+                </div>
+
+                <!-- Domestic Card -->
+                <div class="academic-card p-6 relative overflow-hidden group bg-stone-50">
+                    <p class="text-xs font-bold text-almond-primary uppercase tracking-wider">Net Domestic Supply</p>
+                    <p class="text-3xl font-bold text-gray-900 mt-2">29,110 <span class="text-sm font-normal text-gray-500">t</span></p>
+                    <div class="mt-2 text-xs text-gray-500">Base for Waste Calc</div>
+                </div>
+
+                <!-- Total Biomass Card -->
+                <div class="academic-card p-6 relative overflow-hidden group border-b-4 border-b-almond-hull">
+                    <p class="text-xs font-bold text-almond-dark uppercase tracking-wider">Total Est. Biomass</p>
+                    <p class="text-3xl font-bold text-gray-900 mt-2">32,013 <span class="text-sm font-normal text-gray-500">t/yr</span></p>
+                    <div class="mt-2 text-xs text-green-800 bg-green-50 px-2 py-1 rounded inline-block">Hulls + Shells + Pruning</div>
+                </div>
+            </div>
+
+            <!-- Detailed Table -->
+            <div class="bg-white rounded-xl shadow-soft overflow-hidden border border-stone-200">
+                <div class="overflow-x-auto">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Indicator</th>
+                                <th>Value</th>
+                                <th>Source/Logic</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-sm text-gray-700">
+                            <tr>
+                                <td class="font-bold text-gray-900">Total Cultivated Area</td>
+                                <td class="font-mono text-lg">5,427 ha</td>
+                                <td>World Bank (2018)</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold text-gray-900">Kernel Exports (2023)</td>
+                                <td class="font-mono text-export-red">29.89 t</td>
+                                <td>UN Comtrade (WITS)</td>
+                            </tr>
+                            <tr class="bg-stone-50">
+                                <td class="text-almond-dark font-medium">Export In-Shell Equivalent</td>
+                                <td class="font-mono text-almond-dark">199.27 t</td>
+                                <td>Calculation: 29.89 / 0.15</td>
+                            </tr>
+                            <tr class="bg-almond-light border-t-2 border-almond-primary">
+                                <td class="font-bold text-almond-dark text-lg">Net Domestic In-Shell</td>
+                                <td class="font-bold font-mono text-xl text-almond-dark">29,109.76 t</td>
+                                <td>Production - Export Eq.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section C: Waste Methodology -->
+        <section id="waste-methodology" class="scroll-mt-28">
+            <button onclick="toggleSection('calc-methodology', 'icon-methodology')" class="w-full text-left focus:outline-none no-print">
+                <div class="flex items-center justify-between section-header cursor-pointer group">
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl">🧮</span>
+                        <h2 class="text-2xl font-serif font-bold text-almond-dark group-hover:text-almond-primary transition">
+                            2. Waste Generation Methodology
+                        </h2>
+                    </div>
+                    <div class="bg-white p-2 rounded-full shadow-sm border border-gray-100 group-hover:bg-almond-light transition">
+                        <svg id="icon-methodology" class="w-5 h-5 text-gray-500 arrow-icon transform rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </div>
+                </div>
+            </button>
+            
+            <div class="hidden print:block section-header">
+                <h2 class="text-2xl font-serif font-bold text-almond-dark">2. Waste Generation Methodology</h2>
+            </div>
+
+            <div id="calc-methodology" class="collapsible-content collapsible-active">
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                    <!-- Left: Processing Fractions -->
+                    <div class="bg-white p-6 rounded-xl border border-stone-200 shadow-sm">
+                        <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span class="bg-almond-hull text-white p-1 rounded px-2">A</span> Processing Fractions
+                        </h3>
+                        <p class="text-xs text-gray-500 mb-4">Based on Mediterranean Almond Standards</p>
+                        
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between p-3 bg-green-50 rounded border border-green-100">
+                                <span class="font-bold text-green-800">1. Hulls (Green Outer)</span>
+                                <span class="font-mono font-bold text-lg">52%</span>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-amber-50 rounded border border-amber-100">
+                                <span class="font-bold text-amber-800">2. Shells (Hard Inner)</span>
+                                <span class="font-mono font-bold text-lg">33%</span>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-stone-100 rounded border border-stone-200 opacity-75">
+                                <span class="font-medium text-stone-600">3. Kernel (Product)</span>
+                                <span class="font-mono">15%</span>
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-gray-200">
+                            <p class="text-xs text-gray-600 mb-1"><strong>Citations:</strong></p>
+                            <p class="text-xs text-gray-500 italic">• Hull 52%, Shell 33%, Kernel 15% — MDPI (2025), Almond Hulls & Shells Review.</p>
+                            <p class="text-xs text-gray-500 italic mt-1">• Pruning biomass = 1.34 t/ha — Renewable Energy (2011), Mediterranean Pruning Biomass Study.</p>
+                        </div>
+                    </div>
+
+                    <!-- Right: Pruning & Logic -->
+                    <div class="bg-stone-50 p-6 rounded-xl border border-stone-200 flex flex-col justify-center">
+                        <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span class="bg-almond-primary text-white p-1 rounded px-2">B</span> Calculation Logic
+                        </h3>
+                        <div class="mb-4">
+                            <p class="text-xs font-bold text-gray-400 uppercase tracking-wide mb-1">Net Domestic Almonds Formula</p>
+                            <div class="math-block py-3 text-sm">
+                                $$ \text{Net Domestic} = 29,309.03 - 199.27 = 29,109.76 \text{ t} $$
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <p class="text-xs font-bold text-gray-400 uppercase tracking-wide mb-1">Processing Waste Formula</p>
+                            <div class="math-block py-3 text-sm">
+                                $$ W_{proc} = (P_{prod} - P_{exp\_eq}) \times 0.85 $$
+                                $$ W_{proc} = 29,109.76 \times 0.85 \approx 24,742 \text{ t} $$
+                            </div>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-gray-400 uppercase tracking-wide mb-1">Pruning Biomass</p>
+                            <div class="math-block py-3 text-sm">
+                                $$ W_{pruning} = \text{Area} \times 1.34 \text{ t/ha} $$
+                                $$ W_{pruning} = 5,427 \times 1.34 \approx 7,272 \text{ t} $$
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section D: Regional Distribution -->
+        <section id="regional-distribution" class="scroll-mt-28">
+            <div class="section-header">
+                <span class="text-2xl">🗺️</span>
+                <h2 class="text-2xl font-serif font-bold text-almond-dark">3. Regional Waste Distribution</h2>
+            </div>
+
+            <!-- Methodology Subsection (Added) -->
+            <div class="bg-white p-6 rounded-xl border border-stone-200 shadow-sm mb-8 space-y-6">
+                
+                <!-- A. Source -->
+                <div>
+                    <h4 class="text-sm font-bold text-almond-primary uppercase tracking-wide mb-2 flex items-center gap-2">
+                        <span class="bg-almond-primary text-white text-[10px] px-1.5 py-0.5 rounded">A</span> Source of Regional Shares
+                    </h4>
+                    <p class="text-sm text-gray-700 leading-relaxed">
+                        Regional almond distribution is derived directly from Table 3.4 (Fruit Tree Cultivation Areas by Governorate) in the World Bank report: <em>Droughts and Agriculture in Lebanon: Causes, Consequences, and Risk Management (2018)</em>. This table provides the definitive area dataset (in hectares) for almonds across Lebanon’s governorates.
+                    </p>
+                </div>
+
+                <!-- B. Formula -->
+                <div>
+                    <h4 class="text-sm font-bold text-almond-primary uppercase tracking-wide mb-2 flex items-center gap-2">
+                        <span class="bg-almond-primary text-white text-[10px] px-1.5 py-0.5 rounded">B</span> Methodology Formula
+                    </h4>
+                    <div class="bg-stone-50 p-3 rounded border border-stone-200 font-mono text-xs text-gray-800">
+                        $$ \text{Regional Share (\%)} = (\frac{\text{Regional Almond Area}}{5,427 \text{ ha total}}) \times 100 $$
+                    </div>
+                </div>
+
+                <!-- C. Logic -->
+                <div>
+                    <h4 class="text-sm font-bold text-almond-primary uppercase tracking-wide mb-2 flex items-center gap-2">
+                        <span class="bg-almond-primary text-white text-[10px] px-1.5 py-0.5 rounded">C</span> Logic of Waste Location
+                    </h4>
+                    <p class="text-sm text-gray-700 leading-relaxed">
+                        Because almond shelling and hulling typically occur on-farm or in local village processing units, waste (hulls, shells, pruning residues) is assumed to be generated in the same governorate where the almonds are cultivated. No evidence exists for large-scale inter-governorate processing flows.
+                    </p>
+                </div>
+
+                <!-- D. Computation -->
+                <div>
+                    <h4 class="text-sm font-bold text-almond-primary uppercase tracking-wide mb-2 flex items-center gap-2">
+                        <span class="bg-almond-primary text-white text-[10px] px-1.5 py-0.5 rounded">D</span> Waste Computation Formula
+                    </h4>
+                    <div class="bg-stone-50 p-3 rounded border border-stone-200 font-mono text-xs text-gray-800 space-y-2">
+                        <p>$$ \text{Regional Production} = \text{Net Domestic Production} \times \text{Regional Share} $$</p>
+                        <p>$$ \text{Hulls} = \text{Regional Production} \times 0.52 $$</p>
+                        <p>$$ \text{Shells} = \text{Regional Production} \times 0.33 $$</p>
+                        <p>$$ \text{Pruning} = \text{Regional Area} \times 1.34 \text{ t/ha} $$</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interactive Table -->
+            <div class="bg-white rounded-xl shadow-soft overflow-hidden border border-stone-200">
+                <div class="overflow-x-auto">
+                    <table id="regionalTable">
+                        <thead>
+                            <tr>
+                                <th class="cursor-pointer hover:bg-almond-primary transition-colors" onclick="sortTable(0)">Region <span class="opacity-50 text-xs no-print">↕</span></th>
+                                <th class="cursor-pointer hover:bg-almond-primary transition-colors text-right" onclick="sortTable(1)">Share <span class="opacity-50 text-xs no-print">↕</span></th>
+                                <th class="cursor-pointer hover:bg-almond-primary transition-colors text-right" onclick="sortTable(2)">Hulls (52%) <span class="opacity-50 text-xs no-print">↕</span></th>
+                                <th class="cursor-pointer hover:bg-almond-primary transition-colors text-right" onclick="sortTable(3)">Shells (33%) <span class="opacity-50 text-xs no-print">↕</span></th>
+                                <th class="cursor-pointer hover:bg-almond-primary transition-colors text-right" onclick="sortTable(4)">Pruning (t) <span class="opacity-50 text-xs no-print">↕</span></th>
+                                <th class="text-center font-bold bg-almond-dark/90">Total Biomass</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-sm text-gray-700">
+                            <!-- Baalbek-Hermel -->
+                            <tr class="bg-almond-light/30">
+                                <td class="font-bold text-gray-900">Baalbek-Hermel</td>
+                                <td class="text-right"><span class="bg-almond-primary text-white px-2 py-1 rounded text-xs font-bold">50%</span></td>
+                                <td class="text-right font-mono text-almond-hull">7,569</td>
+                                <td class="text-right font-mono text-stone-600">4,803</td>
+                                <td class="text-right font-mono text-gray-500 italic">3,636</td>
+                                <td class="text-center font-bold font-mono text-almond-dark">16,008</td>
+                            </tr>
+                            <!-- Akkar -->
+                            <tr>
+                                <td class="font-bold text-gray-900">Akkar</td>
+                                <td class="text-right"><span class="bg-almond-primary/80 text-white px-2 py-1 rounded text-xs">23%</span></td>
+                                <td class="text-right font-mono text-almond-hull">3,482</td>
+                                <td class="text-right font-mono text-stone-600">2,209</td>
+                                <td class="text-right font-mono text-gray-500 italic">1,672</td>
+                                <td class="text-center font-bold font-mono text-almond-dark">7,363</td>
+                            </tr>
+                            <!-- Bekaa -->
+                            <tr>
+                                <td class="font-bold text-gray-900">Bekaa</td>
+                                <td class="text-right"><span class="bg-almond-primary/60 text-white px-2 py-1 rounded text-xs">14%</span></td>
+                                <td class="text-right font-mono text-almond-hull">2,119</td>
+                                <td class="text-right font-mono text-stone-600">1,345</td>
+                                <td class="text-right font-mono text-gray-500 italic">1,018</td>
+                                <td class="text-center font-bold font-mono text-almond-dark">4,482</td>
+                            </tr>
+                            <!-- North -->
+                            <tr>
+                                <td class="font-bold text-gray-900">North</td>
+                                <td class="text-right"><span class="bg-almond-primary/40 text-white px-2 py-1 rounded text-xs">6%</span></td>
+                                <td class="text-right font-mono text-almond-hull">908</td>
+                                <td class="text-right font-mono text-stone-600">576</td>
+                                <td class="text-right font-mono text-gray-500 italic">436</td>
+                                <td class="text-center font-bold font-mono text-almond-dark">1,920</td>
+                            </tr>
+                            <!-- Mount Lebanon -->
+                            <tr>
+                                <td class="font-bold text-gray-900">Mount Lebanon</td>
+                                <td class="text-right"><span class="bg-almond-primary/30 text-white px-2 py-1 rounded text-xs">3%</span></td>
+                                <td class="text-right font-mono text-almond-hull">454</td>
+                                <td class="text-right font-mono text-stone-600">288</td>
+                                <td class="text-right font-mono text-gray-500 italic">218</td>
+                                <td class="text-center font-bold font-mono text-almond-dark">960</td>
+                            </tr>
+                            <!-- Nabatieh -->
+                            <tr>
+                                <td class="font-bold text-gray-900">Nabatieh</td>
+                                <td class="text-right"><span class="bg-almond-primary/30 text-white px-2 py-1 rounded text-xs">3%</span></td>
+                                <td class="text-right font-mono text-almond-hull">454</td>
+                                <td class="text-right font-mono text-stone-600">288</td>
+                                <td class="text-right font-mono text-gray-500 italic">218</td>
+                                <td class="text-center font-bold font-mono text-almond-dark">960</td>
+                            </tr>
+                            <!-- South -->
+                            <tr>
+                                <td class="font-bold text-gray-900">South</td>
+                                <td class="text-right"><span class="bg-almond-primary/20 text-white px-2 py-1 rounded text-xs">1%</span></td>
+                                <td class="text-right font-mono text-almond-hull">151</td>
+                                <td class="text-right font-mono text-stone-600">96</td>
+                                <td class="text-right font-mono text-gray-500 italic">73</td>
+                                <td class="text-center font-bold font-mono text-almond-dark">320</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="bg-stone-50 border-t border-stone-200 p-3 text-xs text-gray-500 italic text-center">
+                    Regional percentages are derived from World Bank (2018) Table 3.4. Waste volumes computed via fractional allocation from net domestic production (29,109.76 t), after accounting for kernel exports (29.89 t = 199.27 t in-shell equivalent).
+                </div>
+            </div>
+        </section>
+
+        <!-- Section E: Visual Figures -->
+        <section id="visualizations" class="scroll-mt-28">
+            <div class="section-header">
+                <span class="text-2xl">📉</span>
+                <h2 class="text-2xl font-serif font-bold text-almond-dark">4. Visual Analysis & Figures</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                
+                <!-- Chart 1: Bar Chart (Biomass Composition) -->
+                <div class="academic-card p-6 break-inside-avoid">
+                    <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-6 text-center flex justify-center items-center gap-2">
+                        <span>📊</span> Waste Stream Composition
+                    </h3>
+                    <div class="relative h-72 w-full">
+                        <canvas id="compositionChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Chart 2: Pie Chart (Distribution) -->
+                <div class="academic-card p-6 break-inside-avoid">
+                    <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-6 text-center flex justify-center items-center gap-2">
+                        <span>🍩</span> Regional Production Share
+                    </h3>
+                    <div class="relative h-72 w-full flex justify-center">
+                        <canvas id="sharePieChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Chart 3: Stacked Bar -->
+                <div class="academic-card p-6 md:col-span-2 bg-gradient-to-br from-white to-stone-50 break-inside-avoid">
+                    <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-6 text-center flex justify-center items-center gap-2">
+                        <span>⚖️</span> Total Regional Biomass (Processing + Pruning)
+                    </h3>
+                    <div class="relative h-72 w-full">
+                        <canvas id="regionalStackedChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section F: References -->
+        <section id="references" class="border-t border-stone-200 pt-10 scroll-mt-28">
+            <h2 class="text-xl font-bold text-gray-900 mb-8 flex items-center gap-2">
+                <span class="text-almond-primary">5.</span> References & Citations
+            </h2>
+            <div class="grid grid-cols-1 gap-4 text-sm text-gray-600">
+                
+                <div class="group p-4 rounded-lg hover:bg-white hover:shadow-md transition border border-transparent hover:border-stone-200">
+                    <p class="font-bold text-gray-900 group-hover:text-blue-700 transition">FAO. (2023).</p>
+                    <p class="mb-1">FAOSTAT – Crops and Livestock Products: Almonds, in shell (tonnes), Lebanon.</p>
+                    <a href="https://www.fao.org/faostat/en/#data/QCL" target="_blank" class="text-blue-500 hover:underline break-all text-xs flex items-center gap-1">
+                        Access Database <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                    </a>
+                </div>
+
+                <div class="group p-4 rounded-lg hover:bg-white hover:shadow-md transition border border-transparent hover:border-stone-200">
+                    <p class="font-bold text-gray-900 group-hover:text-blue-700 transition">World Bank. (2018).</p>
+                    <p class="mb-1">Droughts and Agriculture in Lebanon: Causes, Consequences, and Risk Management.</p>
+                    <a href="https://documents1.worldbank.org/curated/en/892381538415122088/pdf/130405-WP-P160212-Lebanon-WEB.pdf" target="_blank" class="text-blue-500 hover:underline break-all text-xs flex items-center gap-1">
+                        View Report <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                    </a>
+                </div>
+
+                <div class="group p-4 rounded-lg hover:bg-white hover:shadow-md transition border border-transparent hover:border-stone-200">
+                    <p class="font-bold text-gray-900 group-hover:text-blue-700 transition">MDPI. (2025).</p>
+                    <p class="mb-1">Harnessing and Evaluating Almond Hulls and Shells for Bio-Based Products</p>
+                    
+                    <a href="https://www.mdpi.com/2076-3298/12/10/369" target="_blank" class="text-blue-500 hover:underline break-all text-xs flex items-center gap-1">
+                        View Export Data <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                    </a>
+                    
+                    
+                </div>
+
+                <div class="group p-4 rounded-lg hover:bg-white hover:shadow-md transition border border-transparent hover:border-stone-200">
+                    <p class="font-bold text-gray-900 group-hover:text-blue-700 transition">World Integrated Trade Solution (WITS). (2023).</p>
+                    <p class="mb-1">Lebanon Almond Exports, product 080212.</p>
+                    <a href="https://wits.worldbank.org/trade/comtrade/en/country/LBN/year/2023/tradeflow/Exports/product/080212" target="_blank" class="text-blue-500 hover:underline break-all text-xs flex items-center gap-1">
+                        View Export Data <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                    </a>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-gray-900 text-gray-400 py-10 mt-12 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <div class="flex justify-center mb-4 text-3xl">🌰</div>
+            <p class="text-sm font-medium text-white">Sustainable Materials - PhD Scholar Mika - University of Bath</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // --- 1. Collapsible Logic ---
+        function toggleSection(contentId, iconId) {
+            const content = document.getElementById(contentId);
+            const icon = document.getElementById(iconId);
+            
+            if (content.classList.contains('collapsible-active')) {
+                content.classList.remove('collapsible-active');
+                icon.classList.remove('rotate-180');
+            } else {
+                content.classList.add('collapsible-active');
+                icon.classList.add('rotate-180');
+            }
+        }
+
+        // --- 2. Table Sorting Logic ---
+        function sortTable(n) {
+            var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+            table = document.getElementById("regionalTable");
+            switching = true;
+            dir = "asc"; 
+            
+            while (switching) {
+                switching = false;
+                rows = table.rows;
+                
+                for (i = 1; i < (rows.length - 1); i++) {
+                    shouldSwitch = false;
+                    x = rows[i].getElementsByTagName("TD")[n];
+                    y = rows[i+1].getElementsByTagName("TD")[n];
+                    
+                    let xVal = x.textContent.toLowerCase().replace(/,/g, '').replace(/%/g, '');
+                    let yVal = y.textContent.toLowerCase().replace(/,/g, '').replace(/%/g, '');
+                    
+                    if (!isNaN(parseFloat(xVal)) && !isNaN(parseFloat(yVal))) {
+                        xVal = parseFloat(xVal);
+                        yVal = parseFloat(yVal);
+                    }
+
+                    if (dir == "asc") {
+                        if (xVal > yVal) { shouldSwitch = true; break; }
+                    } else if (dir == "desc") {
+                        if (xVal < yVal) { shouldSwitch = true; break; }
+                    }
+                }
+                if (shouldSwitch) {
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                    switchcount ++; 
+                } else {
+                    if (switchcount == 0 && dir == "asc") {
+                        dir = "desc";
+                        switching = true;
+                    }
+                }
+            }
+        }
+
+        // --- 3. Chart.js Configurations ---
+        document.addEventListener('DOMContentLoaded', function () {
+            
+            // Colors
+            const colorHull = '#558B2F';
+            const colorShell = '#A1887F';
+            const colorPruning = '#8D6E63';
+            const colorDark = '#3E2723';
+
+            const labels = ['Baalbek-Hermel', 'Akkar', 'Bekaa', 'North', 'Mt Lebanon', 'Nabatieh', 'South'];
+            // Shares: 50, 23, 14, 6, 3, 3, 1
+            const hulls = [7569, 3482, 2119, 908, 454, 454, 151];
+            const shells = [4803, 2209, 1345, 576, 288, 288, 96];
+            const prunings = [3636, 1672, 1018, 436, 218, 218, 73];
+
+            // 1. Composition Bar
+            const ctxComp = document.getElementById('compositionChart').getContext('2d');
+            new Chart(ctxComp, {
+                type: 'bar',
+                data: {
+                    labels: ['Hulls (52%)', 'Shells (33%)', 'Prunings (Agri)'],
+                    datasets: [{
+                        label: 'National Volume (Tonnes)',
+                        data: [15137, 9605, 7271],
+                        backgroundColor: [colorHull, colorShell, colorPruning],
+                        borderRadius: 6,
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { x: { beginAtZero: true, grid: { color: '#f5f5f4' } } }
+                }
+            });
+
+            // 2. Pie Chart (Shares)
+            const ctxPie = document.getElementById('sharePieChart').getContext('2d');
+            new Chart(ctxPie, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: [50, 23, 14, 6, 3, 3, 1],
+                        backgroundColor: [
+                            '#3E2723', '#4E342E', '#5D4037', '#6D4C41', 
+                            '#795548', '#8D6E63', '#A1887F'
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '60%',
+                    plugins: {
+                        legend: { position: 'right', labels: { usePointStyle: true, boxWidth: 8, font: { size: 11 } } }
+                    }
+                }
+            });
+
+            // 3. Stacked Regional Chart
+            const ctxStack = document.getElementById('regionalStackedChart').getContext('2d');
+            new Chart(ctxStack, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        { label: 'Hulls', data: hulls, backgroundColor: colorHull },
+                        { label: 'Shells', data: shells, backgroundColor: colorShell },
+                        { label: 'Prunings', data: prunings, backgroundColor: colorPruning }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { stacked: true, grid: { display: false } },
+                        y: { stacked: true, grid: { color: '#f5f5f4' } }
+                    }
+                }
+            });
+        });
+        
+        // --- 4. Sticky Nav Highlight Logic ---
+        window.addEventListener('scroll', () => {
+            let current = '';
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.side-nav-link, .top-nav-link');
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 150) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

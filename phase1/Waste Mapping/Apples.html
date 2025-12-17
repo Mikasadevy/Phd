@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apple Waste – Lebanon | National Waste Assessment (Export-Adjusted)</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- MathJax for LaTeX Equations -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Merriweather', 'serif'],
+                    },
+                    colors: {
+                        'apple-dark': '#880E4F',    // Deep Burgundy/Red
+                        'apple-primary': '#D32F2F', // Bright Apple Red
+                        'apple-accent': '#689F38',  // Orchard Leaf Green
+                        'apple-light': '#FFEBEE',   // Flesh/Pale Pink
+                        'pomace-brown': '#795548',  // Pomace/Fiber
+                        'scientific-blue': '#2980B9',
+                        'export-gold': '#F59E0B'    // Color for exports
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+                        'glow': '0 0 15px rgba(211, 47, 47, 0.2)'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #FAFAFA;
+            background-image: radial-gradient(#e0e0e0 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+        .academic-card {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(5px);
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .academic-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border-color: #D32F2F;
+        }
+        .section-header {
+            border-bottom: 2px solid #D32F2F;
+            padding-bottom: 0.75rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        table {
+            border-collapse: separate;
+            border-spacing: 0;
+            width: 100%;
+        }
+        th {
+            background-color: #880E4F;
+            font-weight: 600;
+            color: #ffffff;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+            padding: 14px 16px;
+        }
+        th:first-child { border-top-left-radius: 8px; }
+        th:last-child { border-top-right-radius: 8px; }
+        
+        td {
+            padding: 14px 16px;
+            border-bottom: 1px solid #e2e8f0;
+            background-color: white;
+            transition: background-color 0.2s;
+        }
+        tr:last-child td:first-child { border-bottom-left-radius: 8px; }
+        tr:last-child td:last-child { border-bottom-right-radius: 8px; }
+        
+        tr:hover td {
+            background-color: #FFEBEE;
+        }
+        
+        /* Navigation Dot Active State */
+        .side-nav-link.active span {
+            background-color: #D32F2F;
+            transform: scale(1.25);
+            border-color: #880E4F;
+        }
+        .side-nav-link.active p {
+            color: #880E4F;
+            font-weight: 700;
+        }
+
+        .top-nav-link.active {
+            color: #880E4F;
+            background-color: #FFEBEE;
+            font-weight: 600;
+        }
+
+        /* Print Optimizations */
+        @media print {
+            body { background: white; background-image: none; }
+            .no-print { display: none !important; }
+            .academic-card { break-inside: avoid; box-shadow: none; border: 1px solid #ccc; }
+            .collapsible-content { max-height: none !important; display: block !important; }
+            canvas { max-width: 100% !important; }
+            a[href]:after { content: " (" attr(href) ")"; font-size: 0.8em; color: #666; }
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+        }
+
+        .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0, 1, 0, 1); }
+        .collapsible-active { max-height: 3000px; transition: max-height 0.5s ease-in-out; }
+        .arrow-icon { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .rotate-180 { transform: rotate(180deg); }
+    </style>
+</head>
+<body class="text-slate-800 antialiased relative">
+
+    <!-- Sticky Side Navigation (Desktop) -->
+    <nav class="hidden 2xl:block fixed left-10 top-1/2 transform -translate-y-1/2 z-40 no-print bg-white/80 backdrop-blur p-4 rounded-xl border border-gray-200 shadow-soft">
+        <ul class="space-y-4">
+            <li><a href="#overview" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-apple-primary transition group"><span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-apple-primary transition bg-white"></span><p class="font-medium">Overview</p></a></li>
+            <li><a href="#national-data" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-apple-primary transition group"><span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-apple-primary transition bg-white"></span><p class="font-medium">Data Anchors</p></a></li>
+            <li><a href="#waste-system" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-apple-primary transition group"><span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-apple-primary transition bg-white"></span><p class="font-medium">System Dynamics</p></a></li>
+            <li><a href="#regional-distribution" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-apple-primary transition group"><span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-apple-primary transition bg-white"></span><p class="font-medium">Regional Roles</p></a></li>
+            <li><a href="#visualizations" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-apple-primary transition group"><span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-apple-primary transition bg-white"></span><p class="font-medium">Visual Analysis</p></a></li>
+            <li><a href="#references" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-apple-primary transition group"><span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-apple-primary transition bg-white"></span><p class="font-medium">References</p></a></li>
+        </ul>
+    </nav>
+
+    <!-- Header -->
+    <header class="bg-white/90 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50 shadow-sm print:static print:border-none">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+            <div class="flex items-center gap-3 min-w-fit">
+                <div class="bg-apple-light p-2 rounded-full border border-apple-primary/40 print:hidden">
+                    <span class="text-2xl">🍎</span>
+                </div>
+                <div>
+                    <h1 class="text-lg md:text-xl font-serif font-bold text-gray-900 leading-tight">
+                        Apple Waste Assessment
+                    </h1>
+                    <p class="hidden sm:block text-xs text-apple-dark font-bold">
+                        Lebanon National Assessment | Export-Adjusted 🇱🇧
+                    </p>
+                </div>
+            </div>
+            <nav class="hidden lg:flex items-center gap-1 no-print bg-gray-50/50 p-1.5 rounded-lg border border-gray-100">
+                <a href="#national-data" class="top-nav-link px-3 py-1.5 text-sm font-medium text-gray-600 rounded-md hover:bg-gray-100 transition-colors">Data</a>
+                <a href="#waste-system" class="top-nav-link px-3 py-1.5 text-sm font-medium text-gray-600 rounded-md hover:bg-gray-100 transition-colors">Dynamics</a>
+                <a href="#regional-distribution" class="top-nav-link px-3 py-1.5 text-sm font-medium text-gray-600 rounded-md hover:bg-gray-100 transition-colors">Regional</a>
+                <a href="#visualizations" class="top-nav-link px-3 py-1.5 text-sm font-medium text-gray-600 rounded-md hover:bg-gray-100 transition-colors">Visuals</a>
+            </nav>
+            <div class="no-print min-w-fit">
+                <button onclick="window.print()" class="flex items-center gap-2 bg-apple-dark hover:bg-gray-800 text-white px-4 py-2 rounded-lg text-xs md:text-sm font-medium transition shadow hover:shadow-lg transform hover:-translate-y-0.5">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                    <span class="hidden md:inline">Print Report</span>
+                    <span class="md:hidden">Print</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-16">
+
+        <!-- Section A: Overview -->
+        <section id="overview" class="bg-white rounded-2xl p-8 shadow-soft border border-gray-100 scroll-mt-28">
+            <h2 class="text-lg font-bold text-gray-900 mb-2 flex items-center gap-2">
+                <span>🔍</span> Executive Summary: National Waste Assessment
+            </h2>
+            <div class="prose max-w-none text-gray-600">
+                <p class="text-lg leading-relaxed">
+                    This assessment quantifies <strong>Apple</strong> waste in Lebanon at a national scale. National apple waste is calculated from FAOSTAT production data combined with peer-reviewed loss ratios; values represent order-of-magnitude estimates. By adjusting for exports, the model isolates the domestic supply chain where agricultural losses and potential processing residues occur.
+                </p>
+                <p class="mt-4 text-xs font-bold text-apple-dark">
+                    FAOSTAT national production figures are used as a structural reference point only. All downstream waste streams are discussed qualitatively due to limited reporting resolution in Lebanon.
+                </p>
+            </div>
+        </section>
+
+        <!-- Section B: National Data & Export Logic -->
+        <section id="national-data" class="scroll-mt-28">
+            <div class="section-header">
+                <span class="text-2xl">📊</span>
+                <h2 class="text-2xl font-serif font-bold text-apple-dark">1. Structural Data Anchors</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+                <!-- Production Card -->
+                <div class="academic-card p-6 relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <span class="text-6xl">🍎</span>
+                    </div>
+                    <p class="text-[10px] font-bold text-scientific-blue uppercase tracking-wider flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-scientific-blue"></span> Gross Production
+                    </p>
+                    <p class="text-3xl font-bold text-gray-900 mt-2 tracking-tight">235,336 <span class="text-sm text-gray-500 font-normal">t</span></p>
+                    <div class="mt-3 inline-flex items-center text-[10px] font-medium text-blue-800 bg-blue-50 px-2 py-1 rounded">
+                        FAO (2023)
+                    </div>
+                </div>
+
+                <!-- Export Card -->
+                <div class="academic-card p-6 relative overflow-hidden group border-b-4 border-export-gold">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <span class="text-6xl">🚢</span>
+                    </div>
+                    <p class="text-[10px] font-bold text-export-gold uppercase tracking-wider flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-export-gold"></span> Exports (Verified)
+                    </p>
+                    <p class="text-3xl font-bold text-gray-900 mt-2 tracking-tight">20,582 <span class="text-sm text-gray-500 font-normal">t</span></p>
+                    <div class="mt-3 inline-flex flex-col items-start gap-1">
+                         <span class="text-[10px] font-medium text-amber-800 bg-amber-50 px-2 py-1 rounded">Tridge/WITS (2023)</span>
+                    </div>
+                </div>
+
+                <!-- Net Supply Card -->
+                <div class="academic-card p-6 relative overflow-hidden group col-span-1 md:col-span-2 bg-gradient-to-r from-gray-50 to-white border-apple-dark">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <span class="text-6xl">📉</span>
+                    </div>
+                    <p class="text-[10px] font-bold text-gray-600 uppercase tracking-wider flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-gray-600"></span> Net Domestic Availability
+                    </p>
+                    <div class="flex items-baseline gap-2 mt-2">
+                        <p class="text-4xl font-bold text-apple-dark tracking-tight">~214,700 <span class="text-lg text-gray-500 font-normal">t</span></p>
+                    </div>
+                    <div class="mt-3 text-xs text-gray-500 italic">
+                        Reference Baseline for Domestic Consumption & Loss
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section C: Waste Stream Dynamics -->
+        <section id="waste-system" class="scroll-mt-28">
+            <div class="section-header">
+                <span class="text-2xl">♻️</span>
+                <h2 class="text-2xl font-serif font-bold text-apple-dark group-hover:text-apple-primary transition">
+                    2. Waste Stream Dynamics
+                </h2>
+            </div>
+
+            <div class="space-y-8">
+                
+                <!-- Main Logic -->
+                <div class="bg-white p-6 rounded-xl border border-apple-primary/30 shadow-sm">
+                    <h3 class="font-bold text-gray-800 mb-4">Stream Characterization</h3>
+                    <p class="text-sm text-gray-700 mb-6">
+                        While literature suggests post-harvest apple losses in Lebanon may be substantial, no nationally audited dataset exists. Therefore, waste quantities are discussed as indicative streams rather than fixed values.
+                    </p>
+                    
+                    <!-- Calculation Logic -->
+                    <div class="bg-gray-50 p-4 rounded-lg mb-6 border border-gray-200">
+                        <p class="text-xs font-bold text-gray-500 uppercase mb-2">National Waste Estimation Model</p>
+                        <div class="math-block p-3 text-sm">
+                            $$ \text{National Waste} \approx (\text{Production} - \text{Exports}) \times \text{Waste Ratio} $$
+                            $$ \text{National Waste} \approx 214,754 \times 0.40 \approx 85,000 \text{ t (Order of Magnitude)} $$
+                        </div>
+                        <p class="text-xs text-gray-500 mt-2">
+                            *The 40% waste ratio is a literature-based estimate for post-harvest loss in developing supply chains, not a measured coefficient.
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <!-- Stream 1 -->
+                        <div class="bg-red-50 p-4 rounded-lg border-l-4 border-apple-primary">
+                            <h4 class="font-bold text-apple-dark text-sm mb-1">Agricultural Waste</h4>
+                            <p class="text-xs text-gray-600">Field culls, market rejection, and storage losses (scab/rot). Represents a <strong>significant share</strong> of domestic loss.</p>
+                        </div>
+                        <!-- Stream 2 -->
+                        <div class="bg-amber-50 p-4 rounded-lg border-l-4 border-pomace-brown">
+                            <h4 class="font-bold text-pomace-brown text-sm mb-1">Industrial Pomace</h4>
+                            <p class="text-xs text-gray-600">
+                                Apple pomace is a processing-dependent residue generated only where juice or cider production occurs. In Lebanon, industrial apple processing is limited and geographically concentrated; therefore, pomace availability is structurally constrained and not proportional to total apple waste.
+                            </p>
+                            <span class="text-[10px] bg-white border border-amber-200 px-1 rounded mt-2 inline-block">Confidence: Low</span>
+                        </div>
+                        <!-- Stream 3 -->
+                        <div class="bg-gray-50 p-4 rounded-lg border-l-4 border-gray-400">
+                            <h4 class="font-bold text-gray-700 text-sm mb-1">Unrecovered Surplus</h4>
+                            <p class="text-xs text-gray-600">Apples never entering processing or market. Often abandoned or used as animal feed.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Critical Note -->
+                <div class="bg-blue-50 p-4 rounded-lg border border-blue-200 flex gap-3 items-start">
+                    <span class="text-xl">⚠️</span>
+                    <div>
+                        <p class="text-sm font-bold text-blue-900">Important Distinction</p>
+                        <p class="text-sm text-blue-800">
+                            <strong>High apple waste does not imply high apple pomace generation.</strong> Globally, apple pomace typically represents 25–30% of fruit entering juice processing. In Lebanon, however, industrial apple processing is limited; therefore, pomace availability is constrained and geographically localized.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section D: Regional Distribution -->
+        <section id="regional-distribution" class="scroll-mt-28">
+            <div class="section-header">
+                <span class="text-2xl">🗺️</span>
+                <h2 class="text-2xl font-serif font-bold text-apple-dark group-hover:text-apple-primary transition">
+                    3. Regional System Roles (Qualitative)
+                </h2>
+            </div>
+
+            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 text-sm text-gray-600 italic mb-6">
+                "No governorate-level apple waste statistics are officially reported; therefore, regional waste quantities are not presented."
+            </div>
+
+            <!-- Qualitative Table -->
+            <div class="bg-white rounded-xl shadow-soft overflow-hidden border border-gray-100">
+                <div class="overflow-x-auto">
+                    <table id="regionalTable">
+                        <thead>
+                            <tr>
+                                <th class="bg-apple-dark text-white p-3 text-left">Region</th>
+                                <th class="bg-apple-dark text-white p-3 text-left">Primary Role in Apple System</th>
+                                <th class="bg-apple-dark text-white p-3 text-left">Waste Characteristics</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-sm text-gray-700">
+                            <tr>
+                                <td class="font-bold text-gray-900 border-b p-3">Mount Lebanon (Kesrwan)</td>
+                                <td class="border-b p-3">Historical production hub, high cold storage density.</td>
+                                <td class="border-b p-3 text-apple-dark">Cold storage losses, quality downgrades, sorting rejects.</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold text-gray-900 border-b p-3">North Lebanon (Bcharre)</td>
+                                <td class="border-b p-3">Large-scale high-altitude production.</td>
+                                <td class="border-b p-3 text-apple-dark">Surplus risk, logistical losses during transport.</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold text-gray-900 border-b p-3">Baalbek-Hermel / Bekaa</td>
+                                <td class="border-b p-3">Volume production, newer orchards.</td>
+                                <td class="border-b p-3 text-apple-dark">Field culls, limited processing infrastructure implies low pomace.</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold text-gray-900 border-b p-3">Akkar</td>
+                                <td class="border-b p-3">Secondary production zone.</td>
+                                <td class="border-b p-3 text-apple-dark">Market access constraints, potential for unharvested fruit.</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold text-gray-900 p-3">Beirut</td>
+                                <td class="p-3">Consumption & Trade Hub.</td>
+                                <td class="p-3 text-gray-500">Retail/Household waste (Municipal scope, excluded here).</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section E: Visual Figures -->
+        <section id="visualizations" class="scroll-mt-28">
+            <div class="section-header">
+                <span class="text-2xl">📉</span>
+                <h2 class="text-2xl font-serif font-bold text-apple-dark">4. Visual Analysis</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                
+                <!-- Chart 1: System Flow -->
+                <div class="academic-card p-6 break-inside-avoid md:col-span-2">
+                    <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-6 text-center flex justify-center items-center gap-2">
+                        <span>📊</span> System Flow Proxy (Indicative Magnitudes)
+                    </h3>
+                    <div class="relative h-64 w-full">
+                        <canvas id="systemFlowChart"></canvas>
+                    </div>
+                    <p class="text-center text-xs text-gray-400 mt-2">Values for waste streams are derived from literature estimates, not direct measurement.</p>
+                </div>
+
+                <!-- Chart 2: Cultivation -->
+                <div class="academic-card p-6 break-inside-avoid">
+                    <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-6 text-center flex justify-center items-center gap-2">
+                        <span>🍩</span> Cultivation Intensity (Orchard Area)
+                    </h3>
+                    <div class="relative h-72 w-full flex justify-center">
+                        <canvas id="areaPieChart"></canvas>
+                    </div>
+                    <p class="text-center text-xs text-gray-400 mt-2">Proxy for potential waste generation density.</p>
+                </div>
+
+                <!-- Insight Card -->
+                <div class="academic-card p-6 break-inside-avoid flex flex-col justify-center bg-gray-50 border border-gray-200">
+                    <h3 class="text-sm font-bold text-scientific-blue uppercase tracking-wide mb-4">Key Insight</h3>
+                    <p class="text-sm text-gray-700 leading-relaxed">
+                        While the gross production volume is high (~235k t), the actual industrial feedstock (pomace) is constrained by the limited processing capacity. Most "waste" likely remains on-farm or is lost in storage (Whole fruit loss), rather than accumulating as factory pomace.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section G: Overall Waste Summary -->
+        <section id="waste-summary" class="scroll-mt-28 mb-12">
+            <div class="section-header">
+                <span class="text-2xl">📝</span>
+                <h2 class="text-2xl font-serif font-bold text-apple-dark">5. Conclusion</h2>
+            </div>
+            
+            <div class="academic-card p-8 bg-gradient-to-r from-apple-light to-white border-l-4 border-apple-primary">
+                <p class="text-gray-800 text-lg font-medium mb-4">
+                    The Lebanese apple sector generates significant organic residues, primarily in the form of agricultural culls and storage losses.
+                </p>
+                <p class="text-gray-600 mb-4">
+                    However, accurate quantification is hindered by the informal nature of the secondary market. Industrial pomace availability is structurally limited to specific processing clusters and should not be extrapolated from total national production.
+                </p>
+                <div class="bg-white p-4 rounded border border-red-100 mt-4">
+                    <p class="text-sm font-bold text-red-800">
+                        "This page intentionally reports apple waste at national scale only and avoids regional or industrial disaggregation due to the absence of audited, disaggregated datasets in Lebanon."
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 6: References -->
+        <section id="references" class="border-t border-gray-200 pt-10 scroll-mt-28">
+            <h2 class="text-xl font-bold text-gray-900 mb-8 flex items-center gap-2">
+                <span class="text-apple-accent">6.</span> References & Citations
+            </h2>
+            
+            <div class="mb-6">
+                <h3 class="text-sm font-bold text-gray-500 uppercase border-b border-gray-200 pb-2 mb-4">Scope of Evidence</h3>
+            </div>
+
+            <div class="grid grid-cols-1 gap-4 text-sm text-gray-600">
+                
+                <!-- FAO -->
+                <div class="group p-4 rounded-lg hover:bg-white hover:shadow-md transition border border-transparent hover:border-gray-100">
+                    <p class="font-bold text-gray-900 group-hover:text-blue-700 transition">FAO (2023).</p>
+                    <p class="mb-1">Production Data Source.</p>
+                    <a href="https://www.fao.org/faostat/en/#data/QCL" target="_blank" class="text-blue-500 hover:underline break-all text-xs flex items-center gap-1">FAOSTAT Database <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg></a>
+                </div>
+
+                <!-- Academic -->
+                <div class="group p-4 rounded-lg hover:bg-white hover:shadow-md transition border border-transparent hover:border-gray-100">
+                    <p class="font-bold text-gray-900 group-hover:text-blue-700 transition">Tohme Tawk, S. (2022).</p>
+                    <p class="mb-1">Loss mechanisms & composition (Case Study).</p>
+                    <span class="text-xs text-gray-500 mb-2 block">Preliminary Study on Food Loss in the Apple Value Chain in Lebanon.</span>
+                    <a href="https://lsj.cnrs.edu.lb/wp-content/uploads/2022/12/Salwa-Tohme-Tawk.pdf" target="_blank" class="text-blue-500 hover:underline break-all text-xs flex items-center gap-1">View PDF <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg></a>
+                </div>
+
+                <!-- Tridge -->
+                <div class="group p-4 rounded-lg hover:bg-white hover:shadow-md transition border border-transparent hover:border-gray-100">
+                    <p class="font-bold text-gray-900 group-hover:text-blue-700 transition">Tridge & WITS (2023).</p>
+                    <p class="mb-1">Export Volumes (Leakage).</p>
+                    <a href="https://www.tridge.com/intelligences/apple/LB/export" target="_blank" class="text-blue-500 hover:underline break-all text-xs flex items-center gap-1">Tridge Intelligence <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg></a>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-gray-900 text-gray-400 py-10 mt-12 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <div class="flex justify-center mb-4 text-3xl">🌿</div>
+            <p class="text-sm font-medium text-white">Sustainable Materials - PhD Scholar Mika - University of Bath</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Collapsible Logic
+        function toggleSection(contentId, iconId) {
+            const content = document.getElementById(contentId);
+            const icon = document.getElementById(iconId);
+            if (content.classList.contains('collapsible-active')) {
+                content.classList.remove('collapsible-active');
+                icon.classList.remove('rotate-180');
+            } else {
+                content.classList.add('collapsible-active');
+                icon.classList.add('rotate-180');
+            }
+        }
+
+        // Chart Configurations
+        document.addEventListener('DOMContentLoaded', function () {
+            
+            const colorPrimary = '#D32F2F'; // Red
+            const colorDark = '#880E4F';    // Burgundy
+            const colorAccent = '#689F38';  // Green
+            const colorPomace = '#795548';  // Brown
+            const colorExport = '#F59E0B';  // Gold
+
+            const labels = ['Mt Lebanon', 'North', 'Baalbek-Hermel', 'Akkar', 'Bekaa', 'Nabatieh', 'South'];
+            // Shares based on Area (World Bank 2010 / MOA) - Indicative for intensity
+            const dataShares = [26.1, 23.3, 22.2, 13.1, 11.7, 2.2, 1.4];
+
+            // 1. System Flow Chart (Horizontal Bar as Sankey Proxy)
+            const ctxFlow = document.getElementById('systemFlowChart').getContext('2d');
+            new Chart(ctxFlow, {
+                type: 'bar',
+                data: {
+                    labels: ['Gross Production', 'Fresh Exports', 'Net Domestic', 'Est. National Waste'],
+                    datasets: [{
+                        label: 'Volume (Tonnes)',
+                        data: [235336, 20582, 214754, 85000], // 85000 is indicative order of magnitude
+                        backgroundColor: [colorAccent, colorExport, '#94A3B8', colorPrimary],
+                        borderRadius: 6,
+                        barPercentage: 0.6
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    if (context.dataIndex === 3) return 'Order of Magnitude (~40% loss)';
+                                    return context.raw.toLocaleString() + ' t';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { beginAtZero: true, grid: { color: '#f3f4f6' }, title: { display: true, text: 'System Scale (Tonnes)' } },
+                        y: { grid: { display: false } }
+                    }
+                }
+            });
+
+            // 2. Pie Chart: Area Shares (Cultivation Intensity)
+            const ctxPie = document.getElementById('areaPieChart').getContext('2d');
+            new Chart(ctxPie, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: dataShares,
+                        backgroundColor: [
+                            '#880E4F', // Mt Leb
+                            '#AD1457', // North
+                            '#C62828', // Baalbek
+                            '#D32F2F', // Akkar
+                            '#E53935', // Bekaa
+                            '#EF5350', // Nabatieh
+                            '#E57373'  // South
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '65%',
+                    plugins: { 
+                        legend: { position: 'right', labels: { usePointStyle: true, boxWidth: 8, font: { size: 11 } } },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.raw + '% (Area Share)';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+        
+        // Sticky Nav Logic
+        window.addEventListener('scroll', () => {
+            let current = '';
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.side-nav-link, .top-nav-link');
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 150) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

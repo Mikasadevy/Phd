@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grape Waste Model 2.0 – Export Adjusted</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- MathJax for LaTeX Equations -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Merriweather', 'serif'],
+                    },
+                    colors: {
+                        'grape-dark': '#4A148C',    
+                        'grape-primary': '#7B1FA2', 
+                        'grape-accent': '#66BB6A',  
+                        'grape-light': '#F3E5F5',   
+                        'residue-brown': '#795548', 
+                        'scientific-blue': '#2980B9',
+                        'export-orange': '#F59E0B'
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+                        'glow': '0 0 15px rgba(123, 31, 162, 0.2)'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #FAFAFA;
+            background-image: radial-gradient(#e1bee7 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+        .academic-card {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(5px);
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .academic-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border-color: #7B1FA2;
+        }
+        .section-header {
+            border-bottom: 2px solid #7B1FA2;
+            padding-bottom: 0.75rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        table {
+            border-collapse: separate;
+            border-spacing: 0;
+            width: 100%;
+        }
+        th {
+            background-color: #4A148C;
+            font-weight: 600;
+            color: #ffffff;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+            padding: 14px 16px;
+        }
+        th:first-child { border-top-left-radius: 8px; }
+        th:last-child { border-top-right-radius: 8px; }
+        
+        td {
+            padding: 14px 16px;
+            border-bottom: 1px solid #e2e8f0;
+            background-color: white;
+            transition: background-color 0.2s;
+        }
+        tr:last-child td:first-child { border-bottom-left-radius: 8px; }
+        tr:last-child td:last-child { border-bottom-right-radius: 8px; }
+        
+        tr:hover td {
+            background-color: #F3E5F5;
+        }
+        
+        .math-block {
+            background: linear-gradient(to right, #ffffff, #fcf4fd);
+            padding: 1.25rem;
+            border-radius: 0.5rem;
+            border-left: 4px solid #7B1FA2;
+            margin: 1.5rem 0;
+            overflow-x: auto;
+            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.03);
+            font-family: 'Inter', monospace;
+            font-size: 0.9rem;
+            color: #333;
+        }
+        
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 50; 
+            left: 0; 
+            top: 0; 
+            width: 100%; 
+            height: 100%; 
+            overflow: auto; 
+            background-color: rgba(0,0,0,0.4); 
+            backdrop-filter: blur(4px);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 10% auto; 
+            padding: 2rem;
+            border: 1px solid #888;
+            width: 90%; 
+            max-width: 600px;
+            border-radius: 12px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .side-nav-link.active span { background-color: #7B1FA2; transform: scale(1.25); border-color: #4A148C; }
+        .side-nav-link.active p { color: #4A148C; font-weight: 700; }
+        .top-nav-link.active { color: #4A148C; background-color: #F3E5F5; font-weight: 600; }
+        
+        .badge-high { background-color: #DCFCE7; color: #166534; border: 1px solid #86EFAC; }
+        .badge-med { background-color: #FEF9C3; color: #854D0E; border: 1px solid #FDE047; }
+        .badge-low { background-color: #FEE2E2; color: #991B1B; border: 1px solid #FECACA; }
+
+        @media print {
+            body { background: white; background-image: none; }
+            .no-print { display: none !important; }
+            .academic-card { break-inside: avoid; box-shadow: none; border: 1px solid #ccc; }
+            .collapsible-content { max-height: none !important; display: block !important; }
+            canvas { max-width: 100% !important; }
+            a[href]:after { content: " (" attr(href) ")"; font-size: 0.8em; color: #666; }
+        }
+        
+        .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0, 1, 0, 1); }
+        .collapsible-active { max-height: 3000px; transition: max-height 0.5s ease-in-out; }
+        .arrow-icon { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .rotate-180 { transform: rotate(180deg); }
+    </style>
+</head>
+<body class="text-slate-800 antialiased relative">
+
+    <!-- JSON Data Store (Modified for Export Logic) -->
+    <script>
+        const grapesData = {
+            metadata: {
+                crop: "Grapes (Vitis vinifera)",
+                year: 2023,
+                country: "Lebanon",
+                last_updated: "2025-12-08"
+            },
+            national: {
+                production_tonnes: 55014,
+                source: "FAO. (2025). FAOSTAT 2023.",
+                url: "https://www.fao.org/faostat/en/#data/QCL"
+            },
+            exports: {
+                total_tonnes: 8542.5,
+                details: [
+                    { type: "Fresh Grapes", tonnes: 8384, notes: "No local processing waste" },
+                    { type: "Dried Grapes", tonnes: 158.5, notes: "No local processing waste" }
+                ],
+                source: "Customs Data 2023"
+            },
+            waste_factors: {
+                // Split factor methodology
+                ag_factor: 0.12,  // 12% - Applied to Total Production (Pruning + Harvest Loss)
+                ind_factor: 0.16, // 16% - Applied to Domestic Retention (Pomace/Marc)
+                
+                // For evidence display
+                components: [
+                    { name: "Ag. Residues (Pruning)", value: "8-10%", type: "ag", source: "Mediterranean Vine Pruning Study (2018)" },
+                    { name: "Harvest Loss", value: "2-4%", type: "ag", source: "FAO Postharvest Guidelines" },
+                    { name: "Pomace & Marc", value: "16%", type: "ind", source: "Evaluation of Grape Pomace Valorisation (2023)" }
+                ],
+                calculation_logic: "Split-Stream: Ag factor applied to Gross Production; Ind factor applied to (Gross - Exports)."
+            },
+            regional_distribution: [
+                { 
+                    region: "Bekaa", 
+                    share: 44, 
+                    confidence: "Medium", 
+                    logic: "Direct evidence: IDAL Investment Opportunities in Bekaa (2018) / Agrofood Factbook 2018 (Production Share).",
+                    evidence_url: "http://investinlebanon.gov.lb/Content/uploads/SideBlock/180906023910464~INVESTMENT%20OPPORTUNITIES%20IN%20BEKAA%202018.pdf"
+                },
+                { 
+                    region: "Baalbek-Hermel", 
+                    share: 36, 
+                    confidence: "Medium", 
+                    logic: "Direct evidence: IDAL 2018 Factbook data (36% Production Share).",
+                    evidence_url: "https://investinlebanon.gov.lb/Content/uploads/Publication/190517113716560~IDAL%20-%20Agrofood%20Factsheet%20%202018.pdf"
+                },
+                { 
+                    region: "South", 
+                    share: 5, 
+                    confidence: "Medium", 
+                    logic: "IDAL 2018 regional share (5%). Hosts Jezzine wine cluster.",
+                    evidence_url: "https://investinlebanon.gov.lb/Content/uploads/Publication/190517113716560~IDAL%20-%20Agrofood%20Factsheet%20%202018.pdf"
+                },
+                { 
+                    region: "Mount Lebanon", 
+                    share: 5, 
+                    confidence: "Medium", 
+                    logic: "Production share is 5% (IDAL 2018). Region hosts significant winery capacity relative to production.",
+                    evidence_url: "https://investinlebanon.gov.lb/Content/uploads/Publication/190517113716560~IDAL%20-%20Agrofood%20Factsheet%20%202018.pdf"
+                },
+                { 
+                    region: "Akkar", 
+                    share: 4, 
+                    confidence: "Medium", 
+                    logic: "IDAL 2018 regional share (4%).",
+                    evidence_url: "https://investinlebanon.gov.lb/Content/uploads/Publication/190517113716560~IDAL%20-%20Agrofood%20Factsheet%20%202018.pdf"
+                },
+                { 
+                    region: "North", 
+                    share: 3, 
+                    confidence: "Medium", 
+                    logic: "IDAL 2018 regional share (3%). Includes Batroun/Koura wine clusters.",
+                    evidence_url: "https://investinlebanon.gov.lb/Content/uploads/Publication/190517113716560~IDAL%20-%20Agrofood%20Factsheet%20%202018.pdf"
+                },
+                { 
+                    region: "Nabatieh", 
+                    share: 3, 
+                    confidence: "Medium", 
+                    logic: "IDAL 2018 regional share (3%).",
+                    evidence_url: "https://investinlebanon.gov.lb/Content/uploads/Publication/190517113716560~IDAL%20-%20Agrofood%20Factsheet%20%202018.pdf"
+                },
+                { 
+                    region: "Beirut", 
+                    share: 0, 
+                    confidence: "Medium", 
+                    logic: "Urban exclusion.",
+                    evidence_url: "#"
+                }
+            ],
+            references: [
+                { title: "FAOSTAT – Crops and Livestock Products: Grapes (01330), Lebanon, 2023", author: "FAO", year: "2025", url: "https://www.fao.org/faostat/en/#data/QCL" },
+                { title: "Agricultural Census 2010", author: "MoA & FAO", year: "2010", url: "https://microdata.fao.org/index.php/catalog/1633/related-materials" },
+                { title: "Agricultural Damage & Loss Assessment", author: "FAO", year: "2025", url: "https://ewsp.gov.lb/wp-content/uploads/2025/04/Agricultural-damage-and-loss-assessment_FAO.pdf" },
+                { title: "Investment Opportunities in Bekaa 2018", author: "IDAL", year: "2018", url: "http://investinlebanon.gov.lb/Content/uploads/SideBlock/180906023910464~INVESTMENT%20OPPORTUNITIES%20IN%20BEKAA%202018.pdf" },
+                { title: "Agrofood Industry Factbook 2018", author: "IDAL", year: "2018", url: "https://investinlebanon.gov.lb/Content/uploads/Publication/190517113716560~IDAL%20-%20Agrofood%20Factsheet%20%202018.pdf" },
+                { title: "Evaluation of Grape Pomace Valorisation", author: "Academic Research", year: "2023", url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC10521143/" }
+            ]
+        };
+    </script>
+
+    <!-- Navigation -->
+    <nav class="hidden 2xl:block fixed left-10 top-1/2 transform -translate-y-1/2 z-40 no-print bg-white/80 backdrop-blur p-4 rounded-xl border border-gray-200 shadow-soft">
+        <ul class="space-y-4">
+            <li><a href="#overview" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-grape-primary transition group"><span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-grape-primary transition bg-white"></span><p class="font-medium">Overview</p></a></li>
+            <li><a href="#mass-balance" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-grape-primary transition group"><span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-grape-primary transition bg-white"></span><p class="font-medium">Mass Balance</p></a></li>
+            <li><a href="#waste-methodology" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-grape-primary transition group"><span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-grape-primary transition bg-white"></span><p class="font-medium">Calculations</p></a></li>
+            <li><a href="#regional-distribution" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-grape-primary transition group"><span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-grape-primary transition bg-white"></span><p class="font-medium">Regions</p></a></li>
+            <li><a href="#visualizations" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-grape-primary transition group"><span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-grape-primary transition bg-white"></span><p class="font-medium">Visuals</p></a></li>
+            <li><a href="#references" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-grape-primary transition group"><span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-grape-primary transition bg-white"></span><p class="font-medium">References</p></a></li>
+        </ul>
+    </nav>
+
+    <!-- Header -->
+    <header class="bg-white/90 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50 shadow-sm print:static print:border-none">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+            <div class="flex items-center gap-3 min-w-fit">
+                <div class="bg-grape-light p-2 rounded-full border border-grape-primary/40 print:hidden">
+                    <span class="text-2xl">🍇</span>
+                </div>
+                <div>
+                    <h1 class="text-lg md:text-xl font-serif font-bold text-gray-900 leading-tight">
+                        Grape Waste Map <span class="text-grape-primary text-sm font-sans font-normal">(Export-Adjusted)</span>
+                    </h1>
+                    <p class="hidden sm:block text-xs text-grape-dark font-bold">
+                        Lebanon Scientific Dataset 🇱🇧
+                    </p>
+                </div>
+            </div>
+            <nav class="hidden lg:flex items-center gap-1 no-print bg-gray-50/50 p-1.5 rounded-lg border border-gray-100">
+                <a href="#mass-balance" class="top-nav-link px-3 py-1.5 text-sm font-medium text-gray-600 rounded-md hover:bg-gray-100 transition-colors">Balance</a>
+                <a href="#waste-methodology" class="top-nav-link px-3 py-1.5 text-sm font-medium text-gray-600 rounded-md hover:bg-gray-100 transition-colors">Formula</a>
+                <a href="#regional-distribution" class="top-nav-link px-3 py-1.5 text-sm font-medium text-gray-600 rounded-md hover:bg-gray-100 transition-colors">Regions</a>
+                <a href="#visualizations" class="top-nav-link px-3 py-1.5 text-sm font-medium text-gray-600 rounded-md hover:bg-gray-100 transition-colors">Visuals</a>
+                <a href="#references" class="top-nav-link px-3 py-1.5 text-sm font-medium text-gray-600 rounded-md hover:bg-gray-100 transition-colors">Refs</a>
+            </nav>
+            <div class="no-print min-w-fit flex gap-2">
+                <button onclick="window.print()" class="flex items-center gap-2 bg-grape-dark hover:bg-gray-800 text-white px-3 py-2 rounded-lg text-xs font-medium transition shadow hover:shadow-lg">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                    Print
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-16">
+
+        <!-- Overview -->
+        <section id="overview" class="bg-white rounded-2xl p-8 shadow-soft border border-gray-100 scroll-mt-28">
+            <h2 class="text-lg font-bold text-gray-900 mb-2 flex items-center gap-2">
+                <span>⚖️</span> Executive Summary: The Export Impact
+            </h2>
+            <div class="prose max-w-none text-gray-600">
+                <p class="text-lg leading-relaxed">
+                    This scientific dataset presents a comprehensive waste mapping model for the Lebanese grape sector (Vitis vinifera) for the year 2023. The methodology employs a split-stream mass balance approach to ensure high-precision quantification of biomass residues. By distinguishing between <strong>Agricultural Waste</strong> (pruning biomass and harvest losses) and <strong>Industrial Waste</strong> (pomace and stalks), the model accurately accounts for trade flows, specifically excluding exported volumes from local processing calculations.
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+                    <div class="bg-amber-50 p-4 rounded-lg border border-amber-100">
+                        <span class="text-xs font-bold text-amber-700 uppercase">Key Adjustment</span>
+                        <p class="text-sm text-amber-900 mt-1">
+                            Data analysis indicates that while total production stood at <strong>55,014 tonnes</strong>, the export of <strong>8,542 tonnes</strong> (fresh and dried) significantly mitigates the domestic generation of industrial processing residues.
+                        </p>
+                    </div>
+                    <div class="bg-grape-light p-4 rounded-lg border border-grape-primary/20">
+                        <span class="text-xs font-bold text-grape-dark uppercase">Result</span>
+                        <p class="text-sm text-grape-dark mt-1">
+                            The refined model yields a total waste estimate of <strong id="summary-total-waste">--</strong>, preventing the overestimation of pomace availability and providing a robust baseline for circular economy interventions.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Mass Balance Flow -->
+        <section id="mass-balance" class="scroll-mt-28">
+            <div class="section-header">
+                <span class="text-2xl">📊</span>
+                <h2 class="text-2xl font-serif font-bold text-grape-dark">1. Mass Balance & Export Flow</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+                <!-- Production -->
+                <div class="academic-card p-6 relative overflow-hidden group">
+                    <p class="text-xs font-bold text-scientific-blue uppercase tracking-wider">Total Production</p>
+                    <p id="card-prod" class="text-3xl font-bold text-gray-900 mt-2">--</p>
+                    <div class="w-full bg-gray-200 h-1.5 mt-4 rounded-full overflow-hidden">
+                        <div class="bg-scientific-blue h-full w-full"></div>
+                    </div>
+                    <p class="text-[10px] text-gray-500 mt-2">Base for Ag. Waste</p>
+                </div>
+
+                <!-- Minus Exports -->
+                <div class="academic-card p-6 relative overflow-hidden group border-l-4 border-l-export-orange">
+                    <p class="text-xs font-bold text-export-orange uppercase tracking-wider">Exports (2023)</p>
+                    <p id="card-export" class="text-3xl font-bold text-gray-900 mt-2">--</p>
+                    <div class="w-full bg-gray-200 h-1.5 mt-4 rounded-full overflow-hidden">
+                        <div class="bg-export-orange h-full" style="width: 15.5%"></div>
+                    </div>
+                    <p class="text-[10px] text-gray-500 mt-2">Leaves system (No Pomace)</p>
+                </div>
+
+                <!-- Equals Retention -->
+                <div class="academic-card p-6 relative overflow-hidden group">
+                    <p class="text-xs font-bold text-grape-primary uppercase tracking-wider">Domestic Retention</p>
+                    <p id="card-retention" class="text-3xl font-bold text-gray-900 mt-2">--</p>
+                    <div class="w-full bg-gray-200 h-1.5 mt-4 rounded-full overflow-hidden">
+                        <div class="bg-grape-primary h-full" style="width: 84.5%"></div>
+                    </div>
+                    <p class="text-[10px] text-gray-500 mt-2">Base for Ind. Waste</p>
+                </div>
+
+                <!-- Total Waste Result -->
+                <div class="academic-card p-6 relative overflow-hidden group bg-grape-dark text-white">
+                    <p class="text-xs font-bold text-grape-accent uppercase tracking-wider">Calculated Waste</p>
+                    <p id="card-waste" class="text-3xl font-bold text-white mt-2">--</p>
+                    <div class="w-full bg-white/20 h-1.5 mt-4 rounded-full overflow-hidden">
+                        <div class="bg-grape-accent h-full" style="width: 25%"></div>
+                    </div>
+                    <p class="text-[10px] text-gray-300 mt-2">Ag + Ind Combined</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Waste Methodology -->
+        <section id="waste-methodology" class="scroll-mt-28">
+            <div class="section-header">
+                <span class="text-2xl">🧮</span>
+                <h2 class="text-2xl font-serif font-bold text-grape-dark">2. Split-Stream Calculation Logic</h2>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                <!-- Equation -->
+                <div class="bg-white p-6 rounded-xl border border-grape-primary/30 shadow-sm">
+                    <h3 class="font-bold text-gray-800 mb-4">The Formula</h3>
+                    <p class="text-sm text-gray-600 mb-2">We decouple the waste streams to ensure exported grapes don't generate phantom industrial waste.</p>
+                    
+                    <div class="math-block mb-4 p-3 text-sm">
+                        $$ W_{total} = W_{ag} + W_{ind} $$
+                        $$ W_{ag} = P_{total} \times 0.12 $$
+                        $$ W_{ind} = (P_{total} - E_{xport}) \times 0.16 $$
+                    </div>
+                    
+                    <div class="space-y-2 text-sm">
+                        <div class="flex items-start gap-2">
+                            <span class="font-mono bg-blue-100 text-blue-800 px-1 rounded">0.12</span>
+                            <span class="text-gray-600"><strong>Agricultural Factor:</strong> Pruning residues (8%) and harvest losses (4%). Applied to all vines.</span>
+                        </div>
+                        <div class="flex items-start gap-2">
+                            <span class="font-mono bg-purple-100 text-purple-800 px-1 rounded">0.16</span>
+                            <span class="text-gray-600"><strong>Industrial Factor:</strong> Pomace, marc, stalks. Applied only to grapes staying in Lebanon.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step-by-Step Breakdown -->
+                <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                    <h3 class="font-bold text-gray-800 mb-4">Calculation Output</h3>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center border-b border-gray-200 pb-2">
+                            <span class="text-sm text-gray-600">1. Total Production</span>
+                            <span class="font-mono font-bold" id="calc-prod">--</span>
+                        </div>
+                        <div class="flex justify-between items-center border-b border-gray-200 pb-2">
+                            <span class="text-sm text-gray-600">2. Agricultural Waste (12%)</span>
+                            <span class="font-mono text-scientific-blue font-bold" id="calc-ag-waste">--</span>
+                        </div>
+                        <div class="flex justify-between items-center border-b border-gray-200 pb-2">
+                            <span class="text-sm text-gray-600">3. Domestic Retention (Prod - Exp)</span>
+                            <span class="font-mono text-gray-800" id="calc-retention">--</span>
+                        </div>
+                        <div class="flex justify-between items-center border-b border-gray-200 pb-2">
+                            <span class="text-sm text-gray-600">4. Industrial Waste (16%)</span>
+                            <span class="font-mono text-grape-primary font-bold" id="calc-ind-waste">--</span>
+                        </div>
+                        <div class="flex justify-between items-center pt-2 bg-grape-light/30 px-2 rounded">
+                            <span class="text-sm font-bold text-grape-dark">Total Waste Generated</span>
+                            <span class="font-mono font-bold text-lg text-grape-dark" id="calc-final-waste">--</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Regional Distribution -->
+        <section id="regional-distribution" class="scroll-mt-28">
+            <div class="section-header">
+                <span class="text-2xl">🗺️</span>
+                <h2 class="text-2xl font-serif font-bold text-grape-dark">3. Regional Allocation</h2>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow-soft overflow-hidden border border-gray-100">
+                <div class="p-4 bg-gray-50 text-xs text-gray-500 border-b border-gray-100">
+                    <span class="font-bold">Note:</span> Since regional export data is unavailable, the national waste ratio (adjusted for exports) is distributed according to production share.
+                </div>
+                <div class="overflow-x-auto">
+                    <table id="regionalTable">
+                        <thead>
+                            <tr>
+                                <th class="text-left">Governorate</th>
+                                <th class="text-right">Share % (Production Proxy)</th>
+                                <th class="text-right">Production (t)</th>
+                                <th class="text-right">Indicative Share of Waste</th>
+                                <th class="text-center no-print">Evidence</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-sm text-gray-700" id="table-body">
+                            <!-- JS Populated -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Visuals -->
+        <section id="visualizations" class="scroll-mt-28">
+            <div class="section-header">
+                <span class="text-2xl">📉</span>
+                <h2 class="text-2xl font-serif font-bold text-grape-dark">4. Visual Analysis</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Stacked Bar: Waste Components -->
+                <div class="academic-card p-6 md:col-span-2">
+                    <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-6 text-center">
+                        Waste Stream Composition
+                    </h3>
+                    <div class="relative h-64 w-full">
+                        <canvas id="wasteStackChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Export Context -->
+                <div class="academic-card p-6">
+                    <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-6 text-center">
+                        Production Flow (2023)
+                    </h3>
+                    <div class="relative h-64 w-full flex justify-center">
+                        <canvas id="flowPieChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Regional Share (New) -->
+                <div class="academic-card p-6">
+                    <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-6 text-center">
+                        Grape Production Share by Governorate (2015)
+                    </h3>
+                    <div class="relative h-64 w-full flex justify-center">
+                        <canvas id="grapeShareChart"></canvas>
+                    </div>
+                    <p class="text-center text-[10px] text-gray-400 mt-3 px-4">
+                        This chart reflects reported grape production share by governorate (IDA / Invest in Lebanon, 2015) and is used as a proxy for primary agricultural grape waste distribution. It does not represent orchard surface area or winery throughput.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- References -->
+        <section id="references" class="border-t border-gray-200 pt-10 scroll-mt-28">
+            <h2 class="text-xl font-bold text-gray-900 mb-8 flex items-center gap-2">
+                <span class="text-grape-accent">5.</span> References & Citations
+            </h2>
+            <div class="grid grid-cols-1 gap-4 text-sm text-gray-600" id="ref-container">
+                <!-- JS Populated -->
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-gray-900 text-gray-400 py-10 mt-12 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <div class="flex justify-center mb-4 text-3xl">🌿</div>
+            <p class="text-sm font-medium text-white">Sustainable Materials - PhD Scholar Mika - University of Bath</p>
+        </div>
+    </footer>
+
+    <!-- Info Modal -->
+    <div id="infoModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 id="modalTitle" class="text-xl font-bold text-grape-dark mb-4">Region Info</h2>
+            <div id="modalBody" class="text-sm text-gray-700 space-y-3"></div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', function () {
+            initDashboard();
+        });
+
+        function initDashboard() {
+            calculateAndRender();
+            renderReferences();
+        }
+
+        function calculateAndRender() {
+            // 1. Get Base Values
+            const prod = grapesData.national.production_tonnes;
+            const exports = grapesData.exports.total_tonnes;
+            const retention = prod - exports;
+
+            // 2. Calculate Waste Streams
+            // Ag Waste applies to TOTAL production (0.12)
+            const agWaste = prod * grapesData.waste_factors.ag_factor;
+            
+            // Ind Waste applies ONLY to Retention (0.16)
+            const indWaste = retention * grapesData.waste_factors.ind_factor;
+            
+            const totalWaste = agWaste + indWaste;
+
+            // 3. Update DOM - Summary
+            document.getElementById('summary-total-waste').innerText = Math.round(totalWaste).toLocaleString() + " tonnes";
+
+            // 4. Update DOM - Cards
+            document.getElementById('card-prod').innerText = prod.toLocaleString();
+            document.getElementById('card-export').innerText = "-" + exports.toLocaleString();
+            document.getElementById('card-retention').innerText = "=" + retention.toLocaleString();
+            document.getElementById('card-waste').innerText = Math.round(totalWaste).toLocaleString() + " t";
+
+            // 5. Update DOM - Math Breakdown
+            document.getElementById('calc-prod').innerText = prod.toLocaleString();
+            document.getElementById('calc-ag-waste').innerText = agWaste.toLocaleString(undefined, {maximumFractionDigits:1});
+            document.getElementById('calc-retention').innerText = retention.toLocaleString();
+            document.getElementById('calc-ind-waste').innerText = indWaste.toLocaleString(undefined, {maximumFractionDigits:1});
+            document.getElementById('calc-final-waste').innerText = Math.round(totalWaste).toLocaleString() + " t";
+
+            // 6. Regional Table
+            const tbody = document.getElementById('table-body');
+            tbody.innerHTML = '';
+            const sortedRegions = [...grapesData.regional_distribution].sort((a,b) => b.share - a.share);
+            
+            sortedRegions.forEach(r => {
+                const regionProd = prod * (r.share / 100);
+                
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="font-bold text-gray-900">${r.region}</td>
+                    <td class="text-right"><span class="bg-gray-100 rounded px-2 py-1 text-xs font-mono">${r.share}%</span></td>
+                    <td class="text-right text-sm text-gray-500">${Math.round(regionProd).toLocaleString()}</td>
+                    <td class="text-right text-xs text-gray-500 italic">Indicative share of national waste (qualitative proxy)</td>
+                    <td class="text-center no-print">
+                        <button onclick="openModal('${r.region}')" class="text-gray-400 hover:text-grape-primary transition">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            // 7. Render Charts
+            renderCharts(agWaste, indWaste, exports, retention, sortedRegions);
+            
+            // 8. Re-render MathJax
+            if(window.MathJax) MathJax.typesetPromise();
+        }
+
+        function renderCharts(agWaste, indWaste, exports, retention, regionalData) {
+            // Waste Composition Chart
+            new Chart(document.getElementById('wasteStackChart'), {
+                type: 'bar',
+                data: {
+                    labels: ['Waste Composition'],
+                    datasets: [
+                        { 
+                            label: 'Agricultural (Pruning/Loss)', 
+                            data: [agWaste], 
+                            backgroundColor: '#2980B9' 
+                        },
+                        { 
+                            label: 'Industrial (Pomace)', 
+                            data: [indWaste], 
+                            backgroundColor: '#7B1FA2' 
+                        }
+                    ]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { 
+                        x: { stacked: true }, 
+                        y: { stacked: true, grid: { display: false } } 
+                    }
+                }
+            });
+
+            // Flow Pie Chart
+            new Chart(document.getElementById('flowPieChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Domestic Retention', 'Export (Fresh/Dried)'],
+                    datasets: [{
+                        data: [retention, exports],
+                        backgroundColor: ['#F3E5F5', '#F59E0B'], // Grape Light vs Orange
+                        borderColor: ['#7B1FA2', '#D97706'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+
+            // Grape Production Share (Proxy) Chart
+            // Shares based on reported grape production by governorate (IDA / Invest in Lebanon, 2015)
+            const labels = regionalData.map(r => r.region);
+            const dataShares = regionalData.map(r => r.share);
+            
+            new Chart(document.getElementById('grapeShareChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: dataShares,
+                        backgroundColor: [
+                            '#4A148C', // Bekaa
+                            '#6A1B9A', // Baalbek
+                            '#7B1FA2', // South
+                            '#8E24AA', // Mt Leb
+                            '#9C27B0', // Akkar
+                            '#AB47BC', // North
+                            '#BA68C8', // Nabatieh
+                            '#E0E0E0'  // Beirut
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '65%',
+                    plugins: { 
+                        legend: { position: 'right', labels: { usePointStyle: true, boxWidth: 8, font: { size: 11 } } },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.raw + '% (Grape Production Share)';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // --- Render References ---
+        function renderReferences() {
+            const container = document.getElementById('ref-container');
+            container.innerHTML = '';
+            grapesData.references.forEach(ref => {
+                const div = document.createElement('div');
+                div.className = "group p-4 rounded-lg bg-white border border-gray-200 hover:border-grape-primary/50 hover:shadow-md transition";
+                div.innerHTML = `
+                    <div class="flex justify-between items-start gap-4">
+                        <div>
+                            <p class="font-bold text-gray-900 group-hover:text-grape-primary transition">${ref.author} (${ref.year})</p>
+                            <p class="mb-2 font-serif text-sm">${ref.title}</p>
+                        </div>
+                        <a href="${ref.url}" target="_blank" class="shrink-0 text-xs bg-gray-50 hover:bg-grape-light text-gray-600 hover:text-grape-dark px-3 py-1.5 rounded-full border border-gray-200 transition flex items-center gap-1">
+                            Source <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                        </a>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // --- Modal Logic ---
+        function openModal(regionName) {
+            const regionData = grapesData.regional_distribution.find(r => r.region === regionName);
+            if(!regionData) return;
+
+            document.getElementById('modalTitle').innerText = regionName + " - Evidence Detail";
+            const body = document.getElementById('modalBody');
+            body.innerHTML = `
+                <div class="bg-gray-50 p-3 rounded border border-gray-200">
+                    <p class="font-semibold text-grape-dark">Calculation Logic</p>
+                    <p class="mb-2">${regionData.logic}</p>
+                    <div class="flex justify-between items-center mt-2 pt-2 border-t border-gray-200">
+                        <span class="text-xs text-gray-500">Share: <strong>${regionData.share}%</strong></span>
+                        <a href="${regionData.evidence_url}" target="_blank" class="text-blue-600 text-xs hover:underline">Verify Source &rarr;</a>
+                    </div>
+                </div>
+            `;
+            document.getElementById('infoModal').style.display = "block";
+        }
+
+        function closeModal() {
+            document.getElementById('infoModal').style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('infoModal');
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>

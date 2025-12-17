@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Potato Waste – Lebanon Scientific Dataset</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- MathJax for LaTeX Equations -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Merriweather', 'serif'],
+                    },
+                    colors: {
+                        'potato-dark': '#5D4037',    // Soil Brown
+                        'potato-primary': '#FBC02D', // Potato Skin Gold
+                        'potato-accent': '#388E3C',  // Haulm/Leaf Green
+                        'potato-light': '#FFF9C4',   // Flesh/Pale Yellow
+                        'industrial-gray': '#607D8B', // Factory Steel
+                        'scientific-blue': '#2980B9',
+                        'export-gold': '#F59E0B'     // Export Gold
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+                        'glow': '0 0 15px rgba(251, 192, 45, 0.3)'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #FAFAFA;
+            background-image: radial-gradient(#d7ccc8 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+        .academic-card {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(5px);
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .academic-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border-color: #FBC02D;
+        }
+        .section-header {
+            border-bottom: 2px solid #FBC02D;
+            padding-bottom: 0.75rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        table {
+            border-collapse: separate;
+            border-spacing: 0;
+            width: 100%;
+        }
+        th {
+            background-color: #5D4037;
+            font-weight: 600;
+            color: #ffffff;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+            padding: 14px 16px;
+        }
+        th:first-child { border-top-left-radius: 8px; }
+        th:last-child { border-top-right-radius: 8px; }
+        
+        td {
+            padding: 14px 16px;
+            border-bottom: 1px solid #e2e8f0;
+            background-color: white;
+            transition: background-color 0.2s;
+        }
+        tr:last-child td:first-child { border-bottom-left-radius: 8px; }
+        tr:last-child td:last-child { border-bottom-right-radius: 8px; }
+        
+        tr:hover td {
+            background-color: #FFF9C4;
+        }
+        
+        .math-block {
+            background: linear-gradient(to right, #ffffff, #fffde7);
+            padding: 1.25rem;
+            border-radius: 0.5rem;
+            border-left: 4px solid #FBC02D;
+            margin: 1.5rem 0;
+            overflow-x: auto;
+            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.03);
+            font-family: 'Inter', monospace;
+            font-size: 0.9rem;
+            color: #333;
+        }
+        
+        /* Navigation Dot Active State */
+        .side-nav-link.active span {
+            background-color: #FBC02D;
+            transform: scale(1.25);
+            border-color: #5D4037;
+        }
+        .side-nav-link.active p {
+            color: #5D4037;
+            font-weight: 700;
+        }
+
+        .top-nav-link.active {
+            color: #5D4037;
+            background-color: #FFF9C4;
+            font-weight: 600;
+        }
+
+        /* Print Optimizations */
+        @media print {
+            body { background: white; background-image: none; }
+            .no-print { display: none !important; }
+            .academic-card { break-inside: avoid; box-shadow: none; border: 1px solid #ccc; }
+            .collapsible-content { max-height: none !important; display: block !important; }
+            canvas { max-width: 100% !important; }
+            a[href]:after { content: " (" attr(href) ")"; font-size: 0.8em; color: #666; }
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+        }
+
+        .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0, 1, 0, 1); }
+        .collapsible-active { max-height: 3000px; transition: max-height 0.5s ease-in-out; }
+        .arrow-icon { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .rotate-180 { transform: rotate(180deg); }
+    </style>
+</head>
+<body class="text-slate-800 antialiased relative">
+
+    <!-- Sticky Side Navigation (Desktop) -->
+    <nav class="hidden 2xl:block fixed left-10 top-1/2 transform -translate-y-1/2 z-40 no-print bg-white/80 backdrop-blur p-4 rounded-xl border border-gray-200 shadow-soft">
+        <ul class="space-y-4">
+            <li><a href="#overview" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-potato-primary transition group"><span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-potato-primary transition bg-white"></span><p class="font-medium">Overview</p></a></li>
+            <li><a href="#national-data" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-potato-primary transition group"><span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-potato-primary transition bg-white"></span><p class="font-medium">Data & Exports</p></a></li>
+            <li><a href="#ag-waste" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-potato-primary transition group"><span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-potato-primary transition bg-white"></span><p class="font-medium">Ag. Waste Model</p></a></li>
+            <li><a href="#ind-waste" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-potato-primary transition group"><span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-potato-primary transition bg-white"></span><p class="font-medium">Industrial Waste</p></a></li>
+            <li><a href="#regional-distribution" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-potato-primary transition group"><span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-potato-primary transition bg-white"></span><p class="font-medium">Regional Dist.</p></a></li>
+            <li><a href="#visualizations" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-potato-primary transition group"><span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-potato-primary transition bg-white"></span><p class="font-medium">Visual Analysis</p></a></li>
+            <li><a href="#waste-summary" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-potato-primary transition group"><span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-potato-primary transition bg-white"></span><p class="font-medium">Overall Summary</p></a></li>
+            <li><a href="#references" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-potato-primary transition group"><span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-potato-primary transition bg-white"></span><p class="font-medium">References</p></a></li>
+        </ul>
+    </nav>
+
+    <!-- Header -->
+    <header class="bg-white/90 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50 shadow-sm print:static print:border-none">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+            <div class="flex items-center gap-3 min-w-fit">
+                <div class="bg-potato-light p-2 rounded-full border border-potato-primary/40 print:hidden">
+                    <span class="text-2xl">🥔</span>
+                </div>
+                <div>
+                    <h1 class="text-lg md:text-xl font-serif font-bold text-gray-900 leading-tight">
+                        Potato Waste (Solanum tuberosum)
+                    </h1>
+                    <p class="hidden sm:block text-xs text-potato-dark font-bold">
+                        Lebanon Scientific Dataset & Methodology 🇱🇧
+                    </p>
+                </div>
+            </div>
+            <nav class="hidden lg:flex items-center gap-1 no-print bg-gray-50/50 p-1.5 rounded-lg border border-gray-100">
+                <a href="#national-data" class="top-nav-link px-3 py-1.5 text-sm font-medium text-gray-600 rounded-md hover:bg-gray-100 transition-colors">Data</a>
+                <a href="#ag-waste" class="top-nav-link px-3 py-1.5 text-sm font-medium text-gray-600 rounded-md hover:bg-gray-100 transition-colors">Ag. Waste</a>
+                <a href="#ind-waste" class="top-nav-link px-3 py-1.5 text-sm font-medium text-gray-600 rounded-md hover:bg-gray-100 transition-colors">Ind. Waste</a>
+                <a href="#regional-distribution" class="top-nav-link px-3 py-1.5 text-sm font-medium text-gray-600 rounded-md hover:bg-gray-100 transition-colors">Regional</a>
+            </nav>
+            <div class="no-print min-w-fit">
+                <button onclick="window.print()" class="flex items-center gap-2 bg-potato-dark hover:bg-gray-800 text-white px-4 py-2 rounded-lg text-xs md:text-sm font-medium transition shadow hover:shadow-lg transform hover:-translate-y-0.5">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                    <span class="hidden md:inline">Print Report</span>
+                    <span class="md:hidden">Print</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-16">
+
+        <!-- Section A: Overview -->
+        <section id="overview" class="bg-white rounded-2xl p-8 shadow-soft border border-gray-100 scroll-mt-28">
+            <h2 class="text-lg font-bold text-gray-900 mb-2 flex items-center gap-2">
+                <span>🔍</span> Executive Summary
+            </h2>
+            <div class="prose max-w-none text-gray-600">
+                <p class="text-lg leading-relaxed">
+                    This scientific dataset quantifies <strong>Potato</strong> (Item 01510) waste in Lebanon using a net-trade methodology. By isolating national production and deducting export volumes, the model calculates the specific organic load remaining within the domestic system. The analysis confirms that commercial potato production and its associated agricultural waste are structurally concentrated in two key regions: <strong>Bekaa (70%)</strong> and <strong>Akkar (30%)</strong>.
+                </p>
+            </div>
+        </section>
+
+        <!-- Section B: National Data -->
+        <section id="national-data" class="scroll-mt-28">
+            <div class="section-header">
+                <span class="text-2xl">📊</span>
+                <h2 class="text-2xl font-serif font-bold text-potato-dark">1. National Data & Net Domestic Supply</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+                <!-- Production Card -->
+                <div class="academic-card p-6 relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <span class="text-6xl">🥔</span>
+                    </div>
+                    <p class="text-[10px] font-bold text-scientific-blue uppercase tracking-wider flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-scientific-blue"></span> Gross Production
+                    </p>
+                    <p class="text-3xl font-bold text-gray-900 mt-2 tracking-tight">659,588 <span class="text-sm text-gray-500 font-normal">t</span></p>
+                    <div class="mt-3 inline-flex items-center text-[10px] font-medium text-blue-800 bg-blue-50 px-2 py-1 rounded">
+                        FAO (2023)
+                    </div>
+                </div>
+
+                <!-- Export Card -->
+                <div class="academic-card p-6 relative overflow-hidden group border-b-4 border-export-gold">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <span class="text-6xl">🚢</span>
+                    </div>
+                    <p class="text-[10px] font-bold text-export-gold uppercase tracking-wider flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-export-gold"></span> Exports (Deducted)
+                    </p>
+                    <p class="text-3xl font-bold text-gray-900 mt-2 tracking-tight">59,988 <span class="text-sm text-gray-500 font-normal">t</span></p>
+                    <div class="mt-3 inline-flex flex-col items-start gap-1">
+                         <span class="text-[10px] font-medium text-amber-800 bg-amber-50 px-2 py-1 rounded">Lebfresh / ITC (2022)</span>
+                         <span class="text-[10px] text-gray-400">Value: ~$20.7M USD</span>
+                    </div>
+                </div>
+
+                <!-- Net Supply Card -->
+                <div class="academic-card p-6 relative overflow-hidden group col-span-1 md:col-span-2 bg-gradient-to-r from-gray-50 to-white border-potato-dark">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <span class="text-6xl">📉</span>
+                    </div>
+                    <p class="text-[10px] font-bold text-gray-600 uppercase tracking-wider flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-gray-600"></span> Net Domestic Availability
+                    </p>
+                    <div class="flex items-baseline gap-2 mt-2">
+                        <p class="text-4xl font-bold text-potato-dark tracking-tight">599,600 <span class="text-lg text-gray-500 font-normal">t</span></p>
+                    </div>
+                    <div class="mt-3 text-xs text-gray-500 italic">
+                        Formula: Production (659k) - Exports (60k)
+                    </div>
+                </div>
+            </div>
+
+            <!-- Export Context -->
+            <div class="bg-amber-50/50 p-4 rounded-lg border border-amber-100 mb-8">
+                <h3 class="text-sm font-bold text-amber-900 mb-2">Export Context & Markets</h3>
+                <p class="text-sm text-gray-700 leading-relaxed mb-2">
+                    Exports represent high-quality, sorted produce that leaves the national boundaries. To avoid overestimating domestic waste generation, these volumes are removed from the baseline. Major markets include the UAE, Kuwait, Oman, Qatar, and Iraq.
+                </p>
+            </div>
+        </section>
+
+        <!-- Section C: Agricultural Waste Methodology -->
+        <section id="ag-waste" class="scroll-mt-28">
+            <button onclick="toggleSection('ag-methodology', 'icon-ag')" class="w-full text-left focus:outline-none no-print">
+                <div class="flex items-center justify-between section-header cursor-pointer group">
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl">🚜</span>
+                        <h2 class="text-2xl font-serif font-bold text-potato-dark group-hover:text-potato-primary transition">
+                            2. Agricultural Waste Methodology
+                        </h2>
+                    </div>
+                    <div class="bg-white p-2 rounded-full shadow-sm border border-gray-100 group-hover:bg-potato-light transition">
+                        <svg id="icon-ag" class="w-5 h-5 text-gray-500 arrow-icon transform rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </div>
+                </div>
+            </button>
+            <div class="hidden print:block section-header"><h2 class="text-2xl font-serif font-bold text-potato-dark">2. Agricultural Waste Methodology</h2></div>
+
+            <div id="ag-methodology" class="collapsible-content collapsible-active">
+                
+                <!-- Main Equation -->
+                <div class="bg-white p-6 rounded-xl border border-potato-primary/30 shadow-sm mb-8">
+                    <h3 class="font-bold text-gray-800 mb-4">Calculation Model</h3>
+                    <div class="math-block mb-4 p-3 text-sm">
+                        $$ \text{Supply}_{\text{net}} = 659,588 - 59,988 = 599,600 \text{ t} $$
+                        $$ \text{Ag\_Waste} = \text{Supply}_{\text{net}} \times 0.525 \approx 314,790 \text{ t/year} $$
+                    </div>
+                    <p class="text-sm text-gray-600">
+                        The aggregate loss factor of <strong>0.525</strong> represents the sum of haulm residue (0.35), culls (0.075), and post-harvest losses (0.10) applied to the domestic supply.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                    <!-- Haulm -->
+                    <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="bg-potato-accent text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold">1</span>
+                            <h3 class="font-bold text-gray-800">Haulm Residue</h3>
+                        </div>
+                        <div class="bg-gray-50 p-2 rounded text-xs font-mono mb-3 border border-gray-100">
+                            Factor: 0.35
+                        </div>
+                        <p class="text-sm text-gray-600 mb-3">Stems & leaves biomass left in field. Ratio of 0.3–0.4 (fresh basis).</p>
+                    </div>
+                    <!-- Culls -->
+                    <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="bg-potato-primary text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold">2</span>
+                            <h3 class="font-bold text-gray-800">Culls (Rejects)</h3>
+                        </div>
+                        <div class="bg-gray-50 p-2 rounded text-xs font-mono mb-3 border border-gray-100">
+                            Factor: 0.075
+                        </div>
+                        <p class="text-sm text-gray-600 mb-3">Defective tubers rejected at farm gate (5–10% of harvest).</p>
+                    </div>
+                    <!-- PHL -->
+                    <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="bg-potato-dark text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold">3</span>
+                            <h3 class="font-bold text-gray-800">Post-Harvest Loss</h3>
+                        </div>
+                        <div class="bg-gray-50 p-2 rounded text-xs font-mono mb-3 border border-gray-100">
+                            Factor: 0.10
+                        </div>
+                        <p class="text-sm text-gray-600 mb-3">Storage/Transport loss. FAO/WFP (2024) confirms 10% rate.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section D: Industrial Waste Methodology -->
+        <section id="ind-waste" class="scroll-mt-28">
+            <button onclick="toggleSection('ind-methodology', 'icon-ind')" class="w-full text-left focus:outline-none no-print">
+                <div class="flex items-center justify-between section-header cursor-pointer group">
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl">🏭</span>
+                        <h2 class="text-2xl font-serif font-bold text-industrial-gray group-hover:text-potato-primary transition">
+                            3. Industrial Waste (Factory-Level)
+                        </h2>
+                    </div>
+                    <div class="bg-white p-2 rounded-full shadow-sm border border-gray-100 group-hover:bg-potato-light transition">
+                        <svg id="icon-ind" class="w-5 h-5 text-gray-500 arrow-icon transform rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </div>
+                </div>
+            </button>
+            <div class="hidden print:block section-header"><h2 class="text-2xl font-serif font-bold text-industrial-gray">3. Industrial Waste (Factory-Level)</h2></div>
+
+            <div id="ind-methodology" class="collapsible-content collapsible-active">
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                    <!-- Factory Allocation -->
+                    <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                        <h3 class="font-bold text-gray-800 mb-4 flex items-center gap-2">
+                            <span>🏭</span> Facility Allocation
+                        </h3>
+                        <p class="text-xs text-gray-500 mb-4 bg-gray-100 p-2 rounded">
+                            <strong>Note:</strong> Industrial waste allocation reflects factory location and throughput, not farm production.
+                        </p>
+                        <ul class="space-y-3 text-sm">
+                            <li class="border-b border-gray-200 pb-2">
+                                <span class="font-bold text-potato-dark">Bekaa (60%)</span><br>
+                                <span class="text-xs text-gray-500">Master Chips, Marina Frozen Fries, LibanFrites</span>
+                            </li>
+                            <li class="border-b border-gray-200 pb-2">
+                                <span class="font-bold text-potato-dark">Mount Lebanon (20%)</span><br>
+                                <span class="text-xs text-gray-500">Fantasia (Salata)</span>
+                            </li>
+                            <li class="border-b border-gray-200 pb-2">
+                                <span class="font-bold text-potato-dark">South (10%)</span><br>
+                                <span class="text-xs text-gray-500">Solino (Tyre)</span>
+                            </li>
+                            <li>
+                                <span class="font-bold text-potato-dark">Nabatieh (10%)</span><br>
+                                <span class="text-xs text-gray-500">Sima Chips</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Waste Factors -->
+                    <div class="bg-white p-6 rounded-xl border border-potato-primary/30">
+                        <h3 class="font-bold text-gray-800 mb-4">Industrial Waste Formulas</h3>
+                        
+                        <div class="math-block mb-4 p-3 text-xs">
+                            $$ \text{Peels} = \text{FactoryInput} \times (0.15–0.40) $$
+                            $$ \text{SortingRejects} = \text{FactoryInput} \times (0.05–0.10) $$
+                            $$ \text{ProcessingLosses} = \text{FactoryInput} \times (0.12–0.20) $$
+                        </div>
+
+                        <p class="text-xs text-potato-dark bg-potato-light p-3 rounded mb-4">
+                            Note: Industrial waste is driven by processing throughput, which draws from the domestic supply pool.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section E: Regional Distribution -->
+        <section id="regional-distribution" class="scroll-mt-28">
+            <button onclick="toggleSection('reg-methodology', 'icon-reg')" class="w-full text-left focus:outline-none no-print">
+                <div class="flex items-center justify-between section-header cursor-pointer group">
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl">🗺️</span>
+                        <h2 class="text-2xl font-serif font-bold text-potato-dark group-hover:text-potato-primary transition">
+                            4. Regional Distribution
+                        </h2>
+                    </div>
+                    <div class="bg-white p-2 rounded-full shadow-sm border border-gray-100 group-hover:bg-potato-light transition">
+                        <svg id="icon-reg" class="w-5 h-5 text-gray-500 arrow-icon transform rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </div>
+                </div>
+            </button>
+            <div class="hidden print:block section-header"><h2 class="text-2xl font-serif font-bold text-potato-dark">4. Regional Distribution</h2></div>
+
+            <div id="reg-methodology" class="collapsible-content collapsible-active">
+                
+                <div class="mb-6">
+                    <div class="bg-potato-light/50 p-4 rounded-lg border border-potato-primary/20 text-sm text-gray-700">
+                        <p class="mb-2"><strong>Allocation Method:</strong> The net agricultural waste total (314,790 t) is distributed strictly according to production shares in the two primary commercial zones (Bekaa and Akkar). All other regions are structurally excluded.</p>
+                        <div class="math-block text-xs">
+                            $$ \text{AgWaste}_i = 314,790 \times \text{ProdShare}_i $$
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive Table -->
+                <div class="bg-white rounded-xl shadow-soft overflow-hidden border border-gray-100">
+                    <div class="overflow-x-auto">
+                        <table id="regionalTable">
+                            <thead>
+                                <tr>
+                                    <th class="cursor-pointer hover:bg-potato-dark/90 transition-colors" onclick="sortTable(0)">Region <span class="opacity-50 text-xs no-print">↕</span></th>
+                                    <th class="cursor-pointer hover:bg-potato-dark/90 transition-colors text-right" onclick="sortTable(1)">Prod. Share <span class="opacity-50 text-xs no-print">↕</span></th>
+                                    <th class="cursor-pointer hover:bg-potato-dark/90 transition-colors text-right" onclick="sortTable(2)">Production (t) <span class="opacity-50 text-xs no-print">↕</span></th>
+                                    <th class="cursor-pointer hover:bg-potato-dark/90 transition-colors text-right" onclick="sortTable(3)">Ag. Waste (t)* <span class="opacity-50 text-xs no-print">↕</span></th>
+                                    <th class="text-right">Classification</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-sm text-gray-700">
+                                <tr>
+                                    <td class="font-bold text-gray-900">Bekaa</td>
+                                    <td class="text-right"><span class="bg-gray-100 rounded px-2 py-1 font-bold">70.0%</span></td>
+                                    <td class="text-right font-mono">461,712</td>
+                                    <td class="text-right font-mono text-potato-dark font-bold">220,353</td>
+                                    <td class="text-right"><span class="font-bold text-potato-primary">Primary Production Zone</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="font-bold text-gray-900">Akkar</td>
+                                    <td class="text-right"><span class="bg-gray-100 rounded px-2 py-1 font-bold">30.0%</span></td>
+                                    <td class="text-right font-mono">197,876</td>
+                                    <td class="text-right font-mono text-potato-dark font-bold">94,437</td>
+                                    <td class="text-right"><span class="font-bold text-potato-primary">Secondary Production Zone</span></td>
+                                </tr>
+                                <tr class="bg-gray-50 opacity-60">
+                                    <td class="font-bold text-gray-400">North</td>
+                                    <td class="text-right"><span class="text-gray-400">0.0%</span></td>
+                                    <td class="text-right font-mono text-gray-400">0</td>
+                                    <td class="text-right font-mono text-gray-400">0</td>
+                                    <td class="text-right text-xs italic">Structural Exclusion</td>
+                                </tr>
+                                <tr class="bg-gray-50 opacity-60">
+                                    <td class="font-bold text-gray-400">South</td>
+                                    <td class="text-right"><span class="text-gray-400">0.0%</span></td>
+                                    <td class="text-right font-mono text-gray-400">0</td>
+                                    <td class="text-right font-mono text-gray-400">0</td>
+                                    <td class="text-right text-xs italic">Structural Exclusion</td>
+                                </tr>
+                                <tr class="bg-gray-50 opacity-60">
+                                    <td class="font-bold text-gray-400">Mount Lebanon</td>
+                                    <td class="text-right"><span class="text-gray-400">0.0%</span></td>
+                                    <td class="text-right font-mono text-gray-400">0</td>
+                                    <td class="text-right font-mono text-gray-400">0</td>
+                                    <td class="text-right text-xs italic">Structural Exclusion</td>
+                                </tr>
+                                <tr class="bg-gray-50 opacity-60">
+                                    <td class="font-bold text-gray-400">Nabatieh</td>
+                                    <td class="text-right"><span class="text-gray-400">0.0%</span></td>
+                                    <td class="text-right font-mono text-gray-400">0</td>
+                                    <td class="text-right font-mono text-gray-400">0</td>
+                                    <td class="text-right text-xs italic">Structural Exclusion</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="bg-potato-light text-potato-dark px-6 py-3 text-xs flex justify-between items-center border-t border-potato-primary/20">
+                        <span class="flex items-center gap-2 no-print">
+                            Note: All commercial production assigned to Bekaa & Akkar.
+                        </span>
+                        <span class="font-bold">Total Net Ag. Waste: ~314,790 tonnes</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section F: Visual Figures -->
+        <section id="visualizations" class="scroll-mt-28">
+            <div class="section-header">
+                <span class="text-2xl">📉</span>
+                <h2 class="text-2xl font-serif font-bold text-potato-dark">5. Visual Analysis</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                
+                <!-- Chart 1: Bar Chart -->
+                <div class="academic-card p-6 break-inside-avoid">
+                    <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-6 text-center flex justify-center items-center gap-2">
+                        <span>📊</span> Regional Ag. Waste (Net)
+                    </h3>
+                    <div class="relative h-72 w-full">
+                        <canvas id="regionalBarChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Chart 2: Pie Chart -->
+                <div class="academic-card p-6 break-inside-avoid">
+                    <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-6 text-center flex justify-center items-center gap-2">
+                        <span>🍩</span> Industrial Waste Distribution
+                    </h3>
+                    <div class="relative h-72 w-full flex justify-center">
+                        <canvas id="indPieChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Chart 3: Comparative -->
+                <div class="academic-card p-6 md:col-span-2 bg-gradient-to-br from-white to-gray-50 break-inside-avoid">
+                    <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-6 text-center flex justify-center items-center gap-2">
+                        <span>⚖️</span> Production vs. Exports vs. Waste
+                    </h3>
+                    <div class="relative h-72 w-full">
+                        <canvas id="comparativeChart"></canvas>
+                    </div>
+                    <p class="text-center text-xs text-gray-500 mt-4 bg-white inline-block px-4 py-2 rounded-full shadow-sm border mx-auto">
+                        <span class="font-bold text-potato-primary">Note:</span> Exported quantities (Yellow) are excluded from waste calculations.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section G: Overall Waste Summary -->
+        <section id="waste-summary" class="scroll-mt-28 mb-12">
+            <div class="section-header">
+                <span class="text-2xl">📝</span>
+                <h2 class="text-2xl font-serif font-bold text-potato-dark">6. Overall Waste Summary</h2>
+            </div>
+            
+            <div class="academic-card p-8 bg-gradient-to-r from-potato-light to-white border-l-4 border-potato-primary">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-lg font-bold text-potato-dark mb-4">Consolidated Waste Totals</h3>
+                        <div class="space-y-3">
+                            <div class="flex justify-between border-b border-potato-primary/20 pb-2">
+                                <span class="text-gray-600">Agricultural Waste (Net)</span>
+                                <span class="font-mono font-bold text-potato-dark">≈ 314,790 t</span>
+                            </div>
+                            <div class="flex justify-between border-b border-potato-primary/20 pb-2">
+                                <span class="text-gray-600">Industrial Waste (Allocated)</span>
+                                <span class="font-mono font-bold text-industrial-gray">Variable</span>
+                            </div>
+                            <div class="flex justify-between pt-2">
+                                <span class="font-bold text-gray-800">Total Potential Waste</span>
+                                <span class="font-mono font-bold text-2xl text-potato-accent">> 314,000 t</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col justify-center">
+                         <p class="text-sm text-gray-600 italic">
+                            "Export quantities (~60k tonnes) are excluded from the waste model. The resulting 314,790 tonnes represents the organic load remaining within Lebanon's borders."
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 6: References -->
+        <section id="references" class="border-t border-gray-200 pt-10 scroll-mt-28">
+            <h2 class="text-xl font-bold text-gray-900 mb-8 flex items-center gap-2">
+                <span class="text-potato-accent">7.</span> References & Citations
+            </h2>
+            <div class="grid grid-cols-1 gap-4 text-sm text-gray-600">
+                
+                 <div class="group p-4 rounded-lg hover:bg-white hover:shadow-md transition border border-transparent hover:border-gray-100">
+                    <p class="font-bold text-gray-900 group-hover:text-blue-700 transition">Lebfresh. (2022).</p>
+                    <p class="mb-1">Sector profile of potatoes in Lebanon.</p>
+                    <a href="https://lebfresh.org/product/potatoes/" target="_blank" class="text-blue-500 hover:underline break-all text-xs flex items-center gap-1">https://lebfresh.org/product/potatoes/ <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg></a>
+                </div>
+
+                <div class="group p-4 rounded-lg hover:bg-white hover:shadow-md transition border border-transparent hover:border-gray-100">
+                    <p class="font-bold text-gray-900 group-hover:text-blue-700 transition">This is Beirut. (2023).</p>
+                    <p class="mb-1">Lebanese Potatoes: Tubers, Challenges and Export Hopes.</p>
+                    <a href="https://thisisbeirut.com.lb/tags/agriculture" target="_blank" class="text-blue-500 hover:underline break-all text-xs flex items-center gap-1">https://thisisbeirut.com.lb/tags/agriculture <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg></a>
+                </div>
+
+                <div class="group p-4 rounded-lg hover:bg-white hover:shadow-md transition border border-transparent hover:border-gray-100">
+                    <p class="font-bold text-gray-900 group-hover:text-blue-700 transition">Investment Development Authority of Lebanon (IDAL).</p>
+                    <p class="mb-1">Agri Plus Program Reports & Agro-Food Factsheets.</p>
+                    <a href="https://investinlebanon.gov.lb/en/InformationCenter" target="_blank" class="text-blue-500 hover:underline break-all text-xs flex items-center gap-1">https://investinlebanon.gov.lb/en/InformationCenter <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg></a>
+                </div>
+
+                <div class="group p-4 rounded-lg hover:bg-white hover:shadow-md transition border border-transparent hover:border-gray-100">
+                    <p class="font-bold text-gray-900 group-hover:text-blue-700 transition">Tridge. (2023).</p>
+                    <p class="mb-1">Lebanon Fresh Common Potato Market Overview.</p>
+                    <a href="https://www.tridge.com/intelligences/potato/LB" target="_blank" class="text-blue-500 hover:underline break-all text-xs flex items-center gap-1">https://www.tridge.com/intelligences/potato/LB <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg></a>
+                </div>
+
+                <div class="group p-4 rounded-lg hover:bg-white hover:shadow-md transition border border-transparent hover:border-gray-100">
+                    <p class="font-bold text-gray-900 group-hover:text-blue-700 transition">FAO. (2023).</p>
+                    <p class="mb-1">FAOSTAT – Crops and Livestock Products: Potatoes (Item 01510), Lebanon, 2023.</p>
+                    <a href="https://www.fao.org/faostat/en/#data/QCL" target="_blank" class="text-blue-500 hover:underline break-all text-xs flex items-center gap-1">https://www.fao.org/faostat/en/#data/QCL <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg></a>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-gray-900 text-gray-400 py-10 mt-12 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <div class="flex justify-center mb-4 text-3xl">🌿</div>
+            <p class="text-sm font-medium text-white">Sustainable Materials - PhD Scholar Mika - University of Bath</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // --- 1. SINGLE SOURCE OF TRUTH (CONFIG) ---
+        const POTATO_CONFIG = {
+            production: 659588,
+            exports: 59988,
+            lossFactor: 0.525, // 0.35 haulm + 0.075 culls + 0.10 PHL
+            regionalShare: {
+                Bekaa: 0.70,
+                Akkar: 0.30,
+                North: 0,
+                South: 0,
+                MtLebanon: 0,
+                Nabatieh: 0
+            }
+        };
+
+        // --- 2. Centralized Calculations ---
+        const netSupply = POTATO_CONFIG.production - POTATO_CONFIG.exports;
+        const totalAgWaste = netSupply * POTATO_CONFIG.lossFactor; // ≈ 314,790
+
+        const regionalWaste = {
+            Bekaa: totalAgWaste * POTATO_CONFIG.regionalShare.Bekaa,
+            Akkar: totalAgWaste * POTATO_CONFIG.regionalShare.Akkar,
+            Others: 0
+        };
+
+        // Collapsible Logic
+        function toggleSection(contentId, iconId) {
+            const content = document.getElementById(contentId);
+            const icon = document.getElementById(iconId);
+            if (content.classList.contains('collapsible-active')) {
+                content.classList.remove('collapsible-active');
+                icon.classList.remove('rotate-180');
+            } else {
+                content.classList.add('collapsible-active');
+                icon.classList.add('rotate-180');
+            }
+        }
+
+        // Table Sorting
+        function sortTable(n) {
+            var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+            table = document.getElementById("regionalTable");
+            switching = true;
+            dir = "asc"; 
+            while (switching) {
+                switching = false;
+                rows = table.rows;
+                for (i = 1; i < (rows.length - 1); i++) {
+                    shouldSwitch = false;
+                    x = rows[i].getElementsByTagName("TD")[n];
+                    y = rows[i+1].getElementsByTagName("TD")[n];
+                    let xVal = x.textContent.toLowerCase().replace(/,/g, '').replace(/%/g, '');
+                    let yVal = y.textContent.toLowerCase().replace(/,/g, '').replace(/%/g, '');
+                    if (!isNaN(parseFloat(xVal)) && !isNaN(parseFloat(yVal))) {
+                        xVal = parseFloat(xVal);
+                        yVal = parseFloat(yVal);
+                    }
+                    if (dir == "asc") {
+                        if (xVal > yVal) { shouldSwitch = true; break; }
+                    } else if (dir == "desc") {
+                        if (xVal < yVal) { shouldSwitch = true; break; }
+                    }
+                }
+                if (shouldSwitch) {
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                    switchcount ++; 
+                } else {
+                    if (switchcount == 0 && dir == "asc") { dir = "desc"; switching = true; }
+                }
+            }
+        }
+
+        // Chart Configurations
+        document.addEventListener('DOMContentLoaded', function () {
+            
+            const colorPrimary = '#FBC02D'; // Gold
+            const colorDark = '#5D4037';    // Brown
+            const colorAccent = '#388E3C';  // Green
+            const colorInd = '#607D8B';     // Ind Gray
+            const colorExport = '#F59E0B';  // Export Gold
+
+            const labels = ['Bekaa', 'Akkar', 'North', 'South', 'Mt Lebanon', 'Others'];
+            
+            // Dynamic Data Pull from Calculated Objects
+            const dataAgWaste = [
+                Math.round(regionalWaste.Bekaa), 
+                Math.round(regionalWaste.Akkar), 
+                0, 0, 0, 0
+            ];
+
+            // 1. Bar Chart: Regional Ag Waste
+            const ctxBar = document.getElementById('regionalBarChart').getContext('2d');
+            new Chart(ctxBar, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Field Waste (Tonnes/Year)',
+                        data: dataAgWaste,
+                        backgroundColor: [
+                            colorAccent, // Bekaa
+                            colorAccent, // Akkar
+                            '#e0e0e0', '#e0e0e0', '#e0e0e0', '#e0e0e0'
+                        ],
+                        borderRadius: 4,
+                        hoverBackgroundColor: colorDark
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { 
+                        legend: { display: false }, 
+                        tooltip: { 
+                            padding: 12,
+                            callbacks: {
+                                afterLabel: function(context) {
+                                    if (context.raw === 0) return "Structural Exclusion (0%)";
+                                    return "Calc: Net Supply × Share × 0.525";
+                                }
+                            }
+                        } 
+                    },
+                    scales: { y: { beginAtZero: true, grid: { color: '#f3f4f6' } }, x: { grid: { display: false } } }
+                }
+            });
+
+            // 2. Pie Chart: Industrial Waste Share (Remains Fixed per Factory Location)
+            const ctxPie = document.getElementById('indPieChart').getContext('2d');
+            new Chart(ctxPie, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Bekaa', 'Mt Lebanon', 'South', 'Nabatieh', 'Others'],
+                    datasets: [{
+                        data: [60, 20, 10, 10, 0],
+                        backgroundColor: [
+                            '#5D4037', // Bekaa
+                            '#8D6E63', // Mt Leb
+                            '#FBC02D', // South
+                            '#FFF176', // Nabatieh
+                            '#E0E0E0'
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '65%',
+                    plugins: { 
+                        legend: { position: 'right', labels: { usePointStyle: true, boxWidth: 8, font: { size: 11 } } },
+                        tooltip: {
+                            callbacks: {
+                                afterLabel: function(context) {
+                                    return "Allocated by Factory Throughput";
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // 3. Comparative Chart
+            const ctxComp = document.getElementById('comparativeChart').getContext('2d');
+            new Chart(ctxComp, {
+                type: 'bar',
+                data: {
+                    labels: ['Gross Production (100%)', 'Net Supply', 'Field Waste', 'Exports'],
+                    datasets: [{
+                        label: 'Volume (Tonnes)',
+                        data: [
+                            POTATO_CONFIG.production, 
+                            netSupply, 
+                            Math.round(totalAgWaste), 
+                            POTATO_CONFIG.exports
+                        ],
+                        backgroundColor: [colorPrimary, '#94A3B8', colorAccent, colorExport], 
+                        borderRadius: 6,
+                        barPercentage: 0.6
+                    }]
+                },
+                options: {
+                    indexAxis: 'y', 
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { 
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                afterLabel: function(context) {
+                                    if(context.dataIndex === 1) return "Prod - Exports";
+                                    if(context.dataIndex === 2) return "Net × 0.525";
+                                }
+                            }
+                        }
+                    },
+                    scales: { x: { beginAtZero: true, grid: { color: '#f3f4f6' } }, y: { grid: { display: false } } }
+                }
+            });
+        });
+        
+        // Sticky Nav Logic
+        window.addEventListener('scroll', () => {
+            let current = '';
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.side-nav-link, .top-nav-link');
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 150) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

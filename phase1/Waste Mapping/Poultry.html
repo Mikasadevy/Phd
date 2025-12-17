@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chicken Feather Waste – Lebanon Scientific Dataset</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- MathJax for LaTeX Equations -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Merriweather', 'serif'],
+                    },
+                    colors: {
+                        'poultry-dark': '#263238',    // Industrial Slate
+                        'poultry-primary': '#FF7043', // Rooster Orange
+                        'poultry-accent': '#78909C',  // Feather Grey
+                        'poultry-light': '#FBE9E7',   // Pale Warm
+                        'scientific-blue': '#2980B9'
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(38, 50, 56, 0.05)',
+                        'glow': '0 0 15px rgba(255, 112, 67, 0.3)'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #F5F7F8;
+            background-image: radial-gradient(#CFD8DC 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+        .academic-card {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(5px);
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .academic-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border-color: #FF7043;
+        }
+        .section-header {
+            border-bottom: 2px solid #FF7043;
+            padding-bottom: 0.75rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        table {
+            border-collapse: separate;
+            border-spacing: 0;
+            width: 100%;
+        }
+        th {
+            background-color: #263238;
+            font-weight: 600;
+            color: #ffffff;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+            padding: 14px 16px;
+        }
+        th:first-child { border-top-left-radius: 8px; }
+        th:last-child { border-top-right-radius: 8px; }
+        
+        td {
+            padding: 14px 16px;
+            border-bottom: 1px solid #e2e8f0;
+            background-color: white;
+            transition: background-color 0.2s;
+        }
+        tr:last-child td:first-child { border-bottom-left-radius: 8px; }
+        tr:last-child td:last-child { border-bottom-right-radius: 8px; }
+        
+        tr:hover td {
+            background-color: #FBE9E7;
+        }
+        
+        .math-block {
+            background: linear-gradient(to right, #ffffff, #eceff1);
+            padding: 1.25rem;
+            border-radius: 0.5rem;
+            border-left: 4px solid #FF7043;
+            margin: 1.5rem 0;
+            overflow-x: auto;
+            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.03);
+            font-family: 'Inter', monospace;
+            font-size: 0.9rem;
+            color: #333;
+        }
+        
+        /* Navigation Dot Active State */
+        .side-nav-link.active span {
+            background-color: #FF7043;
+            transform: scale(1.25);
+            border-color: #263238;
+        }
+        .side-nav-link.active p {
+            color: #263238;
+            font-weight: 700;
+        }
+
+        .top-nav-link.active {
+            color: #263238;
+            background-color: #FFCCBC;
+            font-weight: 600;
+        }
+
+        /* Intensity Badges */
+        .badge-intensity {
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-weight: 700;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+        }
+        .badge-very-high { background-color: #D32F2F; color: white; }
+        .badge-high { background-color: #F57C00; color: white; }
+        .badge-medium { background-color: #FBC02D; color: #37474F; }
+        .badge-low { background-color: #CFD8DC; color: #546E7A; }
+
+        /* Print Optimizations */
+        @media print {
+            body { background: white; background-image: none; }
+            .no-print { display: none !important; }
+            .academic-card { break-inside: avoid; box-shadow: none; border: 1px solid #ccc; }
+            .collapsible-content { max-height: none !important; display: block !important; }
+            canvas { max-width: 100% !important; }
+            a[href]:after { content: " (" attr(href) ")"; font-size: 0.8em; color: #666; }
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+        }
+
+        .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0, 1, 0, 1); }
+        .collapsible-active { max-height: 3000px; transition: max-height 0.5s ease-in-out; }
+        .arrow-icon { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .rotate-180 { transform: rotate(180deg); }
+    </style>
+</head>
+<body class="text-slate-800 antialiased relative">
+
+    <!-- Sticky Side Navigation (Desktop) -->
+    <nav class="hidden 2xl:block fixed left-10 top-1/2 transform -translate-y-1/2 z-40 no-print bg-white/80 backdrop-blur p-4 rounded-xl border border-gray-200 shadow-soft">
+        <ul class="space-y-4">
+            <li><a href="#overview" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-poultry-primary transition group"><span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-poultry-primary transition bg-white"></span><p class="font-medium">Overview</p></a></li>
+            <li><a href="#national-data" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-poultry-primary transition group"><span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-poultry-primary transition bg-white"></span><p class="font-medium">National Data</p></a></li>
+            <li><a href="#waste-methodology" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-poultry-primary transition group"><span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-poultry-primary transition bg-white"></span><p class="font-medium">Methodology</p></a></li>
+            <li><a href="#regional-distribution" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-poultry-primary transition group"><span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-poultry-primary transition bg-white"></span><p class="font-medium">Intensity Map</p></a></li>
+            <li><a href="#visualizations" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-poultry-primary transition group"><span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-poultry-primary transition bg-white"></span><p class="font-medium">Visual Analysis</p></a></li>
+            <li><a href="#references" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-poultry-primary transition group"><span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-poultry-primary transition bg-white"></span><p class="font-medium">References</p></a></li>
+        </ul>
+    </nav>
+
+    <!-- Header -->
+    <header class="bg-white/90 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50 shadow-sm print:static print:border-none">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+            <div class="flex items-center gap-3 min-w-fit">
+                <div class="bg-poultry-light p-2 rounded-full border border-poultry-primary/40 print:hidden">
+                    <span class="text-2xl">🐓</span>
+                </div>
+                <div>
+                    <h1 class="text-lg md:text-xl font-serif font-bold text-gray-900 leading-tight">
+                        Chicken Feather Waste
+                    </h1>
+                    <p class="hidden sm:block text-xs text-poultry-dark font-bold">
+                        Lebanon Scientific Dataset 🇱🇧
+                    </p>
+                </div>
+            </div>
+            <nav class="hidden lg:flex items-center gap-1 no-print bg-gray-50/50 p-1.5 rounded-lg border border-gray-100">
+                <a href="#national-data" class="top-nav-link px-3 py-1.5 text-sm font-medium text-gray-600 rounded-md hover:bg-gray-100 transition-colors">National</a>
+                <a href="#waste-methodology" class="top-nav-link px-3 py-1.5 text-sm font-medium text-gray-600 rounded-md hover:bg-gray-100 transition-colors">Calculations</a>
+                <a href="#regional-distribution" class="top-nav-link px-3 py-1.5 text-sm font-medium text-gray-600 rounded-md hover:bg-gray-100 transition-colors">Intensity Map</a>
+                <a href="#visualizations" class="top-nav-link px-3 py-1.5 text-sm font-medium text-gray-600 rounded-md hover:bg-gray-100 transition-colors">Visuals</a>
+            </nav>
+            <div class="no-print min-w-fit">
+                <button onclick="window.print()" class="flex items-center gap-2 bg-poultry-dark hover:bg-gray-800 text-white px-4 py-2 rounded-lg text-xs md:text-sm font-medium transition shadow hover:shadow-lg transform hover:-translate-y-0.5">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                    <span class="hidden md:inline">Print Report</span>
+                    <span class="md:hidden">Print</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-16">
+
+        <!-- Section A: Overview -->
+        <section id="overview" class="bg-white rounded-2xl p-8 shadow-soft border border-gray-100 scroll-mt-28">
+            <h2 class="text-lg font-bold text-gray-900 mb-2 flex items-center gap-2">
+                <span>🔍</span> Executive Summary
+            </h2>
+            <div class="prose max-w-none text-gray-600">
+                <p class="text-lg leading-relaxed">
+                    This dashboard presents a rigorous assessment of <strong>Chicken Feather Waste</strong> in Lebanon. Anchored by the official FAOSTAT 2023 broiler meat production baseline (<strong class="text-poultry-dark bg-poultry-light px-1 rounded">121,706.90 t</strong>), we derive a national feather waste estimate of <strong>~7,302 tonnes/year</strong>. Due to the lack of disaggregated regional data, the spatial analysis employs a <span class="italic">qualitative intensity methodology</span>, identifying the <strong>Bekaa</strong> and <strong>North Lebanon</strong> as critical clusters based on slaughterhouse and farm density.
+                </p>
+            </div>
+        </section>
+
+        <!-- Section B: National Data -->
+        <section id="national-data" class="scroll-mt-28">
+            <div class="section-header">
+                <span class="text-2xl">📊</span>
+                <h2 class="text-2xl font-serif font-bold text-poultry-dark">1. National Data & Baseline Indicators</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                <!-- Production Card -->
+                <div class="academic-card p-6 relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <span class="text-6xl">🍗</span>
+                    </div>
+                    <p class="text-xs font-bold text-scientific-blue uppercase tracking-wider flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-scientific-blue"></span> Broiler Production Proxy
+                    </p>
+                    <p class="text-4xl font-bold text-gray-900 mt-3 tracking-tight">121,707 <span class="text-lg text-gray-500 font-normal">t</span></p>
+                    <div class="mt-4 inline-flex items-center text-xs font-medium text-blue-800 bg-blue-50 px-2 py-1 rounded">
+                        Meat (Fresh/Chilled) - Item 21121
+                    </div>
+                </div>
+
+                <!-- Waste Factor Card -->
+                <div class="academic-card p-6 relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <span class="text-6xl">🪶</span>
+                    </div>
+                    <p class="text-xs font-bold text-poultry-primary uppercase tracking-wider flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-poultry-primary"></span> Feather Fraction
+                    </p>
+                    <p class="text-4xl font-bold text-gray-900 mt-3 tracking-tight">6% <span class="text-lg text-gray-500 font-normal">of Live Weight</span></p>
+                    <div class="mt-4 inline-flex items-center text-xs font-medium text-orange-800 bg-orange-50 px-2 py-1 rounded">
+                        Scientific Consensus (5-7%)
+                    </div>
+                </div>
+
+                <!-- Total Waste Card -->
+                <div class="academic-card p-6 relative overflow-hidden group border-b-4 border-b-poultry-primary">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <span class="text-6xl">♻️</span>
+                    </div>
+                    <p class="text-xs font-bold text-poultry-dark uppercase tracking-wider flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-poultry-dark"></span> Est. Feather Waste
+                    </p>
+                    <p class="text-4xl font-bold text-gray-900 mt-3 tracking-tight">7,302.41 <span class="text-lg text-gray-500 font-normal">t/yr</span></p>
+                    <div class="mt-4 inline-flex items-center text-xs font-medium text-gray-700 bg-gray-100 px-2 py-1 rounded border border-gray-200">
+                        Confidence: High (FAO Baseline)
+                    </div>
+                </div>
+            </div>
+
+            <!-- Methodology Note -->
+            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                <p class="text-sm text-gray-600 leading-relaxed">
+                    <strong>Note on Material Value:</strong> Feathers are approximately <strong>90% β-keratin</strong>. Their hollow, low-density fibers are highly valued for lightweight insulation, acoustic panels, and bio-composite reinforcement, representing a significant structural bio-material opportunity for Lebanon.
+                </p>
+                <div class="mt-2">
+                    <a class="text-xs text-blue-600 font-medium hover:underline flex items-center gap-1" 
+                       href="https://www.fao.org/faostat/en/#data/QCL" target="_blank">
+                       View Source: FAOSTAT (2023) Item 21121 <span class="text-[10px]">↗</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section C: Waste Methodology -->
+        <section id="waste-methodology" class="scroll-mt-28">
+            <button onclick="toggleSection('calc-methodology', 'icon-calc')" class="w-full text-left focus:outline-none no-print">
+                <div class="flex items-center justify-between section-header cursor-pointer group">
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl">🧮</span>
+                        <h2 class="text-2xl font-serif font-bold text-poultry-dark group-hover:text-poultry-primary transition">
+                            2. Waste Calculation Methodology
+                        </h2>
+                    </div>
+                    <div class="bg-white p-2 rounded-full shadow-sm border border-gray-100 group-hover:bg-poultry-light transition">
+                        <svg id="icon-calc" class="w-5 h-5 text-gray-500 arrow-icon transform rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </div>
+                </div>
+            </button>
+            <div class="hidden print:block section-header"><h2 class="text-2xl font-serif font-bold text-poultry-dark">2. Waste Calculation Methodology</h2></div>
+
+            <div id="calc-methodology" class="collapsible-content collapsible-active">
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                    <!-- Left: Logic -->
+                    <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                        <h3 class="font-bold text-gray-800 mb-4 flex items-center gap-2">
+                            <span class="bg-poultry-dark text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">A</span> 
+                            The 6% Factor
+                        </h3>
+                        <p class="text-sm text-gray-600 mb-4">
+                            Scientific consensus places feather weight at 5–7% of total broiler live weight. We adopt the midpoint of <strong>6%</strong> for LCA and rendering design purposes.
+                        </p>
+                        <ul class="space-y-2 text-xs text-gray-500">
+                            <li class="flex items-start gap-2">
+                                <span class="text-poultry-primary">●</span>
+                                <em>Khosravi et al. (2024):</em> TOPSIS analysis of poultry waste.
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-poultry-primary">●</span>
+                                <em>Froning et al. (1980):</em> Classic reference on by-product yields.
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-poultry-primary">●</span>
+                                <em>The Poultry Site (2010):</em> Industry standard for valorisation.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Right: Equation -->
+                    <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-center">
+                        <h3 class="font-bold text-gray-800 mb-4 flex items-center gap-2">
+                            <span class="bg-poultry-primary text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">B</span>
+                            Calculation
+                        </h3>
+                        <div class="math-block">
+                            $$ f_{\text{feathers}} = 0.06 $$
+                            $$ P_{\text{broilers}} = 121,706.90 \text{ t/year} $$
+                            $$ W_{\text{feathers}} = 121,706.90 \times 0.06 = \mathbf{7,302.41 \text{ t}} $$
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section D: Regional Distribution (Qualitative) -->
+        <section id="regional-distribution" class="scroll-mt-28">
+            <button onclick="toggleSection('reg-methodology', 'icon-reg')" class="w-full text-left focus:outline-none no-print">
+                <div class="flex items-center justify-between section-header cursor-pointer group">
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl">🗺️</span>
+                        <h2 class="text-2xl font-serif font-bold text-poultry-dark group-hover:text-poultry-primary transition">
+                            3. Regional Intensity Map
+                        </h2>
+                    </div>
+                    <div class="bg-white p-2 rounded-full shadow-sm border border-gray-100 group-hover:bg-poultry-light transition">
+                        <svg id="icon-reg" class="w-5 h-5 text-gray-500 arrow-icon transform rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </div>
+                </div>
+            </button>
+            <div class="hidden print:block section-header"><h2 class="text-2xl font-serif font-bold text-poultry-dark">3. Regional Intensity Map</h2></div>
+
+            <div id="reg-methodology" class="collapsible-content collapsible-active">
+                
+                <div class="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-6 flex gap-3 items-start">
+                    <span class="text-xl">ℹ️</span>
+                    <div>
+                        <p class="text-sm text-blue-900 font-bold">Methodological Honesty Statement</p>
+                        <p class="text-sm text-blue-800">
+                            Lebanon lacks published numerical data for feather tonnage by governorate. To avoid false precision, we present a <strong>qualitative intensity model</strong> based on the location of major slaughterhouses (e.g., Tanmia, Chekka) and farm density reports (MoA, IDAL).
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Qualitative Table -->
+                <div class="bg-white rounded-xl shadow-soft overflow-hidden border border-gray-100">
+                    <div class="overflow-x-auto">
+                        <table id="qualitativeTable">
+                            <thead>
+                                <tr>
+                                    <th>Region</th>
+                                    <th class="text-center">Feather Waste Intensity</th>
+                                    <th>Key Evidence & Drivers</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-sm text-gray-700">
+                                <tr>
+                                    <td class="font-bold text-gray-900">Bekaa</td>
+                                    <td class="text-center"><span class="badge-intensity badge-very-high">VERY HIGH</span></td>
+                                    <td class="text-xs text-gray-600">Tanmia slaughterhouse; intensive broiler farms; high manure generation zones.</td>
+                                </tr>
+                                <tr>
+                                    <td class="font-bold text-gray-900">North Lebanon</td>
+                                    <td class="text-center"><span class="badge-intensity badge-high">HIGH</span></td>
+                                    <td class="text-xs text-gray-600">Chekka industrial slaughterhouse expansion; historic broiler capacity hub.</td>
+                                </tr>
+                                <tr>
+                                    <td class="font-bold text-gray-900">Mount Lebanon</td>
+                                    <td class="text-center"><span class="badge-intensity badge-high">HIGH</span></td>
+                                    <td class="text-xs text-gray-600">Hosts ~45% of agro-industrial enterprises; significant processing activity.</td>
+                                </tr>
+                                <tr>
+                                    <td class="font-bold text-gray-900">Akkar</td>
+                                    <td class="text-center"><span class="badge-intensity badge-medium">MEDIUM</span></td>
+                                    <td class="text-xs text-gray-600">Documented poultry farms (e.g., Makary Chicken); rural production.</td>
+                                </tr>
+                                <tr>
+                                    <td class="font-bold text-gray-900">South Lebanon</td>
+                                    <td class="text-center"><span class="badge-intensity badge-medium">MEDIUM</span></td>
+                                    <td class="text-xs text-gray-600">Significant broiler activity; FAO (2025) reports large conflict-related capacity.</td>
+                                </tr>
+                                <tr>
+                                    <td class="font-bold text-gray-900">Nabatieh</td>
+                                    <td class="text-center"><span class="badge-intensity badge-medium">MEDIUM</span></td>
+                                    <td class="text-xs text-gray-600">Cluster with South; moderate farm density.</td>
+                                </tr>
+                                <tr class="bg-gray-50/50">
+                                    <td class="font-bold text-gray-400">Beirut</td>
+                                    <td class="text-center"><span class="badge-intensity badge-low">LOW / NEGLIGIBLE</span></td>
+                                    <td class="text-xs text-gray-400">Minimal primary poultry production.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- NEW: Legend for Table -->
+                <div class="mt-4 border-t border-gray-100 pt-4 px-2">
+                    <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wide mb-3">Intensity Legend</h4>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                        <div class="flex items-start gap-2">
+                            <span class="mt-1 w-3 h-3 rounded-full bg-[#D32F2F] flex-shrink-0"></span>
+                            <div>
+                                <span class="font-bold text-gray-900">Very High</span>
+                                <p class="text-xs text-gray-500">Major industrial slaughterhouses & intensive farms.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-2">
+                            <span class="mt-1 w-3 h-3 rounded-full bg-[#F57C00] flex-shrink-0"></span>
+                            <div>
+                                <span class="font-bold text-gray-900">High</span>
+                                <p class="text-xs text-gray-500">Significant processing capacity & agro-industrial hubs.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-2">
+                            <span class="mt-1 w-3 h-3 rounded-full bg-[#FBC02D] flex-shrink-0"></span>
+                            <div>
+                                <span class="font-bold text-gray-900">Medium</span>
+                                <p class="text-xs text-gray-500">Documented rural clusters & farm density.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-2">
+                            <span class="mt-1 w-3 h-3 rounded-full bg-[#CFD8DC] flex-shrink-0"></span>
+                            <div>
+                                <span class="font-bold text-gray-900">Low</span>
+                                <p class="text-xs text-gray-500">Minimal primary production.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section E: Visual Figures -->
+        <section id="visualizations" class="scroll-mt-28">
+            <div class="section-header">
+                <span class="text-2xl">📉</span>
+                <h2 class="text-2xl font-serif font-bold text-poultry-dark">4. Visual Analysis & Figures</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                
+                <!-- Chart 1: Qualitative Intensity -->
+                <div class="academic-card p-6 break-inside-avoid flex flex-col h-full">
+                    <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-6 text-center flex justify-center items-center gap-2">
+                        <span>📊</span> Regional Intensity Profile
+                    </h3>
+                    <div class="relative h-64 w-full flex-grow">
+                        <canvas id="intensityChart"></canvas>
+                    </div>
+                    
+                    <!-- NEW: Legend for Chart -->
+                    <div class="mt-4 pt-4 border-t border-gray-100 grid grid-cols-2 gap-2 text-xs">
+                        <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#D32F2F]"></span> Very High (Industrial)</div>
+                        <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#F57C00]"></span> High (Hubs)</div>
+                        <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#FBC02D]"></span> Medium (Rural)</div>
+                        <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#CFD8DC]"></span> Low (Negligible)</div>
+                    </div>
+                    <p class="text-xs text-center text-gray-400 mt-2">Visualization of qualitative intensity based on industrial presence.</p>
+                </div>
+
+                <!-- Chart 2: Mass Balance -->
+                <div class="academic-card p-6 break-inside-avoid flex flex-col h-full">
+                    <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-6 text-center flex justify-center items-center gap-2">
+                        <span>⚖️</span> Mass Balance: Meat vs. Feathers
+                    </h3>
+                    <div class="relative h-64 w-full flex-grow flex justify-center">
+                        <canvas id="massBalanceChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 6: References -->
+        <section id="references" class="border-t border-gray-200 pt-10 scroll-mt-28">
+            <h2 class="text-xl font-bold text-gray-900 mb-8 flex items-center gap-2">
+                <span class="text-poultry-primary">5.</span> References & Citations
+            </h2>
+            <div class="grid grid-cols-1 gap-4 text-sm text-gray-600">
+                
+                <div class="group p-4 rounded-lg hover:bg-white hover:shadow-md transition border border-transparent hover:border-gray-100">
+                    <p class="font-bold text-gray-900 group-hover:text-blue-700 transition">FAOSTAT. (2023).</p>
+                    <p class="mb-1">Crops and Livestock Products – Meat of chickens, fresh or chilled (Item 21121), Lebanon.</p>
+                    <a href="https://www.fao.org/faostat/en/#data/QCL" target="_blank" class="text-blue-500 hover:underline break-all text-xs flex items-center gap-1">Access Database <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg></a>
+                </div>
+
+                <div class="group p-4 rounded-lg hover:bg-white hover:shadow-md transition border border-transparent hover:border-gray-100">
+                    <p class="font-bold text-gray-900 group-hover:text-blue-700 transition">Khosravi et al. (2024).</p>
+                    <p class="mb-1">Using TOPSIS in prioritizing poultry waste treatment technologies.</p>
+                    <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12271833/" target="_blank" class="text-blue-500 hover:underline break-all text-xs flex items-center gap-1">Read Paper <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg></a>
+                </div>
+
+                <div class="group p-4 rounded-lg hover:bg-white hover:shadow-md transition border border-transparent hover:border-gray-100">
+                    <p class="font-bold text-gray-900 group-hover:text-blue-700 transition">The Poultry Site. (2010).</p>
+                    <p class="mb-1">Reclaiming feather waste.</p>
+                    <a href="https://www.thepoultrysite.com/articles/reclaiming-feather-waste" target="_blank" class="text-blue-500 hover:underline break-all text-xs flex items-center gap-1">View Article <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg></a>
+                </div>
+
+                <div class="group p-4 rounded-lg hover:bg-white hover:shadow-md transition border border-transparent hover:border-gray-100">
+                    <p class="font-bold text-gray-900 group-hover:text-blue-700 transition">MoA (2004) & IDAL (2017).</p>
+                    <p class="mb-1">Analysis and Assessment of the Poultry Sector / Agro-Food Fact Sheet.</p>
+                </div>
+
+                <div class="group p-4 rounded-lg hover:bg-white hover:shadow-md transition border border-transparent hover:border-gray-100">
+                    <p class="font-bold text-gray-900 group-hover:text-blue-700 transition">FAO. (2025).</p>
+                    <p class="mb-1">Agricultural damage and loss assessment on the impact of conflict on the agriculture sector in South Lebanon.</p>
+                    <a href="https://ewsp.gov.lb/wp-content/uploads/2025/04/Agricultural-damage-and-loss-assessment_FAO.pdf" target="_blank" class="text-blue-500 hover:underline break-all text-xs flex items-center gap-1">View Assessment <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg></a>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-gray-900 text-gray-400 py-10 mt-12 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <div class="flex justify-center mb-4 text-3xl">🐔</div>
+            <p class="text-sm font-medium text-white">Sustainable Materials - PhD Scholar Mika - University of Bath</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Collapsible Logic
+        function toggleSection(contentId, iconId) {
+            const content = document.getElementById(contentId);
+            const icon = document.getElementById(iconId);
+            if (content.classList.contains('collapsible-active')) {
+                content.classList.remove('collapsible-active');
+                icon.classList.remove('rotate-180');
+            } else {
+                content.classList.add('collapsible-active');
+                icon.classList.add('rotate-180');
+            }
+        }
+
+        // Chart Configurations
+        document.addEventListener('DOMContentLoaded', function () {
+            
+            const colorDark = '#263238'; 
+            const colorOrange = '#FF7043'; 
+            const colorGrey = '#78909C'; 
+            
+            // 1. Qualitative Intensity Chart
+            // Mapping: Very High=4, High=3, Medium=2, Low=1
+            const ctxInt = document.getElementById('intensityChart').getContext('2d');
+            new Chart(ctxInt, {
+                type: 'bar',
+                data: {
+                    labels: ['Bekaa', 'North', 'Mt Lebanon', 'Akkar', 'South', 'Nabatieh', 'Beirut'],
+                    datasets: [{
+                        label: 'Intensity Score',
+                        data: [4, 3, 3, 2, 2, 2, 0.5],
+                        backgroundColor: [
+                            '#D32F2F', // Very High
+                            '#F57C00', // High
+                            '#F57C00', // High
+                            '#FBC02D', // Med
+                            '#FBC02D', // Med
+                            '#FBC02D', // Med
+                            '#CFD8DC'  // Low
+                        ],
+                        borderRadius: 4,
+                        barPercentage: 0.6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { 
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const map = {4: 'Very High', 3: 'High', 2: 'Medium', 0.5: 'Low'};
+                                    return 'Intensity: ' + map[context.raw];
+                                }
+                            }
+                        }
+                    },
+                    scales: { 
+                        y: { 
+                            beginAtZero: true, 
+                            max: 5,
+                            ticks: {
+                                callback: function(value) {
+                                    if(value === 4) return 'Very High';
+                                    if(value === 3) return 'High';
+                                    if(value === 2) return 'Medium';
+                                    if(value === 1) return 'Low';
+                                    return '';
+                                },
+                                font: { weight: 'bold' }
+                            },
+                            grid: { color: '#f3f4f6' }
+                        }, 
+                        x: { grid: { display: false } } 
+                    }
+                }
+            });
+
+            // 2. Mass Balance Doughnut
+            const ctxPie = document.getElementById('massBalanceChart').getContext('2d');
+            new Chart(ctxPie, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Meat/Carcass (94%)', 'Feather Waste (6%)'],
+                    datasets: [{
+                        data: [114404, 7302], // 121706 total
+                        backgroundColor: [colorDark, colorOrange],
+                        borderWidth: 0,
+                        hoverOffset: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '65%',
+                    plugins: { 
+                        legend: { position: 'bottom', labels: { usePointStyle: true, boxWidth: 8, font: { size: 11 } } },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ' ' + context.label + ': ' + context.raw.toLocaleString() + ' t';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+        
+        // Sticky Nav Logic
+        window.addEventListener('scroll', () => {
+            let current = '';
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.side-nav-link, .top-nav-link');
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 150) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

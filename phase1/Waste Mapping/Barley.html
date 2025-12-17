@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barley Straw Waste – Lebanon Scientific Dataset & Methodology</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- MathJax for LaTeX Equations -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Merriweather', 'serif'],
+                    },
+                    colors: {
+                        'barley-dark': '#3E2723',    // Dark Earth/Soil
+                        'barley-primary': '#BCAAA4', // Muted Earthy Beige
+                        'barley-accent': '#D84315',  // Rust/Burnt Orange (for contrast)
+                        'barley-gold': '#C0A062',    // Dry Straw Gold
+                        'barley-light': '#EFEBE9',   // Off-white/Paper
+                        'scientific-blue': '#2980B9',
+                        'waste-brown': '#795548'
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+                        'glow': '0 0 15px rgba(192, 160, 98, 0.2)'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #FAFAFA;
+            background-image: radial-gradient(#d7ccc8 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+        .academic-card {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(5px);
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .academic-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border-color: #C0A062;
+        }
+        .section-header {
+            border-bottom: 2px solid #C0A062;
+            padding-bottom: 0.75rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        table {
+            border-collapse: separate;
+            border-spacing: 0;
+            width: 100%;
+        }
+        th {
+            background-color: #5D4037; /* Darker brown for header */
+            font-weight: 600;
+            color: #ffffff;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+            padding: 14px 16px;
+        }
+        th:first-child { border-top-left-radius: 8px; }
+        th:last-child { border-top-right-radius: 8px; }
+        
+        td {
+            padding: 14px 16px;
+            border-bottom: 1px solid #e2e8f0;
+            background-color: white;
+            transition: background-color 0.2s;
+        }
+        tr:last-child td:first-child { border-bottom-left-radius: 8px; }
+        tr:last-child td:last-child { border-bottom-right-radius: 8px; }
+        
+        tr:hover td {
+            background-color: #EFEBE9;
+        }
+        
+        .math-block {
+            background: linear-gradient(to right, #ffffff, #fdfbf7);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            border-left: 5px solid #C0A062;
+            margin: 1.5rem 0;
+            overflow-x: auto;
+            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.03);
+        }
+        
+        /* Navigation Dot Active State */
+        .side-nav-link.active span {
+            background-color: #C0A062;
+            transform: scale(1.25);
+            border-color: #5D4037;
+        }
+        .side-nav-link.active p {
+            color: #3E2723;
+            font-weight: 700;
+        }
+
+        .top-nav-link.active {
+            color: #3E2723;
+            background-color: #D7CCC8;
+            font-weight: 600;
+        }
+
+        /* Print Optimizations */
+        @media print {
+            body { background: white; background-image: none; }
+            .no-print { display: none !important; }
+            .academic-card { break-inside: avoid; box-shadow: none; border: 1px solid #ccc; }
+            .collapsible-content { max-height: none !important; display: block !important; }
+            canvas { max-width: 100% !important; }
+            a[href]:after { content: " (" attr(href) ")"; font-size: 0.8em; color: #666; }
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+        }
+
+        /* Collapsible Styles */
+        .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0, 1, 0, 1); }
+        .collapsible-active { max-height: 3000px; transition: max-height 0.5s ease-in-out; }
+        .arrow-icon { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .rotate-180 { transform: rotate(180deg); }
+    </style>
+</head>
+<body class="text-slate-800 antialiased relative">
+
+    <!-- Sticky Side Navigation (Desktop) -->
+    <nav class="hidden 2xl:block fixed left-10 top-1/2 transform -translate-y-1/2 z-40 no-print bg-white/80 backdrop-blur p-4 rounded-xl border border-gray-200 shadow-soft">
+        <ul class="space-y-4">
+            <li>
+                <a href="#overview" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-barley-gold transition group">
+                    <span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-barley-gold transition bg-white"></span>
+                    <p class="font-medium">Overview</p>
+                </a>
+            </li>
+            <li>
+                <a href="#national-data" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-barley-gold transition group">
+                    <span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-barley-gold transition bg-white"></span>
+                    <p class="font-medium">National Data</p>
+                </a>
+            </li>
+            <li>
+                <a href="#waste-methodology" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-barley-gold transition group">
+                    <span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-barley-gold transition bg-white"></span>
+                    <p class="font-medium">Methodology</p>
+                </a>
+            </li>
+            <li>
+                <a href="#regional-distribution" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-barley-gold transition group">
+                    <span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-barley-gold transition bg-white"></span>
+                    <p class="font-medium">Regional Dist.</p>
+                </a>
+            </li>
+            <li>
+                <a href="#visualizations" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-barley-gold transition group">
+                    <span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-barley-gold transition bg-white"></span>
+                    <p class="font-medium">Visual Analysis</p>
+                </a>
+            </li>
+            <li>
+                <a href="#references" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-barley-gold transition group">
+                    <span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-barley-gold transition bg-white"></span>
+                    <p class="font-medium">References</p>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Header -->
+    <header class="bg-white/90 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50 shadow-sm print:static print:border-none">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+            
+            <div class="flex items-center gap-3 min-w-fit">
+                <div class="bg-barley-light p-2 rounded-full border border-barley-gold/40 print:hidden">
+                    <span class="text-2xl">🌾</span>
+                </div>
+                <div>
+                    <h1 class="text-lg md:text-xl font-serif font-bold text-gray-900 leading-tight">
+                        Barley Straw Waste
+                    </h1>
+                    <p class="hidden sm:block text-xs text-barley-gold font-bold">
+                        Lebanon Scientific Dataset 🇱🇧
+                    </p>
+                </div>
+            </div>
+
+            <nav class="hidden lg:flex items-center gap-1 no-print bg-gray-50/50 p-1.5 rounded-lg border border-gray-100">
+                <a href="#national-data" class="top-nav-link px-3 py-1.5 text-sm font-medium text-gray-600 rounded-md hover:bg-gray-100 transition-colors">Data</a>
+                <a href="#waste-methodology" class="top-nav-link px-3 py-1.5 text-sm font-medium text-gray-600 rounded-md hover:bg-gray-100 transition-colors">Method</a>
+                <a href="#regional-distribution" class="top-nav-link px-3 py-1.5 text-sm font-medium text-gray-600 rounded-md hover:bg-gray-100 transition-colors">Regional</a>
+                <a href="#visualizations" class="top-nav-link px-3 py-1.5 text-sm font-medium text-gray-600 rounded-md hover:bg-gray-100 transition-colors">Visuals</a>
+            </nav>
+
+            <div class="no-print min-w-fit">
+                <button onclick="window.print()" class="flex items-center gap-2 bg-barley-dark hover:bg-gray-800 text-white px-4 py-2 rounded-lg text-xs md:text-sm font-medium transition shadow hover:shadow-lg transform hover:-translate-y-0.5">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                    <span class="hidden md:inline">Print Report</span>
+                    <span class="md:hidden">Print</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-16">
+
+        <!-- Section A: Overview -->
+        <section id="overview" class="bg-white rounded-2xl p-8 shadow-soft border border-gray-100 scroll-mt-28">
+            <h2 class="text-lg font-bold text-gray-900 mb-2 flex items-center gap-2">
+                <span>🔍</span> Executive Summary
+            </h2>
+            <div class="prose max-w-none text-gray-600">
+                <p class="text-lg leading-relaxed">
+                    This scientific dataset quantifies <strong>Barley</strong> (<em>Hordeum vulgare</em>) residues in Lebanon, focusing on the semi-arid, high-altitude production zones. Based on FAO (2023) production data (30,000 t grain) and a conservative Residue-to-Product Ratio (RPR) of 0.90, we define the national waste baseline at <strong class="text-barley-dark bg-barley-light px-1 rounded">27,000 tonnes of straw/year</strong>. The regional distribution is highly concentrated based on cultivated area distribution, with Baalbek-Hermel accounting for ~80.4% of the national cultivated barley area.
+                </p>
+            </div>
+        </section>
+
+        <!-- Section B: National Data -->
+        <section id="national-data" class="scroll-mt-28">
+            <div class="section-header">
+                <span class="text-2xl">📊</span>
+                <h2 class="text-2xl font-serif font-bold text-barley-dark">1. National Data & Baseline Indicators</h2>
+            </div>
+            
+            <!-- Summary Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+                <!-- Production Card -->
+                <div class="academic-card p-6 relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <span class="text-6xl">🚜</span>
+                    </div>
+                    <p class="text-xs font-bold text-scientific-blue uppercase tracking-wider flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-scientific-blue"></span> Production (Grain)
+                    </p>
+                    <p class="text-4xl font-bold text-gray-900 mt-3 tracking-tight">30,000 <span class="text-lg text-gray-500 font-normal">t</span></p>
+                    <div class="mt-4 inline-flex items-center text-xs font-medium text-blue-800 bg-blue-50 px-2 py-1 rounded">
+                        Source: FAO (2023)
+                    </div>
+                </div>
+
+                <!-- Factor Card -->
+                <div class="academic-card p-6 relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <span class="text-6xl">📏</span>
+                    </div>
+                    <p class="text-xs font-bold text-barley-gold uppercase tracking-wider flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-barley-gold"></span> RPR Factor
+                    </p>
+                    <p class="text-4xl font-bold text-gray-900 mt-3 tracking-tight">0.90 <span class="text-lg text-gray-500 font-normal">ratio</span></p>
+                    <div class="mt-4 inline-flex items-center text-xs font-medium text-barley-dark bg-barley-light px-2 py-1 rounded">
+                        Tier-1 / Monfreda et al.
+                    </div>
+                </div>
+
+                <!-- Waste Card -->
+                <div class="academic-card p-6 relative overflow-hidden group border-b-4 border-b-barley-gold">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <span class="text-6xl">🌾</span>
+                    </div>
+                    <p class="text-xs font-bold text-barley-dark uppercase tracking-wider flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-barley-dark"></span> Straw Waste
+                    </p>
+                    <p class="text-4xl font-bold text-gray-900 mt-3 tracking-tight">27,000 <span class="text-lg text-gray-500 font-normal">t/yr</span></p>
+                    <div class="mt-4 inline-flex items-center text-xs font-medium text-amber-900 bg-amber-50 px-2 py-1 rounded border border-amber-100">
+                        Calculated Baseline
+                    </div>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div class="bg-white rounded-xl shadow-soft overflow-hidden border border-gray-100">
+                <div class="overflow-x-auto">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Indicator</th>
+                                <th>Value</th>
+                                <th>Source Type</th>
+                                <th>Authority</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-sm text-gray-700">
+                            <tr>
+                                <td class="font-medium flex items-center gap-2"><span class="text-lg">🏗️</span> National Grain Production</td>
+                                <td class="font-mono">30,000 t</td>
+                                <td><span class="px-2 py-1 bg-blue-50 text-blue-700 rounded text-xs">Intl. Database</span></td>
+                                <td><a href="https://www.fao.org/faostat/en/#data/QCL" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">FAO (2023)</a></td>
+                            </tr>
+                            <tr>
+                                <td class="font-medium flex items-center gap-2"><span class="text-lg">🍂</span> Residue Ratio (RPR)</td>
+                                <td class="font-mono">0.90 t straw/t grain</td>
+                                <td><span class="px-2 py-1 bg-gray-100 rounded text-xs">Organic Database</span></td>
+                                <td><a href="https://essd.copernicus.org/preprints/essd-2023-288/essd-2023-288.pdf" target="_blank" class="text-blue-600 hover:underline">Monfreda et al. (2023)</a></td>
+                            </tr>
+                            <tr class="bg-amber-50/50">
+                                <td class="font-bold text-gray-900">
+                                    <div class="flex flex-col gap-1">
+                                        <div class="flex items-center gap-2">
+                                            <span class="text-lg">♻️</span> 
+                                            <span>Estimated Straw Volume</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="font-bold font-mono text-barley-dark">27,000 t/year</td>
+                                <td><span class="px-2 py-1 bg-amber-100 text-amber-800 rounded text-xs">Derived Calculation</span></td>
+                                <td class="text-gray-500 italic">30,000 × 0.90</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section C: Waste Methodology -->
+        <section id="waste-methodology" class="scroll-mt-28">
+            <button onclick="toggleSection('calc-methodology', 'icon-methodology')" class="w-full text-left focus:outline-none no-print">
+                <div class="flex items-center justify-between section-header cursor-pointer group">
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl">🧮</span>
+                        <h2 class="text-2xl font-serif font-bold text-barley-dark group-hover:text-barley-gold transition">
+                            2. Waste Generation Methodology
+                        </h2>
+                    </div>
+                    <div class="bg-white p-2 rounded-full shadow-sm border border-gray-100 group-hover:bg-barley-light transition">
+                        <svg id="icon-methodology" class="w-5 h-5 text-gray-500 arrow-icon transform rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </div>
+                </div>
+            </button>
+            
+            <div class="hidden print:block section-header">
+                <h2 class="text-2xl font-serif font-bold text-barley-dark">2. Waste Generation Methodology</h2>
+            </div>
+
+            <div id="calc-methodology" class="collapsible-content collapsible-active">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                    <!-- Left: Calculations -->
+                    <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                        <h3 class="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
+                            <span class="bg-blue-100 text-blue-600 p-1 rounded">A</span> Calculation Models
+                        </h3>
+                        
+                        <div class="mb-8 pl-4 border-l-2 border-barley-gold">
+                            <p class="text-xs font-bold text-barley-gold uppercase tracking-wide mb-2">Straw Generation Formula</p>
+                            <div class="math-block shadow-md bg-white ring-1 ring-barley-light">
+                                $$ P_{\text{straw}} = 30,000 \times 0.90 = 27,000 \text{ t/year} $$
+                            </div>
+                            <div class="mt-3 bg-barley-light/50 p-3 rounded text-sm text-barley-dark flex gap-2 items-start">
+                                <span class="text-lg">💡</span>
+                                <p><strong>Factor 0.90:</strong> Lower than wheat (1.2) due to barley's physiology and dryland cultivation context. Compatible with IPCC guidelines for semi-arid systems.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Logic -->
+                    <div class="bg-gray-50 p-6 rounded-xl border border-gray-200 flex flex-col justify-center">
+                        <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span class="bg-purple-100 text-purple-600 p-1 rounded">B</span> Data Interpretation
+                        </h3>
+                        <ul class="space-y-4">
+                            <li class="flex items-start bg-white p-4 rounded-lg shadow-sm">
+                                <span class="flex-shrink-0 h-8 w-8 rounded-full bg-barley-gold text-white flex items-center justify-center text-sm font-bold mr-3 shadow-glow print:text-black print:border print:border-black">1</span>
+                                <div>
+                                    <p class="font-bold text-gray-800 text-sm">Agro-Climatic Context</p>
+                                    <p class="text-sm text-gray-600 mt-1">Barley is concentrated in high-altitude, low-rainfall zones (Northern Bekaa). It is drought-tolerant.</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start bg-white p-4 rounded-lg shadow-sm">
+                                <span class="flex-shrink-0 h-8 w-8 rounded-full bg-barley-dark text-white flex items-center justify-center text-sm font-bold mr-3 print:text-black print:border print:border-black">2</span>
+                                <div>
+                                    <p class="font-bold text-gray-800 text-sm">Residue Use</p>
+                                    <p class="text-sm text-gray-600 mt-1">Almost all barley straw enters the animal feed chain (tibn). Only ~1% is burned (UNFCCC BUR2).</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section D: Regional Distribution -->
+        <section id="regional-distribution" class="scroll-mt-28">
+            <button onclick="toggleSection('reg-methodology', 'icon-reg')" class="w-full text-left focus:outline-none no-print">
+                <div class="flex items-center justify-between section-header cursor-pointer group">
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl">🗺️</span>
+                        <h2 class="text-2xl font-serif font-bold text-barley-dark group-hover:text-barley-gold transition">
+                            3. Regional Waste Distribution
+                        </h2>
+                    </div>
+                    <div class="bg-white p-2 rounded-full shadow-sm border border-gray-100 group-hover:bg-barley-light transition">
+                        <svg id="icon-reg" class="w-5 h-5 text-gray-500 arrow-icon transform rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </div>
+                </div>
+            </button>
+            
+            <div class="hidden print:block section-header">
+                <h2 class="text-2xl font-serif font-bold text-barley-dark">3. Regional Waste Distribution</h2>
+            </div>
+
+            <div id="reg-methodology" class="collapsible-content collapsible-active">
+                <div class="bg-barley-light/50 p-6 rounded-xl border border-barley-gold/10 mb-8 text-center">
+                    <p class="text-gray-700 mb-4 font-medium max-w-3xl mx-auto">
+                        Allocation Method: Regional allocation is based on barley-specific cultivated area (rainfed + irrigated), assuming residue generation proportional to harvested area (Tier-1 proxy). FAO–WFP (2024) is used to validate dominance patterns, not to impose numerical shares.
+                    </p>
+                    <div class="math-block w-full md:w-2/3 mx-auto text-center bg-white shadow-sm">
+                        $$ P_{\text{straw},i} = 27,000 \times \frac{\text{Cultivated Area Share}_i}{100} $$
+                    </div>
+                </div>
+
+                <!-- Interactive Table -->
+                <div class="bg-white rounded-xl shadow-soft overflow-hidden border border-gray-100">
+                    <div class="overflow-x-auto">
+                        <table id="regionalTable">
+                            <thead>
+                                <tr>
+                                    <th class="cursor-pointer hover:bg-barley-gold/90 transition-colors" onclick="sortTable(0)">Governorate <span class="opacity-50 text-xs no-print">↕</span></th>
+                                    <th class="cursor-pointer hover:bg-barley-gold/90 transition-colors text-right" onclick="sortTable(1)">Share (%) <span class="opacity-50 text-xs no-print">↕</span></th>
+                                    <th class="cursor-pointer hover:bg-barley-gold/90 transition-colors text-right" onclick="sortTable(2)">Straw (t/year) <span class="opacity-50 text-xs no-print">↕</span></th>
+                                    <th class="text-right">Logic / Context</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-sm text-gray-700">
+                                <tr>
+                                    <td class="font-bold text-gray-900">Baalbek-Hermel</td>
+                                    <td class="text-right"><div class="inline-block w-16 bg-gray-100 rounded text-center font-bold text-barley-dark">80.4%</div></td>
+                                    <td class="text-right font-mono font-bold text-barley-dark">21,708</td>
+                                    <td class="text-right text-xs text-gray-500">Cultivated Area (World Bank 2010). Validated by FAO-WFP (2024).</td>
+                                </tr>
+                                <tr>
+                                    <td class="font-bold text-gray-900">Bekaa</td>
+                                    <td class="text-right"><div class="inline-block w-16 bg-gray-100 rounded text-center font-bold text-gray-600">7.0%</div></td>
+                                    <td class="text-right font-mono text-gray-600">1,890</td>
+                                    <td class="text-right text-xs text-gray-500">Cultivated Area (World Bank 2010, Table 3.5).</td>
+                                </tr>
+                                <tr>
+                                    <td class="font-bold text-gray-900">Akkar</td>
+                                    <td class="text-right"><div class="inline-block w-16 bg-gray-100 rounded text-center">6.1%</div></td>
+                                    <td class="text-right font-mono text-gray-600">1,647</td>
+                                    <td class="text-right text-xs text-gray-500">Cultivated Area (World Bank 2010, Table 3.5).</td>
+                                </tr>
+                                <tr>
+                                    <td class="font-bold text-gray-900">Nabatieh</td>
+                                    <td class="text-right"><div class="inline-block w-16 bg-gray-100 rounded text-center">3.6%</div></td>
+                                    <td class="text-right font-mono text-gray-600">972</td>
+                                    <td class="text-right text-xs text-gray-500">Cultivated Area (World Bank 2010, Table 3.5).</td>
+                                </tr>
+                                <tr>
+                                    <td class="font-bold text-gray-900">South</td>
+                                    <td class="text-right"><div class="inline-block w-16 bg-gray-100 rounded text-center">1.3%</div></td>
+                                    <td class="text-right font-mono text-gray-600">351</td>
+                                    <td class="text-right text-xs text-gray-500">Cultivated Area (World Bank 2010, Table 3.5).</td>
+                                </tr>
+                                <tr>
+                                    <td class="font-bold text-gray-900">North</td>
+                                    <td class="text-right"><div class="inline-block w-16 bg-gray-100 rounded text-center">1.3%</div></td>
+                                    <td class="text-right font-mono text-gray-600">351</td>
+                                    <td class="text-right text-xs text-gray-500">Cultivated Area (World Bank 2010, Table 3.5).</td>
+                                </tr>
+                                <tr>
+                                    <td class="font-bold text-gray-900">Mount Lebanon</td>
+                                    <td class="text-right"><div class="inline-block w-16 bg-gray-100 rounded text-center">0.2%</div></td>
+                                    <td class="text-right font-mono text-gray-600">54</td>
+                                    <td class="text-right text-xs text-gray-500">Cultivated Area (World Bank 2010, Table 3.5).</td>
+                                </tr>
+                                <tr class="bg-gray-50/50">
+                                    <td class="font-bold text-gray-400">Beirut</td>
+                                    <td class="text-right text-gray-400">0.0%</td>
+                                    <td class="text-right font-mono text-gray-400">0</td>
+                                    <td class="text-right text-xs text-gray-400">Urban Exclusion.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="bg-barley-dark text-white px-6 py-3 text-xs flex justify-between items-center">
+                        <span class="flex items-center gap-2 no-print">💡 <span class="opacity-90">Note: 87.4% of waste is captured in Baalbek-Hermel & Bekaa.</span></span>
+                        <span class="font-bold">Total: ~27,000 tonnes</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section E: Visual Figures -->
+        <section id="visualizations" class="scroll-mt-28">
+            <div class="section-header">
+                <span class="text-2xl">📉</span>
+                <h2 class="text-2xl font-serif font-bold text-barley-dark">4. Visual Analysis & Figures</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                
+                <!-- Chart 1: Bar Chart (Regional) -->
+                <div class="academic-card p-6 break-inside-avoid">
+                    <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-6 text-center flex justify-center items-center gap-2">
+                        <span>📊</span> Regional Straw Generation
+                    </h3>
+                    <div class="relative h-72 w-full">
+                        <canvas id="regionalBarChart"></canvas>
+                    </div>
+                    <p class="text-center text-xs text-gray-400 mt-2">Based on cultivated area (World Bank 2010)</p>
+                </div>
+
+                <!-- Chart 2: Pie Chart (Distribution) -->
+                <div class="academic-card p-6 break-inside-avoid">
+                    <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-6 text-center flex justify-center items-center gap-2">
+                        <span>🍩</span> Barley Share Distribution (%)
+                    </h3>
+                    <div class="relative h-72 w-full flex justify-center">
+                        <canvas id="surfacePieChart"></canvas>
+                    </div>
+                    <p class="text-center text-xs text-gray-400 mt-2">Based on cultivated area (World Bank 2010)</p>
+                </div>
+
+                <!-- Chart 3: Comparative -->
+                <div class="academic-card p-6 md:col-span-2 bg-gradient-to-br from-white to-gray-50 break-inside-avoid">
+                    <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-6 text-center flex justify-center items-center gap-2">
+                        <span>⚖️</span> Grain Production vs. Straw Waste
+                    </h3>
+                    <div class="relative h-72 w-full">
+                        <canvas id="comparativeChart"></canvas>
+                    </div>
+                    <p class="text-center text-xs text-gray-500 mt-4 bg-white inline-block px-4 py-2 rounded-full shadow-sm border mx-auto">
+                        <span class="font-bold text-barley-gold">Insight:</span> Straw volume (27k t) is slightly less than grain (30k t), typical for semi-arid barley varieties.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: Notes -->
+        <section class="bg-gradient-to-r from-barley-light to-white rounded-2xl border border-barley-gold/20 p-8 shadow-soft my-12 relative overflow-hidden break-inside-avoid">
+            <div class="absolute top-0 right-0 p-8 opacity-5">
+                <span class="text-9xl">🏜️</span>
+            </div>
+            <h3 class="flex items-center text-barley-dark font-serif font-bold text-xl mb-6 relative z-10">
+                <span class="bg-barley-gold text-white p-2 rounded-lg mr-3 shadow-glow">5</span>
+                Key Methodological Insights
+            </h3>
+            <ul class="space-y-4 relative z-10">
+                <li class="flex items-start">
+                    <span class="text-barley-gold mr-3 mt-1">●</span>
+                    <span class="text-gray-700 leading-relaxed"><strong>High Concentration:</strong> Barley is Lebanon's most localized cereal crop. Baalbek-Hermel alone dominates with <strong>80.4%</strong> of cultivated area due to its semi-arid climate suitability.</span>
+                </li>
+                <li class="flex items-start">
+                    <span class="text-barley-gold mr-3 mt-1">●</span>
+                    <span class="text-gray-700 leading-relaxed"><strong>Conservative RPR:</strong> The 0.90 factor is lower than wheat, reflecting the shorter stature and stress-tolerant physiology of barley in dryland conditions.</span>
+                </li>
+                <li class="flex items-start">
+                    <span class="text-barley-gold mr-3 mt-1">●</span>
+                    <span class="text-gray-700 leading-relaxed"><strong>Area-Based Allocation:</strong> Regional shares are derived strictly from cultivated area statistics (World Bank 2010), serving as a Tier-1 proxy for residue generation. FAO–WFP (2024) validates the overall dominance pattern.</span>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Section 6: References -->
+        <section id="references" class="border-t border-gray-200 pt-10 scroll-mt-28">
+            <h2 class="text-xl font-bold text-gray-900 mb-8 flex items-center gap-2">
+                <span class="text-barley-gold">6.</span> References & Citations
+            </h2>
+            <div class="grid grid-cols-1 gap-4 text-sm text-gray-600">
+                
+                <div class="group p-4 rounded-lg hover:bg-white hover:shadow-md transition border border-transparent hover:border-gray-100">
+                    <p class="font-bold text-gray-900 group-hover:text-blue-700 transition">Food and Agriculture Organization of the United Nations. (2023).</p>
+                    <p class="mb-1">FAOSTAT – Crops and livestock products (QCL): Barley production, Lebanon, 2023.</p>
+                    <a href="https://www.fao.org/faostat/en/#data/QCL" target="_blank" class="text-blue-500 hover:underline break-all text-xs flex items-center gap-1">
+                        Access Database <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                    </a>
+                </div>
+
+                <div class="group p-4 rounded-lg hover:bg-white hover:shadow-md transition border border-transparent hover:border-gray-100">
+                    <p class="font-bold text-gray-900 group-hover:text-blue-700 transition">Food and Agriculture Organization of the United Nations & World Food Programme. (2024).</p>
+                    <p class="mb-1">Crop and Food Security Assessment Mission – Lebanon. (Used for dominance validation).</p>
+                    <a href="https://www.lebanonrevival.news/download/CropFoodSecurityAssessment2024FAO-WFP.pdf" target="_blank" class="text-blue-500 hover:underline break-all text-xs flex items-center gap-1">
+                        View Report <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                    </a>
+                </div>
+
+                <div class="group p-4 rounded-lg hover:bg-white hover:shadow-md transition border border-transparent hover:border-gray-100">
+                    <p class="font-bold text-gray-900 group-hover:text-blue-700 transition">World Bank. (2010).</p>
+                    <p class="mb-1">Droughts and Agriculture in Lebanon: Causes, Consequences and Options for Policy. (Table 3.5: Barley Cultivated Area).</p>
+                    <a href="https://documents.worldbank.org/en/publication/documents-reports/documentdetail/892381538415122088" target="_blank" class="text-blue-500 hover:underline break-all text-xs flex items-center gap-1">
+                        Download Document <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                    </a>
+                </div>
+
+                <div class="group p-4 rounded-lg hover:bg-white hover:shadow-md transition border border-transparent hover:border-gray-100">
+                    <p class="font-bold text-gray-900 group-hover:text-blue-700 transition">Monfreda, C., et al. (2023).</p>
+                    <p class="mb-1">Organic Matter Database (OMD).</p>
+                    <a href="https://essd.copernicus.org/preprints/essd-2023-288/essd-2023-288.pdf" target="_blank" class="text-blue-500 hover:underline break-all text-xs flex items-center gap-1">
+                        Access Paper <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                    </a>
+                </div>
+
+                <div class="group p-4 rounded-lg hover:bg-white hover:shadow-md transition border border-transparent hover:border-gray-100">
+                    <p class="font-bold text-gray-900 group-hover:text-blue-700 transition">Intergovernmental Panel on Climate Change. (2006).</p>
+                    <p class="mb-1">2006 IPCC Guidelines for National Greenhouse Gas Inventories. Volume 4: Agriculture, Forestry and Other Land Use.</p>
+                    <a href="https://www.ipcc-nggip.iges.or.jp/public/2006gl/vol4.html" target="_blank" class="text-blue-500 hover:underline break-all text-xs flex items-center gap-1">
+                        View Guidelines <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                    </a>
+                </div>
+
+                <div class="group p-4 rounded-lg hover:bg-white hover:shadow-md transition border border-transparent hover:border-gray-100">
+                    <p class="font-bold text-gray-900 group-hover:text-blue-700 transition">Ministry of Environment / UNFCCC. (2017).</p>
+                    <p class="mb-1">Lebanon’s Second Biennial Update Report (BUR2).</p>
+                    <a href="https://unfccc.int/sites/default/files/resource/3490185_lebanon-bur2-1-lebanon_burii_2017.pdf" target="_blank" class="text-blue-500 hover:underline break-all text-xs flex items-center gap-1">
+                        Download Report <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                    </a>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-gray-900 text-gray-400 py-10 mt-12 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <div class="flex justify-center mb-4 text-3xl">🌿</div>
+            <p class="text-sm font-medium text-white">Sustainable Materials - PhD Scholar Mika - University of Bath</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // --- 1. Collapsible Logic ---
+        function toggleSection(contentId, iconId) {
+            const content = document.getElementById(contentId);
+            const icon = document.getElementById(iconId);
+            
+            if (content.classList.contains('collapsible-active')) {
+                content.classList.remove('collapsible-active');
+                icon.classList.remove('rotate-180');
+            } else {
+                content.classList.add('collapsible-active');
+                icon.classList.add('rotate-180');
+            }
+        }
+
+        // --- 2. Table Sorting Logic ---
+        function sortTable(n) {
+            var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+            table = document.getElementById("regionalTable");
+            switching = true;
+            dir = "asc"; 
+            
+            while (switching) {
+                switching = false;
+                rows = table.rows;
+                
+                for (i = 1; i < (rows.length - 1); i++) {
+                    shouldSwitch = false;
+                    x = rows[i].getElementsByTagName("TD")[n];
+                    y = rows[i+1].getElementsByTagName("TD")[n];
+                    
+                    let xVal = x.textContent.toLowerCase().replace(/,/g, '').replace(/%/g, '');
+                    let yVal = y.textContent.toLowerCase().replace(/,/g, '').replace(/%/g, '');
+                    
+                    if (!isNaN(parseFloat(xVal)) && !isNaN(parseFloat(yVal))) {
+                        xVal = parseFloat(xVal);
+                        yVal = parseFloat(yVal);
+                    }
+
+                    if (dir == "asc") {
+                        if (xVal > yVal) { shouldSwitch = true; break; }
+                    } else if (dir == "desc") {
+                        if (xVal < yVal) { shouldSwitch = true; break; }
+                    }
+                }
+                if (shouldSwitch) {
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                    switchcount ++; 
+                } else {
+                    if (switchcount == 0 && dir == "asc") {
+                        dir = "desc";
+                        switching = true;
+                    }
+                }
+            }
+        }
+
+        // --- 3. Chart.js Configurations ---
+        document.addEventListener('DOMContentLoaded', function () {
+            
+            // Palette matches CSS
+            const colorPrimary = '#C0A062'; // Barley Gold
+            const colorAccent = '#D84315';  // Rust
+            const colorDark = '#3E2723';    // Dark Earth
+            const colorLight = '#EFEBE9';   // Off white
+
+            const labels = ['Baalbek-Hermel', 'Bekaa', 'Akkar', 'Nabatieh', 'South', 'North', 'Mt Lebanon', 'Beirut'];
+            // Updated Values (based on 27,000 * share)
+            const dataWaste = [21708, 1890, 1647, 972, 351, 351, 54, 0];
+            // Updated Shares (from World Bank 2010 Table 3.5)
+            const dataShare = [80.4, 7.0, 6.1, 3.6, 1.3, 1.3, 0.2, 0];
+
+            // 1. Regional Bar Chart
+            const ctxBar = document.getElementById('regionalBarChart').getContext('2d');
+            new Chart(ctxBar, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Straw Waste (Tonnes/Year)',
+                        data: dataWaste,
+                        backgroundColor: colorPrimary,
+                        borderRadius: 4,
+                        hoverBackgroundColor: colorAccent
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: 'rgba(62, 39, 35, 0.9)',
+                            padding: 12,
+                            callbacks: {
+                                label: function(context) { return ' ' + context.raw.toLocaleString() + ' tonnes'; },
+                                afterLabel: function() { return 'Source: World Bank (2010)'; }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: '#f3f4f6' } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+
+            // 2. Pie Chart
+            const ctxPie = document.getElementById('surfacePieChart').getContext('2d');
+            new Chart(ctxPie, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: dataShare,
+                        backgroundColor: [
+                            '#C0A062', // Baalbek
+                            '#D7CCC8', // Bekaa
+                            '#BCAAA4', // Akkar
+                            '#A1887F', // Nabatieh
+                            '#8D6E63', // South
+                            '#795548', // North
+                            '#5D4037', // Mt Leb
+                            '#3E2723'
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '65%',
+                    plugins: {
+                        legend: { 
+                            position: 'right', 
+                            labels: { usePointStyle: true, boxWidth: 8, font: { size: 11 } } 
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) { 
+                                    return ' ' + context.parsed + '%'; 
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // 3. Comparative Chart
+            const ctxComp = document.getElementById('comparativeChart').getContext('2d');
+            new Chart(ctxComp, {
+                type: 'bar',
+                data: {
+                    labels: ['Grain Production (1.0)', 'Straw Waste (0.90)'],
+                    datasets: [{
+                        label: 'Volume (Tonnes)',
+                        data: [30000, 27000],
+                        backgroundColor: [colorAccent, colorPrimary], 
+                        borderRadius: 6,
+                        barPercentage: 0.6
+                    }]
+                },
+                options: {
+                    indexAxis: 'y', 
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: 'rgba(62, 39, 35, 0.9)',
+                            padding: 12
+                        }
+                    },
+                    scales: {
+                        x: { beginAtZero: true, grid: { color: '#f3f4f6' }, title: { display: true, text: 'Tonnes per Year' } },
+                        y: { grid: { display: false } }
+                    }
+                }
+            });
+        });
+        
+        // Sticky Nav Logic
+        window.addEventListener('scroll', () => {
+            let current = '';
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.side-nav-link, .top-nav-link');
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 150) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

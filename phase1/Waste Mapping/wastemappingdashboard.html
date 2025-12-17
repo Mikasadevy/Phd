@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Waste Mapping - Lebanon | Scientific Baseline</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['Lora', 'serif'],
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            primary: '#059669',   /* Emerald 600 */
+                            secondary: '#0891b2', /* Cyan 600 */
+                            dark: '#0f172a',      /* Slate 900 */
+                            accent: '#f59e0b',    /* Amber 500 */
+                            light: '#f0fdf4',     /* Emerald 50 */
+                        }
+                    },
+                    animation: {
+                        'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Prism.js for JSON Syntax Highlighting -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-json.min.js"></script>
+
+    <style>
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e0; border-radius: 5px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        .text-gradient {
+            background: linear-gradient(135deg, #059669 0%, #0891b2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover { 
+            transform: translateY(-5px); 
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border-color: #34d399; /* Emerald 400 */
+        }
+
+        /* Timeline / Stepper Styling */
+        .step-connector {
+            position: absolute;
+            top: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 100%;
+            background: #e2e8f0;
+            z-index: 0;
+        }
+        @media (min-width: 768px) {
+            .step-connector {
+                top: 50%;
+                left: 0;
+                transform: translateY(-50%);
+                width: 100%;
+                height: 2px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans selection:bg-emerald-200 relative">
+
+    <!-- Back to Top Button -->
+    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="fixed bottom-8 right-8 z-50 p-3 bg-emerald-600 text-white rounded-full shadow-lg hover:bg-emerald-700 transition-all hover:scale-110 opacity-90 hover:opacity-100">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+        </svg>
+    </button>
+
+    <!-- HERO HEADER -->
+    <header class="relative bg-gradient-to-br from-emerald-700 via-teal-600 to-cyan-800 text-white pt-20 pb-36 px-6 overflow-hidden shadow-2xl">
+        <!-- Abstract Background Pattern -->
+        <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 30px 30px;"></div>
+        <div class="absolute top-0 right-0 w-96 h-96 bg-emerald-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float"></div>
+        <div class="absolute bottom-0 left-0 w-96 h-96 bg-cyan-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float" style="animation-delay: 2s;"></div>
+        
+        <div class="relative container mx-auto max-w-7xl text-center z-10 animate-fade-in-up">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-semibold tracking-wide mb-6 uppercase shadow-sm">
+                <span class="w-2 h-2 bg-emerald-300 rounded-full animate-pulse shadow-[0_0_10px_#34d399]"></span>
+                Scientific Baseline
+            </div>
+            
+            <h1 class="text-4xl md:text-7xl font-serif font-bold mb-6 leading-tight drop-shadow-lg tracking-tight">
+                Waste Mapping - Lebanon
+            </h1>
+            <p class="text-lg md:text-2xl text-emerald-50 font-serif italic max-w-3xl mx-auto mb-10 leading-relaxed font-light">
+                Quantitative assessment of bio-based material feedstock availability
+            </p>
+            
+            <!-- Key Metrics Dashboard -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-12 max-w-6xl mx-auto">
+                <div class="bg-white/10 backdrop-blur-md rounded-2xl p-5 border border-white/10 hover:bg-white/20 transition-all duration-300 hover:-translate-y-1 shadow-lg">
+                    <div class="text-emerald-200 text-xs uppercase tracking-wider font-bold mb-1">Validated Waste Streams</div>
+                    <div class="text-4xl font-serif font-bold">13</div>
+                    <div class="text-xs text-white/80 mt-1">Agricultural & Industrial</div>
+                </div>
+                
+                <div class="bg-white/10 backdrop-blur-md rounded-2xl p-5 border border-white/10 hover:bg-white/20 transition-all duration-300 hover:-translate-y-1 shadow-lg">
+                    <div class="text-emerald-200 text-xs uppercase tracking-wider font-bold mb-1">Total Net Volume</div>
+                    <div class="text-4xl font-serif font-bold">≈ 1.80M</div>
+                    <div class="text-xs text-white/80 mt-1">Tonnes / Year (Export Adj.)</div>
+                </div>
+                
+                <div class="bg-white/10 backdrop-blur-md rounded-2xl p-5 border border-white/10 hover:bg-white/20 transition-all duration-300 hover:-translate-y-1 shadow-lg">
+                    <div class="text-emerald-200 text-xs uppercase tracking-wider font-bold mb-1">Spatial Coverage</div>
+                    <div class="text-4xl font-serif font-bold">8</div>
+                    <div class="text-xs text-white/80 mt-1">Governorates Covered</div>
+                </div>
+                
+                <div class="bg-white/10 backdrop-blur-md rounded-2xl p-5 border border-white/10 hover:bg-white/20 transition-all duration-300 hover:-translate-y-1 shadow-lg">
+                    <div class="text-emerald-200 text-xs uppercase tracking-wider font-bold mb-1">Methodology</div>
+                    <div class="text-xl font-bold mt-2 leading-snug">Net Domestic<br>Supply Model</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Curved Bottom Edge -->
+        <div class="absolute bottom-0 left-0 w-full h-16 bg-slate-50 rounded-t-[50%] transform scale-x-150 translate-y-8 shadow-[0_-10px_40px_rgba(0,0,0,0.1)]"></div>
+    </header>
+
+    <!-- STICKY NAVIGATION -->
+    <nav class="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-200/60 shadow-sm supports-[backdrop-filter]:bg-white/60">
+        <div class="container mx-auto max-w-7xl px-4">
+            <ul class="flex space-x-1 md:space-x-4 overflow-x-auto text-sm font-semibold text-slate-600 scrollbar-hide py-3">
+                <li><a href="#overview" class="block px-3 py-2 hover:text-brand-primary hover:bg-emerald-50 rounded-lg transition whitespace-nowrap">📊 Overview</a></li>
+                <li><a href="#methodology" class="block px-3 py-2 hover:text-brand-primary hover:bg-emerald-50 rounded-lg transition whitespace-nowrap">🔬 Methodology</a></li>
+                <li><a href="#sources" class="block px-3 py-2 hover:text-brand-primary hover:bg-emerald-50 rounded-lg transition whitespace-nowrap">📚 Data Sources</a></li>
+                <li><a href="#waste-streams" class="block px-3 py-2 hover:text-brand-primary hover:bg-emerald-50 rounded-lg transition whitespace-nowrap">♻️ Waste Streams</a></li>
+                <li><a href="#regional-insights" class="block px-3 py-2 hover:text-brand-primary hover:bg-emerald-50 rounded-lg transition whitespace-nowrap">🗺️ Regional Map</a></li>
+                <li><a href="#json-app" class="block px-3 py-2 hover:text-brand-primary hover:bg-emerald-50 rounded-lg transition whitespace-nowrap">🧩 Dataset & App</a></li>
+                <li><a href="#limitations" class="block px-3 py-2 hover:text-brand-primary hover:bg-emerald-50 rounded-lg transition whitespace-nowrap">🛡️ Data Integrity</a></li>
+                <li><a href="#summary" class="block px-3 py-2 hover:text-brand-primary hover:bg-emerald-50 rounded-lg transition whitespace-nowrap">✅ Summary</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 md:px-6 py-12 max-w-7xl space-y-24">
+
+        <!-- 1) OVERVIEW SECTION -->
+        <section id="overview" class="scroll-mt-32">
+            <div class="glass rounded-3xl p-8 md:p-12 shadow-2xl border border-white/50 relative overflow-hidden">
+                <!-- Decorative Circle -->
+                <div class="absolute -top-10 -right-10 w-40 h-40 bg-emerald-100 rounded-full opacity-50 blur-2xl"></div>
+
+                <div class="flex items-center gap-6 mb-10 border-b border-slate-100 pb-8 relative z-10">
+                    <div class="w-16 h-16 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center text-3xl shadow-lg text-white transform rotate-3">
+                        📊
+                    </div>
+                    <div>
+                        <h2 class="text-3xl md:text-4xl font-serif font-bold text-slate-800">Quantifying the Bio-Based Potential</h2>
+                        <p class="text-slate-500 text-lg">A rigorous feedstock inventory for sustainable material engineering</p>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-10 relative z-10">
+                    <!-- Narrative -->
+                    <div class="md:col-span-2 space-y-5 text-slate-700 leading-relaxed text-lg">
+                        <p class="font-medium text-slate-900">
+                            Developing scalable bio-based materials requires a reliable, quantified understanding of locally available feedstock.
+                        </p>
+                        <p>
+                            This dashboard presents a scientifically grounded inventory of Lebanon’s agricultural and industrial organic waste. Unlike gross production estimates, this model applies a <strong>Net Domestic Supply</strong> methodology, deducting exports to reveal the true organic load remaining within national borders. This precision is critical for determining the feasibility of industrial applications.
+                        </p>
+                        <ul class="list-disc list-inside space-y-3 ml-2 text-base marker:text-emerald-500">
+                            <li><strong>Volume Precision:</strong> Shifts from theoretical production to export-adjusted waste generation.</li>
+                            <li><strong>Industrial Capacity:</strong> Includes high-volume streams like <strong>Paper & Cardboard (370k t)</strong> and <strong>Dairy Whey (220k t)</strong> alongside agricultural residues.</li>
+                            <li><strong>Strategic Zoning:</strong> Identifies distinct material belts: the "Carbohydrate Valley" (Bekaa) and the "Fiber Coast" (South).</li>
+                        </ul>
+                    </div>
+
+                    <!-- Info Boxes -->
+                    <div class="space-y-5">
+                        <div class="bg-white/60 backdrop-blur-sm border-l-4 border-emerald-500 p-6 rounded-r-2xl shadow-sm hover:shadow-md transition">
+                            <h4 class="font-bold text-emerald-900 text-sm uppercase tracking-wide mb-3 flex items-center gap-2">
+                                <span>📦</span> Dataset Outputs
+                            </h4>
+                            <ul class="text-sm text-emerald-900/80 space-y-2">
+                                <li>• <strong>Net Domestic Supply</strong>: Export-adjusted calculations</li>
+                                <li>• <strong>13 Validated Streams</strong>: Full sector coverage</li>
+                                <li>• <strong>Precise Factors</strong>: Literature-backed coefficients (e.g., 4:1 Banana)</li>
+                                <li>• <strong>Regional Logic</strong>: Area-based allocation models</li>
+                            </ul>
+                        </div>
+                        <div class="bg-white/60 backdrop-blur-sm border-l-4 border-blue-500 p-6 rounded-r-2xl shadow-sm hover:shadow-md transition">
+                            <h4 class="font-bold text-blue-900 text-sm uppercase tracking-wide mb-3 flex items-center gap-2">
+                                <span>🎓</span> Research Application
+                            </h4>
+                            <ul class="text-sm text-blue-900/80 space-y-2">
+                                <li>• Directs sampling to high-intensity zones</li>
+                                <li>• Validates "Urban Mining" potential (Paper/Textile)</li>
+                                <li>• Identifies Industrial Symbiosis opportunities (Whey)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2) METHODOLOGY SECTION -->
+        <section id="methodology" class="scroll-mt-32">
+            <div class="text-center mb-12">
+                <span class="text-emerald-600 font-bold tracking-widest text-xs uppercase bg-emerald-50 px-3 py-1 rounded-full">Process Workflow</span>
+                <h2 class="text-3xl md:text-4xl font-serif font-bold text-slate-900 mt-4">Scientific Calculation Model</h2>
+            </div>
+            
+            <!-- Horizontal Stepper (Responsive Grid on Mobile) -->
+            <div class="relative grid grid-cols-1 md:grid-cols-6 gap-6 mb-10">
+                <!-- Connector Line (Desktop Only) -->
+                <div class="hidden md:block absolute top-1/2 left-0 w-full h-1 bg-gradient-to-r from-emerald-100 via-teal-100 to-cyan-100 -z-10 transform -translate-y-1/2 rounded-full"></div>
+
+                <!-- Step 1 -->
+                <div class="bg-white p-5 rounded-2xl shadow-md border border-slate-100 relative group hover:-translate-y-2 transition-all duration-300">
+                    <div class="w-10 h-10 bg-emerald-600 text-white rounded-full flex items-center justify-center font-bold text-base mx-auto mb-4 shadow-lg border-4 border-emerald-50 group-hover:bg-emerald-500 transition-colors">1</div>
+                    <h3 class="font-bold text-slate-800 text-sm text-center mb-2">Production Data</h3>
+                    <p class="text-xs text-slate-500 text-center leading-relaxed">FAOSTAT 2023 Gross Production Baseline</p>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="bg-white p-5 rounded-2xl shadow-md border border-slate-100 relative group hover:-translate-y-2 transition-all duration-300">
+                    <div class="w-10 h-10 bg-emerald-600 text-white rounded-full flex items-center justify-center font-bold text-base mx-auto mb-4 shadow-lg border-4 border-emerald-50 group-hover:bg-emerald-500 transition-colors">2</div>
+                    <h3 class="font-bold text-slate-800 text-sm text-center mb-2">Net Trade Adj.</h3>
+                    <p class="text-xs text-slate-500 text-center leading-relaxed">Deduction of Exports (Fresh/Dry)</p>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="bg-white p-5 rounded-2xl shadow-md border border-slate-100 relative group hover:-translate-y-2 transition-all duration-300">
+                    <div class="w-10 h-10 bg-emerald-600 text-white rounded-full flex items-center justify-center font-bold text-base mx-auto mb-4 shadow-lg border-4 border-emerald-50 group-hover:bg-emerald-500 transition-colors">3</div>
+                    <h3 class="font-bold text-slate-800 text-sm text-center mb-2">Loss Factors</h3>
+                    <p class="text-xs text-slate-500 text-center leading-relaxed">Application of IPCC & Scientific Ratios</p>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="bg-white p-5 rounded-2xl shadow-md border border-slate-100 relative group hover:-translate-y-2 transition-all duration-300">
+                    <div class="w-10 h-10 bg-emerald-600 text-white rounded-full flex items-center justify-center font-bold text-base mx-auto mb-4 shadow-lg border-4 border-emerald-50 group-hover:bg-emerald-500 transition-colors">4</div>
+                    <h3 class="font-bold text-slate-800 text-sm text-center mb-2">Domestic Waste</h3>
+                    <p class="text-xs text-slate-500 text-center leading-relaxed">Calculation of internal organic load</p>
+                </div>
+
+                <!-- Step 5 -->
+                <div class="bg-white p-5 rounded-2xl shadow-md border border-slate-100 relative group hover:-translate-y-2 transition-all duration-300">
+                    <div class="w-10 h-10 bg-brand-secondary text-white rounded-full flex items-center justify-center font-bold text-base mx-auto mb-4 shadow-lg border-4 border-cyan-50 group-hover:bg-cyan-500 transition-colors">5</div>
+                    <h3 class="font-bold text-slate-800 text-sm text-center mb-2">Regional Split</h3>
+                    <p class="text-xs text-slate-500 text-center leading-relaxed">World Bank Area / Industry Cluster Maps</p>
+                </div>
+
+                <!-- Step 6 -->
+                <div class="bg-white p-5 rounded-2xl shadow-md border border-slate-100 relative group hover:-translate-y-2 transition-all duration-300">
+                    <div class="w-10 h-10 bg-brand-accent text-white rounded-full flex items-center justify-center font-bold text-base mx-auto mb-4 shadow-lg border-4 border-amber-50 group-hover:bg-amber-400 transition-colors">6</div>
+                    <h3 class="font-bold text-slate-800 text-sm text-center mb-2">Validation</h3>
+                    <p class="text-xs text-slate-500 text-center leading-relaxed">Triangulation with Local Case Studies</p>
+                </div>
+            </div>
+
+            <!-- Methodology Note -->
+            <div class="max-w-3xl mx-auto bg-amber-50/50 border border-amber-200/60 rounded-xl p-5 flex items-start gap-4 shadow-sm mt-10">
+                <span class="text-amber-500 text-2xl animate-pulse">💡</span>
+                <p class="text-sm text-amber-900/80 italic leading-relaxed">
+                    <strong>Net Domestic Supply Logic:</strong> This model prioritizes accuracy by excluding exported materials from the waste equation. For example, while national Potato production is ~660k tonnes, approximately 60k tonnes are exported. Waste coefficients are applied only to the remaining ~600k tonne domestic supply to avoid overestimating locally available biomass.
+                </p>
+            </div>
+        </section>
+
+        <!-- 3) DATA SOURCES SECTION -->
+        <section id="sources" class="scroll-mt-32">
+            <h2 class="text-2xl font-serif font-bold text-slate-800 mb-8 flex items-center gap-3">
+                <span class="text-brand-primary bg-emerald-100 p-2 rounded-lg">📚</span> 
+                Data Sources & Credibility
+            </h2>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <div class="glass p-8 rounded-3xl border-t-8 border-emerald-500 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
+                    <div class="h-12 w-12 bg-emerald-100 rounded-xl flex items-center justify-center text-2xl mb-6 text-emerald-600">🌍</div>
+                    <h3 class="font-bold text-slate-800 text-lg mb-4">Production & Trade</h3>
+                    <ul class="space-y-3 text-sm text-slate-600">
+                        <li class="flex items-center gap-3"><span class="w-2 h-2 bg-emerald-400 rounded-full"></span>FAOSTAT (2023)</li>
+                        <li class="flex items-center gap-3"><span class="w-2 h-2 bg-emerald-400 rounded-full"></span>UN Comtrade (Exports)</li>
+                        <li class="flex items-center gap-3"><span class="w-2 h-2 bg-emerald-400 rounded-full"></span>World Bank (Regional Area)</li>
+                        <li class="flex items-center gap-3"><span class="w-2 h-2 bg-emerald-400 rounded-full"></span>UNOPS (Dairy Stats)</li>
+                    </ul>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="glass p-8 rounded-3xl border-t-8 border-blue-500 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
+                    <div class="h-12 w-12 bg-blue-100 rounded-xl flex items-center justify-center text-2xl mb-6 text-blue-600">🇱🇧</div>
+                    <h3 class="font-bold text-slate-800 text-lg mb-4">National Validation</h3>
+                    <ul class="space-y-3 text-sm text-slate-600">
+                        <li class="flex items-center gap-3"><span class="w-2 h-2 bg-blue-400 rounded-full"></span>MoA (Olive/Wheat Surveys)</li>
+                        <li class="flex items-center gap-3"><span class="w-2 h-2 bg-blue-400 rounded-full"></span>SWEEP-Net (MSW Comp.)</li>
+                        <li class="flex items-center gap-3"><span class="w-2 h-2 bg-blue-400 rounded-full"></span>IDAL (Agro-Industry Map)</li>
+                        <li class="flex items-center gap-3"><span class="w-2 h-2 bg-blue-400 rounded-full"></span>Blominvest (Citrus)</li>
+                    </ul>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="glass p-8 rounded-3xl border-t-8 border-purple-500 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
+                    <div class="h-12 w-12 bg-purple-100 rounded-xl flex items-center justify-center text-2xl mb-6 text-purple-600">🎓</div>
+                    <h3 class="font-bold text-slate-800 text-lg mb-4">Scientific Factors</h3>
+                    <ul class="space-y-3 text-sm text-slate-600">
+                        <li class="flex items-center gap-3"><span class="w-2 h-2 bg-purple-400 rounded-full"></span>IPCC (Residue Ratios)</li>
+                        <li class="flex items-center gap-3"><span class="w-2 h-2 bg-purple-400 rounded-full"></span>Zhang et al. (Biomass)</li>
+                        <li class="flex items-center gap-3"><span class="w-2 h-2 bg-purple-400 rounded-full"></span>Kinab & Khoury (Olives)</li>
+                        <li class="flex items-center gap-3"><span class="w-2 h-2 bg-purple-400 rounded-full"></span>UNIDO MED TEST II</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4) WASTE STREAMS SECTION -->
+        <section id="waste-streams" class="scroll-mt-32">
+            <div class="mb-10 text-center">
+                <h2 class="text-3xl font-serif font-bold text-slate-800">Quantified Waste Streams (13)</h2>
+                <p class="text-slate-500 mt-2">Comprehensive inventory categorized by origin</p>
+            </div>
+
+            <!-- Agricultural Biomass Header -->
+            <div class="flex items-center gap-4 mb-6">
+                <span class="h-px bg-slate-200 flex-1"></span>
+                <span class="text-emerald-700 font-bold uppercase tracking-wider text-sm bg-emerald-50 px-4 py-1 rounded-full border border-emerald-100">Agricultural Biomass</span>
+                <span class="h-px bg-slate-200 flex-1"></span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+                <!-- Banana -->
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 card-hover group relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-20 h-20 bg-yellow-50 rounded-bl-full -mr-10 -mt-10 transition-transform group-hover:scale-150 duration-500"></div>
+                    <div class="flex justify-between items-start mb-4 relative z-10">
+                        <div class="text-4xl p-2 bg-yellow-50 rounded-2xl shadow-sm">🍌</div>
+                        <span class="w-3 h-3 bg-emerald-500 rounded-full ring-4 ring-emerald-50"></span>
+                    </div>
+                    <h3 class="font-bold text-slate-800 mb-1 text-lg group-hover:text-emerald-600 transition-colors">Banana Biomass</h3>
+                    <p class="text-xs text-slate-500 mb-5 font-medium">Pseudostems & leaves (4:1)</p>
+                    <div class="space-y-2 text-xs border-t border-slate-100 pt-4">
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-500 font-medium">Est. Vol:</span>
+                            <span class="font-mono font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded">329,246 t</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-500 font-medium">Region:</span>
+                            <span class="font-bold text-slate-700">South (53%), Mt. Leb</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Potato -->
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 card-hover group relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-20 h-20 bg-amber-100 rounded-bl-full -mr-10 -mt-10 transition-transform group-hover:scale-150 duration-500"></div>
+                    <div class="flex justify-between items-start mb-4 relative z-10">
+                        <div class="text-4xl p-2 bg-amber-50 rounded-2xl shadow-sm">🥔</div>
+                        <span class="w-3 h-3 bg-emerald-500 rounded-full ring-4 ring-emerald-50"></span>
+                    </div>
+                    <h3 class="font-bold text-slate-800 mb-1 text-lg group-hover:text-emerald-600 transition-colors">Potato Ag-Waste</h3>
+                    <p class="text-xs text-slate-500 mb-5 font-medium">Haulms & culls (Net Supply)</p>
+                    <div class="space-y-2 text-xs border-t border-slate-100 pt-4">
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-500 font-medium">Est. Vol:</span>
+                            <span class="font-mono font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded">314,790 t</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-500 font-medium">Region:</span>
+                            <span class="font-bold text-slate-700">Bekaa (70%), Akkar</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Wheat -->
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 card-hover group relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-20 h-20 bg-amber-50 rounded-bl-full -mr-10 -mt-10 transition-transform group-hover:scale-150 duration-500"></div>
+                    <div class="flex justify-between items-start mb-4 relative z-10">
+                        <div class="text-4xl p-2 bg-amber-50 rounded-2xl shadow-sm">🌾</div>
+                        <span class="w-3 h-3 bg-emerald-500 rounded-full ring-4 ring-emerald-50"></span>
+                    </div>
+                    <h3 class="font-bold text-slate-800 mb-1 text-lg group-hover:text-emerald-600 transition-colors">Wheat Straw</h3>
+                    <p class="text-xs text-slate-500 mb-5 font-medium">Field residue (IPCC 1.2)</p>
+                    <div class="space-y-2 text-xs border-t border-slate-100 pt-4">
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-500 font-medium">Est. Vol:</span>
+                            <span class="font-mono font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded">120,000 t</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-500 font-medium">Region:</span>
+                            <span class="font-bold text-slate-700">Bekaa, Baalbek</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Barley -->
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 card-hover group relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-20 h-20 bg-amber-50 rounded-bl-full -mr-10 -mt-10 transition-transform group-hover:scale-150 duration-500"></div>
+                    <div class="flex justify-between items-start mb-4 relative z-10">
+                        <div class="text-4xl p-2 bg-amber-50 rounded-2xl shadow-sm">🌾</div>
+                        <span class="w-3 h-3 bg-emerald-500 rounded-full ring-4 ring-emerald-50"></span>
+                    </div>
+                    <h3 class="font-bold text-slate-800 mb-1 text-lg group-hover:text-emerald-600 transition-colors">Barley Straw</h3>
+                    <p class="text-xs text-slate-500 mb-5 font-medium">Dryland cereal residue</p>
+                    <div class="space-y-2 text-xs border-t border-slate-100 pt-4">
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-500 font-medium">Est. Vol:</span>
+                            <span class="font-mono font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded">27,000 t</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-500 font-medium">Region:</span>
+                            <span class="font-bold text-slate-700">Baalbek (80%)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tobacco -->
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 card-hover group relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-20 h-20 bg-green-100 rounded-bl-full -mr-10 -mt-10 transition-transform group-hover:scale-150 duration-500"></div>
+                    <div class="flex justify-between items-start mb-4 relative z-10">
+                        <div class="text-4xl p-2 bg-green-50 rounded-2xl shadow-sm">🌿</div>
+                        <span class="w-3 h-3 bg-emerald-500 rounded-full ring-4 ring-emerald-50"></span>
+                    </div>
+                    <h3 class="font-bold text-slate-800 mb-1 text-lg group-hover:text-emerald-600 transition-colors">Tobacco Stalks</h3>
+                    <p class="text-xs text-slate-500 mb-5 font-medium">Lignocellulosic stalks</p>
+                    <div class="space-y-2 text-xs border-t border-slate-100 pt-4">
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-500 font-medium">Est. Vol:</span>
+                            <span class="font-mono font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded">Significant</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-500 font-medium">Region:</span>
+                            <span class="font-bold text-slate-700">South, Nabatieh</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Apple Ag-Waste -->
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 card-hover group relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-20 h-20 bg-red-50 rounded-bl-full -mr-10 -mt-10 transition-transform group-hover:scale-150 duration-500"></div>
+                    <div class="flex justify-between items-start mb-4 relative z-10">
+                        <div class="text-4xl p-2 bg-red-50 rounded-2xl shadow-sm">🍎</div>
+                        <span class="w-3 h-3 bg-transparent border-2 border-slate-300 rounded-full"></span>
+                    </div>
+                    <h3 class="font-bold text-slate-800 mb-1 text-lg group-hover:text-emerald-600 transition-colors">Apple Ag-Waste</h3>
+                    <p class="text-xs text-slate-500 mb-5 font-medium">Field culls & storage loss</p>
+                    <div class="space-y-2 text-xs border-t border-slate-100 pt-4">
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-500 font-medium">Est. Vol:</span>
+                            <span class="font-mono font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded">~85,000 t</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-500 font-medium">Region:</span>
+                            <span class="font-bold text-slate-700 italic">National estimate (no verified regional allocation)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Citrus Ag-Waste -->
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 card-hover group relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-20 h-20 bg-orange-50 rounded-bl-full -mr-10 -mt-10 transition-transform group-hover:scale-150 duration-500"></div>
+                    <div class="flex justify-between items-start mb-4 relative z-10">
+                        <div class="text-4xl p-2 bg-orange-50 rounded-2xl shadow-sm">🍊</div>
+                        <span class="w-3 h-3 bg-emerald-500 rounded-full ring-4 ring-emerald-50"></span>
+                    </div>
+                    <h3 class="font-bold text-slate-800 mb-1 text-lg group-hover:text-emerald-600 transition-colors">Citrus Culls</h3>
+                    <p class="text-xs text-slate-500 mb-5 font-medium">Field & packing culls</p>
+                    <div class="space-y-2 text-xs border-t border-slate-100 pt-4">
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-500 font-medium">Est. Vol:</span>
+                            <span class="font-mono font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded">Variable</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-500 font-medium">Region:</span>
+                            <span class="font-bold text-slate-700">South (60%), North</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Industrial Waste Header -->
+            <div class="flex items-center gap-4 mb-6">
+                <span class="h-px bg-slate-200 flex-1"></span>
+                <span class="text-blue-700 font-bold uppercase tracking-wider text-sm bg-blue-50 px-4 py-1 rounded-full border border-blue-100">Industrial & Processing Waste</span>
+                <span class="h-px bg-slate-200 flex-1"></span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Paper -->
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 card-hover group relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-20 h-20 bg-emerald-50 rounded-bl-full -mr-10 -mt-10 transition-transform group-hover:scale-150 duration-500"></div>
+                    <div class="flex justify-between items-start mb-4 relative z-10">
+                        <div class="text-4xl p-2 bg-emerald-50 rounded-2xl shadow-sm">📦</div>
+                        <span class="w-3 h-3 bg-transparent border-2 border-slate-300 rounded-full"></span>
+                    </div>
+                    <h3 class="font-bold text-slate-800 mb-1 text-lg group-hover:text-emerald-600 transition-colors">Paper & Cardboard</h3>
+                    <p class="text-xs text-slate-500 mb-5 font-medium">Consumption-driven MSW</p>
+                    <div class="space-y-2 text-xs border-t border-slate-100 pt-4">
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-500 font-medium">Est. Vol:</span>
+                            <span class="font-mono font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded">~370,000 t</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-500 font-medium">Region:</span>
+                            <span class="font-bold text-slate-700 italic">National estimate (no verified regional allocation)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dairy -->
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 card-hover group relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-20 h-20 bg-blue-50 rounded-bl-full -mr-10 -mt-10 transition-transform group-hover:scale-150 duration-500"></div>
+                    <div class="flex justify-between items-start mb-4 relative z-10">
+                        <div class="text-4xl p-2 bg-blue-50 rounded-2xl shadow-sm">🥛</div>
+                        <span class="w-3 h-3 bg-emerald-500 rounded-full ring-4 ring-emerald-50"></span>
+                    </div>
+                    <h3 class="font-bold text-slate-800 mb-1 text-lg group-hover:text-emerald-600 transition-colors">Dairy Whey</h3>
+                    <p class="text-xs text-slate-500 mb-5 font-medium">Liquid effluent</p>
+                    <div class="space-y-2 text-xs border-t border-slate-100 pt-4">
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-500 font-medium">Est. Vol:</span>
+                            <span class="font-mono font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded">220,000 t</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-500 font-medium">Region:</span>
+                            <span class="font-bold text-slate-700">Bekaa, Baalbek</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Olive Pomace -->
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 card-hover group relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-20 h-20 bg-stone-100 rounded-bl-full -mr-10 -mt-10 transition-transform group-hover:scale-150 duration-500"></div>
+                    <div class="flex justify-between items-start mb-4 relative z-10">
+                        <div class="text-4xl p-2 bg-stone-50 rounded-2xl shadow-sm">🫒</div>
+                        <span class="w-3 h-3 bg-emerald-500 rounded-full ring-4 ring-emerald-50"></span>
+                    </div>
+                    <h3 class="font-bold text-slate-800 mb-1 text-lg group-hover:text-emerald-600 transition-colors">Olive Pomace</h3>
+                    <p class="text-xs text-slate-500 mb-5 font-medium">High moisture (58% factor)</p>
+                    <div class="space-y-2 text-xs border-t border-slate-100 pt-4">
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-500 font-medium">Est. Vol:</span>
+                            <span class="font-mono font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded">79,000 t</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-500 font-medium">Region:</span>
+                            <span class="font-bold text-slate-700">North, Nabatieh</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Textile -->
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 card-hover group relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-20 h-20 bg-purple-50 rounded-bl-full -mr-10 -mt-10 transition-transform group-hover:scale-150 duration-500"></div>
+                    <div class="flex justify-between items-start mb-4 relative z-10">
+                        <div class="text-4xl p-2 bg-purple-50 rounded-2xl shadow-sm">🧵</div>
+                        <span class="w-3 h-3 bg-transparent border-2 border-slate-300 rounded-full"></span>
+                    </div>
+                    <h3 class="font-bold text-slate-800 mb-1 text-lg group-hover:text-emerald-600 transition-colors">Textile Waste</h3>
+                    <p class="text-xs text-slate-500 mb-5 font-medium">Garment offcuts</p>
+                    <div class="space-y-2 text-xs border-t border-slate-100 pt-4">
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-500 font-medium">Est. Vol:</span>
+                            <span class="font-mono font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded">~75,000 t</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-500 font-medium">Region:</span>
+                            <span class="font-bold text-slate-700 italic">National estimate (no verified regional allocation)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chicken Feathers -->
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 card-hover group relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-20 h-20 bg-red-50 rounded-bl-full -mr-10 -mt-10 transition-transform group-hover:scale-150 duration-500"></div>
+                    <div class="flex justify-between items-start mb-4 relative z-10">
+                        <div class="text-4xl p-2 bg-red-50 rounded-2xl shadow-sm">🪶</div>
+                        <span class="w-3 h-3 bg-transparent border-2 border-slate-300 rounded-full"></span>
+                    </div>
+                    <h3 class="font-bold text-slate-800 mb-1 text-lg group-hover:text-emerald-600 transition-colors">Chicken Feathers</h3>
+                    <p class="text-xs text-slate-500 mb-5 font-medium">Keratin source (6% live wt)</p>
+                    <div class="space-y-2 text-xs border-t border-slate-100 pt-4">
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-500 font-medium">Est. Vol:</span>
+                            <span class="font-mono font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded">7,302 t</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-500 font-medium">Region:</span>
+                            <span class="font-bold text-slate-700 italic">National estimate (no verified regional allocation)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Almond Shells -->
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 card-hover group relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-20 h-20 bg-stone-50 rounded-bl-full -mr-10 -mt-10 transition-transform group-hover:scale-150 duration-500"></div>
+                    <div class="flex justify-between items-start mb-4 relative z-10">
+                        <div class="text-4xl p-2 bg-stone-100 rounded-2xl shadow-sm">🌰</div>
+                        <span class="w-3 h-3 bg-emerald-500 rounded-full ring-4 ring-emerald-50"></span>
+                    </div>
+                    <h3 class="font-bold text-slate-800 mb-1 text-lg group-hover:text-emerald-600 transition-colors">Almond Waste</h3>
+                    <p class="text-xs text-slate-500 mb-5 font-medium">Hulls & shells</p>
+                    <div class="space-y-2 text-xs border-t border-slate-100 pt-4">
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-500 font-medium">Est. Vol:</span>
+                            <span class="font-mono font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded">32,013 t</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-500 font-medium">Region:</span>
+                            <span class="font-bold text-slate-700">Baalbek (50%)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Grape Pomace -->
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 card-hover group relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-20 h-20 bg-purple-50 rounded-bl-full -mr-10 -mt-10 transition-transform group-hover:scale-150 duration-500"></div>
+                    <div class="flex justify-between items-start mb-4 relative z-10">
+                        <div class="text-4xl p-2 bg-purple-50 rounded-2xl shadow-sm">🍇</div>
+                        <span class="w-3 h-3 bg-emerald-500 rounded-full ring-4 ring-amber-50"></span>
+                    </div>
+                    <h3 class="font-bold text-slate-800 mb-1 text-lg group-hover:text-emerald-600 transition-colors">Grape Pomace</h3>
+                    <p class="text-xs text-slate-500 mb-5 font-medium">Winery waste</p>
+                    <div class="space-y-2 text-xs border-t border-slate-100 pt-4">
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-500 font-medium">Est. Vol:</span>
+                            <span class="font-mono font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded">~14,000 t</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-500 font-medium">Region:</span>
+                            <span class="font-bold text-slate-700">Bekaa</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Citrus Processing -->
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 card-hover group relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-20 h-20 bg-orange-50 rounded-bl-full -mr-10 -mt-10 transition-transform group-hover:scale-150 duration-500"></div>
+                    <div class="flex justify-between items-start mb-4 relative z-10">
+                        <div class="text-4xl p-2 bg-orange-50 rounded-2xl shadow-sm">🧃</div>
+                        <span class="w-3 h-3 bg-emerald-500 rounded-full ring-4 ring-emerald-50"></span>
+                    </div>
+                    <h3 class="font-bold text-slate-800 mb-1 text-lg group-hover:text-emerald-600 transition-colors">Citrus Biomass</h3>
+                    <p class="text-xs text-slate-500 mb-5 font-medium">Industrial peel & pulp</p>
+                    <div class="space-y-2 text-xs border-t border-slate-100 pt-4">
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-500 font-medium">Est. Vol:</span>
+                            <span class="font-mono font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded">121,992 t</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-500 font-medium">Region:</span>
+                            <span class="font-bold text-slate-700">South, North</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+             <!-- Legend for Confidence -->
+            <div class="max-w-2xl mx-auto flex items-center justify-center gap-8 mb-16 text-sm text-slate-500">
+                <div class="flex items-center gap-2">
+                    <span class="w-3 h-3 bg-emerald-500 rounded-full ring-4 ring-emerald-50"></span>
+                    <span>High Confidence (Regional Data)</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="w-3 h-3 bg-transparent border-2 border-slate-300 rounded-full"></span>
+                    <span>Low Confidence (National Only)</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5) REGIONAL INSIGHTS SECTION (ENHANCED with IMAGE) -->
+        <section id="regional-insights" class="scroll-mt-32">
+            <h2 class="text-3xl font-serif font-bold text-slate-800 mb-10">The "Three Belts" of Lebanon</h2>
+            
+            <div class="grid lg:grid-cols-2 gap-12">
+                <!-- Left: Explanation -->
+                <div class="space-y-8">
+                    <p class="text-slate-600 leading-relaxed text-lg">
+                        The updated mapping reveals three distinct "Bio-Economic Zones" rather than simple administrative divisions. Each belt offers a unique material profile for sampling and industrial logistics.
+                    </p>
+
+                    <div class="grid gap-5">
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-emerald-500 hover:shadow-md transition">
+                            <h4 class="font-bold text-slate-900 text-base mb-1">Zone A: The Carbohydrate Valley</h4>
+                            <p class="text-sm text-slate-600"><strong>Bekaa & Baalbek-Hermel:</strong> Dominated by high-volume carbohydrate-rich waste streams, including potato residues, cereal straw, and dairy whey (modeled regional concentration). Ideal for rigid boards and starch-based binders.</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-cyan-500 hover:shadow-md transition">
+                            <h4 class="font-bold text-slate-900 text-base mb-1">Zone B: The Fiber Coast</h4>
+                            <p class="text-sm text-slate-600"><strong>South & Coastal Mt. Lebanon:</strong> Dominated by Banana (329k t) and Citrus (122k t). High moisture but immense fibrous volume requiring drying infrastructure.</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-amber-500 hover:shadow-md transition">
+                            <h4 class="font-bold text-slate-900 text-base mb-1">Zone C: The Urban Mine</h4>
+                            <p class="text-sm text-slate-600"><strong>Beirut & Maten:</strong> The hub for "cleaner" industrial wastes including Paper (370k t) and Textiles (75k t), driven by consumption and light industry.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Tool Screenshot Display -->
+                <a href="https://mikasadevy.github.io/waste-mapping-all/LebanonWasteMapping.html" target="_blank" class="block relative group rounded-3xl overflow-hidden shadow-2xl border-4 border-white ring-1 ring-slate-200 bg-slate-900 w-full aspect-video cursor-pointer">
+                    <div class="absolute inset-0 bg-slate-900/10 group-hover:bg-transparent transition-all z-10"></div>
+                    
+                    <img src="https://i.ibb.co/whx07HzV/image.png" alt="Interactive Waste Map Interface Visualization" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out opacity-90 group-hover:opacity-100">
+                    
+                    <!-- Overlay Badge -->
+                    <div class="absolute bottom-6 right-6 z-20 bg-white/95 backdrop-blur px-5 py-2.5 rounded-full text-sm font-bold shadow-lg flex items-center gap-3 border border-slate-100 group-hover:scale-105 transition-transform">
+                       <span class="relative flex h-3 w-3">
+                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                          <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                        </span>
+                       <span class="text-slate-800">Interactive Tool Preview ↗</span>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <!-- 6) JSON & APP SECTION -->
+        <section id="json-app" class="scroll-mt-32">
+            <h2 class="text-3xl font-serif font-bold text-slate-800 mb-10">Digital Dataset & Python Application</h2>
+            
+            <div class="grid lg:grid-cols-2 gap-10">
+                <!-- Code Snippet -->
+                <div class="bg-[#1e1e1e] rounded-3xl shadow-2xl overflow-hidden font-mono text-xs text-slate-300 relative border border-slate-700 transform hover:scale-[1.01] transition-transform duration-300">
+                    <!-- Mac-style window header -->
+                    <div class="bg-[#2d2d2d] px-5 py-3 border-b border-[#3e3e3e] flex items-center justify-between">
+                        <div class="flex gap-2">
+                            <div class="w-3 h-3 rounded-full bg-[#ff5f56]"></div>
+                            <div class="w-3 h-3 rounded-full bg-[#ffbd2e]"></div>
+                            <div class="w-3 h-3 rounded-full bg-[#27c93f]"></div>
+                        </div>
+                        <span class="text-slate-500 font-sans text-xs">waste_data.json</span>
+                        <div class="w-10"></div>
+                    </div>
+                    
+                    <div class="p-6 overflow-x-auto custom-scrollbar">
+                        <div class="mb-4 text-emerald-400 opacity-80 border-b border-emerald-900/30 pb-2">
+                             // Example shown for a high-confidence waste stream only.
+                        </div>
+<pre><code class="language-json" style="background: transparent; padding: 0; text-shadow: none;">{
+  "waste_id": "W01_BANANA",
+  "name": "Banana Biomass",
+  "category": "Agricultural Residue",
+  "total_volume_est": 329246,
+  "unit": "tonnes/year",
+  "biomass_factor": "4:1 (Pseudostem + Leaves)",
+  "regional_confidence": "high",
+  "regions": {
+    "South": {
+      "share": 0.53,
+      "volume": 174500
+    },
+    "Mount_Lebanon": {
+      "share": 0.35,
+      "volume": 115236
+    }
+  },
+  "methodology": "Net Domestic Supply (Exports Deducted)",
+  "sources": ["FAO 2023", "Zhang et al. 2022"]
+}</code></pre>
+                    </div>
+                </div>
+
+                <!-- Description Cards -->
+                <div class="space-y-6">
+                    <div class="bg-white p-8 rounded-3xl shadow-md border border-slate-100 hover:shadow-lg transition">
+                        <h3 class="font-bold text-brand-secondary text-xl mb-3 flex items-center gap-2">
+                            <span>🧩</span> JSON Dataset Structure
+                        </h3>
+                        <p class="text-sm text-slate-600 mb-6 leading-relaxed">
+                            The core data engine. A structured JSON file consolidates all consolidated metrics, serving as the backend for the interactive map and future analysis tools.
+                        </p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-1.5 bg-slate-100 rounded-lg text-xs text-slate-700 font-mono border border-slate-200">volume</span>
+                            <span class="px-3 py-1.5 bg-slate-100 rounded-lg text-xs text-slate-700 font-mono border border-slate-200">seasonality</span>
+                            <span class="px-3 py-1.5 bg-slate-100 rounded-lg text-xs text-slate-700 font-mono border border-slate-200">disposal_method</span>
+                            <span class="px-3 py-1.5 bg-slate-100 rounded-lg text-xs text-slate-700 font-mono border border-slate-200">confidence_score</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-8 rounded-3xl shadow-md border border-slate-100 hover:shadow-lg transition">
+                        <h3 class="font-bold text-brand-primary text-xl mb-3 flex items-center gap-2">
+                            <span>🗺️</span> Python Map Application
+                        </h3>
+                        <ul class="space-y-3 text-sm text-slate-600">
+                            <li class="flex items-start gap-3">
+                                <span class="w-5 h-5 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs font-bold mt-0.5">✓</span>
+                                <span>Visualises waste distribution by region using Leaflet.js</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <span class="w-5 h-5 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs font-bold mt-0.5">✓</span>
+                                <span>Allows dynamic filtering by waste type and volume</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <span class="w-5 h-5 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs font-bold mt-0.5">✓</span>
+                                <span>Provides "Best-Available Estimate" tool for decision support</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7) LIMITATIONS & ACCOUNTABILITY -->
+        <section id="limitations" class="scroll-mt-32">
+            <div class="bg-white rounded-[2rem] shadow-xl overflow-hidden border border-slate-100 grid md:grid-cols-2">
+                <!-- Data Defense & Methodology -->
+                <div class="p-10 md:p-12 bg-slate-50 border-b md:border-b-0 md:border-r border-slate-100">
+                    <h3 class="text-2xl font-serif font-bold text-slate-800 mb-8 flex items-center gap-3">
+                        <span class="text-brand-secondary bg-cyan-100 p-2 rounded-lg">🛡️</span> Data Defense & Accountability
+                    </h3>
+                    <div class="space-y-6 text-sm text-slate-600">
+                        <p class="leading-relaxed">
+                            This dataset prioritizes scientific integrity over false precision. The numbers presented are defensible estimations based on a rigorous three-tier data hierarchy:
+                        </p>
+                        <ul class="space-y-4">
+                            <li class="flex gap-3">
+                                <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full mt-2 shrink-0"></span>
+                                <div>
+                                    <strong class="text-slate-800">Tier 1: Verified National Data (FAO/UN)</strong>
+                                    <p class="text-xs text-slate-500 mt-1">All baseline production figures are anchored in official FAOSTAT (2023) and UN Comtrade reports. We do not "invent" production numbers.</p>
+                                </div>
+                            </li>
+                            <li class="flex gap-3">
+                                <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full mt-2 shrink-0"></span>
+                                <div>
+                                    <strong class="text-slate-800">Tier 2: Scientific Coefficients</strong>
+                                    <p class="text-xs text-slate-500 mt-1">Waste conversion factors (e.g., 1.2 for wheat straw, 4:1 for banana) are derived from peer-reviewed literature (IPCC, Elsevier, MDPI) specific to the Mediterranean context.</p>
+                                </div>
+                            </li>
+                            <li class="flex gap-3">
+                                <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full mt-2 shrink-0"></span>
+                                <div>
+                                    <strong class="text-slate-800">Tier 3: Logical Regional Proxy</strong>
+                                    <p class="text-xs text-slate-500 mt-1">Where direct regional waste audits are missing, distribution is modelled based on proven proxies (Cultivated Surface Area, Industrial Cluster Maps from IDAL/MoA). These are explicitly labeled as "Estimated Allocations" to maintain transparency.</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Current Limitations -->
+                <div class="p-10 md:p-12 bg-white relative overflow-hidden flex flex-col justify-center">
+                     <div class="absolute top-0 right-0 w-32 h-32 bg-amber-50 rounded-bl-full -mr-16 -mt-16"></div>
+                    <h3 class="text-2xl font-serif font-bold text-slate-800 mb-8 flex items-center gap-3 relative z-10">
+                        <span class="text-amber-500 bg-amber-100 p-2 rounded-lg">⚠️</span> Known Limitations
+                    </h3>
+                    <ul class="space-y-6 text-sm text-slate-600 relative z-10">
+                        <li class="flex gap-4">
+                            <span class="w-1.5 h-1.5 bg-amber-500 rounded-full mt-2 shrink-0"></span>
+                            <span><strong>Theoretical Maximums:</strong> Values represent the <em>total generated</em> biological material. Recoverable fractions may be lower due to logistical constraints (e.g., collection from smallholders).</span>
+                        </li>
+                        <li class="flex gap-4">
+                            <span class="w-1.5 h-1.5 bg-amber-500 rounded-full mt-2 shrink-0"></span>
+                            <span><strong>Qualitative Zones:</strong> For wastes like Textiles and Paper, regional data is qualitative (intensity based on population/industry density) rather than quantitative tonnage.</span>
+                        </li>
+                        <li class="flex gap-4">
+                            <span class="w-1.5 h-1.5 bg-amber-500 rounded-full mt-2 shrink-0"></span>
+                            <span><strong>Dynamic Factors:</strong> Seasonal variations and recent economic shifts may alter industrial throughput, affecting streams like Dairy Whey and Olive Pomace.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 8) SUMMARY -->
+        <section id="summary" class="scroll-mt-32 mb-20">
+            <div class="bg-gradient-to-br from-emerald-600 to-teal-800 rounded-[2.5rem] p-10 md:p-16 text-center text-white shadow-2xl relative overflow-hidden">
+                 <!-- Background Elements -->
+                 <div class="absolute top-0 left-0 w-full h-full opacity-10" style="background-image: radial-gradient(white 1px, transparent 1px); background-size: 40px 40px;"></div>
+                 <div class="absolute top-[-50px] right-[-50px] w-64 h-64 bg-teal-400 rounded-full filter blur-[100px] opacity-30"></div>
+
+                <div class="relative z-10">
+                    <h2 class="text-3xl md:text-5xl font-serif font-bold mb-8 tracking-tight">Where This Phase Leaves Us</h2>
+                    <p class="text-lg md:text-xl text-emerald-50 max-w-4xl mx-auto leading-relaxed mb-12 font-light">
+                        The waste mapping dashboard serves as the <strong>quantitative baseline</strong>. It confirms that Lebanon possesses sufficient, diverse, and accessible lignocellulosic waste to support a bio-based materials industry, validating the previous MCDA regional selection.
+                    </p>
+
+                    <div class="inline-block bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20 shadow-lg w-full max-w-5xl">
+                        <div class="text-xs font-bold uppercase tracking-[0.2em] text-emerald-200 mb-6">Next Project Milestones</div>
+                        
+                        <!-- Responsive Flow Chart -->
+                        <div class="flex flex-col md:flex-row justify-between items-center gap-4 text-xs md:text-sm font-semibold">
+                            
+                            <div class="flex flex-col items-center gap-2 w-full md:w-auto">
+                                <span class="bg-white/10 px-3 py-2 rounded-lg w-full md:w-auto text-center">Prioritise (Top 5)</span>
+                                <span class="md:hidden text-emerald-400">↓</span>
+                            </div>
+
+                            <span class="hidden md:block text-emerald-400">→</span>
+
+                            <div class="flex flex-col items-center gap-2 w-full md:w-auto">
+                                <span class="bg-white/10 px-3 py-2 rounded-lg w-full md:w-auto text-center">Field Visits & Networking</span>
+                                <span class="md:hidden text-emerald-400">↓</span>
+                            </div>
+
+                            <span class="hidden md:block text-emerald-400">→</span>
+
+                            <div class="flex flex-col items-center gap-2 w-full md:w-auto">
+                                <span class="bg-emerald-500 text-white px-3 py-2 rounded-lg w-full md:w-auto text-center shadow-lg">Sampling Campaign</span>
+                                <span class="md:hidden text-emerald-400">↓</span>
+                            </div>
+
+                            <span class="hidden md:block text-emerald-400">→</span>
+
+                            <div class="flex flex-col items-center gap-2 w-full md:w-auto">
+                                <span class="bg-white/10 px-3 py-2 rounded-lg w-full md:w-auto text-center">Prelim. Lab Test</span>
+                                <span class="md:hidden text-emerald-400">↓</span>
+                            </div>
+
+                            <span class="hidden md:block text-emerald-400">→</span>
+
+                            <div class="flex flex-col items-center gap-2 w-full md:w-auto">
+                                <span class="bg-white/10 px-3 py-2 rounded-lg w-full md:w-auto text-center">Bath Lab Analysis</span>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 text-slate-400 py-16 border-t border-slate-800">
+        <div class="container mx-auto max-w-6xl text-center px-4">
+            <div class="mb-8">
+                <span class="text-2xl font-serif text-slate-200 font-bold tracking-tight">PhD Research Dashboard</span>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8 max-w-3xl mx-auto mb-10 text-sm">
+                 <div>
+                    <h4 class="text-slate-300 font-bold mb-2">Phase</h4>
+                    <p>Waste Mapping - Lebanon</p>
+                 </div>
+                 <div>
+                    <h4 class="text-slate-300 font-bold mb-2">Focus</h4>
+                    <p>Bio-based Construction Materials</p>
+                 </div>
+                 <div>
+                    <h4 class="text-slate-300 font-bold mb-2">Region</h4>
+                    <p>Lebanon (Governorate Level)</p>
+                 </div>
+            </div>
+            
+            <div class="text-xs text-slate-600 space-y-2 border-t border-slate-800 pt-8">
+                <p> Dr. Mika - University of Bath - 2025 PhD Research Project.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Simple Interactions Script -->
+    <script>
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>

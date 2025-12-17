@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dairy Whey Waste – Lebanon Scientific Dataset</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Merriweather', 'serif'],
+                    },
+                    colors: {
+                        'dairy-primary': '#1E88E5',   // Whey Blue
+                        'dairy-dark': '#0D47A1',      // Industrial Blue
+                        'dairy-light': '#E3F2FD',     // Milk White/Blue
+                        'pasture-green': '#43A047',   // Agriculture
+                        'scientific-grey': '#455A64'
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(30, 136, 229, 0.1)',
+                        'glow': '0 0 15px rgba(30, 136, 229, 0.3)'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #F8FDFF;
+            background-image: radial-gradient(#90CAF9 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+        .academic-card {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(5px);
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .academic-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border-color: #1E88E5;
+        }
+        .section-header {
+            border-bottom: 2px solid #1E88E5;
+            padding-bottom: 0.75rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        table {
+            border-collapse: separate;
+            border-spacing: 0;
+            width: 100%;
+        }
+        th {
+            background-color: #0D47A1;
+            font-weight: 600;
+            color: #ffffff;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+            padding: 14px 16px;
+        }
+        th:first-child { border-top-left-radius: 8px; }
+        th:last-child { border-top-right-radius: 8px; }
+        
+        td {
+            padding: 14px 16px;
+            border-bottom: 1px solid #e2e8f0;
+            background-color: white;
+            transition: background-color 0.2s;
+        }
+        tr:last-child td:first-child { border-bottom-left-radius: 8px; }
+        tr:last-child td:last-child { border-bottom-right-radius: 8px; }
+        
+        tr:hover td {
+            background-color: #E3F2FD;
+        }
+        
+        /* Navigation Dot Active State */
+        .side-nav-link.active span {
+            background-color: #1E88E5;
+            transform: scale(1.25);
+            border-color: #0D47A1;
+        }
+        .side-nav-link.active p {
+            color: #0D47A1;
+            font-weight: 700;
+        }
+        .top-nav-link.active {
+            color: #0D47A1;
+            background-color: #BBDEFB;
+            font-weight: 600;
+        }
+
+        /* Collapsible */
+        .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0, 1, 0, 1); }
+        .collapsible-active { max-height: 3000px; transition: max-height 0.5s ease-in-out; }
+        .arrow-icon { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .rotate-180 { transform: rotate(180deg); }
+
+        /* Print */
+        @media print {
+            body { background: white; background-image: none; }
+            .no-print { display: none !important; }
+            .academic-card { break-inside: avoid; box-shadow: none; border: 1px solid #ccc; }
+            canvas { max-width: 100% !important; }
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+        }
+    </style>
+</head>
+<body class="text-slate-800 antialiased relative">
+
+    <!-- Sticky Side Navigation (Desktop) -->
+    <nav class="hidden 2xl:block fixed left-10 top-1/2 transform -translate-y-1/2 z-40 no-print bg-white/80 backdrop-blur p-4 rounded-xl border border-gray-200 shadow-soft">
+        <ul class="space-y-4">
+            <li><a href="#overview" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-dairy-primary transition group"><span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-dairy-primary transition bg-white"></span><p class="font-medium">Overview</p></a></li>
+            <li><a href="#national-data" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-dairy-primary transition group"><span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-dairy-primary transition bg-white"></span><p class="font-medium">Sector Data</p></a></li>
+            <li><a href="#waste-methodology" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-dairy-primary transition group"><span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-dairy-primary transition bg-white"></span><p class="font-medium">Methodology</p></a></li>
+            <li><a href="#regional-distribution" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-dairy-primary transition group"><span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-dairy-primary transition bg-white"></span><p class="font-medium">Regional Dist.</p></a></li>
+            <li><a href="#visualizations" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-dairy-primary transition group"><span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-dairy-primary transition bg-white"></span><p class="font-medium">Visual Analysis</p></a></li>
+            <li><a href="#references" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-dairy-primary transition group"><span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-dairy-primary transition bg-white"></span><p class="font-medium">References</p></a></li>
+        </ul>
+    </nav>
+
+    <!-- Header -->
+    <header class="bg-white/90 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50 shadow-sm print:static print:border-none">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+            <div class="flex items-center gap-3 min-w-fit">
+                <div class="bg-dairy-light p-2 rounded-full border border-dairy-primary/40 print:hidden">
+                    <span class="text-2xl">🥛</span>
+                </div>
+                <div>
+                    <h1 class="text-lg md:text-xl font-serif font-bold text-gray-900 leading-tight">
+                        Dairy Whey Waste
+                    </h1>
+                    <p class="hidden sm:block text-xs text-dairy-dark font-bold">
+                        Lebanon Scientific Dataset 🇱🇧
+                    </p>
+                </div>
+            </div>
+            <nav class="hidden lg:flex items-center gap-1 no-print bg-gray-50/50 p-1.5 rounded-lg border border-gray-100">
+                <a href="#national-data" class="top-nav-link px-3 py-1.5 text-sm font-medium text-gray-600 rounded-md hover:bg-gray-100 transition-colors">Sector Data</a>
+                <a href="#waste-methodology" class="top-nav-link px-3 py-1.5 text-sm font-medium text-gray-600 rounded-md hover:bg-gray-100 transition-colors">Calculations</a>
+                <a href="#regional-distribution" class="top-nav-link px-3 py-1.5 text-sm font-medium text-gray-600 rounded-md hover:bg-gray-100 transition-colors">Regional Dist.</a>
+                <a href="#visualizations" class="top-nav-link px-3 py-1.5 text-sm font-medium text-gray-600 rounded-md hover:bg-gray-100 transition-colors">Visuals</a>
+            </nav>
+            <div class="no-print min-w-fit">
+                <button onclick="window.print()" class="flex items-center gap-2 bg-dairy-dark hover:bg-gray-800 text-white px-4 py-2 rounded-lg text-xs md:text-sm font-medium transition shadow hover:shadow-lg transform hover:-translate-y-0.5">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                    <span class="hidden md:inline">Print Report</span>
+                    <span class="md:hidden">Print</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-16">
+
+        <!-- Section A: Overview -->
+        <section id="overview" class="bg-white rounded-2xl p-8 shadow-soft border border-gray-100 scroll-mt-28">
+            <h2 class="text-lg font-bold text-gray-900 mb-2 flex items-center gap-2">
+                <span>🔍</span> Executive Summary
+            </h2>
+            <div class="prose max-w-none text-gray-600">
+                <p class="text-lg leading-relaxed">
+                    Dairy whey is one of Lebanon’s largest liquid organic waste streams. Anchored by a national milk production baseline of <strong>270,000 tonnes/year</strong> (FAO 2011), this dashboard quantifies whey generation at <strong>220,000 tonnes/year</strong> (UNOPS 2025). This high-BOD effluent is heavily concentrated in the <strong>Bekaa and Baalbek-Hermel regions (60%)</strong>, reflecting the location of major industrial processors and livestock intensity, with significant secondary clusters in the South and Mount Lebanon.
+                </p>
+            </div>
+        </section>
+
+        <!-- Section B: National Sector Data -->
+        <section id="national-data" class="scroll-mt-28">
+            <div class="section-header">
+                <span class="text-2xl">🏭</span>
+                <h2 class="text-2xl font-serif font-bold text-dairy-dark">1. National Sector Profile</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                <!-- Milk Production -->
+                <div class="academic-card p-6 relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <span class="text-6xl">🐄</span>
+                    </div>
+                    <p class="text-xs font-bold text-pasture-green uppercase tracking-wider flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-pasture-green"></span> Raw Milk Production
+                    </p>
+                    <p class="text-4xl font-bold text-gray-900 mt-3 tracking-tight">270,000 <span class="text-lg text-gray-500 font-normal">t/yr</span></p>
+                    <div class="mt-4 inline-flex items-center text-xs font-medium text-green-800 bg-green-50 px-2 py-1 rounded">
+                        Source: FAO (2011)
+                    </div>
+                </div>
+
+                <!-- Processed Fraction -->
+                <div class="academic-card p-6 relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <span class="text-6xl">🧀</span>
+                    </div>
+                    <p class="text-xs font-bold text-dairy-dark uppercase tracking-wider flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-dairy-dark"></span> Processed Share
+                    </p>
+                    <p class="text-4xl font-bold text-gray-900 mt-3 tracking-tight">60% <span class="text-lg text-gray-500 font-normal">(162,000 t)</span></p>
+                    <div class="mt-4 inline-flex items-center text-xs font-medium text-blue-800 bg-blue-50 px-2 py-1 rounded">
+                        Converted to Cheese/Labneh
+                    </div>
+                </div>
+
+                <!-- Whey Generation -->
+                <div class="academic-card p-6 relative overflow-hidden group border-b-4 border-b-dairy-primary">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <span class="text-6xl">💧</span>
+                    </div>
+                    <p class="text-xs font-bold text-dairy-primary uppercase tracking-wider flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-dairy-primary"></span> Whey Generation
+                    </p>
+                    <p class="text-4xl font-bold text-gray-900 mt-3 tracking-tight">220,000 <span class="text-lg text-gray-500 font-normal">t/yr</span></p>
+                    <div class="mt-4 inline-flex items-center text-xs font-medium text-indigo-900 bg-indigo-50 px-2 py-1 rounded border border-indigo-100">
+                        Source: UNOPS (2025)
+                    </div>
+                </div>
+            </div>
+
+            <!-- Wastewater Note -->
+            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 flex gap-3 items-start">
+                <span class="text-xl">ℹ️</span>
+                <p class="text-sm text-gray-600 leading-relaxed">
+                    <strong>Wastewater Context:</strong> Industrial dairy operations generate approx. <strong>19.58 m³</strong> of wastewater per ton of product (MoE/UNDP 2021). This creates a massive hydraulic load alongside the high-strength organic whey load.
+                </p>
+            </div>
+        </section>
+
+        <!-- Section C: Waste Methodology -->
+        <section id="waste-methodology" class="scroll-mt-28">
+            <div class="section-header">
+                <span class="text-2xl">🧮</span>
+                <h2 class="text-2xl font-serif font-bold text-dairy-dark">2. Calculation Methodology</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                <!-- Step 1: Processing -->
+                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                    <h3 class="font-bold text-gray-800 mb-4 flex items-center gap-2">
+                        <span class="bg-dairy-dark text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">1</span> 
+                        Processing Volume
+                    </h3>
+                    <div class="math-block bg-gray-50 p-4 rounded text-sm text-gray-700 font-mono mb-2">
+                        $$ M_{\text{processed}} = 0.60 \times 270,000 = 162,000 \text{ t} $$
+                    </div>
+                    <p class="text-xs text-gray-500">Only 60% of raw milk enters the processing chain (FAO 2011).</p>
+                </div>
+
+                <!-- Step 2: Whey Generation -->
+                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                    <h3 class="font-bold text-gray-800 mb-4 flex items-center gap-2">
+                        <span class="bg-dairy-primary text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">2</span> 
+                        Whey Output
+                    </h3>
+                    <div class="math-block bg-gray-50 p-4 rounded text-sm text-gray-700 font-mono mb-2">
+                        $$ M_{\text{whey}} \approx 220,000 \text{ t} $$
+                        $$ \text{Ratio} \approx 1.35 \times M_{\text{processed}} $$
+                    </div>
+                    <p class="text-xs text-gray-500">
+                        <strong>Note:</strong> The >100% ratio (1.35) reflects the high volume of liquid whey generated relative to solid product, aligned with UNOPS (2025) estimates.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section D: Regional Distribution -->
+        <section id="regional-distribution" class="scroll-mt-28">
+            <button onclick="toggleSection('reg-methodology', 'icon-reg')" class="w-full text-left focus:outline-none no-print">
+                <div class="flex items-center justify-between section-header cursor-pointer group">
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl">🗺️</span>
+                        <h2 class="text-2xl font-serif font-bold text-dairy-dark group-hover:text-dairy-primary transition">
+                            3. Regional Distribution
+                        </h2>
+                    </div>
+                    <div class="bg-white p-2 rounded-full shadow-sm border border-gray-100 group-hover:bg-dairy-light transition">
+                        <svg id="icon-reg" class="w-5 h-5 text-gray-500 arrow-icon transform rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </div>
+                </div>
+            </button>
+            <div class="hidden print:block section-header"><h2 class="text-2xl font-serif font-bold text-dairy-dark">3. Regional Distribution</h2></div>
+
+            <div id="reg-methodology" class="collapsible-content collapsible-active">
+                
+                <!-- Scientific Methodology Breakdown -->
+                <div class="bg-white p-6 rounded-xl border border-blue-200 shadow-sm mb-8">
+                    <h3 class="font-bold text-dairy-dark text-lg mb-4 border-b border-gray-100 pb-2">✅ Hierarchical Regional Allocation</h3>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <!-- Left: Triangulation Logic -->
+                        <div>
+                            <p class="text-sm text-gray-600 mb-3">
+                                Regional dairy waste shares are estimated using <strong>livestock concentration, producer density, processing capacity, and conflict-loss proxies</strong> due to the absence of direct regional milk production data; therefore, allocations are reported with medium confidence.
+                            </p>
+                            <ul class="space-y-2 text-xs text-gray-500 mb-4 bg-gray-50 p-3 rounded border border-gray-100">
+                                <li class="flex items-center gap-2">
+                                    <span class="w-2 h-2 rounded-full bg-dairy-primary"></span> <strong>Herd Concentration:</strong> Bekaa holds ~72% sheep / 51% goats (Mercy Corps).
+                                </li>
+                                <li class="flex items-center gap-2">
+                                    <span class="w-2 h-2 rounded-full bg-dairy-primary"></span> <strong>Processing Hubs:</strong> Major processors in Bekaa/Baalbek.
+                                </li>
+                                <li class="flex items-center gap-2">
+                                    <span class="w-2 h-2 rounded-full bg-dairy-primary"></span> <strong>Conflict Impact:</strong> Distress sales/loss in South/Nabatieh (UNDP 2024).
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Right: Regional Justification -->
+                        <div>
+                            <h4 class="font-bold text-gray-700 text-sm mb-2">📌 Allocation Defense</h4>
+                            <div class="space-y-3 h-48 overflow-y-auto pr-2 custom-scrollbar">
+                                <div>
+                                    <span class="font-bold text-dairy-dark text-xs">Bekaa (40%)</span>
+                                    <p class="text-xs text-gray-500">Primary hub. 72% of national sheep/51% goats. Major industrial processors (LibanLait, Khoury).</p>
+                                </div>
+                                <div>
+                                    <span class="font-bold text-dairy-dark text-xs">Baalbek-Hermel (20%)</span>
+                                    <p class="text-xs text-gray-500">Livestock intensive extension of Bekaa. Highest number of small-ruminant producers.</p>
+                                </div>
+                                <div>
+                                    <span class="font-bold text-dairy-dark text-xs">South (15%)</span>
+                                    <p class="text-xs text-gray-500">Secondary zone (~150k goats). Significant distress sales and informal processing waste.</p>
+                                </div>
+                                <div>
+                                    <span class="font-bold text-dairy-dark text-xs">Nabatieh (10%)</span>
+                                    <p class="text-xs text-gray-500">Pastoral activity similar to South. Conflict-related livestock loss increases waste.</p>
+                                </div>
+                                <div>
+                                    <span class="font-bold text-dairy-dark text-xs">Mount Lebanon (10%)</span>
+                                    <p class="text-xs text-gray-500">Processing-driven. High volume of cheese/labneh production relative to farm size.</p>
+                                </div>
+                                <div>
+                                    <span class="font-bold text-dairy-dark text-xs">North (5%)</span>
+                                    <p class="text-xs text-gray-500">Low-density pastoral contribution. Smaller scale than Bekaa/South.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between">
+                        <span class="text-xs font-mono text-dairy-dark font-bold">Total Volume: 220,000 tonnes</span>
+                        <span class="text-[10px] text-gray-400 uppercase tracking-wide">Confidence: Medium</span>
+                    </div>
+                </div>
+
+                <!-- Table -->
+                <div class="bg-white rounded-xl shadow-soft overflow-hidden border border-gray-100">
+                    <div class="overflow-x-auto">
+                        <table id="regionalTable">
+                            <thead>
+                                <tr>
+                                    <th class="cursor-pointer hover:bg-dairy-dark/90 transition-colors" onclick="sortTable(0)">Governorate <span class="opacity-50 text-xs no-print">↕</span></th>
+                                    <th class="cursor-pointer hover:bg-dairy-dark/90 transition-colors text-right" onclick="sortTable(1)">Share (%) <span class="opacity-50 text-xs no-print">↕</span></th>
+                                    <th class="cursor-pointer hover:bg-dairy-dark/90 transition-colors text-right" onclick="sortTable(2)">Whey Volume (t) <span class="opacity-50 text-xs no-print">↕</span></th>
+                                    <th>Key Logic</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-sm text-gray-700">
+                                <tr>
+                                    <td class="font-bold text-gray-900">Bekaa</td>
+                                    <td class="text-right"><span class="bg-gray-100 rounded px-2 py-1 font-bold">40%</span></td>
+                                    <td class="text-right font-mono font-bold text-dairy-primary">88,000</td>
+                                    <td class="text-xs text-gray-600">Primary Hub: 72% sheep/51% goats (Mercy Corps 2004).</td>
+                                </tr>
+                                <tr>
+                                    <td class="font-bold text-gray-900">Baalbek-Hermel</td>
+                                    <td class="text-right"><span class="bg-gray-100 rounded px-2 py-1 font-bold">20%</span></td>
+                                    <td class="text-right font-mono font-bold text-dairy-primary">44,000</td>
+                                    <td class="text-xs text-gray-600">Livestock Intensive: Highest producer density (~3,300).</td>
+                                </tr>
+                                <tr>
+                                    <td class="font-bold text-gray-900">South</td>
+                                    <td class="text-right"><span class="bg-gray-100 rounded px-2 py-1">15%</span></td>
+                                    <td class="text-right font-mono font-bold text-dairy-primary">33,000</td>
+                                    <td class="text-xs text-gray-600">Conflict Impact: Distress sales & informal processing (UNDP).</td>
+                                </tr>
+                                <tr>
+                                    <td class="font-bold text-gray-900">Nabatieh</td>
+                                    <td class="text-right"><span class="bg-gray-100 rounded px-2 py-1">10%</span></td>
+                                    <td class="text-right font-mono font-bold text-dairy-primary">22,000</td>
+                                    <td class="text-xs text-gray-600">Pastoral Zone: Similar profile to South; vulnerability hotspot.</td>
+                                </tr>
+                                <tr>
+                                    <td class="font-bold text-gray-900">Mount Lebanon</td>
+                                    <td class="text-right"><span class="bg-gray-100 rounded px-2 py-1">10%</span></td>
+                                    <td class="text-right font-mono font-bold text-dairy-primary">22,000</td>
+                                    <td class="text-xs text-gray-600">Processing Hub: Cheese/Labneh focus (NAS 2020).</td>
+                                </tr>
+                                <tr>
+                                    <td class="font-bold text-gray-900">North</td>
+                                    <td class="text-right"><span class="bg-gray-100 rounded px-2 py-1">5%</span></td>
+                                    <td class="text-right font-mono font-bold text-dairy-primary">11,000</td>
+                                    <td class="text-xs text-gray-600">Low Density: Documented pastoral activity but smaller scale.</td>
+                                </tr>
+                                <tr>
+                                    <td class="font-bold text-gray-400">Akkar</td>
+                                    <td class="text-right"><span class="text-gray-400">0%</span></td>
+                                    <td class="text-right font-mono text-gray-400">0</td>
+                                    <td class="text-xs text-gray-400">Excluded: No documented dairy waste concentration.</td>
+                                </tr>
+                                <tr>
+                                    <td class="font-bold text-gray-400">Beirut</td>
+                                    <td class="text-right"><span class="text-gray-400">0%</span></td>
+                                    <td class="text-right font-mono text-gray-400">0</td>
+                                    <td class="text-xs text-gray-400">Excluded: Urban/Consumption only.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section E: Visual Figures -->
+        <section id="visualizations" class="scroll-mt-28">
+            <div class="section-header">
+                <span class="text-2xl">📉</span>
+                <h2 class="text-2xl font-serif font-bold text-dairy-dark">4. Visual Analysis & Figures</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                
+                <!-- Chart 1: Regional Whey -->
+                <div class="academic-card p-6 break-inside-avoid flex flex-col h-full">
+                    <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-6 text-center flex justify-center items-center gap-2">
+                        <span>📊</span> Regional Whey Generation
+                    </h3>
+                    <div class="relative h-64 w-full flex-grow">
+                        <canvas id="regionalChart"></canvas>
+                    </div>
+                    <p class="text-xs text-center text-gray-400 mt-2">Bekaa & Baalbek-Hermel account for 60% of total generation.</p>
+                </div>
+
+                <!-- Chart 2: Mass Balance -->
+                <div class="academic-card p-6 break-inside-avoid flex flex-col h-full">
+                    <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-6 text-center flex justify-center items-center gap-2">
+                        <span>⚖️</span> Mass Balance (Tonnes)
+                    </h3>
+                    <div class="relative h-64 w-full flex-grow flex justify-center">
+                        <canvas id="massBalanceChart"></canvas>
+                    </div>
+                    <p class="text-xs text-center text-gray-400 mt-2">Comparison of Raw Milk vs. Processed Fraction vs. Whey Output.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 6: References -->
+        <section id="references" class="border-t border-gray-200 pt-10 scroll-mt-28">
+            <h2 class="text-xl font-bold text-gray-900 mb-8 flex items-center gap-2">
+                <span class="text-dairy-primary">5.</span> References & Citations
+            </h2>
+            <div class="grid grid-cols-1 gap-4 text-sm text-gray-600">
+                
+                <div class="group p-4 rounded-lg hover:bg-white hover:shadow-md transition border border-transparent hover:border-gray-100">
+                    <p class="font-bold text-gray-900 group-hover:text-blue-700 transition">Mercy Corps (2004)</p>
+                    <p class="mb-1">Small Ruminant Dairy Value Chain Assessment.</p>
+                </div>
+
+                <div class="group p-4 rounded-lg hover:bg-white hover:shadow-md transition border border-transparent hover:border-gray-100">
+                    <p class="font-bold text-gray-900 group-hover:text-blue-700 transition">FAO (2011)</p>
+                    <p class="mb-1">Recovery and Rehabilitation of the Dairy Sector in Lebanon.</p>
+                    <a href="http://www.fao.org/3/a-i5745e.pdf" target="_blank" class="text-blue-500 hover:underline break-all text-xs flex items-center gap-1">ResearchGate <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg></a>
+                </div>
+
+                <div class="group p-4 rounded-lg hover:bg-white hover:shadow-md transition border border-transparent hover:border-gray-100">
+                    <p class="font-bold text-gray-900 group-hover:text-blue-700 transition">UNDP (2024)</p>
+                    <p class="mb-1">Socioeconomic Impacts of the 2024 War on Lebanon.</p>
+                </div>
+
+                <div class="group p-4 rounded-lg hover:bg-white hover:shadow-md transition border border-transparent hover:border-gray-100">
+                    <p class="font-bold text-gray-900 group-hover:text-blue-700 transition">Ministry of Agriculture (2020)</p>
+                    <p class="mb-1">Lebanon National Agriculture Strategy (NAS 2020–2025).</p>
+                </div>
+
+                <div class="group p-4 rounded-lg hover:bg-white hover:shadow-md transition border border-transparent hover:border-gray-100">
+                    <p class="font-bold text-gray-900 group-hover:text-blue-700 transition">AUB (2006)</p>
+                    <p class="mb-1">Impact of Conflict on Livestock & Dairy Sector.</p>
+                </div>
+
+                <div class="group p-4 rounded-lg hover:bg-white hover:shadow-md transition border border-transparent hover:border-gray-100">
+                    <p class="font-bold text-gray-900 group-hover:text-blue-700 transition">UNOPS (2025)</p>
+                    <p class="mb-1">Towards a Greener Future in Lebanon.</p>
+                    <a href="https://www.unops.org/news-and-stories/news/towards-a-greener-future-in-lebanon" target="_blank" class="text-blue-500 hover:underline break-all text-xs flex items-center gap-1">View Report <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg></a>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-gray-900 text-gray-400 py-10 mt-12 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <div class="flex justify-center mb-4 text-3xl">🥛</div>
+            <p class="text-sm font-medium text-white">Sustainable Materials - PhD Scholar Mika - University of Bath</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Collapsible Logic
+        function toggleSection(contentId, iconId) {
+            const content = document.getElementById(contentId);
+            const icon = document.getElementById(iconId);
+            if (content.classList.contains('collapsible-active')) {
+                content.classList.remove('collapsible-active');
+                icon.classList.remove('rotate-180');
+            } else {
+                content.classList.add('collapsible-active');
+                icon.classList.add('rotate-180');
+            }
+        }
+
+        // Table Sorting
+        function sortTable(n) {
+            var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+            table = document.getElementById("regionalTable");
+            switching = true;
+            dir = "asc"; 
+            while (switching) {
+                switching = false;
+                rows = table.rows;
+                for (i = 1; i < (rows.length - 1); i++) {
+                    shouldSwitch = false;
+                    x = rows[i].getElementsByTagName("TD")[n];
+                    y = rows[i+1].getElementsByTagName("TD")[n];
+                    let xVal = x.textContent.toLowerCase().replace(/,/g, '').replace(/%/g, '');
+                    let yVal = y.textContent.toLowerCase().replace(/,/g, '').replace(/%/g, '');
+                    if (!isNaN(parseFloat(xVal)) && !isNaN(parseFloat(yVal))) {
+                        xVal = parseFloat(xVal);
+                        yVal = parseFloat(yVal);
+                    }
+                    if (dir == "asc") {
+                        if (xVal > yVal) { shouldSwitch = true; break; }
+                    } else if (dir == "desc") {
+                        if (xVal < yVal) { shouldSwitch = true; break; }
+                    }
+                }
+                if (shouldSwitch) {
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                    switchcount ++; 
+                } else {
+                    if (switchcount == 0 && dir == "asc") { dir = "desc"; switching = true; }
+                }
+            }
+        }
+
+        // Chart Configurations
+        document.addEventListener('DOMContentLoaded', function () {
+            
+            const colorBlue = '#1E88E5'; 
+            const colorDark = '#0D47A1'; 
+            const colorLight = '#90CAF9';
+
+            // 1. Regional Bar Chart
+            const ctxReg = document.getElementById('regionalChart').getContext('2d');
+            new Chart(ctxReg, {
+                type: 'bar',
+                data: {
+                    labels: ['Bekaa', 'Baalbek', 'South', 'Nabatieh', 'Mt Lebanon', 'North', 'Akkar', 'Beirut'],
+                    datasets: [{
+                        label: 'Whey (Tonnes/Year)',
+                        // 40% Bekaa, 20% Baalbek, 15% South, 10% Nabatieh, 10% Mt Leb, 5% North, 0% Akkar, 0% Beirut
+                        // Total 220,000
+                        data: [88000, 44000, 33000, 22000, 22000, 11000, 0, 0],
+                        backgroundColor: [
+                            colorDark, // Bekaa
+                            colorBlue, // Baalbek
+                            colorBlue, // South
+                            colorLight, // Nabatieh
+                            colorLight, // Mt Leb
+                            colorLight, // North
+                            '#e0e0e0',
+                            '#e0e0e0'
+                        ],
+                        borderRadius: 4,
+                        barPercentage: 0.6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { 
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.raw.toLocaleString() + ' tonnes';
+                                }
+                            }
+                        }
+                    },
+                    scales: { 
+                        y: { beginAtZero: true, grid: { color: '#f3f4f6' } }, 
+                        x: { grid: { display: false } } 
+                    }
+                }
+            });
+
+            // 2. Mass Balance Doughnut
+            const ctxBal = document.getElementById('massBalanceChart').getContext('2d');
+            new Chart(ctxBal, {
+                type: 'bar',
+                data: {
+                    labels: ['Raw Milk Input', 'Processed Milk (60%)', 'Whey Generated'],
+                    datasets: [{
+                        label: 'Mass (Tonnes)',
+                        data: [270000, 162000, 220000],
+                        backgroundColor: [
+                            '#43A047', // Green for Milk
+                            colorDark, // Blue for Processed
+                            colorBlue  // Light Blue for Whey
+                        ],
+                        borderRadius: 6,
+                        barPercentage: 0.5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { 
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: '#f3f4f6' } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+        });
+        
+        // Sticky Nav Logic
+        window.addEventListener('scroll', () => {
+            let current = '';
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.side-nav-link, .top-nav-link');
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 150) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

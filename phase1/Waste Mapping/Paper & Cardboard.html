@@ -1,0 +1,617 @@
+
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paper & Cardboard Waste – Lebanon Scientific Dataset</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Merriweather', 'serif'],
+                    },
+                    colors: {
+                        'paper-dark': '#4E342E',    // Dark Brown
+                        'paper-primary': '#8D6E63', // Cardboard Brown
+                        'paper-accent': '#2E7D32',  // Recycling Green
+                        'paper-light': '#EFEBE9',   // Paper White/Beige
+                        'municipal-grey': '#546E7A',
+                        'scientific-blue': '#2980B9'
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(62, 39, 35, 0.08)',
+                        'glow': '0 0 15px rgba(141, 110, 99, 0.3)'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #FAFAFA;
+            background-image: radial-gradient(#D7CCC8 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+        .academic-card {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(5px);
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .academic-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border-color: #8D6E63;
+        }
+        .section-header {
+            border-bottom: 2px solid #8D6E63;
+            padding-bottom: 0.75rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        table {
+            border-collapse: separate;
+            border-spacing: 0;
+            width: 100%;
+        }
+        th {
+            background-color: #4E342E;
+            font-weight: 600;
+            color: #ffffff;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+            padding: 14px 16px;
+        }
+        th:first-child { border-top-left-radius: 8px; }
+        th:last-child { border-top-right-radius: 8px; }
+        
+        td {
+            padding: 14px 16px;
+            border-bottom: 1px solid #e2e8f0;
+            background-color: white;
+            transition: background-color 0.2s;
+        }
+        tr:last-child td:first-child { border-bottom-left-radius: 8px; }
+        tr:last-child td:last-child { border-bottom-right-radius: 8px; }
+        
+        tr:hover td {
+            background-color: #EFEBE9;
+        }
+        
+        /* Intensity Badges */
+        .badge-intensity {
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-weight: 700;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+        }
+        .badge-very-high { background-color: #3E2723; color: white; }
+        .badge-high { background-color: #5D4037; color: white; }
+        .badge-med-high { background-color: #6D4C41; color: white; }
+        .badge-medium { background-color: #8D6E63; color: white; }
+        .badge-low { background-color: #D7CCC8; color: #3E2723; }
+
+        /* Navigation Dot Active State */
+        .side-nav-link.active span {
+            background-color: #8D6E63;
+            transform: scale(1.25);
+            border-color: #2E7D32;
+        }
+        .side-nav-link.active p {
+            color: #4E342E;
+            font-weight: 700;
+        }
+        .top-nav-link.active {
+            color: #4E342E;
+            background-color: #EFEBE9;
+            font-weight: 600;
+        }
+
+        /* Collapsible */
+        .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0, 1, 0, 1); }
+        .collapsible-active { max-height: 3000px; transition: max-height 0.5s ease-in-out; }
+        .arrow-icon { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .rotate-180 { transform: rotate(180deg); }
+
+        /* Print */
+        @media print {
+            body { background: white; background-image: none; }
+            .no-print { display: none !important; }
+            .academic-card { break-inside: avoid; box-shadow: none; border: 1px solid #ccc; }
+            canvas { max-width: 100% !important; }
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+        }
+    </style>
+</head>
+<body class="text-slate-800 antialiased relative">
+
+    <!-- Sticky Side Navigation (Desktop) -->
+    <nav class="hidden 2xl:block fixed left-10 top-1/2 transform -translate-y-1/2 z-40 no-print bg-white/80 backdrop-blur p-4 rounded-xl border border-gray-200 shadow-soft">
+        <ul class="space-y-4">
+            <li><a href="#overview" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-paper-primary transition group"><span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-paper-primary transition bg-white"></span><p class="font-medium">Overview</p></a></li>
+            <li><a href="#national-data" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-paper-primary transition group"><span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-paper-primary transition bg-white"></span><p class="font-medium">National Profile</p></a></li>
+            <li><a href="#methodology" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-paper-primary transition group"><span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-paper-primary transition bg-white"></span><p class="font-medium">Methodology</p></a></li>
+            <li><a href="#regional-distribution" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-paper-primary transition group"><span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-paper-primary transition bg-white"></span><p class="font-medium">Intensity Map</p></a></li>
+            <li><a href="#visualizations" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-paper-primary transition group"><span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-paper-primary transition bg-white"></span><p class="font-medium">Visual Analysis</p></a></li>
+            <li><a href="#references" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-paper-primary transition group"><span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-paper-primary transition bg-white"></span><p class="font-medium">References</p></a></li>
+        </ul>
+    </nav>
+
+    <!-- Header -->
+    <header class="bg-white/90 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50 shadow-sm print:static print:border-none">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+            <div class="flex items-center gap-3 min-w-fit">
+                <div class="bg-paper-light p-2 rounded-full border border-paper-primary/40 print:hidden">
+                    <span class="text-2xl">📦</span>
+                </div>
+                <div>
+                    <h1 class="text-lg md:text-xl font-serif font-bold text-gray-900 leading-tight">
+                        Paper & Cardboard Waste
+                    </h1>
+                    <p class="hidden sm:block text-xs text-paper-dark font-bold">
+                        Lebanon Scientific Dataset 🇱🇧
+                    </p>
+                </div>
+            </div>
+            <nav class="hidden lg:flex items-center gap-1 no-print bg-gray-50/50 p-1.5 rounded-lg border border-gray-100">
+                <a href="#national-data" class="top-nav-link px-3 py-1.5 text-sm font-medium text-gray-600 rounded-md hover:bg-gray-100 transition-colors">National Data</a>
+                <a href="#methodology" class="top-nav-link px-3 py-1.5 text-sm font-medium text-gray-600 rounded-md hover:bg-gray-100 transition-colors">Methodology</a>
+                <a href="#regional-distribution" class="top-nav-link px-3 py-1.5 text-sm font-medium text-gray-600 rounded-md hover:bg-gray-100 transition-colors">Intensity Map</a>
+                <a href="#visualizations" class="top-nav-link px-3 py-1.5 text-sm font-medium text-gray-600 rounded-md hover:bg-gray-100 transition-colors">Visuals</a>
+            </nav>
+            <div class="no-print min-w-fit">
+                <button onclick="window.print()" class="flex items-center gap-2 bg-paper-dark hover:bg-gray-800 text-white px-4 py-2 rounded-lg text-xs md:text-sm font-medium transition shadow hover:shadow-lg transform hover:-translate-y-0.5">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                    <span class="hidden md:inline">Print Report</span>
+                    <span class="md:hidden">Print</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-16">
+
+        <!-- Section A: Overview -->
+        <section id="overview" class="bg-white rounded-2xl p-8 shadow-soft border border-gray-100 scroll-mt-28">
+            <h2 class="text-lg font-bold text-gray-900 mb-2 flex items-center gap-2">
+                <span>🔍</span> Executive Summary
+            </h2>
+            <div class="prose max-w-none text-gray-600">
+                <p class="text-lg leading-relaxed">
+                    Paper and cardboard waste in Lebanon originates from a combination of commercial packaging, institutional use, and household MSW streams. Unlike agricultural wastes, national quantities are partially reported through municipal solid waste composition studies and recycling sector reports, while regional tonnages remain weakly disaggregated.
+                </p>
+            </div>
+        </section>
+
+        <!-- Section B: National Sector Data -->
+        <section id="national-data" class="scroll-mt-28">
+            <div class="section-header">
+                <span class="text-2xl">🏭</span>
+                <h2 class="text-2xl font-serif font-bold text-paper-dark">1. National Waste Profile</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                <!-- MSW Share Card -->
+                <div class="academic-card p-6 relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <span class="text-6xl">📊</span>
+                    </div>
+                    <p class="text-xs font-bold text-scientific-blue uppercase tracking-wider flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-scientific-blue"></span> MSW Composition
+                    </p>
+                    <p class="text-4xl font-bold text-gray-900 mt-3 tracking-tight">~16% <span class="text-lg text-gray-500 font-normal">of Total MSW</span></p>
+                    <div class="mt-4 inline-flex items-center text-xs font-medium text-blue-800 bg-blue-50 px-2 py-1 rounded">
+                        Source: SWEEP-Net (2014)
+                    </div>
+                </div>
+
+                <!-- Estimated Quantity -->
+                <div class="academic-card p-6 relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <span class="text-6xl">⚖️</span>
+                    </div>
+                    <p class="text-xs font-bold text-paper-primary uppercase tracking-wider flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-paper-primary"></span> Estimated Tonnage
+                    </p>
+                    <p class="text-4xl font-bold text-gray-900 mt-3 tracking-tight">~370,000 <span class="text-lg text-gray-500 font-normal">t/yr</span></p>
+                    <div class="mt-4 inline-flex items-center text-xs font-medium text-indigo-800 bg-indigo-50 px-2 py-1 rounded">
+                        Derived from MSW Total (2.3M t)
+                    </div>
+                </div>
+
+                <!-- Recovery Potential -->
+                <div class="academic-card p-6 relative overflow-hidden group border-b-4 border-b-paper-accent">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <span class="text-6xl">♻️</span>
+                    </div>
+                    <p class="text-xs font-bold text-paper-accent uppercase tracking-wider flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-paper-accent"></span> Recycling Status
+                    </p>
+                    <p class="text-4xl font-bold text-gray-900 mt-3 tracking-tight">Active <span class="text-lg text-gray-500 font-normal">Market</span></p>
+                    <div class="mt-4 inline-flex items-center text-xs font-medium text-green-800 bg-green-50 px-2 py-1 rounded border border-green-100">
+                        Formal & Informal Sector
+                    </div>
+                </div>
+            </div>
+
+            <!-- Context Note -->
+            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 flex gap-3 items-start">
+                <span class="text-xl">ℹ️</span>
+                <p class="text-sm text-gray-600 leading-relaxed">
+                    <strong>Data Context:</strong> National quantities are estimated from MSW composition studies (not direct production statistics). Values represent the aggregated flow of paper and cardboard entering the municipal waste stream, including commercial, institutional, and household sources.
+                </p>
+            </div>
+        </section>
+
+        <!-- Section C: Evidence Anchors -->
+        <section id="case-studies" class="scroll-mt-28">
+            <div class="section-header">
+                <span class="text-2xl">📝</span>
+                <h2 class="text-2xl font-serif font-bold text-paper-dark">2. Evidence Anchors: Municipal Waste Audits</h2>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm mb-8">
+                <h3 class="font-bold text-gray-800 mb-4">Sector Reporting & Studies</h3>
+                <ul class="space-y-4 text-sm text-gray-700">
+                    <li class="flex items-start gap-3">
+                        <span class="flex-shrink-0 w-6 h-6 rounded-full bg-paper-primary text-white flex items-center justify-center font-bold text-xs">1</span>
+                        <div>
+                            <strong>SWEEP-Net Reports (2014, 2016):</strong> Identify paper and cardboard as approximately 16-17% of the total municipal solid waste stream in Lebanon.
+                        </div>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <span class="flex-shrink-0 w-6 h-6 rounded-full bg-paper-primary text-white flex items-center justify-center font-bold text-xs">2</span>
+                        <div>
+                            <strong>World Bank & MoE Studies:</strong> Corroborate the composition data, highlighting higher concentrations of paper waste in urban centers due to commercial activity and higher consumption rates.
+                        </div>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <span class="flex-shrink-0 w-6 h-6 rounded-full bg-paper-primary text-white flex items-center justify-center font-bold text-xs">3</span>
+                        <div>
+                            <strong>Recycling Sector Activity:</strong> Established paper mills and recovery facilities (e.g., Solicar, Sicomo) provide operational evidence of significant recoverable volumes, though facility-level throughput data is proprietary.
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Section D: Regional Intensity Map -->
+        <section id="regional-distribution" class="scroll-mt-28">
+            <button onclick="toggleSection('reg-methodology', 'icon-reg')" class="w-full text-left focus:outline-none no-print">
+                <div class="flex items-center justify-between section-header cursor-pointer group">
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl">🗺️</span>
+                        <h2 class="text-2xl font-serif font-bold text-paper-dark group-hover:text-paper-primary transition">
+                            3. Regional Intensity Map
+                        </h2>
+                    </div>
+                    <div class="bg-white p-2 rounded-full shadow-sm border border-gray-100 group-hover:bg-paper-light transition">
+                        <svg id="icon-reg" class="w-5 h-5 text-gray-500 arrow-icon transform rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </div>
+                </div>
+            </button>
+            <div class="hidden print:block section-header"><h2 class="text-2xl font-serif font-bold text-paper-dark">3. Regional Intensity Map</h2></div>
+
+            <div id="reg-methodology" class="collapsible-content collapsible-active">
+                
+                <div class="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-6 flex gap-3 items-start">
+                    <span class="text-xl">ℹ️</span>
+                    <div>
+                        <p class="text-sm text-blue-900 font-bold">Methodological Note</p>
+                        <p class="text-sm text-blue-800">
+                            Regional intensity reflects consumption and MSW generation patterns, not measured waste tonnage. Paper waste generation is strongly correlated with population density, commercial activity, and institutional presence.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Qualitative Table -->
+                <div class="bg-white rounded-xl shadow-soft overflow-hidden border border-gray-100">
+                    <div class="overflow-x-auto">
+                        <table id="qualitativeTable">
+                            <thead>
+                                <tr>
+                                    <th>Region</th>
+                                    <th class="text-center">Generation Intensity</th>
+                                    <th>Primary Drivers</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-sm text-gray-700">
+                                <tr>
+                                    <td class="font-bold text-gray-900">Beirut</td>
+                                    <td class="text-center"><span class="badge-intensity badge-very-high">VERY HIGH</span></td>
+                                    <td class="text-xs text-gray-600">Commercial hubs, offices, institutions, high population density.</td>
+                                </tr>
+                                <tr>
+                                    <td class="font-bold text-gray-900">Mount Lebanon</td>
+                                    <td class="text-center"><span class="badge-intensity badge-high">HIGH</span></td>
+                                    <td class="text-xs text-gray-600">Residential clusters, retail centers, peri-urban commercial zones.</td>
+                                </tr>
+                                <tr>
+                                    <td class="font-bold text-gray-900">North</td>
+                                    <td class="text-center"><span class="badge-intensity badge-medium">MEDIUM</span></td>
+                                    <td class="text-xs text-gray-600">Urban MSW (Tripoli), regional commercial activity.</td>
+                                </tr>
+                                <tr>
+                                    <td class="font-bold text-gray-900">Bekaa</td>
+                                    <td class="text-center"><span class="badge-intensity badge-medium">MED-LOW</span></td>
+                                    <td class="text-xs text-gray-600">Lower population density, mixed agricultural/commercial use.</td>
+                                </tr>
+                                <tr>
+                                    <td class="font-bold text-gray-900">South & Nabatieh</td>
+                                    <td class="text-center"><span class="badge-intensity badge-medium">MED-LOW</span></td>
+                                    <td class="text-xs text-gray-600">Moderate residential consumption, smaller commercial centers.</td>
+                                </tr>
+                                <tr>
+                                    <td class="font-bold text-gray-900">Akkar / Baalbek</td>
+                                    <td class="text-center"><span class="badge-intensity badge-low">LOW</span></td>
+                                    <td class="text-xs text-gray-600">Rural consumption patterns, lower MSW generation rates.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Legend -->
+                <div class="mt-4 border-t border-gray-100 pt-4 px-2">
+                    <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wide mb-3">Intensity Legend</h4>
+                    <div class="grid grid-cols-2 md:grid-cols-5 gap-3 text-sm">
+                        <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#3E2723]"></span> <span class="text-xs">Very High (Commercial)</span></div>
+                        <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#5D4037]"></span> <span class="text-xs">High (Residential/Retail)</span></div>
+                        <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#8D6E63]"></span> <span class="text-xs">Medium (Urban)</span></div>
+                        <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#D7CCC8]"></span> <span class="text-xs">Low (Rural)</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section E: Methodology & Visuals -->
+        <section id="visualizations" class="scroll-mt-28">
+            
+            <!-- Methodology Block -->
+            <div id="methodology" class="mb-12">
+                <div class="section-header">
+                    <span class="text-2xl">📐</span>
+                    <h2 class="text-2xl font-serif font-bold text-paper-dark">4. Methodology</h2>
+                </div>
+                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                    <p class="text-gray-700 leading-relaxed">
+                        Paper & cardboard waste estimates are derived from national MSW composition studies and recycling sector reports. Unlike agricultural residues, waste generation is driven by consumption patterns rather than production geography; therefore, only national quantities are reported, while regional mapping remains qualitative.
+                    </p>
+                </div>
+            </div>
+
+            <div class="section-header">
+                <span class="text-2xl">📉</span>
+                <h2 class="text-2xl font-serif font-bold text-paper-dark">5. Visual Analysis</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                
+                <!-- Chart 1: Regional Intensity -->
+                <div class="academic-card p-6 break-inside-avoid flex flex-col h-full">
+                    <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-6 text-center flex justify-center items-center gap-2">
+                        <span>📊</span> Regional Consumption Intensity
+                    </h3>
+                    <div class="relative h-64 w-full flex-grow">
+                        <canvas id="intensityChart"></canvas>
+                    </div>
+                    <p class="text-xs text-center text-gray-400 mt-2">Indicative – derived from population & commercial density.</p>
+                </div>
+
+                <!-- Chart 2: MSW Composition -->
+                <div class="academic-card p-6 break-inside-avoid flex flex-col h-full">
+                    <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-6 text-center flex justify-center items-center gap-2">
+                        <span>🍩</span> MSW Composition (National)
+                    </h3>
+                    <div class="relative h-64 w-full flex-grow flex justify-center">
+                        <canvas id="compositionChart"></canvas>
+                    </div>
+                    <p class="text-xs text-center text-gray-400 mt-2">Indicative – derived from SWEEP-Net/WB MSW studies.</p>
+                </div>
+            </div>
+        </section>
+
+      <!-- Section F: References -->
+        <section id="references" class="border-t border-gray-200 pt-10 scroll-mt-28">
+            <h2 class="text-xl font-bold text-gray-900 mb-8 flex items-center gap-2">
+                <span class="text-paper-primary">6.</span> References & Citations
+            </h2>
+            <div class="grid grid-cols-1 gap-4 text-sm text-gray-600">
+                
+                <div class="group p-4 rounded-lg hover:bg-white hover:shadow-md transition border border-transparent hover:border-gray-100">
+                    <p class="font-bold text-gray-900 group-hover:text-blue-700 transition">SWEEP-Net. (2014).</p>
+                    <p class="mb-1">Country Report on the Solid Waste Management in Lebanon.</p>
+                    <a href="http://data.infopro.com.lb/file/LebanonCountryReportonSolidWaste2014GIZ.pdf" target="_blank" class="text-blue-500 hover:underline break-all text-xs flex items-center gap-1">View PDF <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg></a>
+                </div>
+
+                <div class="group p-4 rounded-lg hover:bg-white hover:shadow-md transition border border-transparent hover:border-gray-100">
+                    <p class="font-bold text-gray-900 group-hover:text-blue-700 transition">World Bank. (2011/2015).</p>
+                    <p class="mb-1">Solid Waste Management in Lebanon - Country Environmental Analysis.</p>
+                    <a href="https://documents1.worldbank.org/curated/en/360011468265768992/pdf/622660ESW0Gray0c060601100BOX361480B.pdf" target="_blank" class="text-blue-500 hover:underline break-all text-xs flex items-center gap-1">View Analysis <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg></a>
+                </div>
+
+                <div class="group p-4 rounded-lg hover:bg-white hover:shadow-md transition border border-transparent hover:border-gray-100">
+                    <p class="font-bold text-gray-900 group-hover:text-blue-700 transition">Ministry of Environment (MoE) / UNDP.</p>
+                    <p class="mb-1">Updated Master Plan for the Closure and Rehabilitation of Uncontrolled Dumpsites.</p>
+                    <a href="http://www.studies.gov.lb/getattachment/Sectors/Environment/2017/ENV-17-8/ENV-17-8.pdf" target="_blank" class="text-blue-500 hover:underline break-all text-xs flex items-center gap-1">View Plan <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg></a>
+                </div>
+
+                <div class="group p-4 rounded-lg hover:bg-white hover:shadow-md transition border border-transparent hover:border-gray-100">
+                    <p class="font-bold text-gray-900 group-hover:text-blue-700 transition">UN-Habitat.</p>
+                    <p class="mb-1">Solid Waste Management Studies (Various regional assessments).</p>
+                    <a href="https://unhabitat.org/sites/default/files/2021/02/solid_waste_management_in_the_worlds_cities_water_and_sanitation_in_the_worlds_cities_2010.pdf" target="_blank" class="text-blue-500 hover:underline break-all text-xs flex items-center gap-1">View Report <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg></a>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Final Safety Note -->
+        <div class="mt-12 p-6 bg-gray-50 border border-gray-200 rounded-lg text-center">
+            <p class="text-sm text-gray-500 italic">
+                “This page intentionally avoids presenting region-specific paper and cardboard waste tonnages due to the absence of audited disaggregated datasets in Lebanon.”
+            </p>
+        </div>
+
+    </main>
+
+    <footer class="bg-gray-900 text-gray-400 py-10 mt-12 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <div class="flex justify-center mb-4 text-3xl">📦</div>
+            <p class="text-sm font-medium text-white">Sustainable Materials - PhD Scholar Mika - University of Bath</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Collapsible Logic
+        function toggleSection(contentId, iconId) {
+            const content = document.getElementById(contentId);
+            const icon = document.getElementById(iconId);
+            if (content.classList.contains('collapsible-active')) {
+                content.classList.remove('collapsible-active');
+                icon.classList.remove('rotate-180');
+            } else {
+                content.classList.add('collapsible-active');
+                icon.classList.add('rotate-180');
+            }
+        }
+
+        // Chart Configurations
+        document.addEventListener('DOMContentLoaded', function () {
+            
+            const colorDark = '#3E2723'; 
+            const colorPrimary = '#5D4037'; 
+            const colorMedium = '#8D6E63';
+            const colorLight = '#D7CCC8';
+            const colorAccent = '#2E7D32';
+
+            // 1. Regional Intensity Chart
+            // Mapping: Very High=4, High=3, Med=2, Low-Med=1.5, Low=1
+            const ctxInt = document.getElementById('intensityChart').getContext('2d');
+            new Chart(ctxInt, {
+                type: 'bar',
+                data: {
+                    labels: ['Beirut', 'Mt Lebanon', 'North', 'Bekaa', 'South', 'Nabatieh', 'Akkar'],
+                    datasets: [{
+                        label: 'Intensity Score',
+                        data: [4, 3, 2, 1.5, 1.5, 1.5, 1],
+                        backgroundColor: [
+                            colorDark, // Very High
+                            colorPrimary, // High
+                            colorMedium, // Med
+                            '#A1887F', // Med-Low
+                            '#A1887F', // Med-Low
+                            '#A1887F', // Med-Low
+                            colorLight  // Low
+                        ],
+                        borderRadius: 4,
+                        barPercentage: 0.6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { 
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const map = {4: 'Very High', 3: 'High', 2: 'Medium', 1.5: 'Med-Low', 1: 'Low'};
+                                    return 'Intensity: ' + map[context.raw];
+                                }
+                            }
+                        }
+                    },
+                    scales: { 
+                        y: { 
+                            beginAtZero: true, 
+                            max: 5,
+                            ticks: {
+                                callback: function(value) {
+                                    if(value === 4) return 'Very High';
+                                    if(value === 3) return 'High';
+                                    if(value === 2) return 'Medium';
+                                    if(value === 1) return 'Low';
+                                    return '';
+                                },
+                                font: { weight: 'bold' }
+                            },
+                            grid: { color: '#f3f4f6' }
+                        }, 
+                        x: { grid: { display: false } } 
+                    }
+                }
+            });
+
+            // 2. Composition Pie Chart
+            const ctxComp = document.getElementById('compositionChart').getContext('2d');
+            new Chart(ctxComp, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Organics (~52%)', 'Paper & Cardboard (~16%)', 'Plastics (~11%)', 'Others (~21%)'],
+                    datasets: [{
+                        data: [52, 16, 11, 21],
+                        backgroundColor: ['#E0E0E0', colorPrimary, '#E0E0E0', '#E0E0E0'],
+                        borderWidth: 0,
+                        hoverOffset: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%',
+                    plugins: { 
+                        legend: { position: 'bottom', labels: { usePointStyle: true, boxWidth: 8, font: { size: 11 } } }
+                    }
+                }
+            });
+        });
+        
+        // Sticky Nav Logic
+        window.addEventListener('scroll', () => {
+            let current = '';
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.side-nav-link, .top-nav-link');
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 150) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

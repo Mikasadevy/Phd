@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Citrus Waste – Lebanon Scientific Dataset & Methodology</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- MathJax for LaTeX Equations -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Merriweather', 'serif'],
+                    },
+                    colors: {
+                        'citrus-dark': '#E65100',    // Deep Orange
+                        'citrus-primary': '#FB8C00', // Vibrant Orange
+                        'citrus-zest': '#FBC02D',    // Yellow/Peel
+                        'citrus-leaf': '#689F38',    // Leaf Green
+                        'citrus-light': '#FFF3E0',   // Pale Orange
+                        'waste-brown': '#8D6E63',
+                        'scientific-blue': '#1976D2'
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+                        'glow': '0 0 15px rgba(251, 140, 0, 0.3)'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #fdfbf7;
+            background-image: radial-gradient(#ffe0b2 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+        .academic-card {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(5px);
+            border: 1px solid #ffe0b2;
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .academic-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border-color: #FB8C00;
+        }
+        .section-header {
+            border-bottom: 2px solid #FB8C00;
+            padding-bottom: 0.75rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        table {
+            border-collapse: separate;
+            border-spacing: 0;
+            width: 100%;
+        }
+        th {
+            background-color: #E65100;
+            font-weight: 600;
+            color: #ffffff;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+            padding: 14px 16px;
+        }
+        th:first-child { border-top-left-radius: 8px; }
+        th:last-child { border-top-right-radius: 8px; }
+        
+        td {
+            padding: 14px 16px;
+            border-bottom: 1px solid #fed7aa;
+            background-color: white;
+            transition: background-color 0.2s;
+        }
+        tr:last-child td:first-child { border-bottom-left-radius: 8px; }
+        tr:last-child td:last-child { border-bottom-right-radius: 8px; }
+        
+        tr:hover td {
+            background-color: #FFF3E0;
+        }
+        
+        .math-block {
+            background: linear-gradient(to right, #ffffff, #fff8e1);
+            padding: 1.25rem;
+            border-radius: 0.5rem;
+            border-left: 4px solid #FB8C00;
+            margin: 1.5rem 0;
+            overflow-x: auto;
+            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.03);
+            font-family: 'Inter', monospace;
+            font-size: 0.95rem;
+            color: #333;
+        }
+        
+        /* Navigation Dot Active State */
+        .side-nav-link.active span {
+            background-color: #FB8C00;
+            transform: scale(1.25);
+            border-color: #E65100;
+        }
+        .side-nav-link.active p {
+            color: #E65100;
+            font-weight: 700;
+        }
+
+        .top-nav-link.active {
+            color: #E65100;
+            background-color: #FFF3E0;
+            font-weight: 600;
+        }
+
+        /* Print Optimizations */
+        @media print {
+            body { background: white; background-image: none; }
+            .no-print { display: none !important; }
+            .academic-card { break-inside: avoid; box-shadow: none; border: 1px solid #ccc; }
+            .collapsible-content { max-height: none !important; display: block !important; }
+            canvas { max-width: 100% !important; }
+            a[href]:after { content: " (" attr(href) ")"; font-size: 0.8em; color: #666; }
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+        }
+
+        .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0, 1, 0, 1); }
+        .collapsible-active { max-height: 3000px; transition: max-height 0.5s ease-in-out; }
+        .arrow-icon { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .rotate-180 { transform: rotate(180deg); }
+    </style>
+</head>
+<body class="text-slate-800 antialiased relative">
+
+    <!-- Sticky Side Navigation (Desktop) -->
+    <nav class="hidden 2xl:block fixed left-10 top-1/2 transform -translate-y-1/2 z-40 no-print bg-white/80 backdrop-blur p-4 rounded-xl border border-orange-200 shadow-soft">
+        <ul class="space-y-4">
+            <li><a href="#overview" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-citrus-primary transition group"><span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-citrus-primary transition bg-white"></span><p class="font-medium">Overview</p></a></li>
+            <li><a href="#national-data" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-citrus-primary transition group"><span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-citrus-primary transition bg-white"></span><p class="font-medium">National Data</p></a></li>
+            <li><a href="#waste-methodology" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-citrus-primary transition group"><span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-citrus-primary transition bg-white"></span><p class="font-medium">Methodology</p></a></li>
+            <li><a href="#regional-distribution" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-citrus-primary transition group"><span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-citrus-primary transition bg-white"></span><p class="font-medium">Regional Dist.</p></a></li>
+            <li><a href="#visualizations" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-citrus-primary transition group"><span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-citrus-primary transition bg-white"></span><p class="font-medium">Visual Analysis</p></a></li>
+            <li><a href="#references" class="side-nav-link flex items-center gap-3 text-sm text-gray-500 hover:text-citrus-primary transition group"><span class="w-3 h-3 rounded-full border-2 border-gray-300 group-hover:border-citrus-primary transition bg-white"></span><p class="font-medium">References</p></a></li>
+        </ul>
+    </nav>
+
+    <!-- Header -->
+    <header class="bg-white/90 backdrop-blur-md border-b border-orange-200 sticky top-0 z-50 shadow-sm print:static print:border-none">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+            <div class="flex items-center gap-3 min-w-fit">
+                <div class="bg-citrus-light p-2 rounded-full border border-citrus-primary/40 print:hidden">
+                    <span class="text-2xl">🍊</span>
+                </div>
+                <div>
+                    <h1 class="text-lg md:text-xl font-serif font-bold text-gray-900 leading-tight">
+                        Citrus Biomass Waste
+                    </h1>
+                    <p class="hidden sm:block text-xs text-citrus-dark font-bold">
+                        Lebanon Scientific Dataset 🇱🇧
+                    </p>
+                </div>
+            </div>
+            <nav class="hidden lg:flex items-center gap-1 no-print bg-orange-50/50 p-1.5 rounded-lg border border-orange-100">
+                <a href="#national-data" class="top-nav-link px-3 py-1.5 text-sm font-medium text-gray-600 rounded-md hover:bg-orange-100 transition-colors">National</a>
+                <a href="#waste-methodology" class="top-nav-link px-3 py-1.5 text-sm font-medium text-gray-600 rounded-md hover:bg-orange-100 transition-colors">Method</a>
+                <a href="#regional-distribution" class="top-nav-link px-3 py-1.5 text-sm font-medium text-gray-600 rounded-md hover:bg-orange-100 transition-colors">Regional</a>
+                <a href="#visualizations" class="top-nav-link px-3 py-1.5 text-sm font-medium text-gray-600 rounded-md hover:bg-orange-100 transition-colors">Visuals</a>
+            </nav>
+            <div class="no-print min-w-fit">
+                <button onclick="window.print()" class="flex items-center gap-2 bg-citrus-dark hover:bg-orange-800 text-white px-4 py-2 rounded-lg text-xs md:text-sm font-medium transition shadow hover:shadow-lg transform hover:-translate-y-0.5">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                    <span class="hidden md:inline">Print Report</span>
+                    <span class="md:hidden">Print</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-16">
+
+        <!-- Section A: Overview -->
+        <section id="overview" class="bg-white rounded-2xl p-8 shadow-soft border border-orange-100 scroll-mt-28">
+            <h2 class="text-lg font-bold text-gray-900 mb-2 flex items-center gap-2">
+                <span>🔍</span> Executive Summary
+            </h2>
+            <div class="prose max-w-none text-gray-600">
+                <p class="text-lg leading-relaxed">
+                    This scientific dataset quantifies <strong>Citrus</strong> (Oranges, Lemons, Grapefruits, Mandarins) waste in Lebanon for the reference year 2023. By reconciling FAOSTAT production data (296,081 t) with export figures (52,098 t), we establish a <strong>Net Domestic Supply</strong> of ~244,000 tonnes. A verified 50% waste factor applied to this domestic volume yields a <strong>Maximum Recoverable Biomass Potential of ~121,992 tonnes/year</strong>.
+                </p>
+                <p class="text-sm font-bold text-citrus-dark mt-2">
+                    Note: The dataset is designed to identify industrial biomass investment potential (source-generated waste), not to estimate household food waste generation.
+                </p>
+            </div>
+        </section>
+
+        <!-- Section B: National Data -->
+        <section id="national-data" class="scroll-mt-28">
+            <div class="section-header">
+                <span class="text-2xl">📊</span>
+                <h2 class="text-2xl font-serif font-bold text-citrus-dark">1. National Data & Baseline Indicators</h2>
+            </div>
+            
+            <!-- Summary Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+                <!-- Production Card -->
+                <div class="academic-card p-6 relative overflow-hidden group">
+                    <p class="text-xs font-bold text-citrus-leaf uppercase tracking-wider">Gross Production</p>
+                    <p class="text-3xl font-bold text-gray-900 mt-2">296,081 <span class="text-sm font-normal text-gray-500">t</span></p>
+                    <div class="mt-2 text-xs text-gray-500">Source: FAOSTAT 2023</div>
+                </div>
+
+                <!-- Export Card -->
+                <div class="academic-card p-6 relative overflow-hidden group border-l-4 border-l-blue-400">
+                    <p class="text-xs font-bold text-blue-600 uppercase tracking-wider">Exports (Deducted)</p>
+                    <p class="text-3xl font-bold text-gray-900 mt-2">-52,098 <span class="text-sm font-normal text-gray-500">t</span></p>
+                    <div class="mt-2 text-xs text-gray-500">Source: UN COMTRADE</div>
+                </div>
+
+                <!-- Domestic Card -->
+                <div class="academic-card p-6 relative overflow-hidden group bg-orange-50">
+                    <p class="text-xs font-bold text-citrus-dark uppercase tracking-wider">Net Domestic Supply</p>
+                    <p class="text-3xl font-bold text-gray-900 mt-2">243,983 <span class="text-sm font-normal text-gray-500">t</span></p>
+                    <div class="mt-2 text-xs text-gray-500">Processing + Fresh Market</div>
+                </div>
+
+                <!-- Waste Card -->
+                <div class="academic-card p-6 relative overflow-hidden group border-b-4 border-b-citrus-zest">
+                    <p class="text-xs font-bold text-citrus-dark uppercase tracking-wider">Theoretical Waste Potential</p>
+                    <p class="text-3xl font-bold text-gray-900 mt-2">121,992 <span class="text-sm font-normal text-gray-500">t/yr</span></p>
+                    <div class="mt-2 text-xs text-orange-800 bg-orange-100 px-2 py-1 rounded inline-block">Upper-Bound Estimate</div>
+                </div>
+            </div>
+
+            <!-- Detailed Table -->
+            <div class="bg-white rounded-xl shadow-soft overflow-hidden border border-orange-100">
+                <div class="overflow-x-auto">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Indicator</th>
+                                <th>Value (Tonnes)</th>
+                                <th>Source/Logic</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-sm text-gray-700">
+                            <tr>
+                                <td class="font-bold text-gray-900">1. Total National Production</td>
+                                <td class="font-mono text-lg">296,081</td>
+                                <td>FAOSTAT (2023)</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold text-gray-900">2. Exports (Fresh)</td>
+                                <td class="font-mono text-red-600">- 52,098</td>
+                                <td>UN COMTRADE (2021)</td>
+                            </tr>
+                            <tr class="bg-orange-50 font-bold">
+                                <td class="text-citrus-dark">3. Net Domestic Availability</td>
+                                <td class="font-mono text-citrus-dark">= 243,983</td>
+                                <td>(1) - (2)</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold text-gray-900">4. Waste Factor</td>
+                                <td class="font-mono">50%</td>
+                                <td>Theoretical Maximum</td>
+                            </tr>
+                            <tr class="bg-citrus-light border-t-2 border-citrus-primary">
+                                <td class="font-bold text-citrus-dark text-lg">5. Recoverable Potential</td>
+                                <td class="font-bold font-mono text-xl text-citrus-dark">121,992</td>
+                                <td>(3) × (4)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section C: Waste Methodology -->
+        <section id="waste-methodology" class="scroll-mt-28">
+            <div class="section-header">
+                <span class="text-2xl">🧮</span>
+                <h2 class="text-2xl font-serif font-bold text-citrus-dark">2. Waste Generation Methodology</h2>
+            </div>
+
+            <!-- Methodology Body -->
+            <div class="space-y-8">
+                
+                <!-- CRITICAL SCOPE DISCLAIMER -->
+                <div class="bg-red-50 border-l-4 border-red-500 p-6 rounded-r-xl shadow-sm">
+                    <h3 class="text-red-800 font-bold mb-2 flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                        Scientific Scope: "Source-Generated" vs. "Municipal" Waste
+                    </h3>
+                    <div class="text-sm text-gray-700 space-y-3 leading-relaxed">
+                        <p>
+                            <strong>This assessment quantifies source-generated citrus biomass waste associated with agricultural and agro-industrial activities, not municipal food waste.</strong>
+                        </p>
+                        <p>
+                            <strong>Justification:</strong> According to <em>Blominvest (2016)</em>, fresh juice producers must be located near orchards to minimize refrigerated transport costs. Furthermore, "inadequate packinghouses" near orchards account for 5-15% losses. Therefore, <strong>Production Clusters (South/North) are the scientifically correct proxy</strong> for calculating accessible industrial biomass, not urban consumption centers.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Left: Calculations -->
+                    <div class="bg-white p-6 rounded-xl border border-orange-200 shadow-sm">
+                        <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span class="bg-citrus-light text-citrus-dark p-1 rounded">A</span> Calculation Logic Flow
+                        </h3>
+                        <div class="mb-4">
+                            <ul class="text-sm text-gray-600 space-y-2 mb-4">
+                                <li><strong>Input:</strong> Total citrus production (FAOSTAT, 2023)</li>
+                                <li><strong>Leakage:</strong> Deduct fresh exports (UN COMTRADE)</li>
+                                <li><strong>Stock:</strong> Net domestic citrus supply</li>
+                                <li><strong>Generation:</strong> Apply composite waste factor</li>
+                            </ul>
+                            <div class="math-block py-4">
+                                $$ P_{potential} = (P_{prod} - P_{export}) \times 0.50 $$
+                            </div>
+                            <p class="text-xs text-gray-500 italic mt-2">
+                                Processed citrus exports (HS 200830) are downstream products and do not materially affect farm-gate biomass availability.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Right: Waste Factor Decomposition -->
+                    <div class="bg-orange-50 p-6 rounded-xl border border-orange-100 flex flex-col justify-center">
+                        <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span class="bg-scientific-blue text-white p-1 rounded">B</span> Waste Fraction Decomposition (50%)
+                        </h3>
+                        <p class="text-sm text-gray-600 mb-3">The 50% factor represents a <strong>conservative theoretical maximum</strong> for industrial valorization, composed of:</p>
+                        <ul class="space-y-3 text-sm text-gray-700">
+                            <li class="bg-white p-3 rounded border border-orange-100 flex justify-between">
+                                <span>Processing Residues (Peel & Pulp)</span>
+                                <span class="font-bold text-citrus-dark">~35–40%</span>
+                            </li>
+                            <li class="bg-white p-3 rounded border border-orange-100 flex justify-between">
+                                <span>Packing House Culls / Rejects</span>
+                                <span class="font-bold text-citrus-dark">5–15%</span>
+                            </li>
+                            <li class="bg-white p-3 rounded border border-orange-100 flex justify-between">
+                                <span>Economic Abandonment</span>
+                                <span class="font-bold text-citrus-dark">Variable</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section D: Regional Distribution -->
+        <section id="regional-distribution" class="scroll-mt-28">
+            <div class="section-header">
+                <span class="text-2xl">🗺️</span>
+                <h2 class="text-2xl font-serif font-bold text-citrus-dark">3. Regional Waste Distribution</h2>
+            </div>
+
+            <div class="bg-citrus-light/30 p-6 rounded-xl border border-citrus-primary/10 mb-8 text-center">
+                <p class="text-gray-700 mb-2 font-medium">
+                    Regional quantities are indicative allocations based on cultivation concentration and agro-industrial location proxies. Lebanon does not publish governorate-level citrus production statistics.
+                </p>
+            </div>
+
+            <!-- Interactive Table -->
+            <div class="bg-white rounded-xl shadow-soft overflow-hidden border border-orange-100">
+                <div class="overflow-x-auto">
+                    <table id="regionalTable">
+                        <thead>
+                            <tr>
+                                <th class="cursor-pointer hover:bg-orange-700 transition-colors" onclick="sortTable(0)">Region <span class="opacity-50 text-xs no-print">↕</span></th>
+                                <th class="cursor-pointer hover:bg-orange-700 transition-colors text-right" onclick="sortTable(1)">Share (%) <span class="opacity-50 text-xs no-print">↕</span></th>
+                                <th class="cursor-pointer hover:bg-orange-700 transition-colors text-right" onclick="sortTable(2)">Net Potential (t/yr) <span class="opacity-50 text-xs no-print">↕</span></th>
+                                <th class="text-left pl-4">Methodological Evidence</th>
+                                <th class="text-center">Confidence</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-sm text-gray-700">
+                            <tr class="bg-orange-50/30">
+                                <td class="font-bold text-gray-900">South Lebanon</td>
+                                <td class="text-right"><div class="inline-block w-16 bg-citrus-primary text-white rounded text-center font-bold">60.0%</div></td>
+                                <td class="text-right font-mono font-bold text-citrus-dark text-lg">73,195</td>
+                                <td class="text-left pl-4 text-xs text-gray-600 leading-snug">
+                                    Primary production belt (Tyre/Sidon). 64% of trees (Blominvest).
+                                </td>
+                                <td class="text-center"><span class="px-2 py-1 rounded-full bg-blue-100 text-blue-800 text-xs font-bold border border-blue-200">Medium</span></td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold text-gray-900">North</td>
+                                <td class="text-right"><div class="inline-block w-16 bg-orange-200 rounded text-center">17.0%</div></td>
+                                <td class="text-right font-mono font-bold text-citrus-dark">20,739</td>
+                                <td class="text-left pl-4 text-xs text-gray-600 leading-snug">
+                                    Major coastal cluster (Tripoli/Zgharta).
+                                </td>
+                                <td class="text-center"><span class="px-2 py-1 rounded-full bg-blue-100 text-blue-800 text-xs font-bold border border-blue-200">Medium</span></td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold text-gray-900">Akkar</td>
+                                <td class="text-right"><div class="inline-block w-16 bg-orange-200 rounded text-center">16.0%</div></td>
+                                <td class="text-right font-mono font-bold text-citrus-dark">19,519</td>
+                                <td class="text-left pl-4 text-xs text-gray-600 leading-snug">
+                                    Extension of Northern coastal plain.
+                                </td>
+                                <td class="text-center"><span class="px-2 py-1 rounded-full bg-blue-100 text-blue-800 text-xs font-bold border border-blue-200">Medium</span></td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold text-gray-900">Mount Lebanon</td>
+                                <td class="text-right"><div class="inline-block w-16 bg-gray-100 rounded text-center">7.0%</div></td>
+                                <td class="text-right font-mono font-bold text-citrus-dark">8,539</td>
+                                <td class="text-left pl-4 text-xs text-gray-600 leading-snug">
+                                    Residual coastal production (Damour/Jiyeh).
+                                </td>
+                                <td class="text-center"><span class="px-2 py-1 rounded-full bg-gray-100 text-gray-600 text-xs font-bold border border-gray-200">Low</span></td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold text-gray-400">Nabatieh</td>
+                                <td class="text-right text-gray-400">0%</td>
+                                <td class="text-right font-mono text-gray-400">–</td>
+                                <td class="text-left pl-4 text-xs text-gray-400 leading-snug">
+                                    No statistically significant citrus cultivation reported.
+                                </td>
+                                <td class="text-center text-gray-400">-</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold text-gray-400">Beirut</td>
+                                <td class="text-right text-gray-400">0%</td>
+                                <td class="text-right font-mono text-gray-400">–</td>
+                                <td class="text-left pl-4 text-xs text-gray-400 leading-snug">
+                                    Excluded (Municipal/Consumption).
+                                </td>
+                                <td class="text-center text-gray-400">-</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Legend -->
+                <div class="bg-gray-50 border-t border-gray-200 p-3 flex flex-wrap gap-4 text-xs text-gray-600 justify-end">
+                    <span class="font-bold text-gray-500 uppercase tracking-wide">Data Confidence:</span>
+                    <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-blue-500"></span> <strong>Medium:</strong> Inferred from cluster data.</div>
+                    <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-gray-400"></span> <strong>Low:</strong> Estimated residual.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section E: Visual Figures -->
+        <section id="visualizations" class="scroll-mt-28">
+            <div class="section-header">
+                <span class="text-2xl">📉</span>
+                <h2 class="text-2xl font-serif font-bold text-citrus-dark">4. Visual Analysis & Figures</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                
+                <!-- Chart 1: Bar Chart (Regional) -->
+                <div class="academic-card p-6 break-inside-avoid">
+                    <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-6 text-center flex justify-center items-center gap-2">
+                        <span>📊</span> Regional Net Potential (Tonnes)
+                    </h3>
+                    <div class="relative h-72 w-full">
+                        <canvas id="regionalBarChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Chart 2: Pie Chart (Distribution) -->
+                <div class="academic-card p-6 break-inside-avoid">
+                    <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-6 text-center flex justify-center items-center gap-2">
+                        <span>🍩</span> Regional Share (%)
+                    </h3>
+                    <div class="relative h-72 w-full flex justify-center">
+                        <canvas id="sharePieChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Chart 3: Comparative -->
+                <div class="academic-card p-6 md:col-span-2 bg-gradient-to-br from-white to-orange-50 break-inside-avoid">
+                    <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-6 text-center flex justify-center items-center gap-2">
+                        <span>⚖️</span> Mass Balance: Production vs. Export vs. Potential
+                    </h3>
+                    <div class="relative h-72 w-full">
+                        <canvas id="comparativeChart"></canvas>
+                    </div>
+                    <p class="text-center text-xs text-gray-500 mt-4 bg-white inline-block px-4 py-2 rounded-full shadow-sm border mx-auto">
+                        <span class="font-bold text-citrus-dark">Insight:</span> Exports (52k t) are deducted first. Waste potential is 50% of the remaining Domestic Supply (244k t).
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section F: References -->
+        <section id="references" class="border-t border-orange-200 pt-10 scroll-mt-28">
+            <h2 class="text-xl font-bold text-gray-900 mb-8 flex items-center gap-2">
+                <span class="text-citrus-primary">5.</span> References & Citations
+            </h2>
+            <div class="grid grid-cols-1 gap-4 text-sm text-gray-600">
+                
+                <div class="group p-4 rounded-lg hover:bg-white hover:shadow-md transition border border-transparent hover:border-orange-100">
+                    <p class="font-bold text-gray-900 group-hover:text-blue-700 transition">Mikhael, M., & Saadeh, L. (2016).</p>
+                    <p class="mb-1">Citrus Cultivation: Lebanon’s Sour Sector. Blominvest Bank.</p>
+                    <a href="https://blog.blominvestbank.com/wp-content/uploads/2016/06/Citrus-Cultivation-Lebanon---s-Sour-Sector.pdf" target="_blank" class="text-blue-500 hover:underline break-all text-xs flex items-center gap-1">
+                        Read Report <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                    </a>
+                </div>
+
+                <div class="group p-4 rounded-lg hover:bg-white hover:shadow-md transition border border-transparent hover:border-orange-100">
+                    <p class="font-bold text-gray-900 group-hover:text-blue-700 transition">United Nations COMTRADE / World Bank WITS. (2021).</p>
+                    <p class="mb-1">Lebanon Citrus fruit exports by country (Export Volume: 52,098 tons).</p>
+                    <a href="https://wits.worldbank.org/trade/comtrade/en/country/LBN/year/2021/tradeflow/Exports/partner/ALL/product/200830" target="_blank" class="text-blue-500 hover:underline break-all text-xs flex items-center gap-1">
+                        Access WITS Data <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                    </a>
+                </div>
+
+                <div class="group p-4 rounded-lg hover:bg-white hover:shadow-md transition border border-transparent hover:border-orange-100">
+                    <p class="font-bold text-gray-900 group-hover:text-blue-700 transition">CBI & Netherlands MFA. (2018).</p>
+                    <p class="mb-1">Export value chain analysis Lebanon fresh, fruit and vegetables (Industrial Estimate Support).</p>
+                    <a href="https://www.cbi.eu/sites/default/files/market-information/2018_vca_lebanon_ffv.pdf" target="_blank" class="text-blue-500 hover:underline break-all text-xs flex items-center gap-1">
+                        View Analysis <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                    </a>
+                </div>
+
+                <div class="group p-4 rounded-lg hover:bg-white hover:shadow-md transition border border-transparent hover:border-orange-100">
+                    <p class="font-bold text-gray-900 group-hover:text-blue-700 transition">FAO. (2023).</p>
+                    <p class="mb-1">FAOSTAT – Crops and Livestock Products (QCL): Oranges, Lemons, Grapefruit, Mandarins – Lebanon.</p>
+                    <a href="https://www.fao.org/faostat/en/#data/QCL" target="_blank" class="text-blue-500 hover:underline break-all text-xs flex items-center gap-1">
+                        Access Database <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                    </a>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-gray-900 text-gray-400 py-10 mt-12 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <div class="flex justify-center mb-4 text-3xl">🍊</div>
+            <p class="text-sm font-medium text-white">Sustainable Materials - PhD Scholar Mika - University of Bath</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // --- 1. Collapsible Logic ---
+        function toggleSection(contentId, iconId) {
+            const content = document.getElementById(contentId);
+            const icon = document.getElementById(iconId);
+            
+            if (content.classList.contains('collapsible-active')) {
+                content.classList.remove('collapsible-active');
+                icon.classList.remove('rotate-180');
+            } else {
+                content.classList.add('collapsible-active');
+                icon.classList.add('rotate-180');
+            }
+        }
+
+        // --- 2. Table Sorting Logic ---
+        function sortTable(n) {
+            var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+            table = document.getElementById("regionalTable");
+            switching = true;
+            dir = "asc"; 
+            
+            while (switching) {
+                switching = false;
+                rows = table.rows;
+                
+                for (i = 1; i < (rows.length - 1); i++) {
+                    shouldSwitch = false;
+                    x = rows[i].getElementsByTagName("TD")[n];
+                    y = rows[i+1].getElementsByTagName("TD")[n];
+                    
+                    let xVal = x.textContent.toLowerCase().replace(/,/g, '').replace(/%/g, '');
+                    let yVal = y.textContent.toLowerCase().replace(/,/g, '').replace(/%/g, '');
+                    
+                    if (!isNaN(parseFloat(xVal)) && !isNaN(parseFloat(yVal))) {
+                        xVal = parseFloat(xVal);
+                        yVal = parseFloat(yVal);
+                    }
+
+                    if (dir == "asc") {
+                        if (xVal > yVal) { shouldSwitch = true; break; }
+                    } else if (dir == "desc") {
+                        if (xVal < yVal) { shouldSwitch = true; break; }
+                    }
+                }
+                if (shouldSwitch) {
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                    switchcount ++; 
+                } else {
+                    if (switchcount == 0 && dir == "asc") {
+                        dir = "desc";
+                        switching = true;
+                    }
+                }
+            }
+        }
+
+        // --- 3. Chart.js Configurations ---
+        document.addEventListener('DOMContentLoaded', function () {
+            
+            // Citrus Palette
+            const colorPrimary = '#FB8C00'; // Orange
+            const colorDark = '#E65100';    // Deep Orange
+            const colorZest = '#FBC02D';    // Yellow
+            const colorLeaf = '#689F38';    // Green
+            const colorLight = '#FFE0B2';
+
+            const labels = ['South Lebanon', 'North', 'Akkar', 'Mount Lebanon', 'Nabatieh', 'Beirut'];
+            // New Scientific Data: Net Waste after Exports (121,992 t)
+            // Shares: South 60%, North 17%, Akkar 16%, Mt Leb 7%, Others Null
+            // Updated to use null for visually excluded regions
+            const dataWaste = [73195, 20739, 19519, 8539, null, null];
+            const dataShare = [60, 17, 16, 7, null, null];
+
+            // 1. Regional Bar Chart
+            const ctxBar = document.getElementById('regionalBarChart').getContext('2d');
+            new Chart(ctxBar, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Net Industrial Biomass (Tonnes/Year)',
+                        data: dataWaste,
+                        backgroundColor: [
+                            colorDark,      // South
+                            colorPrimary,   // North
+                            colorPrimary,   // Akkar
+                            colorLeaf,      // Mt Leb
+                            '#e0e0e0',      // Nabatieh (Null)
+                            '#e0e0e0'       // Beirut (Null)
+                        ],
+                        borderRadius: 4,
+                        borderWidth: 1,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: 'rgba(230, 81, 0, 0.9)',
+                            padding: 12,
+                            titleFont: { size: 13 },
+                            bodyFont: { size: 14 },
+                            callbacks: {
+                                label: function(context) {
+                                    if (context.raw === null) return 'No statistically significant citrus cultivation reported';
+                                    return ' ' + context.raw.toLocaleString() + ' tonnes (Upper-Bound)';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: '#fff3e0' }
+                        },
+                        x: {
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+
+            // 2. Pie Chart
+            const ctxPie = document.getElementById('sharePieChart').getContext('2d');
+            new Chart(ctxPie, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: dataShare,
+                        backgroundColor: [
+                            colorDark,      // South
+                            '#F57C00',      // North
+                            '#FF9800',      // Akkar
+                            colorLeaf,      // Mt Leb
+                            '#E0E0E0',      // Nabatieh
+                            '#E0E0E0'       // Beirut
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '60%',
+                    plugins: {
+                        legend: { 
+                            position: 'right', 
+                            labels: { usePointStyle: true, boxWidth: 8, font: { size: 11 } } 
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    if (context.raw === null) return 'Excluded';
+                                    return context.raw + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // 3. Comparative Chart
+            const ctxComp = document.getElementById('comparativeChart').getContext('2d');
+            new Chart(ctxComp, {
+                type: 'bar',
+                data: {
+                    labels: ['Gross Production', 'Fresh Exports', 'Net Domestic Supply', 'Recoverable Potential'],
+                    datasets: [{
+                        label: 'Volume (Tonnes)',
+                        data: [296081, 52098, 243983, 121992],
+                        backgroundColor: [colorLeaf, '#E53935', colorPrimary, colorDark],
+                        borderRadius: 6,
+                        barPercentage: 0.6
+                    }]
+                },
+                options: {
+                    indexAxis: 'y', 
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: 'rgba(104, 159, 56, 0.9)',
+                            padding: 12,
+                            callbacks: {
+                                label: function(context) {
+                                    if (context.dataIndex === 3) return 'Theoretical Max: ' + context.raw.toLocaleString() + ' t';
+                                    return context.raw.toLocaleString() + ' t';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            grid: { color: '#f1f8e9' },
+                            title: { display: true, text: 'Tonnes per Year' }
+                        },
+                        y: {
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+        });
+        
+        // --- 4. Sticky Nav Highlight Logic ---
+        window.addEventListener('scroll', () => {
+            let current = '';
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.side-nav-link, .top-nav-link');
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 150) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
