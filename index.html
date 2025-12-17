@@ -114,55 +114,87 @@
         </svg>
         Quick Access
       </h2>
+      
+      <!-- Desktop Header Arrows (Alternative Location if needed, currently using absolute) -->
     </div>
 
-    <!-- Scroll Container -->
-    <div class="flex overflow-x-auto gap-4 pb-6 snap-x snap-mandatory no-scrollbar" style="-webkit-overflow-scrolling: touch;">
+    <!-- Scroll Container Wrapper -->
+    <div class="relative group">
       
-      <!-- Card 1: Waste Mapping -->
-      <a href="https://mikaresearch.info/phase1/Waste%20Mapping/LebanonWasteMapping.html" target="_blank" rel="noopener" 
-         class="snap-start shrink-0 w-72 p-5 rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-md transition-all group">
-        <div class="flex items-start justify-between">
-          <span class="text-2xl group-hover:scale-110 transition-transform duration-300">🗺️</span>
-          <svg class="w-4 h-4 text-slate-300 group-hover:text-emerald-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-        </div>
-        <h3 class="mt-3 font-bold text-slate-900">Waste Mapping Portal</h3>
-        <p class="mt-1 text-xs text-slate-500">Interactive regional mapping & waste cards database.</p>
-      </a>
+      <!-- Left Arrow Button -->
+      <button id="scrollLeftBtn" class="absolute left-0 top-1/2 -translate-y-1/2 -ml-2 lg:-ml-4 z-10 p-2 rounded-full bg-white/90 shadow-lg border border-slate-100 text-slate-500 hover:text-emerald-600 hover:scale-110 transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 hidden md:flex items-center justify-center cursor-pointer" aria-label="Scroll Left">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+        </svg>
+      </button>
 
-      <!-- Card 2: Agro Production -->
-      <a href="https://mikaresearch.info/phase1/Waste%20Mapping/AgroProductionLebanon.html" target="_blank" rel="noopener" 
-         class="snap-start shrink-0 w-72 p-5 rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-md transition-all group">
-        <div class="flex items-start justify-between">
-          <span class="text-2xl group-hover:scale-110 transition-transform duration-300">🌾</span>
-          <svg class="w-4 h-4 text-slate-300 group-hover:text-cyan-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-        </div>
-        <h3 class="mt-3 font-bold text-slate-900">Agro Production Data</h3>
-        <p class="mt-1 text-xs text-slate-500">Lebanon production baseline dashboard (FAOSTAT).</p>
-      </a>
+      <!-- Scroll Container -->
+      <div id="quickLinksScroll" class="flex overflow-x-auto gap-4 pb-6 snap-x snap-mandatory no-scrollbar" style="-webkit-overflow-scrolling: touch;">
+        
+        <!-- Card 1: Waste Mapping -->
+        <a href="https://mikaresearch.info/phase1/Waste%20Mapping/LebanonWasteMapping.html" target="_blank" rel="noopener" 
+           class="snap-start shrink-0 w-72 p-5 rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-md transition-all group">
+          <div class="flex items-start justify-between">
+            <span class="text-2xl group-hover:scale-110 transition-transform duration-300">🗺️</span>
+            <svg class="w-4 h-4 text-slate-300 group-hover:text-emerald-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+          </div>
+          <h3 class="mt-3 font-bold text-slate-900">Waste Mapping Portal</h3>
+          <p class="mt-1 text-xs text-slate-500">Interactive regional mapping & waste cards database.</p>
+        </a>
 
-      <!-- Card 3: MCDA Tool -->
-      <a href="https://mikaresearch.info/phase1/Region%20Selection/MCDA_Sensitivity_Region_Selection.html" target="_blank" rel="noopener" 
-         class="snap-start shrink-0 w-72 p-5 rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-md transition-all group">
-        <div class="flex items-start justify-between">
-          <span class="text-2xl group-hover:scale-110 transition-transform duration-300">📊</span>
-          <svg class="w-4 h-4 text-slate-300 group-hover:text-violet-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-        </div>
-        <h3 class="mt-3 font-bold text-slate-900">MCDA Region Tool</h3>
-        <p class="mt-1 text-xs text-slate-500">Region selection sensitivity analysis and decision matrix.</p>
-      </a>
+        <!-- Card 2: Agro Production -->
+        <a href="https://mikaresearch.info/phase1/Waste%20Mapping/AgroProductionLebanon.html" target="_blank" rel="noopener" 
+           class="snap-start shrink-0 w-72 p-5 rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-md transition-all group">
+          <div class="flex items-start justify-between">
+            <span class="text-2xl group-hover:scale-110 transition-transform duration-300">🌾</span>
+            <svg class="w-4 h-4 text-slate-300 group-hover:text-cyan-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+          </div>
+          <h3 class="mt-3 font-bold text-slate-900">Agro Production Data</h3>
+          <p class="mt-1 text-xs text-slate-500">Lebanon production baseline dashboard (FAOSTAT).</p>
+        </a>
 
-      <!-- Card 4: Sequential Filtration (New) -->
-      <a href="https://mikaresearch.info/phase2/sequential_waste_filtration.html" target="_blank" rel="noopener" 
-         class="snap-start shrink-0 w-72 p-5 rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-md transition-all group">
-        <div class="flex items-start justify-between">
-          <span class="text-2xl group-hover:scale-110 transition-transform duration-300">🔻</span>
-          <svg class="w-4 h-4 text-slate-300 group-hover:text-rose-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-        </div>
-        <h3 class="mt-3 font-bold text-slate-900">Sequential Filtration</h3>
-        <p class="mt-1 text-xs text-slate-500">Framework for binary elimination and waste prioritisation.</p>
-      </a>
-      
+        <!-- Card 3: MCDA Tool -->
+        <a href="https://mikaresearch.info/phase1/Region%20Selection/MCDA_Sensitivity_Region_Selection.html" target="_blank" rel="noopener" 
+           class="snap-start shrink-0 w-72 p-5 rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-md transition-all group">
+          <div class="flex items-start justify-between">
+            <span class="text-2xl group-hover:scale-110 transition-transform duration-300">📊</span>
+            <svg class="w-4 h-4 text-slate-300 group-hover:text-violet-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+          </div>
+          <h3 class="mt-3 font-bold text-slate-900">MCDA Region Tool</h3>
+          <p class="mt-1 text-xs text-slate-500">Region selection sensitivity analysis and decision matrix.</p>
+        </a>
+
+        <!-- Card 4: Sequential Filtration -->
+        <a href="https://mikaresearch.info/phase2/sequential_waste_filtration.html" target="_blank" rel="noopener" 
+           class="snap-start shrink-0 w-72 p-5 rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-md transition-all group">
+          <div class="flex items-start justify-between">
+            <span class="text-2xl group-hover:scale-110 transition-transform duration-300">🔻</span>
+            <svg class="w-4 h-4 text-slate-300 group-hover:text-rose-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+          </div>
+          <h3 class="mt-3 font-bold text-slate-900">Sequential Filtration</h3>
+          <p class="mt-1 text-xs text-slate-500">Framework for binary elimination and waste prioritisation.</p>
+        </a>
+
+        <!-- Card 5: MCDA Waste Selection -->
+        <a href="https://mikaresearch.info/phase2/mcda_waste_selection.html" target="_blank" rel="noopener" 
+           class="snap-start shrink-0 w-72 p-5 rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-md transition-all group">
+          <div class="flex items-start justify-between">
+            <span class="text-2xl group-hover:scale-110 transition-transform duration-300">⚖️</span>
+            <svg class="w-4 h-4 text-slate-300 group-hover:text-amber-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+          </div>
+          <h3 class="mt-3 font-bold text-slate-900">MCDA Waste Selection</h3>
+          <p class="mt-1 text-xs text-slate-500">Weighted scoring dashboard for final waste prioritization.</p>
+        </a>
+        
+      </div>
+
+      <!-- Right Arrow Button -->
+      <button id="scrollRightBtn" class="absolute right-0 top-1/2 -translate-y-1/2 -mr-2 lg:-mr-4 z-10 p-2 rounded-full bg-white/90 shadow-lg border border-slate-100 text-slate-500 hover:text-emerald-600 hover:scale-110 transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 hidden md:flex items-center justify-center cursor-pointer" aria-label="Scroll Right">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
+
     </div>
   </section>
 
@@ -291,6 +323,24 @@
   </div>
 
   <script>
+    // --- SCROLL BUTTON LOGIC ---
+    document.addEventListener('DOMContentLoaded', () => {
+      const container = document.getElementById('quickLinksScroll');
+      const btnLeft = document.getElementById('scrollLeftBtn');
+      const btnRight = document.getElementById('scrollRightBtn');
+      
+      if(container && btnLeft && btnRight) {
+        btnLeft.addEventListener('click', () => {
+          container.scrollBy({ left: -310, behavior: 'smooth' });
+        });
+        
+        btnRight.addEventListener('click', () => {
+          container.scrollBy({ left: 310, behavior: 'smooth' });
+        });
+      }
+    });
+
+    // --- MODAL & PHASE LOGIC ---
     const PHASES = {
       p1: {
         kicker: "Phase 1 • Completed",
@@ -298,7 +348,7 @@
         brief: "Literature review for regional selection, extraction of criteria, and mapping of major waste streams using a Net Domestic Supply model.",
         dashboardUrl: "https://mikaresearch.info/phase1/Waste%20Mapping/wastemappingdashboard.html",
         links: [
-          { label: "1.1 Regional Evidence Review", desc: "Criteria extraction and framework synthesis.", href: "https://trello.com/c/GdFVPDpj/40-11-regional-evidence-review", icon: "📄" },
+          { label: "1.1 Regional Selection Review", desc: "Criteria extraction and framework synthesis.", href: "http://mikaresearch.info/phase1/Region%20Selection/Region%20Selection%20Dashboard%20.html", icon: "📄" },
           { label: "1.2 Regional Assessment", desc: "Scoring candidate regions and justification.", href: "https://mikaresearch.info/phase1/Region%20Selection/MCDA_Sensitivity_Region_Selection.html", icon: "📊" },
           { label: "1.3 Waste Mapping", desc: "Interactive map and waste inventory.", href: "https://mikaresearch.info/phase1/Waste%20Mapping/LebanonWasteMapping.html", icon: "🗺️" }
         ]
@@ -310,9 +360,8 @@
         brief: "Binary elimination of weak waste streams followed by a weighted Multi-Criteria Decision Analysis (MCDA) to select the final 2-3 materials.",
         dashboardUrl: null,
         links: [
-          // UPDATED: Item 2.1
           { label: "2.1 Sequential Filtration Framework", desc: "Binary elimination of non-feasible wastes.", href: "https://mikaresearch.info/phase2/sequential_waste_filtration.html", icon: "🔻" },
-          { label: "2.2 MCDA Scoring", desc: "Weighted criteria application on shortlist.", href: "https://trello.com/c/cF3thbkI/52-22-mcda-on-shortlisted-wastes", icon: "🧮" },
+          { label: "2.2 MCDA Scoring", desc: "Weighted criteria application on shortlist.", href: "https://mikaresearch.info/phase2/mcda_waste_selection.html", icon: "🧮" },
           { label: "2.3 Final Selection", desc: "Justification of top 3 chosen wastes.", href: "https://trello.com/c/bSbI3DsH/53-23-final-waste-selection", icon: "🏆" }
         ]
       },
