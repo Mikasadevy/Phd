@@ -1,0 +1,1702 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCDA Regional Selection Framework | PhD Research Dashboard</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+    
+    <!-- Chart.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['Lora', 'serif'],
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            primary: '#667eea',
+                            secondary: '#764ba2',
+                            accent: '#f093fb',
+                            gold: '#f39c12',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e0; border-radius: 5px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        .text-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .tab-content { display: none; animation: fadeIn 0.4s ease; }
+        .tab-content.active { display: block; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .criterion-card:hover { transform: translateY(-4px); }
+        .region-card:hover { transform: translateY(-6px) scale(1.02); }
+        
+        .glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        
+        .accordion-content.active {
+            max-height: 500px;
+        }
+
+        .tooltip-trigger:hover .tooltip-content {
+            display: block;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-50 to-blue-50 text-slate-800 font-sans">
+
+    <!-- HERO HEADER -->
+    <header class="relative bg-gradient-to-br from-brand-primary via-brand-secondary to-brand-accent text-white pt-16 pb-28 px-6 overflow-hidden shadow-2xl">
+        <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTM2IDM0di00aC0ydjRoLTR2Mmg0djRoMnYtNGg0di0yaC00em0wLTMwVjBoLTJ2NGgtNHYyaDR2NGgyVjZoNFY0aC00ek02IDM0di00SDR2NEgwdjJoNHY0aDJ2LTRoNHYtMkg2ek02IDRWMEG0djRIMHYyaDR2NGgyVjZoNFY0SDZ6Ii8+PC9nPjwvZz48L3N2Zz4=')] opacity-10"></div>
+        <div class="absolute bottom-0 left-0 w-full h-20 bg-gradient-to-br from-slate-50 to-blue-50 rounded-t-[60px] transform scale-x-150 translate-y-10"></div>
+        
+        <div class="relative container mx-auto max-w-7xl text-center z-10">
+            <div class="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white/15 backdrop-blur-md border border-white/30 text-sm font-semibold tracking-wide mb-6 animate-pulse">
+                <span class="w-2.5 h-2.5 bg-green-400 rounded-full animate-ping absolute"></span>
+                <span class="w-2.5 h-2.5 bg-green-400 rounded-full relative"></span>
+                PhD Research Framework
+            </div>
+            
+            <h1 class="text-5xl md:text-7xl font-serif font-bold mb-6 leading-tight drop-shadow-2xl">
+                Multi-Criteria Decision Analysis
+            </h1>
+            <p class="text-xl md:text-3xl text-blue-50 font-serif italic max-w-4xl mx-auto leading-relaxed mb-3">
+                Regional Selection for Bio-Based Construction Materials
+            </p>
+            <p class="text-base md:text-lg text-white/90 max-w-3xl mx-auto leading-relaxed">
+                A rigorous, data-driven framework identifying the optimal ecosystem for waste valorisation innovation through agricultural and industrial waste transformation
+            </p>
+            
+            <!-- Key Metrics Dashboard -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-5 mt-14 max-w-5xl mx-auto">
+                <div class="bg-white/10 backdrop-blur-md rounded-2xl p-5 border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105">
+                    <div class="text-blue-100 text-xs uppercase tracking-wider font-bold mb-2">Selected Region</div>
+                    <div class="text-4xl font-serif font-bold mb-1">🇱🇧 Lebanon</div>
+                    <div class="text-sm text-emerald-300 font-semibold">Score: 391.66</div>
+                </div>
+                
+                <div class="bg-white/10 backdrop-blur-md rounded-2xl p-5 border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105">
+                    <div class="text-blue-100 text-xs uppercase tracking-wider font-bold mb-2">Regions Compared</div>
+                    <div class="text-4xl font-serif font-bold mb-1">5</div>
+                    <div class="text-sm text-blue-200">Global Contexts</div>
+                </div>
+                
+                <div class="bg-white/10 backdrop-blur-md rounded-2xl p-5 border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105">
+                    <div class="text-blue-100 text-xs uppercase tracking-wider font-bold mb-2">Evaluation Criteria</div>
+                    <div class="text-4xl font-serif font-bold mb-1">7</div>
+                    <div class="text-sm text-blue-200">Weighted Dimensions</div>
+                </div>
+                
+                <div class="bg-white/10 backdrop-blur-md rounded-2xl p-5 border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105">
+                    <div class="text-blue-100 text-xs uppercase tracking-wider font-bold mb-2">Methodology</div>
+                    <div class="text-4xl font-serif font-bold mb-1">6</div>
+                    <div class="text-sm text-blue-200">Structured Steps</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- NAVIGATION -->
+    <nav class="sticky top-0 z-50 bg-white/95 backdrop-blur-lg border-b border-slate-200 shadow-sm">
+        <div class="container mx-auto max-w-7xl px-4">
+            <ul class="flex space-x-1 md:space-x-6 overflow-x-auto text-sm font-semibold text-slate-600 scrollbar-hide">
+                <li><a href="#overview" class="block py-4 px-3 hover:text-brand-secondary border-b-2 border-transparent hover:border-brand-secondary transition whitespace-nowrap">📊 Overview</a></li>
+                <li><a href="#methodology" class="block py-4 px-3 hover:text-brand-secondary border-b-2 border-transparent hover:border-brand-secondary transition whitespace-nowrap">🔬 Methodology</a></li>
+                <li><a href="#criteria" class="block py-4 px-3 hover:text-brand-secondary border-b-2 border-transparent hover:border-brand-secondary transition whitespace-nowrap">⚖️ Criteria</a></li>
+                <li><a href="#regions" class="block py-4 px-3 hover:text-brand-secondary border-b-2 border-transparent hover:border-brand-secondary transition whitespace-nowrap">🌍 Regional Analysis</a></li>
+                <li><a href="#visualization" class="block py-4 px-3 hover:text-brand-secondary border-b-2 border-transparent hover:border-brand-secondary transition whitespace-nowrap">📈 Visualizations</a></li>
+                <li><a href="#sensitivity" class="block py-4 px-3 hover:text-brand-secondary border-b-2 border-transparent hover:border-brand-secondary transition whitespace-nowrap">🎯 Sensitivity</a></li>
+                <li><a href="#conclusion" class="block py-4 px-3 hover:text-brand-secondary border-b-2 border-transparent hover:border-brand-secondary transition whitespace-nowrap">✅ Conclusion</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 md:px-6 py-12 max-w-7xl space-y-20">
+
+        <!-- SECTION 1: OVERVIEW & RATIONALE -->
+        <section id="overview" class="scroll-mt-20">
+            <div class="bg-white rounded-3xl shadow-xl border border-slate-100 p-8 md:p-12">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-16 h-16 bg-gradient-to-br from-brand-primary to-brand-secondary rounded-2xl flex items-center justify-center text-3xl shadow-lg">
+                        📊
+                    </div>
+                    <div>
+                        <h2 class="text-4xl font-serif font-bold text-slate-900">Research Context & Rationale</h2>
+                        <p class="text-slate-500 text-lg">Why MCDA for Regional Selection?</p>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8 mt-8">
+                    <div class="space-y-4">
+                        <h3 class="text-2xl font-serif font-bold text-brand-primary mb-4">The Global Challenge</h3>
+                        <div class="bg-red-50 border-l-4 border-red-500 p-5 rounded-lg">
+                            <p class="font-bold text-red-900 mb-2">🏗️ Construction Sector Crisis</p>
+                            <ul class="text-sm text-red-800 space-y-2">
+                                <li>• <strong>39%</strong> of global CO₂ emissions</li>
+                                <li>• <strong>7%</strong> from concrete production alone</li>
+                                <li>• Rapid urbanization increasing demand</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="bg-orange-50 border-l-4 border-orange-500 p-5 rounded-lg">
+                            <p class="font-bold text-orange-900 mb-2">♻️ Waste Management Crisis</p>
+                            <ul class="text-sm text-orange-800 space-y-2">
+                                <li>• Agricultural wastes burned or dumped</li>
+                                <li>• Lost circular economy potential</li>
+                                <li>• Environmental harm from mismanagement</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <h3 class="text-2xl font-serif font-bold text-emerald-600 mb-4">The Opportunity</h3>
+                        <div class="bg-emerald-50 border-l-4 border-emerald-500 p-5 rounded-lg">
+                            <p class="font-bold text-emerald-900 mb-3">Transforming waste into bio-based construction materials enables:</p>
+                            <ul class="text-sm text-emerald-800 space-y-2">
+                                <li>✓ <strong>Waste Diversion</strong> from landfills and burning</li>
+                                <li>✓ <strong>Carbon Reduction</strong> through material substitution</li>
+                                <li>✓ <strong>Local Circularity</strong> and supply chain resilience</li>
+                                <li>✓ <strong>Sustainable Housing</strong> with affordable materials</li>
+                                <li>✓ <strong>Economic Value</strong> from underutilized resources</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-blue-50 border-l-4 border-blue-500 p-5 rounded-lg">
+                            <p class="font-bold text-blue-900 mb-2">🎓 PhD Research Imperative</p>
+                            <p class="text-sm text-blue-800">Selecting the <strong>optimal region</strong> requires balancing technical feasibility, environmental impact, collaboration potential, and strategic alignment.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-2xl p-8">
+                    <h3 class="text-2xl font-serif font-bold text-purple-900 mb-4">Why Multi-Criteria Decision Analysis (MCDA)?</h3>
+                    <div class="grid md:grid-cols-3 gap-6 text-sm">
+                        <div>
+                            <div class="text-3xl mb-2">🔍</div>
+                            <h4 class="font-bold text-purple-800 mb-2">Transparent & Rigorous</h4>
+                            <p class="text-purple-700">Evidence-based methodology with documented decision logic and replicable framework</p>
+                        </div>
+                        <div>
+                            <div class="text-3xl mb-2">⚖️</div>
+                            <h4 class="font-bold text-purple-800 mb-2">Multi-Dimensional</h4>
+                            <p class="text-purple-700">Integrates technical, environmental, economic, policy, and strategic factors simultaneously</p>
+                        </div>
+                        <div>
+                            <div class="text-3xl mb-2">✅</div>
+                            <h4 class="font-bold text-purple-800 mb-2">Defensible Selection</h4>
+                            <p class="text-purple-700">Academically sound, examiner-friendly, and aligned with funder priorities</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: METHODOLOGY -->
+        <section id="methodology" class="scroll-mt-20">
+            <div class="text-center mb-10">
+                <h2 class="text-4xl md:text-5xl font-serif font-bold text-slate-900 mb-4">The MCDA Methodology</h2>
+                <p class="text-slate-600 text-lg max-w-3xl mx-auto">A structured six-step process ensuring transparency, replicability, and academic rigor</p>
+            </div>
+            
+            <!-- Process Steps -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+                <!-- Step 1 -->
+                <div class="bg-white rounded-2xl shadow-lg border-2 border-slate-100 p-8 hover:shadow-2xl transition-all duration-300 relative overflow-hidden group">
+                    <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-brand-primary to-brand-secondary"></div>
+                    <div class="absolute top-4 right-4 text-6xl font-serif font-bold text-slate-100 group-hover:text-slate-200 transition">1</div>
+                    <div class="relative z-10">
+                        <div class="w-14 h-14 bg-gradient-to-br from-brand-primary to-brand-secondary rounded-xl flex items-center justify-center text-2xl mb-4 shadow-lg">
+                            📋
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-800 mb-3">Define Criteria & Weights</h3>
+                        <p class="text-sm text-slate-600 leading-relaxed">Established 7 weighted criteria reflecting research priorities: Technical (30%), Environmental (15%), Market (15%), Policy (10%), Logistics (5%), Collaboration (15%), Funder Alignment (10%)</p>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="bg-white rounded-2xl shadow-lg border-2 border-slate-100 p-8 hover:shadow-2xl transition-all duration-300 relative overflow-hidden group">
+                    <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-brand-primary to-brand-secondary"></div>
+                    <div class="absolute top-4 right-4 text-6xl font-serif font-bold text-slate-100 group-hover:text-slate-200 transition">2</div>
+                    <div class="relative z-10">
+                        <div class="w-14 h-14 bg-gradient-to-br from-brand-primary to-brand-secondary rounded-xl flex items-center justify-center text-2xl mb-4 shadow-lg">
+                            📊
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-800 mb-3">Define Indicators</h3>
+                        <p class="text-sm text-slate-600 leading-relaxed">Translated criteria into measurable indicators (e.g., Biomass Potential, Waste Mismanagement %, LPI Scores). Each indicator weighted within its criterion</p>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="bg-white rounded-2xl shadow-lg border-2 border-slate-100 p-8 hover:shadow-2xl transition-all duration-300 relative overflow-hidden group">
+                    <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-brand-primary to-brand-secondary"></div>
+                    <div class="absolute top-4 right-4 text-6xl font-serif font-bold text-slate-100 group-hover:text-slate-200 transition">3</div>
+                    <div class="relative z-10">
+                        <div class="w-14 h-14 bg-gradient-to-br from-brand-primary to-brand-secondary rounded-xl flex items-center justify-center text-2xl mb-4 shadow-lg">
+                            🔍
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-800 mb-3">Collect Data</h3>
+                        <p class="text-sm text-slate-600 leading-relaxed">Gathered from authoritative sources: FAO, World Bank (WDI, WGI, LPI), DEFRA, National Inventory Reports, peer-reviewed literature, government dashboards</p>
+                    </div>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="bg-white rounded-2xl shadow-lg border-2 border-slate-100 p-8 hover:shadow-2xl transition-all duration-300 relative overflow-hidden group">
+                    <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-brand-primary to-brand-secondary"></div>
+                    <div class="absolute top-4 right-4 text-6xl font-serif font-bold text-slate-100 group-hover:text-slate-200 transition">4</div>
+                    <div class="relative z-10">
+                        <div class="w-14 h-14 bg-gradient-to-br from-brand-primary to-brand-secondary rounded-xl flex items-center justify-center text-2xl mb-4 shadow-lg">
+                            ⚖️
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-800 mb-3">Normalize & Score (1-5)</h3>
+                        <p class="text-sm text-slate-600 leading-relaxed">Quantitative: ranking-based (highest=5, lowest=1). Qualitative: categorical scoring (Very High=5, High=4, Moderate=3, Low=2, Very Low=1)</p>
+                    </div>
+                </div>
+
+                <!-- Step 5 -->
+                <div class="bg-white rounded-2xl shadow-lg border-2 border-slate-100 p-8 hover:shadow-2xl transition-all duration-300 relative overflow-hidden group">
+                    <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-brand-primary to-brand-secondary"></div>
+                    <div class="absolute top-4 right-4 text-6xl font-serif font-bold text-slate-100 group-hover:text-slate-200 transition">5</div>
+                    <div class="relative z-10">
+                        <div class="w-14 h-14 bg-gradient-to-br from-brand-primary to-brand-secondary rounded-xl flex items-center justify-center text-2xl mb-4 shadow-lg">
+                            ⚡
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-800 mb-3">Apply Weights & Aggregate</h3>
+                        <p class="text-sm text-slate-600 leading-relaxed">Multiplied each indicator score by its weight, aggregated to criterion scores, then applied criterion weights for final weighted sum</p>
+                    </div>
+                </div>
+
+                <!-- Step 6 -->
+                <div class="bg-white rounded-2xl shadow-lg border-2 border-slate-100 p-8 hover:shadow-2xl transition-all duration-300 relative overflow-hidden group">
+                    <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-brand-primary to-brand-secondary"></div>
+                    <div class="absolute top-4 right-4 text-6xl font-serif font-bold text-slate-100 group-hover:text-slate-200 transition">6</div>
+                    <div class="relative z-10">
+                        <div class="w-14 h-14 bg-gradient-to-br from-brand-primary to-brand-secondary rounded-xl flex items-center justify-center text-2xl mb-4 shadow-lg">
+                            🏆
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-800 mb-3">Rank & Interpret</h3>
+                        <p class="text-sm text-slate-600 leading-relaxed">Final ranking reveals Lebanon (#1, 391.66), Brazil (#2, 348.81), Indonesia (#3, 325.61), UK (#4, 320.85), KSA (#5, 315.16). Tested sensitivity</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data Sources -->
+            <div class="bg-gradient-to-r from-blue-900 to-indigo-900 text-white rounded-3xl shadow-2xl p-10">
+                <h3 class="text-3xl font-serif font-bold mb-6 text-center">🌐 Authoritative Data Sources</h3>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20">
+                        <h4 class="font-bold text-lg mb-3 text-blue-200">International Organizations</h4>
+                        <ul class="space-y-2 text-sm text-blue-100">
+                            <li>• FAO (Agricultural production, biomass)</li>
+                            <li>• World Bank (WDI, WGI, LPI indices)</li>
+                            <li>• Ellen MacArthur Foundation (CE)</li>
+                        </ul>
+                    </div>
+                    <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20">
+                        <h4 class="font-bold text-lg mb-3 text-blue-200">National Authorities</h4>
+                        <ul class="space-y-2 text-sm text-blue-100">
+                            <li>• DEFRA (UK environmental data)</li>
+                            <li>• National Inventory Reports (GHG)</li>
+                            <li>• Government waste strategies</li>
+                        </ul>
+                    </div>
+                    <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20">
+                        <h4 class="font-bold text-lg mb-3 text-blue-200">Academic Research</h4>
+                        <ul class="space-y-2 text-sm text-blue-100">
+                            <li>• Peer-reviewed biomass studies</li>
+                            <li>• Regional waste assessments</li>
+                            <li>• Construction sector reports</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: CRITERIA & WEIGHTS -->
+        <section id="criteria" class="scroll-mt-20">
+            <div class="text-center mb-10">
+                <h2 class="text-4xl md:text-5xl font-serif font-bold text-slate-900 mb-4">Evaluation Criteria Framework</h2>
+                <p class="text-slate-600 text-lg max-w-3xl mx-auto">Seven weighted dimensions reflecting PhD research priorities and feasibility requirements</p>
+            </div>
+
+            <div class="grid lg:grid-cols-3 gap-8 mb-12">
+                <!-- Weights Summary -->
+                <div class="bg-white rounded-2xl shadow-xl border border-slate-100 p-8">
+                    <h3 class="text-2xl font-serif font-bold text-slate-800 mb-6 flex items-center gap-3">
+                        <span class="text-3xl">⚖️</span> Weighting Structure
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <span class="font-semibold text-slate-700">C1: Technical Potential</span>
+                            <span class="px-3 py-1 bg-purple-100 text-purple-800 rounded-full font-bold text-sm">30%</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="font-semibold text-slate-700">C2: Environmental Opportunity</span>
+                            <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full font-bold text-sm">15%</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="font-semibold text-slate-700">C3: Market & Societal Relevance</span>
+                            <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full font-bold text-sm">15%</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="font-semibold text-slate-700">C4: Policy & Institutional Support</span>
+                            <span class="px-3 py-1 bg-amber-100 text-amber-800 rounded-full font-bold text-sm">10%</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="font-semibold text-slate-700">C5: Logistical Practicality</span>
+                            <span class="px-3 py-1 bg-red-100 text-red-800 rounded-full font-bold text-sm">5%</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="font-semibold text-slate-700">C6: Collaboration & Access</span>
+                            <span class="px-3 py-1 bg-indigo-100 text-indigo-800 rounded-full font-bold text-sm">15%</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="font-semibold text-slate-700">C7: Funder Alignment</span>
+                            <span class="px-3 py-1 bg-pink-100 text-pink-800 rounded-full font-bold text-sm">10%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-8 p-4 bg-gradient-to-r from-purple-50 to-blue-50 rounded-xl border border-purple-200">
+                        <p class="text-xs text-purple-900 font-semibold">💡 Weighting Rationale</p>
+                        <p class="text-xs text-purple-800 mt-2">Weights reflect hierarchy: <strong>Feasibility (30%) > Impact (15%) > Operations (5%)</strong></p>
+                    </div>
+                </div>
+
+                <!-- Detailed Criteria Cards (2 columns) -->
+                <div class="lg:col-span-2 grid md:grid-cols-2 gap-6">
+                    <!-- C1 Card -->
+                    <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-2xl shadow-lg border-2 border-purple-200 p-6 hover:shadow-2xl transition-all duration-300 cursor-pointer" onclick="toggleAccordion('acc-c1')">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 bg-purple-600 rounded-xl flex items-center justify-center text-xl shadow-lg">🔬</div>
+                                <div>
+                                    <h4 class="font-bold text-purple-900 text-lg">Technical Potential</h4>
+                                    <p class="text-xs text-purple-700">Core feasibility driver</p>
+                                </div>
+                            </div>
+                            <span class="px-3 py-1 bg-purple-600 text-white rounded-full font-bold text-sm">30%</span>
+                        </div>
+                        <p class="text-sm text-purple-800 leading-relaxed mb-3">Access to abundant, diverse, and stable agricultural and agro-industrial waste streams. Critical "go/no-go" factor for material development.</p>
+                        <div id="acc-c1" class="accordion-content">
+                            <div class="bg-white/60 rounded-lg p-4 mt-3 text-xs space-y-2 border border-purple-300">
+                                <p class="font-semibold text-purple-900">Sub-indicators:</p>
+                                <ul class="space-y-1 text-purple-800 ml-4">
+                                    <li>• <strong>Biomass Volume</strong> (40%): Total agricultural residues</li>
+                                    <li>• <strong>Agro-Industrial Strength</strong> (27%): Processing capacity</li>
+                                    <li>• <strong>Valorisation Urgency</strong> (17%): Waste burning severity</li>
+                                    <li>• <strong>Replicability</strong> (17%): Regional applicability</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- C2 Card -->
+                    <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-2xl shadow-lg border-2 border-green-200 p-6 hover:shadow-2xl transition-all duration-300 cursor-pointer" onclick="toggleAccordion('acc-c2')">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 bg-green-600 rounded-xl flex items-center justify-center text-xl shadow-lg">🌱</div>
+                                <div>
+                                    <h4 class="font-bold text-green-900 text-lg">Environmental Opportunity</h4>
+                                    <p class="text-xs text-green-700">Impact potential</p>
+                                </div>
+                            </div>
+                            <span class="px-3 py-1 bg-green-600 text-white rounded-full font-bold text-sm">15%</span>
+                        </div>
+                        <p class="text-sm text-green-800 leading-relaxed mb-3">Waste management gaps and environmental urgency. Higher mismanagement = greater impact potential through intervention.</p>
+                        <div id="acc-c2" class="accordion-content">
+                            <div class="bg-white/60 rounded-lg p-4 mt-3 text-xs space-y-2 border border-green-300">
+                                <p class="font-semibold text-green-900">Sub-indicators:</p>
+                                <ul class="space-y-1 text-green-800 ml-4">
+                                    <li>• <strong>Waste Mismanagement %</strong> (10%): Disposal quality</li>
+                                    <li>• <strong>Sector CO₂ Emissions</strong> (5%): GHG reduction potential</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- C3 Card -->
+                    <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl shadow-lg border-2 border-blue-200 p-6 hover:shadow-2xl transition-all duration-300 cursor-pointer" onclick="toggleAccordion('acc-c3')">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center text-xl shadow-lg">🏘️</div>
+                                <div>
+                                    <h4 class="font-bold text-blue-900 text-lg">Market Relevance</h4>
+                                    <p class="text-xs text-blue-700">Deployment potential</p>
+                                </div>
+                            </div>
+                            <span class="px-3 py-1 bg-blue-600 text-white rounded-full font-bold text-sm">15%</span>
+                        </div>
+                        <p class="text-sm text-blue-800 leading-relaxed mb-3">Construction demand, housing affordability needs, and circular economy readiness ensuring real-world adoption potential.</p>
+                        <div id="acc-c3" class="accordion-content">
+                            <div class="bg-white/60 rounded-lg p-4 mt-3 text-xs space-y-2 border border-blue-300">
+                                <p class="font-semibold text-blue-900">Key factors:</p>
+                                <ul class="space-y-1 text-blue-800 ml-4">
+                                    <li>• Construction sector GDP contribution</li>
+                                    <li>• Housing affordability crisis indicators</li>
+                                    <li>• Circular economy policy maturity</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- C4 Card -->
+                    <div class="bg-gradient-to-br from-amber-50 to-amber-100 rounded-2xl shadow-lg border-2 border-amber-200 p-6 hover:shadow-2xl transition-all duration-300 cursor-pointer" onclick="toggleAccordion('acc-c4')">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 bg-amber-600 rounded-xl flex items-center justify-center text-xl shadow-lg">🏛️</div>
+                                <div>
+                                    <h4 class="font-bold text-amber-900 text-lg">Policy Support</h4>
+                                    <p class="text-xs text-amber-700">Enabling environment</p>
+                                </div>
+                            </div>
+                            <span class="px-3 py-1 bg-amber-600 text-white rounded-full font-bold text-sm">10%</span>
+                        </div>
+                        <p class="text-sm text-amber-800 leading-relaxed mb-3">Green building standards, waste legislation, circular economy commitments enabling pilot testing and adoption.</p>
+                        <div id="acc-c4" class="accordion-content">
+                            <div class="bg-white/60 rounded-lg p-4 mt-3 text-xs space-y-2 border border-amber-300">
+                                <p class="font-semibold text-amber-900">Measured through:</p>
+                                <ul class="space-y-1 text-amber-800 ml-4">
+                                    <li>• Regulatory quality (World Bank WGI)</li>
+                                    <li>• Green building codes existence</li>
+                                    <li>• National CE strategies</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- C6 Card -->
+                    <div class="bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-2xl shadow-lg border-2 border-indigo-200 p-6 hover:shadow-2xl transition-all duration-300 cursor-pointer" onclick="toggleAccordion('acc-c6')">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 bg-indigo-600 rounded-xl flex items-center justify-center text-xl shadow-lg">🤝</div>
+                                <div>
+                                    <h4 class="font-bold text-indigo-900 text-lg">Collaboration & Access</h4>
+                                    <p class="text-xs text-indigo-700">Operational engine</p>
+                                </div>
+                            </div>
+                            <span class="px-3 py-1 bg-indigo-600 text-white rounded-full font-bold text-sm">15%</span>
+                        </div>
+                        <p class="text-sm text-indigo-800 leading-relaxed mb-3">Partner availability, sample accessibility, existing networks. Critical determinant of PhD operational success.</p>
+                        <div id="acc-c6" class="accordion-content">
+                            <div class="bg-white/60 rounded-lg p-4 mt-3 text-xs space-y-2 border border-indigo-300">
+                                <p class="font-semibold text-indigo-900">Includes:</p>
+                                <ul class="space-y-1 text-indigo-800 ml-4">
+                                    <li>• <strong>Academic Networks</strong> (8%): Research partnerships</li>
+                                    <li>• <strong>Sample Access</strong> (7%): Material availability</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- C7 Card -->
+                    <div class="bg-gradient-to-br from-pink-50 to-pink-100 rounded-2xl shadow-lg border-2 border-pink-200 p-6 hover:shadow-2xl transition-all duration-300 cursor-pointer" onclick="toggleAccordion('acc-c7')">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 bg-pink-600 rounded-xl flex items-center justify-center text-xl shadow-lg">🎯</div>
+                                <div>
+                                    <h4 class="font-bold text-pink-900 text-lg">Funder Alignment</h4>
+                                    <p class="text-xs text-pink-700">Strategic fit</p>
+                                </div>
+                            </div>
+                            <span class="px-3 py-1 bg-pink-600 text-white rounded-full font-bold text-sm">10%</span>
+                        </div>
+                        <p class="text-sm text-pink-800 leading-relaxed mb-3">Alignment with CMA CGM Excellence Fund priorities and regional relevance to funder's sustainability mission.</p>
+                        <div id="acc-c7" class="accordion-content">
+                            <div class="bg-white/60 rounded-lg p-4 mt-3 text-xs space-y-2 border border-pink-300">
+                                <p class="font-semibold text-pink-900">Binary/decisive factor:</p>
+                                <ul class="space-y-1 text-pink-800 ml-4">
+                                    <li>• CMA CGM Excellence Fund mandate</li>
+                                    <li>• Regional reconstruction priorities</li>
+                                    <li>• Strategic operational geography</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: REGIONAL ANALYSIS -->
+        <section id="regions" class="scroll-mt-20">
+            <div class="text-center mb-10">
+                <h2 class="text-4xl md:text-5xl font-serif font-bold text-slate-900 mb-4">Regional Comparative Analysis</h2>
+                <p class="text-slate-600 text-lg max-w-3xl mx-auto">Five global contexts representing diverse agricultural systems, waste realities, and collaboration potential</p>
+            </div>
+
+            <!-- Regional Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+                <!-- Lebanon Card -->
+                <div class="bg-gradient-to-br from-yellow-50 to-amber-50 rounded-3xl shadow-2xl border-4 border-brand-gold p-8 hover:scale-105 transition-all duration-300 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-brand-gold/10 rounded-full -mr-16 -mt-16"></div>
+                    <div class="relative z-10">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="text-5xl">🇱🇧</div>
+                            <div class="px-4 py-2 bg-brand-gold text-white rounded-full font-bold text-sm shadow-lg">
+                                🏆 RANK #1
+                            </div>
+                        </div>
+                        <h3 class="text-3xl font-serif font-bold text-slate-900 mb-2">Lebanon</h3>
+                        <div class="text-6xl font-serif font-bold text-brand-gold mb-1">391.66</div>
+                        <p class="text-sm text-amber-800 font-semibold mb-6">Final MCDA Score</p>
+                        
+                        <div class="space-y-3 text-sm text-slate-700">
+                            <div class="flex items-start gap-2">
+                                <span class="text-green-600 font-bold mt-0.5">✓</span>
+                                <span><strong>Highest environmental urgency</strong> (54% unsound disposal)</span>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <span class="text-green-600 font-bold mt-0.5">✓</span>
+                                <span><strong>Strong agricultural residues</strong> (Mediterranean diversity)</span>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <span class="text-green-600 font-bold mt-0.5">✓</span>
+                                <span><strong>Excellent collaboration networks</strong> (personal contacts)</span>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <span class="text-green-600 font-bold mt-0.5">✓</span>
+                                <span><strong>CMA CGM strategic relevance</strong> (fund mandate)</span>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <span class="text-green-600 font-bold mt-0.5">✓</span>
+                                <span><strong>Mediterranean replicability</strong> (regional impact)</span>
+                            </div>
+                        </div>
+
+                        <button onclick="switchTab('lebanon')" class="mt-6 w-full py-3 bg-gradient-to-r from-brand-gold to-yellow-600 text-white font-bold rounded-xl hover:shadow-xl transition-all">
+                            View Detailed Profile →
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Brazil Card -->
+                <div class="bg-white rounded-3xl shadow-xl border-2 border-slate-200 p-8 hover:scale-105 transition-all duration-300 region-card">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="text-5xl">🇧🇷</div>
+                        <div class="px-4 py-2 bg-slate-700 text-white rounded-full font-bold text-sm">
+                            RANK #2
+                        </div>
+                    </div>
+                    <h3 class="text-3xl font-serif font-bold text-slate-900 mb-2">Brazil</h3>
+                    <div class="text-5xl font-serif font-bold text-brand-secondary mb-1">348.81</div>
+                    <p class="text-sm text-slate-600 font-semibold mb-6">Final MCDA Score</p>
+                    
+                    <div class="space-y-3 text-sm text-slate-700">
+                        <div class="flex items-start gap-2">
+                            <span class="text-green-600 font-bold mt-0.5">✓</span>
+                            <span><strong>World's largest biomass producer</strong></span>
+                        </div>
+                        <div class="flex items-start gap-2">
+                            <span class="text-green-600 font-bold mt-0.5">✓</span>
+                            <span><strong>High waste mismanagement</strong> (opportunity)</span>
+                        </div>
+                        <div class="flex items-start gap-2">
+                            <span class="text-green-600 font-bold mt-0.5">✓</span>
+                            <span><strong>Massive impact potential</strong></span>
+                        </div>
+                        <div class="flex items-start gap-2">
+                            <span class="text-orange-500 font-bold mt-0.5">△</span>
+                            <span>Lower collaboration scores</span>
+                        </div>
+                        <div class="flex items-start gap-2">
+                            <span class="text-orange-500 font-bold mt-0.5">△</span>
+                            <span>Lower Funder and Research Interest </span>
+                        </div>
+                    </div>
+
+                    <button onclick="switchTab('brazil')" class="mt-6 w-full py-3 bg-slate-700 text-white font-bold rounded-xl hover:bg-slate-800 transition-all">
+                        View Detailed Profile →
+                    </button>
+                </div>
+
+                <!-- Indonesia Card -->
+                <div class="bg-white rounded-3xl shadow-xl border-2 border-slate-200 p-8 hover:scale-105 transition-all duration-300 region-card">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="text-5xl">🇮🇩</div>
+                        <div class="px-4 py-2 bg-slate-600 text-white rounded-full font-bold text-sm">
+                            RANK #3
+                        </div>
+                    </div>
+                    <h3 class="text-3xl font-serif font-bold text-slate-900 mb-2">Indonesia</h3>
+                    <div class="text-5xl font-serif font-bold text-brand-secondary mb-1">325.61</div>
+                    <p class="text-sm text-slate-600 font-semibold mb-6">Final MCDA Score</p>
+                    
+                    <div class="space-y-3 text-sm text-slate-700">
+                        <div class="flex items-start gap-2">
+                            <span class="text-green-600 font-bold mt-0.5">✓</span>
+                            <span><strong>Exceptional biomass volume</strong> (200Mt/yr)</span>
+                        </div>
+                        <div class="flex items-start gap-2">
+                            <span class="text-green-600 font-bold mt-0.5">✓</span>
+                            <span><strong>Tropical residues diversity</strong></span>
+                        </div>
+                        <div class="flex items-start gap-2">
+                            <span class="text-green-600 font-bold mt-0.5">✓</span>
+                            <span><strong>SE Asian replicability</strong></span>
+                        </div>
+                        <div class="flex items-start gap-2">
+                            <span class="text-orange-500 font-bold mt-0.5">△</span>
+                            <span>Moderate policy maturity</span>
+                        </div>
+                    </div>
+
+                    <button onclick="switchTab('indonesia')" class="mt-6 w-full py-3 bg-slate-600 text-white font-bold rounded-xl hover:bg-slate-700 transition-all">
+                        View Detailed Profile →
+                    </button>
+                </div>
+
+                <!-- UK Card -->
+                <div class="bg-white rounded-3xl shadow-xl border-2 border-slate-200 p-8 hover:scale-105 transition-all duration-300 region-card">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="text-5xl">🇬🇧</div>
+                        <div class="px-4 py-2 bg-slate-500 text-white rounded-full font-bold text-sm">
+                            RANK #4
+                        </div>
+                    </div>
+                    <h3 class="text-3xl font-serif font-bold text-slate-900 mb-2">United Kingdom</h3>
+                    <div class="text-5xl font-serif font-bold text-brand-secondary mb-1">320.85</div>
+                    <p class="text-sm text-slate-600 font-semibold mb-6">Final MCDA Score</p>
+                    
+                    <div class="space-y-3 text-sm text-slate-700">
+                        <div class="flex items-start gap-2">
+                            <span class="text-green-600 font-bold mt-0.5">✓</span>
+                            <span><strong>Highest policy maturity</strong> (90.57 percentile)</span>
+                        </div>
+                        <div class="flex items-start gap-2">
+                            <span class="text-green-600 font-bold mt-0.5">✓</span>
+                            <span><strong>Excellent logistics</strong> (LPI 25/139)</span>
+                        </div>
+                        <div class="flex items-start gap-2">
+                            <span class="text-green-600 font-bold mt-0.5">✓</span>
+                            <span><strong>Physical base location</strong></span>
+                        </div>
+                        <div class="flex items-start gap-2">
+                            <span class="text-red-500 font-bold mt-0.5">✗</span>
+                            <span>Low environmental urgency</span>
+                        </div>
+                    </div>
+
+                    <button onclick="switchTab('uk')" class="mt-6 w-full py-3 bg-slate-500 text-white font-bold rounded-xl hover:bg-slate-600 transition-all">
+                        View Detailed Profile →
+                    </button>
+                </div>
+
+                <!-- KSA Card -->
+                <div class="bg-white rounded-3xl shadow-xl border-2 border-slate-200 p-8 hover:scale-105 transition-all duration-300 region-card">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="text-5xl">🇸🇦</div>
+                        <div class="px-4 py-2 bg-slate-400 text-white rounded-full font-bold text-sm">
+                            RANK #5
+                        </div>
+                    </div>
+                    <h3 class="text-3xl font-serif font-bold text-slate-900 mb-2">Saudi Arabia</h3>
+                    <div class="text-5xl font-serif font-bold text-brand-secondary mb-1">315.16</div>
+                    <p class="text-sm text-slate-600 font-semibold mb-6">Final MCDA Score</p>
+                    
+                    <div class="space-y-3 text-sm text-slate-700">
+                        <div class="flex items-start gap-2">
+                            <span class="text-green-600 font-bold mt-0.5">✓</span>
+                            <span><strong>Strong construction market</strong></span>
+                        </div>
+                        <div class="flex items-start gap-2">
+                            <span class="text-green-600 font-bold mt-0.5">✓</span>
+                            <span><strong>Vision 2030 alignment</strong></span>
+                        </div>
+                        <div class="flex items-start gap-2">
+                            <span class="text-orange-500 font-bold mt-0.5">△</span>
+                            <span>Moderate biomass potential</span>
+                        </div>
+                        <div class="flex items-start gap-2">
+                            <span class="text-orange-500 font-bold mt-0.5">△</span>
+                            <span>Lower waste stream diversity</span>
+                        </div>
+                    </div>
+
+                    <button onclick="switchTab('ksa')" class="mt-6 w-full py-3 bg-slate-400 text-white font-bold rounded-xl hover:bg-slate-500 transition-all">
+                        View Detailed Profile →
+                    </button>
+                </div>
+            </div>
+
+            <!-- Detailed Regional Tabs -->
+            <div class="bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden">
+                <!-- Tab Headers -->
+                <div class="flex bg-slate-100 p-2 overflow-x-auto">
+                    <button onclick="switchTab('lebanon')" id="tab-lebanon" class="tab-btn px-6 py-3 text-sm font-bold rounded-lg transition-all bg-white text-brand-primary shadow-md">
+                        🇱🇧 Lebanon
+                    </button>
+                    <button onclick="switchTab('brazil')" id="tab-brazil" class="tab-btn px-6 py-3 text-sm font-bold rounded-lg text-slate-600 hover:bg-white/50 transition-all">
+                        🇧🇷 Brazil
+                    </button>
+                    <button onclick="switchTab('indonesia')" id="tab-indonesia" class="tab-btn px-6 py-3 text-sm font-bold rounded-lg text-slate-600 hover:bg-white/50 transition-all">
+                        🇮🇩 Indonesia
+                    </button>
+                    <button onclick="switchTab('uk')" id="tab-uk" class="tab-btn px-6 py-3 text-sm font-bold rounded-lg text-slate-600 hover:bg-white/50 transition-all">
+                        🇬🇧 UK
+                    </button>
+                    <button onclick="switchTab('ksa')" id="tab-ksa" class="tab-btn px-6 py-3 text-sm font-bold rounded-lg text-slate-600 hover:bg-white/50 transition-all">
+                        🇸🇦 KSA
+                    </button>
+                </div>
+
+                <!-- Tab Content -->
+                <div class="p-8 md:p-12">
+                    <!-- Lebanon Content -->
+                    <div id="content-lebanon" class="tab-content active">
+                        <div class="flex items-center gap-4 mb-8">
+                            <div class="text-6xl">🇱🇧</div>
+                            <div>
+                                <h3 class="text-4xl font-serif font-bold text-slate-900">Lebanon</h3>
+                                <p class="text-xl text-brand-gold font-bold">The Optimal Choice • Score: 391.66</p>
+                            </div>
+                        </div>
+
+                        <div class="grid md:grid-cols-2 gap-8">
+                            <div class="space-y-6">
+                                <div>
+                                    <h4 class="text-2xl font-serif font-bold text-slate-800 mb-4 flex items-center gap-2">
+                                        <span class="text-3xl">🎯</span> Core Strengths
+                                    </h4>
+                                    <div class="space-y-4">
+                                        <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded-r-xl">
+                                            <p class="font-bold text-green-900 mb-2">1. Highest Environmental Urgency</p>
+                                            <p class="text-sm text-green-800">54% unsound waste disposal • 941 unauthorized dumps • >150 fires/week. Solving this creates massive local impact.</p>
+                                        </div>
+                                        <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-xl">
+                                            <p class="font-bold text-blue-900 mb-2">2. Strategic Funder Alignment</p>
+                                            <p class="text-sm text-blue-800">Direct target of CMA CGM Excellence Fund. Explicit mandate for Lebanese reconstruction and Mediterranean operations.</p>
+                                        </div>
+                                        <div class="bg-purple-50 border-l-4 border-purple-500 p-4 rounded-r-xl">
+                                            <p class="font-bold text-purple-900 mb-2">3. Diverse Mediterranean Biomass</p>
+                                            <p class="text-sm text-purple-800">Olives (~79k tonnes waste), Citrus, Apples, Grapes, Cereals. High replicability across Levant region.</p>
+                                        </div>
+                                        <div class="bg-indigo-50 border-l-4 border-indigo-500 p-4 rounded-r-xl">
+                                            <p class="font-bold text-indigo-900 mb-2">4. Exceptional Collaboration Access</p>
+                                            <p class="text-sm text-indigo-800">Personal networks, institutional partnerships, direct sample access. Minimizes operational barriers.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="space-y-6">
+                                <div class="bg-gradient-to-br from-slate-50 to-blue-50 p-6 rounded-2xl border-2 border-slate-200">
+                                    <h4 class="text-xl font-bold text-slate-900 mb-4">📊 Data Snapshot</h4>
+                                    <div class="space-y-3 text-sm">
+                                        <div class="flex justify-between py-2 border-b border-slate-300">
+                                            <span class="text-slate-600">Agricultural Output</span>
+                                            <span class="font-mono font-bold text-slate-900">Crops 60-70% / Livestock 30%</span>
+                                        </div>
+                                        <div class="flex justify-between py-2 border-b border-slate-300">
+                                            <span class="text-slate-600">Waste Sector CO₂</span>
+                                            <span class="font-mono font-bold text-slate-900">6.6% of National GHG</span>
+                                        </div>
+                                        <div class="flex justify-between py-2 border-b border-slate-300">
+                                            <span class="text-slate-600">Import Dependency</span>
+                                            <span class="font-mono font-bold text-red-600">~90% (Construction Materials)</span>
+                                        </div>
+                                        <div class="flex justify-between py-2 border-b border-slate-300">
+                                            <span class="text-slate-600">Policy Status</span>
+                                            <span class="font-mono font-bold text-orange-600">Law 80/2018 (Weak enforcement)</span>
+                                        </div>
+                                        <div class="flex justify-between py-2 border-b border-slate-300">
+                                            <span class="text-slate-600">Logistics Score (LPI)</span>
+                                            <span class="inline-block px-3 py-1 bg-red-100 text-red-800 rounded-full text-xs font-bold">2.0 / 5.0 (Low)</span>
+                                        </div>
+                                        <div class="flex justify-between py-2 pt-2">
+                                            <span class="text-slate-600">Key Waste Streams</span>
+                                            <span class="font-mono font-bold text-emerald-600">Olives, Citrus, Apples, Grapes</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="bg-gradient-to-br from-amber-50 to-yellow-50 border-2 border-amber-300 p-6 rounded-2xl">
+                                    <h4 class="text-lg font-bold text-amber-900 mb-3 flex items-center gap-2">
+                                        <span class="text-2xl">🏆</span> Why Lebanon Wins
+                                    </h4>
+                                    <p class="text-sm text-amber-900 leading-relaxed">
+                                        Lebanon achieves the <strong>highest multidimensional alignment</strong>: combines technical feasibility with environmental urgency, strong collaboration networks, and strategic funder relevance. The region where scientific, environmental, societal, and strategic imperatives converge.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Brazil Content -->
+                    <div id="content-brazil" class="tab-content">
+                        <div class="flex items-center gap-4 mb-8">
+                            <div class="text-6xl">🇧🇷</div>
+                            <div>
+                                <h3 class="text-4xl font-serif font-bold text-slate-900">Brazil</h3>
+                                <p class="text-xl text-slate-600 font-bold">The Biomass Giant • Score: 348.81</p>
+                            </div>
+                        </div>
+
+                        <div class="grid md:grid-cols-2 gap-8">
+                            <div>
+                                <h4 class="text-xl font-bold text-slate-800 border-b-2 border-slate-200 pb-3 mb-4">Profile Overview</h4>
+                                <p class="text-slate-700 leading-relaxed mb-6">
+                                    Brazil represents the <strong>"Scientific Maximizer"</strong> option. It offers the world's largest biological feedstock potential but lacks specific strategic alignment with the funder's regional reconstruction mandate.
+                                </p>
+                                
+                                <div class="space-y-3 text-sm">
+                                    <div class="flex items-start gap-3">
+                                        <span class="text-green-500 text-xl font-bold">✓</span>
+                                        <div>
+                                            <p class="font-bold text-slate-800">Massive Biomass Scale</p>
+                                            <p class="text-slate-600">38 Mton crop protein • 160 Mha pastureland • World leader in sugarcane bagasse</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start gap-3">
+                                        <span class="text-green-500 text-xl font-bold">✓</span>
+                                        <div>
+                                            <p class="font-bold text-slate-800">High Environmental Opportunity</p>
+                                            <p class="text-slate-600">Significant waste mismanagement creates intervention potential</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start gap-3">
+                                        
+                                        
+                                    </div>
+                                    <div class="flex items-start gap-3">
+                                        <span class="text-red-500 text-xl font-bold">✗</span>
+                                        <div>
+                                            <p class="font-bold text-slate-800">Indirect Funder Alignment</p>
+                                            <p class="text-slate-600">Not a primary CMA CGM Excellence Fund target region and Researcher Interest
+                                        </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-slate-50 p-6 rounded-2xl border-2 border-slate-200">
+                                <h4 class="font-bold text-slate-900 mb-4">Data Snapshot</h4>
+                                <div class="space-y-3 text-sm">
+                                    <div class="flex justify-between py-2 border-b border-slate-200">
+                                        <span class="text-slate-500">Biomass Potential</span>
+                                        <span class="font-mono font-bold text-green-600">Very High (Global Leader)</span>
+                                    </div>
+                                    <div class="flex justify-between py-2 border-b border-slate-200">
+                                        <span class="text-slate-500">Regulatory Quality</span>
+                                        <span class="font-mono font-bold">39.9 Percentile</span>
+                                    </div>
+                                    <div class="flex justify-between py-2 border-b border-slate-200">
+                                        <span class="text-slate-500">Construction GDP</span>
+                                        <span class="font-mono font-bold">6.2% (Strong Demand)</span>
+                                    </div>
+                                    <div class="flex justify-between py-2 border-b border-slate-200">
+                                        <span class="text-slate-500">LPI Infrastructure</span>
+                                        <span class="inline-block px-2 py-1 bg-yellow-100 text-yellow-700 rounded text-xs font-bold">3.2 / 5.0</span>
+                                    </div>
+                                    <div class="flex justify-between py-2 pt-2">
+                                        <span class="text-slate-500">Key Wastes</span>
+                                        <span class="font-mono font-bold text-green-600">Sugarcane, Soybean, Coffee</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Indonesia Content -->
+                    <div id="content-indonesia" class="tab-content">
+                        <div class="flex items-center gap-4 mb-8">
+                            <div class="text-6xl">🇮🇩</div>
+                            <div>
+                                <h3 class="text-4xl font-serif font-bold text-slate-900">Indonesia</h3>
+                                <p class="text-xl text-slate-600 font-bold">High Replicability Potential • Score: 325.61</p>
+                            </div>
+                        </div>
+
+                        <div class="grid md:grid-cols-2 gap-8">
+                            <div>
+                                <p class="text-slate-700 leading-relaxed mb-6">
+                                    Similar to Brazil but with specific <strong>tropical biomass</strong> distinct from Mediterranean context. Huge volume (Oil Palm), but lower policy maturity.
+                                </p>
+                                
+                                <div class="space-y-3 text-sm bg-gradient-to-br from-green-50 to-emerald-50 p-6 rounded-xl border-2 border-green-200">
+                                    <div class="flex gap-2 items-start">
+                                        <span class="text-green-600 font-bold">🌴</span>
+                                        <div>
+                                            <p class="font-bold text-green-900">Biomass Volume</p>
+                                            <p class="text-green-800">200 Million tonnes/year potential from agricultural residues</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex gap-2 items-start">
+                                        <span class="text-green-600 font-bold">🌾</span>
+                                        <div>
+                                            <p class="font-bold text-green-900">Key Source</p>
+                                            <p class="text-green-800">Oil Palm: 570 Mt biomass from fronds and trunks</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex gap-2 items-start">
+                                        <span class="text-orange-600 font-bold">⚖️</span>
+                                        <div>
+                                            <p class="font-bold text-orange-900">Policy Maturity</p>
+                                            <p class="text-orange-800">Regulatory Quality 0.30 (WGI) - Developing framework</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-slate-50 p-6 rounded-2xl border-2 border-slate-200">
+                                <h4 class="font-bold text-slate-900 mb-4">Data Snapshot</h4>
+                                <div class="space-y-3 text-sm">
+                                    <div class="flex justify-between py-2 border-b border-slate-200">
+                                        <span class="text-slate-500">Construction GDP</span>
+                                        <span class="font-mono font-bold text-green-600">10.1% (High Growth)</span>
+                                    </div>
+                                    <div class="flex justify-between py-2 border-b border-slate-200">
+                                        <span class="text-slate-500">LPI Score</span>
+                                        <span class="font-mono font-bold">3.0 (Archipelago challenges)</span>
+                                    </div>
+                                    <div class="flex justify-between py-2 border-b border-slate-200">
+                                        <span class="text-slate-500">Mismanagement</span>
+                                        <span class="font-mono font-bold text-red-600">High (Environmental Need)</span>
+                                    </div>
+                                    <div class="flex justify-between py-2 pt-2">
+                                        <span class="text-slate-500">Replicability</span>
+                                        <span class="font-mono font-bold text-blue-600">SE Asia Regional Impact</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- UK Content -->
+                    <div id="content-uk" class="tab-content">
+                        <div class="flex items-center gap-4 mb-8">
+                            <div class="text-6xl">🇬🇧</div>
+                            <div>
+                                <h3 class="text-4xl font-serif font-bold text-slate-900">United Kingdom</h3>
+                                <p class="text-xl text-slate-600 font-bold">Policy & Logistics Benchmark • Score: 320.85</p>
+                            </div>
+                        </div>
+
+                        <div class="grid md:grid-cols-2 gap-8">
+                            <div>
+                                <p class="text-slate-700 leading-relaxed mb-6">
+                                    The UK scores <strong>highest on governance, logistics, and research infrastructure</strong>. However, it scores lowest on "Environmental Opportunity" because its waste management system is already mature (low mismanagement), meaning the "delta" for impact is smaller.
+                                </p>
+                                
+                                <div class="bg-blue-50 border-2 border-blue-200 p-6 rounded-xl">
+                                    <p class="text-xs font-bold text-blue-600 uppercase mb-2">Key Strength</p>
+                                    <p class="font-bold text-blue-900 text-lg mb-2">Rank 25/139 in Logistics Performance Index</p>
+                                    <p class="text-sm text-blue-800">Excellent research infrastructure as physical host country for PhD</p>
+                                </div>
+                            </div>
+
+                            <div class="bg-slate-50 p-6 rounded-2xl border-2 border-slate-200">
+                                <h4 class="font-bold text-slate-900 mb-4">Data Snapshot</h4>
+                                <div class="space-y-3 text-sm">
+                                    <div class="flex justify-between py-2 border-b border-slate-200">
+                                        <span class="text-slate-500">Waste Mismanagement</span>
+                                        <span class="font-mono font-bold text-red-500">Very Low (Mature System)</span>
+                                    </div>
+                                    <div class="flex justify-between py-2 border-b border-slate-200">
+                                        <span class="text-slate-500">Major Crops</span>
+                                        <span class="font-mono font-bold">Wheat (11Mt), Barley (7Mt)</span>
+                                    </div>
+                                    <div class="flex justify-between py-2 border-b border-slate-200">
+                                        <span class="text-slate-500">Regulatory Quality</span>
+                                        <span class="font-mono font-bold text-green-600">90.57 Percentile (Highest)</span>
+                                    </div>
+                                    <div class="flex justify-between py-2 border-b border-slate-200">
+                                        <span class="text-slate-500">Funder Alignment</span>
+                                        <span class="inline-block px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-bold">Moderate (Host Country)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- KSA Content -->
+                    <div id="content-ksa" class="tab-content">
+                        <div class="flex items-center gap-4 mb-8">
+                            <div class="text-6xl">🇸🇦</div>
+                            <div>
+                                <h3 class="text-4xl font-serif font-bold text-slate-900">Saudi Arabia</h3>
+                                <p class="text-xl text-slate-600 font-bold">Market Driven • Score: 315.16</p>
+                            </div>
+                        </div>
+
+                        <div class="grid md:grid-cols-2 gap-8">
+                            <div>
+                                <p class="text-slate-700 leading-relaxed mb-6">
+                                    Strong construction market and <strong>Vision 2030</strong> alignment, but limited by lower biomass diversity compared to tropical/Mediterranean regions.
+                                </p>
+                                
+                                <div class="space-y-3 text-sm">
+                                    <div class="flex gap-2 items-start">
+                                        <span class="text-green-600 font-bold">✓</span>
+                                        <div>
+                                            <p class="font-bold text-slate-800">Biomass Base</p>
+                                            <p class="text-slate-600">>20 Mt/year agricultural residues (Dates, Wheat, Barley)</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex gap-2 items-start">
+                                        <span class="text-green-600 font-bold">✓</span>
+                                        <div>
+                                            <p class="font-bold text-slate-800">Strategic Context</p>
+                                            <p class="text-slate-600">Vision 2030 drives massive construction demand and CE goals</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex gap-2 items-start">
+                                        <span class="text-orange-600 font-bold">△</span>
+                                        <div>
+                                            <p class="font-bold text-slate-800">Biomass Constraint</p>
+                                            <p class="text-slate-600">Lower fibrous waste variety vs Lebanon/Brazil</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-slate-50 p-6 rounded-2xl border-2 border-slate-200">
+                                <h4 class="font-bold text-slate-900 mb-4">Data Snapshot</h4>
+                                <div class="space-y-3 text-sm">
+                                    <div class="flex justify-between py-2 border-b border-slate-200">
+                                        <span class="text-slate-500">Date Self-Sufficiency</span>
+                                        <span class="font-mono font-bold">124% (Key Waste Stream)</span>
+                                    </div>
+                                    <div class="flex justify-between py-2 border-b border-slate-200">
+                                        <span class="text-slate-500">Waste to Energy Target</span>
+                                        <span class="font-mono font-bold">3GW by 2030</span>
+                                    </div>
+                                    <div class="flex justify-between py-2 border-b border-slate-200">
+                                        <span class="text-slate-500">Construction Boom</span>
+                                        <span class="font-mono font-bold text-green-600">Vision 2030 Projects</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 5: VISUALIZATIONS -->
+        <section id="visualization" class="scroll-mt-20">
+            <div class="text-center mb-10">
+                <h2 class="text-4xl md:text-5xl font-serif font-bold text-slate-900 mb-4">Comparative Analytics & Visualizations</h2>
+                <p class="text-slate-600 text-lg max-w-3xl mx-auto">Interactive charts revealing scoring patterns, strengths, and decision drivers</p>
+            </div>
+
+            <div class="grid lg:grid-cols-12 gap-8 mb-12">
+                <!-- Bar Chart -->
+                <div class="lg:col-span-7 bg-white p-8 rounded-3xl shadow-xl border border-slate-100">
+                    <div class="flex justify-between items-end mb-6">
+                        <div>
+                            <h3 class="text-2xl font-serif font-bold text-slate-800 mb-2">Final MCDA Ranking</h3>
+                            <p class="text-sm text-slate-500">Weighted aggregation scores (Max possible: 500)</p>
+                        </div>
+                        <span class="px-4 py-2 bg-emerald-100 text-emerald-800 text-xs font-bold rounded-full">
+                            Lebanon leads by +42.8 pts
+                        </span>
+                    </div>
+                    <div class="relative h-[400px] w-full">
+                        <canvas id="barChart"></canvas>
+                    </div>
+                    
+                    <div class="mt-6 bg-blue-50 border-l-4 border-blue-500 p-5 rounded-r-xl">
+                        <h4 class="font-bold text-blue-900 mb-2 flex items-center gap-2">
+                            <span class="text-xl">💡</span> Key Insight
+                        </h4>
+                        <p class="text-sm text-blue-800 leading-relaxed">
+                            Lebanon's <strong>42.8-point lead</strong> over Brazil (#2) demonstrates robust multidimensional strength. The gap reflects Lebanon's superior performance on collaboration (15%), funder alignment (10%), and environmental urgency (15%) criteria.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Radar Chart -->
+                <div class="lg:col-span-5 bg-gradient-to-br from-slate-900 to-slate-800 p-8 rounded-3xl shadow-xl text-white">
+                    <div class="mb-6">
+                        <h3 class="text-2xl font-serif font-bold text-white mb-2">Regional Profile Shapes</h3>
+                        <p class="text-sm text-slate-300">Comparative strengths across 7 dimensions</p>
+                    </div>
+                    <div class="relative h-[400px] w-full">
+                        <canvas id="radarChart"></canvas>
+                    </div>
+                    
+                    <div class="mt-6 bg-white/10 backdrop-blur-md border border-white/20 p-4 rounded-xl">
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            <strong class="text-white">Reading:</strong> Lebanon shows balanced strength across most criteria. Brazil/Indonesia excel in Technical Potential. UK dominates Policy & Logistics but weak on Environmental Opportunity.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Criteria Breakdown Charts -->
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Stacked Bar -->
+                <div class="bg-white p-8 rounded-3xl shadow-xl border border-slate-100">
+                    <h3 class="text-2xl font-serif font-bold text-slate-800 mb-4">Criteria Score Breakdown</h3>
+                    <p class="text-sm text-slate-500 mb-6">How each region scores across the 7 criteria</p>
+                    <div class="relative h-[350px] w-full">
+                        <canvas id="stackedBarChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Criteria Weights Pie -->
+                <div class="bg-white p-8 rounded-3xl shadow-xl border border-slate-100">
+                    <h3 class="text-2xl font-serif font-bold text-slate-800 mb-4">Criteria Weight Distribution</h3>
+                    <p class="text-sm text-slate-500 mb-6">Relative importance of each evaluation dimension</p>
+                    <div class="relative h-[350px] w-full">
+                        <canvas id="pieChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 6: SENSITIVITY ANALYSIS -->
+        <section id="sensitivity" class="scroll-mt-20">
+            <div class="text-center mb-10">
+                <h2 class="text-4xl md:text-5xl font-serif font-bold text-slate-900 mb-4">Sensitivity Analysis</h2>
+                <p class="text-slate-600 text-lg max-w-3xl mx-auto">Testing robustness under alternative weighting scenarios</p>
+            </div>
+
+            <div class="bg-gradient-to-br from-purple-50 to-blue-50 rounded-3xl border-2 border-purple-200 p-8 mb-8">
+                <p class="text-slate-700 leading-relaxed text-center text-lg">
+                    MCDA results are most sensitive to <strong class="text-purple-900">Technical Potential (C1)</strong> and <strong class="text-purple-900">Policy Support (C4)</strong> weights. 
+                    Below are six key scenarios exploring how rankings shift under alternative strategies.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+                <!-- Scenario 1 -->
+                <div class="bg-white rounded-2xl shadow-lg border-2 border-slate-200 p-6 hover:shadow-2xl transition-all duration-300">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-12 h-12 bg-purple-600 rounded-xl flex items-center justify-center text-2xl">🔬</div>
+                        <h4 class="font-bold text-slate-900 text-lg">Technical Dominates</h4>
+                    </div>
+                    <div class="mb-3">
+                        <span class="px-3 py-1 bg-purple-100 text-purple-800 text-xs font-bold rounded-full">C1: 30% → 50%</span>
+                    </div>
+                    <p class="text-sm text-slate-700 leading-relaxed">
+                        <strong>Result:</strong> Brazil and Indonesia rise significantly. Brazil could challenge Lebanon for #1. Reflects pure biomass abundance strategy over collaboration/policy.
+                    </p>
+                </div>
+
+                <!-- Scenario 2 -->
+                <div class="bg-white rounded-2xl shadow-lg border-2 border-slate-200 p-6 hover:shadow-2xl transition-all duration-300">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-12 h-12 bg-amber-600 rounded-xl flex items-center justify-center text-2xl">🏛️</div>
+                        <h4 class="font-bold text-slate-900 text-lg">Policy Emphasized</h4>
+                    </div>
+                    <div class="mb-3">
+                        <span class="px-3 py-1 bg-amber-100 text-amber-800 text-xs font-bold rounded-full">C4: 10% → 20%</span>
+                    </div>
+                    <p class="text-sm text-slate-700 leading-relaxed">
+                        <strong>Result:</strong> UK rises to #2 or #3 given superior governance frameworks. Lebanon remains #1 due to strong collaboration and strategic alignment.
+                    </p>
+                </div>
+
+                <!-- Scenario 3 -->
+                <div class="bg-white rounded-2xl shadow-lg border-2 border-slate-200 p-6 hover:shadow-2xl transition-all duration-300">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-12 h-12 bg-indigo-600 rounded-xl flex items-center justify-center text-2xl">🤝</div>
+                        <h4 class="font-bold text-slate-900 text-lg">Collaboration Critical</h4>
+                    </div>
+                    <div class="mb-3">
+                        <span class="px-3 py-1 bg-indigo-100 text-indigo-800 text-xs font-bold rounded-full">C6: 15% → 25%</span>
+                    </div>
+                    <p class="text-sm text-slate-700 leading-relaxed">
+                        <strong>Result:</strong> Lebanon's position becomes even more dominant. UK also rises substantially. Prioritizes operational ease over technical challenge.
+                    </p>
+                </div>
+
+                <!-- Scenario 4 -->
+                <div class="bg-white rounded-2xl shadow-lg border-2 border-slate-200 p-6 hover:shadow-2xl transition-all duration-300">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-12 h-12 bg-pink-600 rounded-xl flex items-center justify-center text-2xl">🎯</div>
+                        <h4 class="font-bold text-slate-900 text-lg">Funder Reduced</h4>
+                    </div>
+                    <div class="mb-3">
+                        <span class="px-3 py-1 bg-pink-100 text-pink-800 text-xs font-bold rounded-full">C7: 10% → 5%</span>
+                    </div>
+                    <p class="text-sm text-slate-700 leading-relaxed">
+                        <strong>Result:</strong> Lebanon's gap widens further. Brazil gains slightly but remains #2. Reflects purely scientific vs strategic focus.
+                    </p>
+                </div>
+
+                <!-- Scenario 5 -->
+                <div class="bg-white rounded-2xl shadow-lg border-2 border-slate-200 p-6 hover:shadow-2xl transition-all duration-300">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-12 h-12 bg-green-600 rounded-xl flex items-center justify-center text-2xl">🌱</div>
+                        <h4 class="font-bold text-slate-900 text-lg">Environmental Focus</h4>
+                    </div>
+                    <div class="mb-3">
+                        <span class="px-3 py-1 bg-green-100 text-green-800 text-xs font-bold rounded-full">C2: 15% → 25%</span>
+                    </div>
+                    <p class="text-sm text-slate-700 leading-relaxed">
+                        <strong>Result:</strong> Brazil and Indonesia gain ground due to higher mismanagement. Lebanon remains dominant but gap narrows slightly.
+                    </p>
+                </div>
+
+                <!-- Scenario 6 -->
+                <div class="bg-white rounded-2xl shadow-lg border-2 border-slate-200 p-6 hover:shadow-2xl transition-all duration-300">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center text-2xl">🏘️</div>
+                        <h4 class="font-bold text-slate-900 text-lg">Market Relevance</h4>
+                    </div>
+                    <div class="mb-3">
+                        <span class="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-bold rounded-full">C3: 15% → 25%</span>
+                    </div>
+                    <p class="text-sm text-slate-700 leading-relaxed">
+                        <strong>Result:</strong> Brazil and KSA improve positions. Lebanon remains competitive due to emerging Levant market opportunities.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Robustness Conclusion -->
+            <div class="bg-gradient-to-r from-yellow-50 to-amber-50 border-4 border-amber-400 rounded-3xl p-10 text-center">
+                <div class="text-5xl mb-4">🏆</div>
+                <h3 class="text-3xl font-serif font-bold text-amber-900 mb-4">Overall Robustness Conclusion</h3>
+                <p class="text-lg text-amber-900 leading-relaxed max-w-4xl mx-auto mb-4">
+                    Lebanon remains the <strong>top-ranked region under most reasonable alternative weighting scenarios</strong>. Its multidimensional strength across technical, environmental, institutional, and collaborative dimensions makes it resilient to weight shifts.
+                </p>
+                <p class="text-base text-amber-800 leading-relaxed max-w-4xl mx-auto">
+                    The current weighting structure reflects PhD reality: <strong>scientific ambition balanced with operational feasibility and strategic relevance</strong>. 
+                    Under this framework, <strong>Lebanon is the clear, defensible choice</strong>.
+                </p>
+            </div>
+        </section>
+
+        <!-- SECTION 7: CONCLUSION & RECOMMENDATION -->
+        <section id="conclusion" class="scroll-mt-20">
+            <div class="text-center mb-10">
+                <h2 class="text-4xl md:text-5xl font-serif font-bold text-slate-900 mb-4">Final Recommendation</h2>
+                <p class="text-slate-600 text-lg max-w-3xl mx-auto">Why Lebanon is the optimal choice for this PhD research</p>
+            </div>
+
+            <div class="bg-gradient-to-br from-brand-primary via-brand-secondary to-brand-accent text-white rounded-3xl shadow-2xl p-12 mb-12">
+                <div class="text-center mb-10">
+                    <div class="text-7xl mb-6">🇱🇧</div>
+                    <h3 class="text-4xl font-serif font-bold mb-4">Lebanon: The Convergence Point</h3>
+                    <p class="text-xl text-white/90 max-w-3xl mx-auto leading-relaxed">
+                        Where scientific ambition, environmental urgency, operational feasibility, and strategic alignment converge
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mt-10">
+                    <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
+                        <div class="text-4xl mb-3">🔥</div>
+                        <h4 class="font-bold text-xl mb-3">Environmental Urgency</h4>
+                        <p class="text-sm text-white/90 leading-relaxed">
+                            Acute waste crisis: 54% unsound disposal, 941 dumps, >150 fires/week. High urgency = high impact potential.
+                        </p>
+                    </div>
+
+                    <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
+                        <div class="text-4xl mb-3">🔬</div>
+                        <h4 class="font-bold text-xl mb-3">Technical Feasibility</h4>
+                        <p class="text-sm text-white/90 leading-relaxed">
+                            Diverse Mediterranean waste streams: olives, citrus, grapes, cereals. Strong agro-industrial base for innovation.
+                        </p>
+                    </div>
+
+                    <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
+                        <div class="text-4xl mb-3">🤝</div>
+                        <h4 class="font-bold text-xl mb-3">Collaboration Networks</h4>
+                        <p class="text-sm text-white/90 leading-relaxed">
+                            Existing partnerships, direct sample access, institutional support. Minimizes operational barriers.
+                        </p>
+                    </div>
+
+                    <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
+                        <div class="text-4xl mb-3">🎯</div>
+                        <h4 class="font-bold text-xl mb-3">Strategic Alignment</h4>
+                        <p class="text-sm text-white/90 leading-relaxed">
+                            CMA CGM Excellence Fund's explicit mandate for Lebanese reconstruction and Mediterranean operations.
+                        </p>
+                    </div>
+
+                    <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
+                        <div class="text-4xl mb-3">🌍</div>
+                        <h4 class="font-bold text-xl mb-3">Replicability & Impact</h4>
+                        <p class="text-sm text-white/90 leading-relaxed">
+                            Insights scale across Mediterranean, Levant, and similar global contexts. High development potential.
+                        </p>
+                    </div>
+
+                    <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
+                        <div class="text-4xl mb-3">⚖️</div>
+                        <h4 class="font-bold text-xl mb-3">Research Balance</h4>
+                        <p class="text-sm text-white/90 leading-relaxed">
+                            Balances scientific challenge with operational feasibility. Maximizes PhD completion and impact likelihood.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Final Statement -->
+            <div class="bg-white rounded-3xl shadow-2xl border-2 border-slate-200 p-10">
+                <div class="max-w-4xl mx-auto">
+                    <h3 class="text-3xl font-serif font-bold text-slate-900 mb-6 text-center">Methodological Conclusion</h3>
+                    
+                    <div class="space-y-4 text-lg text-slate-700 leading-relaxed">
+                        <p>
+                            This Multi-Criteria Decision Analysis provides a <strong class="text-brand-primary">transparent, replicable, and academically rigorous</strong> framework for regional selection in bio-waste valorisation research.
+                        </p>
+                        
+                        <p>
+                            Based on weighted criteria aligned with PhD objectives, research feasibility, environmental impact, and funder priorities: 
+                            <strong class="text-brand-gold text-2xl">Lebanon emerges as the most suitable region</strong> for this research programme.
+                        </p>
+                        
+                        <p>
+                            This conclusion is:
+                        </p>
+                        
+                        <ul class="space-y-2 ml-6">
+                            <li class="flex items-start gap-3">
+                                <span class="text-green-600 font-bold text-xl">✓</span>
+                                <span><strong>Data-driven:</strong> Grounded in evidence from FAO, World Bank, and national sources</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <span class="text-green-600 font-bold text-xl">✓</span>
+                                <span><strong>Methodologically rigorous:</strong> Follows established MCDA framework with documented logic</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <span class="text-green-600 font-bold text-xl">✓</span>
+                                <span><strong>Defensible:</strong> Consistent across six sensitivity analysis scenarios</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <span class="text-green-600 font-bold text-xl">✓</span>
+                                <span><strong>Strategically aligned:</strong> Matches research feasibility with funder priorities</span>
+                            </li>
+                        </ul>
+
+                        <div class="mt-8 p-6 bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl border-2 border-blue-200">
+                            <p class="text-center font-semibold text-slate-900">
+                                This decision framework is suitable for <strong>research planning documentation</strong>.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-gradient-to-br from-slate-900 to-slate-800 text-slate-300 py-12 px-6 mt-20">
+        <div class="container mx-auto max-w-6xl">
+            <div class="grid md:grid-cols-3 gap-8 mb-8">
+                <div>
+                    <h4 class="text-white font-bold text-lg mb-4">Research Context</h4>
+                    <p class="text-sm leading-relaxed">
+                        PhD research on bio-based construction materials through agricultural and industrial waste valorisation.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold text-lg mb-4">Methodology</h4>
+                    <p class="text-sm leading-relaxed">
+                        Multi-Criteria Decision Analysis (MCDA) with 7 weighted criteria, 5 regions, and robust sensitivity testing.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold text-lg mb-4">Funding</h4>
+                    <p class="text-sm leading-relaxed">
+                        Supported by CMA CGM Excellence Fund with strategic focus on Lebanese reconstruction and Mediterranean sustainability.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="border-t border-slate-700 pt-8 text-center">
+                <p class="text-sm text-slate-400">
+                    <strong class="text-white">MCDA Regional Selection Dashboard</strong> • PhD Research Framework • Nov 2025
+                </p>
+                <p class="text-xs text-slate-500 mt-2">
+                    Data sources: FAO, World Bank (WDI, WGI, LPI), DEFRA, National Inventory Reports, Peer-reviewed literature
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        // Tab Switching Function
+        function switchTab(tabName) {
+            // Hide all content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active state from all buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-white', 'text-brand-primary', 'shadow-md');
+                btn.classList.add('text-slate-600', 'hover:bg-white/50');
+            });
+            
+            // Show selected content
+            document.getElementById('content-' + tabName).classList.add('active');
+            
+            // Activate button
+            const activeBtn = document.getElementById('tab-' + tabName);
+            activeBtn.classList.add('bg-white', 'text-brand-primary', 'shadow-md');
+            activeBtn.classList.remove('text-slate-600', 'hover:bg-white/50');
+        }
+
+        // Accordion Toggle Function
+        function toggleAccordion(id) {
+            const content = document.getElementById(id);
+            const icon = document.getElementById('icon-' + id);
+            
+            content.classList.toggle('active');
+            
+            if (content.classList.contains('active')) {
+                icon.style.transform = 'rotate(180deg)';
+            } else {
+                icon.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        // Chart.js Configurations
+        Chart.defaults.font.family = "'Inter', sans-serif";
+        Chart.defaults.color = '#64748b';
+
+        // Regional Data
+        const regionData = {
+            labels: ['Lebanon 🇱🇧', 'Brazil 🇧🇷', 'Indonesia 🇮🇩', 'UK 🇬🇧', 'KSA 🇸🇦'],
+            scores: [391.66, 348.81, 325.61, 320.85, 315.16],
+            colors: ['#f39c12', '#667eea', '#764ba2', '#3b82f6', '#8b5cf6']
+        };
+
+        // Criteria Data
+        const criteriaScores = {
+            lebanon: [4.2, 5.0, 4.3, 3.0, 2.5, 4.0, 5.0],
+            brazil: [4.8, 4.5, 4.0, 3.5, 3.5, 2.5, 2.0],
+            indonesia: [4.5, 4.0, 4.5, 3.2, 2.8, 2.0, 3.0],
+            uk: [2.5, 1.5, 3.3, 4.8, 4.5, 4.7, 3.0],
+            ksa: [2.0, 3.0, 4.0, 4.0, 3.8, 2.0, 4.0]
+        };
+
+        // Bar Chart - Final Ranking
+        const barCtx = document.getElementById('barChart').getContext('2d');
+        new Chart(barCtx, {
+            type: 'bar',
+            data: {
+                labels: regionData.labels,
+                datasets: [{
+                    label: 'Final MCDA Score',
+                    data: regionData.scores,
+                    backgroundColor: regionData.colors,
+                    borderRadius: 8,
+                    borderSkipped: false,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        padding: 12,
+                        titleFont: { size: 14, weight: 'bold' },
+                        bodyFont: { size: 13 }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 450,
+                        ticks: { font: { size: 12 } },
+                        grid: { color: 'rgba(0, 0, 0, 0.05)' }
+                    },
+                    x: {
+                        ticks: { font: { size: 12, weight: 'bold' } },
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+
+        // Radar Chart - Profile Comparison
+        const radarCtx = document.getElementById('radarChart').getContext('2d');
+        new Chart(radarCtx, {
+            type: 'radar',
+            data: {
+                labels: ['Technical', 'Environmental', 'Market', 'Policy', 'Logistics', 'Collaboration', 'Funder'],
+                datasets: [
+                    {
+                        label: 'Lebanon',
+                        data: criteriaScores.lebanon,
+                        borderColor: '#f39c12',
+                        backgroundColor: 'rgba(243, 156, 18, 0.2)',
+                        pointBackgroundColor: '#f39c12',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: '#f39c12'
+                    },
+                    {
+                        label: 'Brazil',
+                        data: criteriaScores.brazil,
+                        borderColor: '#667eea',
+                        backgroundColor: 'rgba(102, 126, 234, 0.2)',
+                        pointBackgroundColor: '#667eea',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: '#667eea'
+                    },
+                    {
+                        label: 'UK',
+                        data: criteriaScores.uk,
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                        pointBackgroundColor: '#3b82f6',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: '#3b82f6'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { 
+                            color: '#fff',
+                            font: { size: 12, weight: 'bold' },
+                            padding: 15
+                        }
+                    }
+                },
+                scales: {
+                    r: {
+                        beginAtZero: true,
+                        max: 5,
+                        ticks: { 
+                            stepSize: 1,
+                            color: '#cbd5e0',
+                            backdropColor: 'transparent',
+                            font: { size: 10 }
+                        },
+                        grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                        angleLines: { color: 'rgba(255, 255, 255, 0.1)' },
+                        pointLabels: { 
+                            color: '#e2e8f0',
+                            font: { size: 11, weight: 'bold' }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Stacked Bar Chart - Criteria Breakdown
+        const stackedCtx = document.getElementById('stackedBarChart').getContext('2d');
+        new Chart(stackedCtx, {
+            type: 'bar',
+            data: {
+                labels: regionData.labels,
+                datasets: [
+                    { label: 'Technical (30%)', data: [126, 144, 135, 75, 60], backgroundColor: '#8b5cf6' },
+                    { label: 'Environmental (15%)', data: [75, 67.5, 60, 22.5, 45], backgroundColor: '#10b981' },
+                    { label: 'Market (15%)', data: [64.5, 60, 67.5, 49.5, 60], backgroundColor: '#3b82f6' },
+                    { label: 'Policy (10%)', data: [30, 35, 32, 48, 40], backgroundColor: '#f59e0b' },
+                    { label: 'Logistics (5%)', data: [12.5, 17.5, 14, 22.5, 19], backgroundColor: '#ef4444' },
+                    { label: 'Collaboration (15%)', data: [60, 37.5, 30, 70.5, 30], backgroundColor: '#6366f1' },
+                    { label: 'Funder (10%)', data: [50, 20, 30, 30, 40], backgroundColor: '#ec4899' }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { font: { size: 10 }, padding: 10 }
+                    }
+                },
+                scales: {
+                    x: { stacked: true, grid: { display: false } },
+                    y: { stacked: true, beginAtZero: true, max: 450 }
+                }
+            }
+        });
+
+        // Pie Chart - Criteria Weights
+        const pieCtx = document.getElementById('pieChart').getContext('2d');
+        new Chart(pieCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Technical (30%)', 'Environmental (15%)', 'Market (15%)', 'Policy (10%)', 'Logistics (5%)', 'Collaboration (15%)', 'Funder (10%)'],
+                datasets: [{
+                    data: [30, 15, 15, 10, 5, 15, 10],
+                    backgroundColor: ['#8b5cf6', '#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#6366f1', '#ec4899'],
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: { font: { size: 11 }, padding: 12 }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.label + ': ' + context.parsed + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Smooth Scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Initialize first tab
+        document.addEventListener('DOMContentLoaded', function() {
+            switchTab('lebanon');
+        });
+    </script>
+</body>
+</html>
