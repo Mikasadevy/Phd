@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phase 2 – Sequential Waste Stream Filtration Framework</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['Lora', 'serif'],
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            primary: '#059669',   /* Emerald 600 */
+                            secondary: '#0891b2', /* Cyan 600 */
+                            dark: '#0f172a',      /* Slate 900 */
+                            accent: '#f59e0b',    /* Amber 500 */
+                            light: '#f0fdf4',     /* Emerald 50 */
+                        }
+                    },
+                    animation: {
+                        'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e0; border-radius: 5px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        .glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+        
+        .glass-dark {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .waste-row { transition: all 0.3s ease; }
+        .waste-row.eliminated { opacity: 0.4; background-color: #fef2f2; /* Red-50 */ }
+        .waste-row:hover:not(.eliminated) { background-color: #f0fdf4; /* Emerald-50 */ }
+
+        /* Decision Badges */
+        .decision-badge { padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; display: inline-flex; align-items: center; gap: 0.25rem; }
+        .decision-pass { background-color: #d1fae5; color: #065f46; border: 1px solid #10b981; } /* Green for Lane A */
+        .decision-borderline { background-color: #fef3c7; color: #92400e; border: 1px solid #f59e0b; } /* Amber for Lane B */
+        .decision-fail { background-color: #fee2e2; color: #991b1b; border: 1px solid #ef4444; }
+        .decision-strategic { background-color: #dbeafe; color: #1e40af; border: 1px solid #3b82f6; } /* Blue for Strategic */
+
+        .expandable-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
+            opacity: 0;
+        }
+        .expandable-content.expanded {
+            max-height: 2500px; /* Arbitrary large height */
+            opacity: 1;
+        }
+
+        /* Tooltip Logic */
+        .tooltip-trigger:hover .tooltip-content {
+            display: block;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans selection:bg-emerald-200 relative">
+
+    <!-- Back to Top Button -->
+    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="fixed bottom-8 right-8 z-50 p-3 bg-emerald-600 text-white rounded-full shadow-lg hover:bg-emerald-700 transition-all hover:scale-110 opacity-90 hover:opacity-100">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+        </svg>
+    </button>
+
+    <!-- HERO HEADER -->
+    <header class="relative bg-gradient-to-br from-emerald-800 via-teal-700 to-slate-900 text-white pt-24 pb-32 px-6 overflow-hidden shadow-2xl">
+        <!-- Abstract Background Pattern -->
+        <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 30px 30px;"></div>
+        <div class="absolute top-0 right-0 w-96 h-96 bg-emerald-400 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-float"></div>
+        <div class="absolute bottom-0 left-0 w-96 h-96 bg-cyan-400 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-float" style="animation-delay: 2s;"></div>
+        
+        <div class="relative container mx-auto max-w-7xl text-center z-10 animate-fade-in-up">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-semibold tracking-wide mb-6 uppercase shadow-sm">
+                <span class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse shadow-[0_0_10px_#34d399]"></span>
+                PhD Phase 2.0
+            </div>
+            
+            <h1 class="text-4xl md:text-6xl font-serif font-bold mb-6 leading-tight drop-shadow-lg tracking-tight">
+                Sequential Waste Stream<br/><span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-200 to-cyan-200">Filtration Framework</span>
+            </h1>
+            <p class="text-lg md:text-xl text-emerald-50 font-serif italic max-w-3xl mx-auto mb-10 leading-relaxed font-light">
+                A data-driven methodology to filter 13 candidate waste streams down to a focused shortlist for experimental investigation.
+            </p>
+        </div>
+        
+        <!-- Curved Bottom Edge -->
+        <div class="absolute bottom-0 left-0 w-full h-16 bg-slate-50 rounded-t-[50%] transform scale-x-150 translate-y-8 shadow-[0_-10px_40px_rgba(0,0,0,0.1)]"></div>
+    </header>
+
+    <!-- STICKY NAVIGATION -->
+    <nav class="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-200/60 shadow-sm supports-[backdrop-filter]:bg-white/60">
+        <div class="container mx-auto max-w-7xl px-4">
+            <ul class="flex justify-center space-x-1 md:space-x-8 text-sm font-semibold text-slate-600 py-3">
+                <li><a href="#overview" class="block px-3 py-2 hover:text-brand-primary hover:bg-emerald-50 rounded-lg transition">📊 Funnel Overview</a></li>
+                <li><a href="#criteria-container" class="block px-3 py-2 hover:text-brand-primary hover:bg-emerald-50 rounded-lg transition">🔬 The Filtration Gates</a></li>
+                <li><a href="#results" class="block px-3 py-2 hover:text-brand-primary hover:bg-emerald-50 rounded-lg transition">✅ Final Results</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 md:px-6 py-12 max-w-7xl space-y-24">
+
+        <!-- 1) FUNNEL OVERVIEW SECTION -->
+        <section id="overview" class="scroll-mt-32">
+            <div class="glass rounded-3xl p-8 md:p-12 shadow-xl border border-white/50 relative overflow-hidden">
+                <div class="flex items-center gap-6 mb-10 border-b border-slate-100 pb-8 relative z-10">
+                    <div class="w-16 h-16 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center text-3xl shadow-lg text-white transform -rotate-3">
+                        📉
+                    </div>
+                    <div>
+                        <h2 class="text-3xl md:text-4xl font-serif font-bold text-slate-800">The Filtration Funnel</h2>
+                        <p class="text-slate-500 text-lg">Systematic reduction through sequential logic gates</p>
+                    </div>
+                </div>
+
+                <!-- Stepper Visualization -->
+                <div class="relative grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
+                    <!-- Connector Line (Desktop) -->
+                    <div class="hidden md:block absolute top-1/2 left-0 w-full h-1 bg-gradient-to-r from-emerald-100 via-teal-100 to-slate-200 -z-10 transform -translate-y-1/2 rounded-full"></div>
+
+                    <!-- Step 1 -->
+                    <div class="bg-white p-4 rounded-2xl shadow-md border border-slate-100 relative text-center group hover:-translate-y-1 transition-all">
+                        <div class="w-12 h-12 bg-slate-100 text-slate-600 rounded-full flex items-center justify-center font-bold text-lg mx-auto mb-3 shadow-inner border-4 border-white">13</div>
+                        <h3 class="font-bold text-slate-800 text-xs uppercase tracking-wide">Candidates</h3>
+                        <p class="text-xs text-slate-400">Initial Pool</p>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="bg-white p-4 rounded-2xl shadow-md border border-slate-100 relative text-center group hover:-translate-y-1 transition-all">
+                        <div class="w-12 h-12 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center font-bold text-lg mx-auto mb-3 shadow-inner border-4 border-white" id="after-c1">13</div>
+                        <h3 class="font-bold text-slate-800 text-xs uppercase tracking-wide">After C1</h3>
+                        <p class="text-xs text-slate-400">Median Volume</p>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="bg-white p-4 rounded-2xl shadow-md border border-slate-100 relative text-center group hover:-translate-y-1 transition-all">
+                        <div class="w-12 h-12 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center font-bold text-lg mx-auto mb-3 shadow-inner border-4 border-white" id="after-c2">11</div>
+                        <h3 class="font-bold text-slate-800 text-xs uppercase tracking-wide">After C2</h3>
+                        <p class="text-xs text-slate-400">Accessibility</p>
+                    </div>
+
+                    <!-- Step 4 -->
+                    <div class="bg-white p-4 rounded-2xl shadow-md border border-slate-100 relative text-center group hover:-translate-y-1 transition-all">
+                        <div class="w-12 h-12 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center font-bold text-lg mx-auto mb-3 shadow-inner border-4 border-white" id="after-c3">10</div>
+                        <h3 class="font-bold text-slate-800 text-xs uppercase tracking-wide">After C3/C4</h3>
+                        <p class="text-xs text-slate-400">Technical Fit</p>
+                    </div>
+
+                    <!-- Final Step -->
+                    <div class="bg-gradient-to-br from-emerald-500 to-teal-600 text-white p-4 rounded-2xl shadow-lg relative text-center transform scale-105">
+                        <div class="w-12 h-12 bg-white/20 text-white rounded-full flex items-center justify-center font-bold text-xl mx-auto mb-3 backdrop-blur-sm border-2 border-white/30" id="after-c5">5</div>
+                        <h3 class="font-bold text-emerald-50 text-xs uppercase tracking-wide">Shortlist</h3>
+                        <p class="text-xs text-emerald-100/80">Final Selection</p>
+                    </div>
+                </div>
+
+                <div class="text-center mt-8">
+                     <p class="text-sm text-slate-500 italic bg-slate-50 inline-block px-4 py-2 rounded-full border border-slate-200">
+                        Unlike matrix-based approaches, each criterion acts as a discrete "gate": failing one eliminates the waste immediately.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2) CRITERIA CARDS CONTAINER -->
+        <section class="max-w-6xl mx-auto space-y-8" id="criteria-container">
+            <div class="text-center mb-8">
+                <span class="text-emerald-600 font-bold tracking-widest text-xs uppercase bg-emerald-50 px-3 py-1 rounded-full">The Methodology</span>
+                <h2 class="text-3xl font-serif font-bold text-slate-900 mt-4">Criteria Gates Details</h2>
+            </div>
+            <!-- Dynamic JS Injection Here -->
+        </section>
+
+        <!-- 3) FINAL OUTPUT SECTION -->
+        <section id="results" class="scroll-mt-32 mb-20">
+            <div class="bg-gradient-to-br from-emerald-600 to-teal-800 rounded-[2.5rem] p-10 md:p-16 text-white shadow-2xl relative overflow-hidden">
+                <!-- Decorative Elements -->
+                <div class="absolute top-0 right-0 w-96 h-96 bg-white opacity-5 rounded-full blur-3xl -mr-20 -mt-20"></div>
+                <div class="absolute bottom-0 left-0 w-96 h-96 bg-cyan-400 opacity-10 rounded-full blur-3xl -ml-20 -mb-20 mix-blend-overlay"></div>
+
+                <h2 class="text-3xl md:text-5xl font-serif font-bold mb-4 relative z-10 text-center">Phase 2 Result: 5 Shortlisted Wastes</h2>
+                <p class="text-emerald-100 text-center max-w-2xl mx-auto mb-12 relative z-10 font-light text-lg">
+                    These materials have passed all 5 feasibility gates and are approved for the Material Characterisation Phase
+                </p>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 relative z-10">
+                    
+                    <!-- Card 1 -->
+                    <div class="bg-white/10 backdrop-blur-md border border-white/20 p-6 rounded-2xl hover:bg-white/20 transition duration-300 group border-l-4 border-l-amber-400">
+                        <div class="flex items-center gap-4 mb-3">
+                            <span class="text-4xl bg-white/20 p-2 rounded-xl group-hover:scale-110 transition">🫒</span>
+                            <div>
+                                <h3 class="font-bold text-xl">Olive Pomace</h3>
+                                <span class="bg-amber-400/20 text-amber-200 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">Lane B</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-emerald-50/80 leading-relaxed">Below the dataset median but above the lower inclusion bound, indicating a moderate yet nationally meaningful waste stream.</p>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="bg-white/10 backdrop-blur-md border border-white/20 p-6 rounded-2xl hover:bg-white/20 transition duration-300 group border-l-4 border-l-emerald-400">
+                        <div class="flex items-center gap-4 mb-3">
+                            <span class="text-4xl bg-white/20 p-2 rounded-xl group-hover:scale-110 transition">🍌</span>
+                            <div>
+                                <h3 class="font-bold text-xl">Banana Biomass</h3>
+                                <span class="bg-emerald-400/20 text-emerald-200 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">Lane A</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-emerald-50/80 leading-relaxed">Far exceeds the dataset median, clearly representing a dominant, high-volume agricultural biomass stream.</p>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="bg-white/10 backdrop-blur-md border border-white/20 p-6 rounded-2xl hover:bg-white/20 transition duration-300 group border-l-4 border-l-blue-400">
+                        <div class="flex items-center gap-4 mb-3">
+                            <span class="text-4xl bg-white/20 p-2 rounded-xl group-hover:scale-110 transition">🪶</span>
+                            <div>
+                                <h3 class="font-bold text-xl">Poultry Feathers</h3>
+                                <span class="bg-blue-400/20 text-blue-200 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">Strategic</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-emerald-50/80 leading-relaxed">Well below the quantitative threshold, indicating a low-volume stream retained solely for its unique functional characteristics.</p>
+                    </div>
+
+                     <!-- Card 4 -->
+                     <div class="bg-white/10 backdrop-blur-md border border-white/20 p-6 rounded-2xl hover:bg-white/20 transition duration-300 group border-l-4 border-l-emerald-400">
+                        <div class="flex items-center gap-4 mb-3">
+                            <span class="text-4xl bg-white/20 p-2 rounded-xl group-hover:scale-110 transition">🌾</span>
+                            <div>
+                                <h3 class="font-bold text-xl">Wheat Straw</h3>
+                                <span class="bg-emerald-400/20 text-emerald-200 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">Lane A</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-emerald-50/80 leading-relaxed">Exceeds the dataset median, indicating a bulk agricultural residue with above-typical national volume.</p>
+                    </div>
+
+                    <!-- Card 5 -->
+                    <div class="bg-white/10 backdrop-blur-md border border-white/20 p-6 rounded-2xl hover:bg-white/20 transition duration-300 group border-l-4 border-l-blue-400">
+                        <div class="flex items-center gap-4 mb-3">
+                            <span class="text-4xl bg-white/20 p-2 rounded-xl group-hover:scale-110 transition">🍇</span>
+                            <div>
+                                <h3 class="font-bold text-xl">Grape Waste</h3>
+                                <span class="bg-blue-400/20 text-blue-200 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">Strategic</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-emerald-50/80 leading-relaxed">Below the quantitative threshold, indicating a minor national volume retained only for its specific research relevance.</p>
+                    </div>
+                </div>
+
+                <div class="mt-12 text-center">
+                    <button class="bg-white text-emerald-800 font-bold py-4 px-10 rounded-full shadow-lg hover:shadow-2xl hover:bg-emerald-50 hover:scale-105 transition duration-300 flex items-center gap-2 mx-auto">
+                        Proceed to MCDA Analysis <span class="text-xl">→</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 text-slate-400 py-16 border-t border-slate-800">
+        <div class="container mx-auto max-w-6xl text-center px-4">
+            <div class="mb-8">
+                <span class="text-2xl font-serif text-slate-200 font-bold tracking-tight">PhD Research Dashboard</span>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8 max-w-3xl mx-auto mb-10 text-sm">
+                 <div>
+                    <h4 class="text-slate-300 font-bold mb-2">Phase</h4>
+                    <p>Selection & Filtration (Phase 2)</p>
+                 </div>
+                 <div>
+                    <h4 class="text-slate-300 font-bold mb-2">Focus</h4>
+                    <p>Feasibility & Accessibility</p>
+                 </div>
+                 <div>
+                    <h4 class="text-slate-300 font-bold mb-2">Outcome</h4>
+                    <p>5 Final Candidates</p>
+                 </div>
+            </div>
+            
+            <div class="text-xs text-slate-600 space-y-2 border-t border-slate-800 pt-8">
+                <p> Dr. Mika - University of Bath - 2025 PhD Research Project.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- LOGIC SCRIPT -->
+    <script>
+        // --- DATA ---
+        // Justifications updated to Median-Based Logic (Median ≈ 85,000)
+        // Lane A: >= 85,000
+        // Lane B: >= 25,500
+        // Strategic: < 25,500 (with special case)
+
+        const wasteData = [
+            {
+                name: "Olive Pomace", emoji: "🫒",
+                c1_quantity: 79000, c1_confidence: "High", c1_lane: "Lane B", c1_decision: "PASS", 
+                c1_justification: "Below the dataset median but above the lower inclusion bound, indicating a moderate yet nationally meaningful waste stream rather than a bulk-dominant one.",
+                c2_source: "Olive mills", c2_accessibility: "High", c2_continuity: "Seasonal (predictable)", c2_decision: "PASS", c2_justification: "Centralised mills; easy bulk access",
+                c3_form: "Semi-solid (press cake)", c3_stabilisation: "Low", c3_decision: "PASS", c3_justification: "Dryable, granular organic solid",
+                c4_risk: "Low", c4_pathway: "Drying", c4_decision: "PASS", c4_justification: "Semi-solid; routinely dried and stored",
+                c5_source: "Olive mills", c5_outreach: "Confirmed", c5_readiness: "High", c5_decision: "PASS", c5_justification: "Centralised processing; willingness to provide samples confirmed"
+            },
+            {
+                name: "Wheat Straw", emoji: "🌾",
+                c1_quantity: 120000, c1_confidence: "High", c1_lane: "Lane A", c1_decision: "PASS", 
+                c1_justification: "Exceeds the dataset median, indicating a bulk agricultural residue with above-typical national volume.",
+                c2_source: "Farms", c2_accessibility: "High", c2_continuity: "Seasonal", c2_decision: "PASS", c2_justification: "Farm-level residues; baled & stored",
+                c3_form: "Fibrous solid", c3_stabilisation: "Low", c3_decision: "PASS", c3_justification: "Structural lignocellulosic fibre",
+                c4_risk: "Low", c4_pathway: "None needed", c4_decision: "PASS", c4_justification: "Stable, baled biomass",
+                c5_source: "Farms / cooperatives", c5_outreach: "Outreach initiated", c5_readiness: "Medium", c5_decision: "BORDERLINE", c5_justification: "Agricultural residue with established supply chains; access likely"
+            },
+            {
+                name: "Barley Straw", emoji: "🌾",
+                c1_quantity: 27000, c1_confidence: "High", c1_lane: "Lane B", c1_decision: "PASS", 
+                c1_justification: "Falls below the median but above the lower inclusion bound, representing a regionally significant but not bulk-impact waste stream.",
+                c2_source: "Farms", c2_accessibility: "High", c2_continuity: "Seasonal", c2_decision: "PASS", c2_justification: "Concentrated in Baalbek-Hermel",
+                c3_form: "Fibrous solid", c3_stabilisation: "Low", c3_decision: "PASS", c3_justification: "Similar to wheat straw",
+                c4_risk: "Low", c4_pathway: "None needed", c4_decision: "PASS", c4_justification: "Same handling as wheat straw",
+                c5_source: "Farms", c5_outreach: "No response", c5_readiness: "Low", c5_decision: "FAIL", c5_justification: "No confirmed access or engagement at time of assessment"
+            },
+            {
+                name: "Banana Biomass", emoji: "🍌",
+                c1_quantity: 329246, c1_confidence: "High", c1_lane: "Lane A", c1_decision: "PASS", 
+                c1_justification: "Far exceeds the dataset median, clearly representing a dominant, high-volume agricultural biomass stream.",
+                c2_source: "Farms", c2_accessibility: "High", c2_continuity: "Continuous", c2_decision: "PASS", c2_justification: "Field residues; strong farmer access",
+                c3_form: "Fibrous solid", c3_stabilisation: "Moderate", c3_decision: "PASS", c3_justification: "High moisture but structurally fibrous",
+                c4_risk: "Medium", c4_pathway: "Drying", c4_decision: "CONDITIONAL", c4_justification: "High moisture but fibrous; stabilisable",
+                c5_source: "Farms / cooperatives", c5_outreach: "Confirmed", c5_readiness: "High", c5_decision: "PASS", c5_justification: "Direct engagement with producers; fieldwork access feasible"
+            },
+            {
+                name: "Dairy Whey Waste", emoji: "🥛",
+                c1_quantity: 220000, c1_confidence: "High", c1_lane: "Lane A", c1_decision: "PASS", 
+                c1_justification: "Exceeds the dataset median, indicating a high-volume industrial by-product rather than a marginal residue.",
+                c2_source: "Dairies", c2_accessibility: "High", c2_continuity: "Continuous", c2_decision: "PASS", c2_justification: "Factory-based; clean source",
+                c3_form: "Liquid", c3_stabilisation: "High", c3_decision: "FAIL", c3_justification: "Primarily liquid; unsuitable without major transformation"
+            },
+            {
+                name: "Potato Waste", emoji: "🥔",
+                c1_quantity: 346283, c1_confidence: "High", c1_lane: "Lane A", c1_decision: "PASS", 
+                c1_justification: "Far exceeds the dataset median, classifying it as a bulk-impact agricultural processing waste.",
+                c2_source: "Processing facilities", c2_accessibility: "High", c2_continuity: "Continuous", c2_decision: "PASS", c2_justification: "Industrial processors; clean streams",
+                c3_form: "Wet solid (peels/pulp)", c3_stabilisation: "Moderate", c3_decision: "PASS", c3_justification: "Solid fraction usable after drying",
+                c4_risk: "Medium–High", c4_pathway: "Drying / separation", c4_decision: "CONDITIONAL", c4_justification: "Feasible if solid fraction isolated quickly",
+                c5_source: "Processing plants", c5_outreach: "No response", c5_readiness: "Low", c5_decision: "FAIL", c5_justification: "No confirmed sampling pathway identified"
+            },
+            {
+                name: "Citrus Waste", emoji: "🍊",
+                c1_quantity: 121992, c1_confidence: "High", c1_lane: "Lane A", c1_decision: "PASS", 
+                c1_justification: "Exceeds the dataset median, indicating a large-scale seasonal waste stream with substantial national volume.",
+                c2_source: "Packing houses / farms", c2_accessibility: "Medium", c2_continuity: "Seasonal", c2_decision: "PASS", c2_justification: "Seasonal but source-identifiable",
+                c3_form: "Wet solid (peel/pulp)", c3_stabilisation: "Moderate–High", c3_decision: "PASS", c3_justification: "Solid peel fraction exists",
+                c4_risk: "Medium", c4_pathway: "Drying (peels)", c4_decision: "CONDITIONAL", c4_justification: "Peel-dominant; acidic, manageable",
+                c5_source: "Juice processors", c5_outreach: "Partial / fragmented", c5_readiness: "Low–Medium", c5_decision: "FAIL", c5_justification: "Informal small sources accessible; major processors non-responsive due to confidentiality"
+            },
+            {
+                name: "Apple Waste", emoji: "🍎",
+                c1_quantity: 85000, c1_confidence: "Low", c1_lane: "Lane A", c1_decision: "PASS", 
+                c1_justification: "Approximately equal to the dataset median, placing it at the threshold of bulk-impact waste streams despite data uncertainty.",
+                c2_source: "Sorting / packing", c2_accessibility: "Medium", c2_continuity: "Seasonal", c2_decision: "PASS", c2_justification: "Poor regional data but clear actors",
+                c3_form: "Wet solid (pomace)", c3_stabilisation: "Moderate", c3_decision: "PASS", c3_justification: "Pomace usable after drying",
+                c4_risk: "High", c4_pathway: "Immediate drying", c4_decision: "CONDITIONAL", c4_justification: "High sugar but stabilisable if prompt",
+                c5_source: "Sorting / processing", c5_outreach: "No response", c5_readiness: "Low", c5_decision: "FAIL", c5_justification: "Access uncertain despite outreach"
+            },
+            {
+                name: "Paper & Cardboard Waste", emoji: "📦",
+                c1_quantity: 370000, c1_confidence: "Low", c1_lane: "Lane A", c1_decision: "PASS", 
+                c1_justification: "Far exceeds the dataset median, representing one of the largest waste streams in the dataset by mass.",
+                c2_source: "MSW / recycling", c2_accessibility: "Low", c2_continuity: "Continuous", c2_decision: "FAIL", c2_justification: "MSW-mixed, contamination risk"
+            },
+            {
+                name: "Textile Waste", emoji: "👕",
+                c1_quantity: 75000, c1_confidence: "Low", c1_lane: "Lane B", c1_decision: "PASS", 
+                c1_justification: "Below the dataset median but above the lower inclusion bound, indicating a non-marginal waste stream without bulk dominance.",
+                c2_source: "MSW / workshops", c2_accessibility: "Low", c2_continuity: "Irregular", c2_decision: "FAIL", c2_justification: "Diffuse, mixed, uncontrolled"
+            },
+            {
+                name: "Almond Biomass", emoji: "🌰",
+                c1_quantity: 32013, c1_confidence: "High", c1_lane: "Lane B", c1_decision: "PASS", 
+                c1_justification: "Below the dataset median but above the lower inclusion bound, representing a moderate-volume agricultural residue.",
+                c2_source: "Farms", c2_accessibility: "Medium", c2_continuity: "Seasonal", c2_decision: "PASS", c2_justification: "Dry, storable, source-based",
+                c3_form: "Hard shell / solid", c3_stabilisation: "Low", c3_decision: "PASS", c3_justification: "Dry, rigid biomass",
+                c4_risk: "Low", c4_pathway: "None needed", c4_decision: "PASS", c4_justification: "Dry, inert shells",
+                c5_source: "Farms / processors", c5_outreach: "No direct contact", c5_readiness: "Low", c5_decision: "FAIL", c5_justification: "Dispersed producers; no confirmed sampling pathway"
+            },
+            {
+                name: "Grape Waste", emoji: "🍇",
+                c1_quantity: 14037, c1_confidence: "High", c1_lane: "Strategic", c1_decision: "STRATEGIC", 
+                c1_justification: "Below the quantitative threshold, indicating a minor national volume retained only for its specific research relevance.",
+                c2_source: "Wineries", c2_accessibility: "High", c2_continuity: "Seasonal", c2_decision: "PASS", c2_justification: "Winery-concentrated pomace",
+                c3_form: "Pomace (skins/stems)", c3_stabilisation: "Moderate", c3_decision: "PASS", c3_justification: "Solid lignocellulosic fraction",
+                c4_risk: "Medium", c4_pathway: "Drying", c4_decision: "CONDITIONAL", c4_justification: "Pomace already handled seasonally",
+                c5_source: "Wineries", c5_outreach: "Outreach initiated", c5_readiness: "Medium", c5_decision: "BORDERLINE", c5_justification: "Sector identified; sampling dependent on producer response"
+            },
+            {
+                name: "Poultry Feather Waste", emoji: "🪶",
+                c1_quantity: 7302, c1_confidence: "Low", c1_lane: "Strategic", c1_decision: "STRATEGIC", 
+                c1_justification: "Well below the quantitative threshold, indicating a low-volume stream retained solely for its unique functional characteristics.",
+                c2_source: "Slaughterhouses", c2_accessibility: "High", c2_continuity: "Continuous", c2_decision: "PASS", c2_justification: "Centralised, controlled by-product",
+                c3_form: "Fibrous solid", c3_stabilisation: "Low", c3_decision: "PASS", c3_justification: "Keratin fibres; dry",
+                c4_risk: "Medium", c4_pathway: "Washing + sterilisation", c4_decision: "PASS", c4_justification: "Known sterilisation pathways",
+                c5_source: "Slaughterhouses", c5_outreach: "Confirmed", c5_readiness: "High", c5_decision: "PASS", c5_justification: "Industrial by-product with identifiable access pathways"
+            }
+        ];
+
+        // --- CRITERIA METADATA ---
+        const criteria = [
+            {
+                number: 1,
+                title: "Minimum Recoverable Volume",
+                icon: "📊",
+                purpose: "Identify waste streams that are quantitatively meaningful within the candidate dataset and exclude marginal-volume wastes at an early stage.",
+                whatTests: ["Annual recoverable waste quantity", "Position relative to the dataset median (≈85,000 t/year)", "Position relative to the lower inclusion bound (30% of the median)"],
+                whatNotTests: ["Material properties", "Processing complexity", "Commercial viability"],
+                passRule: "Lane A (≥85,000 t/year) OR Lane B (25,500–84,999 t/year) OR Strategic exception",
+                failRule: "< 25,500 t/year unless explicitly classified as Strategic",
+                note: "Methodology Note: The dataset median (≈85,000 t/year) is used to represent a typical waste size within the candidate set. A lower inclusion bound (≈25,500 t/year) is applied to exclude quantitatively minor wastes while retaining moderately sized streams for further evaluation.",
+                tableHeaders: ["Waste", "Quantity (t/y)", "Lane", "Decision", "Justification"],
+                getRowData: (waste) => [`${waste.emoji} ${waste.name}`, waste.c1_quantity.toLocaleString(), waste.c1_lane, waste.c1_decision, waste.c1_justification],
+                decisionField: "c1_decision"
+            },
+            {
+                number: 2,
+                title: "Source Accessibility & Continuity",
+                icon: "🏭",
+                purpose: "Verify that waste can be sourced in a controlled, repeatable manner",
+                whatTests: ["Identifiable generation sources", "Collection feasibility", "Predictability of supply"],
+                whatNotTests: ["Market-scale logistics", "Cost optimization", "Theoretical collectability"],
+                passRule: "Identifiable actors + Collectable source + Predictable",
+                failRule: "MSW-mixed, diffuse, or unpredictable",
+                note: "Only wastes passing Criterion 1 proceed to Criterion 2",
+                tableHeaders: ["Waste", "Source Type", "Accessibility", "Continuity", "Decision", "Justification"],
+                getRowData: (waste) => [`${waste.emoji} ${waste.name}`, waste.c2_source, waste.c2_accessibility, waste.c2_continuity, waste.c2_decision, waste.c2_justification],
+                decisionField: "c2_decision",
+                filterPrevious: ["c1_decision"]
+            },
+            {
+                number: 3,
+                title: "Physical Suitability (Form Factor)",
+                icon: "🧱",
+                purpose: "Assess physical compatibility with construction materials research",
+                whatTests: ["Dominant physical form", "Compatibility with drying", "Structural integrity"],
+                whatNotTests: ["Mechanical strength", "Chemical composition", "Advanced processing"],
+                passRule: "Solid, fibrous, or particulate form",
+                failRule: "Liquid or slurry-based",
+                note: "Only wastes passing Criterion 2 proceed to Criterion 3",
+                tableHeaders: ["Waste", "Physical Form", "Stabilisation", "Decision", "Justification"],
+                getRowData: (waste) => [`${waste.emoji} ${waste.name}`, waste.c3_form, waste.c3_stabilisation, waste.c3_decision, waste.c3_justification],
+                decisionField: "c3_decision",
+                filterPrevious: ["c1_decision", "c2_decision"]
+            },
+            {
+                number: 4,
+                title: "Handling, Safety & Stabilisation",
+                icon: "🧪",
+                purpose: "Evaluate feasibility of stabilising waste within fieldwork constraints",
+                whatTests: ["Stabilisation within 24–48h", "Storage safety", "Drying feasibility"],
+                whatNotTests: ["Industrial-scale processing", "Long-term storage infra", "Perishability (general)"],
+                passRule: "Stabilisable < 48h + Low bio-risk",
+                failRule: "Unsafe or unmanageable before stabilisation",
+                note: "Only wastes passing Criterion 3 proceed.",
+                tableHeaders: ["Waste", "Dominant Risk", "Pathway", "Decision", "Justification"],
+                getRowData: (waste) => [`${waste.emoji} ${waste.name}`, waste.c4_risk, waste.c4_pathway, waste.c4_decision, waste.c4_justification],
+                decisionField: "c4_decision",
+                filterPrevious: ["c1_decision", "c2_decision", "c3_decision"]
+            },
+            {
+                number: 5,
+                title: "Fieldwork Feasibility & Readiness",
+                icon: "🤝",
+                purpose: "Confirm realistic sourcing pathways during doctoral fieldwork",
+                whatTests: ["Identifiable actors", "Outreach initiated", "Probability of sampling"],
+                whatNotTests: ["Technical merit", "Theoretical availability", "Commercial supply"],
+                passRule: "Credible sources + Outreach confirmed + Realistic access",
+                failRule: "Access uncertain or unresponsive",
+                note: "Final gate before MCDA.",
+                tableHeaders: ["Waste", "Source", "Outreach", "Readiness", "Decision", "Justification"],
+                getRowData: (waste) => [`${waste.emoji} ${waste.name}`, waste.c5_source, waste.c5_outreach, waste.c5_readiness, waste.c5_decision, waste.c5_justification],
+                decisionField: "c5_decision",
+                filterPrevious: ["c1_decision", "c2_decision", "c3_decision", "c4_decision"]
+            }
+        ];
+
+        // --- LOGIC FUNCTIONS ---
+        function passedPreviousCriteria(waste, filterFields) {
+            if (!filterFields || filterFields.length === 0) return true;
+            return filterFields.every(field => {
+                const decision = waste[field];
+                return decision === "PASS" || decision === "STRATEGIC" ||
+                       decision === "CONDITIONAL" || decision === "BORDERLINE";
+            });
+        }
+
+        function generateCriterionCard(criterion, index) {
+            const filteredWastes = wasteData.filter(waste => 
+                passedPreviousCriteria(waste, criterion.filterPrevious)
+            );
+            
+            // Badge logic
+            const count = filteredWastes.filter(w => 
+                ['PASS', 'STRATEGIC', 'CONDITIONAL', 'BORDERLINE'].includes(w[criterion.decisionField])
+            ).length;
+
+            const card = document.createElement('div');
+            card.className = 'glass rounded-2xl shadow-lg overflow-hidden border border-slate-100 transition-all duration-300 hover:shadow-xl';
+            
+            card.innerHTML = `
+                <div class="cursor-pointer group relative overflow-hidden" onclick="toggleCriterion(${index})">
+                    <!-- Header Background -->
+                    <div class="absolute inset-0 bg-gradient-to-r from-emerald-600 to-teal-700 opacity-95 group-hover:opacity-100 transition-opacity"></div>
+                    <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 10px 10px;"></div>
+                    
+                    <div class="relative p-6 flex items-center justify-between text-white">
+                        <div class="flex items-center gap-5">
+                            <span class="text-3xl bg-white/20 w-12 h-12 flex items-center justify-center rounded-xl backdrop-blur-sm shadow-inner">${criterion.icon}</span>
+                            <div>
+                                <div class="text-emerald-100 text-xs font-bold uppercase tracking-wider mb-1">Gate ${criterion.number}</div>
+                                <h3 class="text-xl md:text-2xl font-serif font-bold">${criterion.title}</h3>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <span class="hidden md:block text-xs font-medium bg-white/20 px-3 py-1 rounded-full">${count} Passing</span>
+                            <div class="bg-white/20 p-2 rounded-full transform transition-transform duration-300" id="arrow-${index}">
+                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="expandable-content bg-white" id="content-${index}">
+                    <div class="p-6 md:p-8">
+                        <!-- Purpose Block -->
+                        <div class="mb-8 bg-slate-50 rounded-xl p-5 border-l-4 border-emerald-500">
+                             <h4 class="font-bold text-slate-800 mb-1 text-sm uppercase tracking-wide">Purpose</h4>
+                             <p class="text-slate-600">${criterion.purpose}</p>
+                             ${criterion.note ? `<div class="mt-4 pt-4 border-t border-emerald-200">
+                                <p class="text-xs text-emerald-800 font-bold uppercase mb-1">Methodology Note</p>
+                                <p class="text-sm text-emerald-700 italic">${criterion.note}</p>
+                             </div>` : ''}
+                        </div>
+
+                        <!-- Grid: Tests -->
+                        <div class="grid md:grid-cols-2 gap-6 mb-8">
+                            <div class="bg-emerald-50/50 rounded-xl p-5 border border-emerald-100">
+                                <h4 class="font-bold text-emerald-800 mb-3 flex items-center gap-2"><span class="w-4 h-4 bg-emerald-500 text-white rounded-full flex items-center justify-center text-xs">✓</span> What This Tests</h4>
+                                <ul class="text-sm text-slate-600 space-y-2">
+                                    ${criterion.whatTests.map(item => `<li>• ${item}</li>`).join('')}
+                                </ul>
+                                <div class="mt-4 pt-4 border-t border-emerald-200">
+                                    <p class="text-xs font-bold text-emerald-800 uppercase">Pass Rule:</p>
+                                    <p class="text-xs text-emerald-700">${criterion.passRule}</p>
+                                </div>
+                            </div>
+                            <div class="bg-red-50/50 rounded-xl p-5 border border-red-100">
+                                <h4 class="font-bold text-red-800 mb-3 flex items-center gap-2"><span class="w-4 h-4 bg-red-500 text-white rounded-full flex items-center justify-center text-xs">✗</span> What This Ignores</h4>
+                                <ul class="text-sm text-slate-600 space-y-2">
+                                    ${criterion.whatNotTests.map(item => `<li>• ${item}</li>`).join('')}
+                                </ul>
+                                <div class="mt-4 pt-4 border-t border-red-200">
+                                    <p class="text-xs font-bold text-red-800 uppercase">Fail Rule:</p>
+                                    <p class="text-xs text-red-700">${criterion.failRule}</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Table -->
+                        <div class="overflow-x-auto rounded-xl border border-slate-200 shadow-sm">
+                            <table class="w-full text-sm text-left">
+                                <thead class="bg-slate-100 text-slate-600 font-bold uppercase text-xs">
+                                    <tr>
+                                        ${criterion.tableHeaders.map(header => `<th class="px-5 py-4">${header}</th>`).join('')}
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 bg-white">
+                                    ${filteredWastes.map(waste => {
+                                        const rowData = criterion.getRowData(waste);
+                                        const decision = waste[criterion.decisionField];
+                                        let badgeClass = '';
+                                        
+                                        // Visual Logic for Badges (Updated for Lanes)
+                                        if (criterion.number === 1) {
+                                             if (waste.c1_lane === 'Lane A') badgeClass = 'decision-pass'; // Green
+                                             else if (waste.c1_lane === 'Lane B') badgeClass = 'decision-borderline'; // Amber
+                                             else if (waste.c1_lane === 'Strategic') badgeClass = 'decision-strategic'; // Blue
+                                        } else {
+                                            // Fallback for other criteria
+                                            if (decision === 'PASS') badgeClass = 'decision-pass';
+                                            else if (decision === 'FAIL') badgeClass = 'decision-fail';
+                                            else if (decision === 'BORDERLINE' || decision === 'CONDITIONAL') badgeClass = 'decision-borderline';
+                                            else if (decision === 'STRATEGIC') badgeClass = 'decision-strategic';
+                                        }
+
+                                        return `
+                                            <tr class="waste-row ${decision === 'FAIL' ? 'eliminated' : ''} hover:bg-slate-50 transition-colors">
+                                                ${rowData.map((cell, idx) => {
+                                                    // Lane Column for Criterion 1 (Index 2 in table headers) - WITH TOOLTIPS
+                                                    if (criterion.number === 1 && idx === 2) {
+                                                        let tooltipText = "";
+                                                        if (cell === "Lane A") tooltipText = "Above typical waste size in this dataset";
+                                                        else if (cell === "Lane B") tooltipText = "Moderate volume, retained to avoid early exclusion";
+                                                        else if (cell === "Strategic") tooltipText = "Low volume, retained for specific research value";
+                                                        
+                                                        return `<td class="px-5 py-4">
+                                                            <div class="flex items-center gap-2">
+                                                                <span class="decision-badge ${badgeClass}">${cell}</span>
+                                                                <div class="group relative flex justify-center tooltip-trigger">
+                                                                    <span class="text-slate-400 cursor-help text-xs">ⓘ</span>
+                                                                    <span class="tooltip-content absolute bottom-full mb-2 hidden w-48 p-2 bg-slate-800 text-white text-xs rounded shadow-lg z-50 text-center">
+                                                                        ${tooltipText}
+                                                                        <!-- Tailwind arrow hack -->
+                                                                        <span class="absolute top-100 left-1/2 -ml-1 border-4 border-transparent border-t-slate-800"></span>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </td>`;
+                                                    }
+                                                    // Decision Column for Others
+                                                    if (criterion.number !== 1 && idx === rowData.length - 2) {
+                                                        return `<td class="px-5 py-4"><span class="decision-badge ${badgeClass}">${cell}</span></td>`;
+                                                    }
+                                                    // Waste Name Column (First)
+                                                    if (idx === 0) {
+                                                        return `<td class="px-5 py-4 font-medium text-slate-900">${cell}</td>`;
+                                                    }
+                                                    return `<td class="px-5 py-4 text-slate-600">${cell}</td>`;
+                                                }).join('')}
+                                            </tr>
+                                        `;
+                                    }).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            `;
+            return card;
+        }
+
+        function toggleCriterion(index) {
+            const content = document.getElementById(`content-${index}`);
+            const arrow = document.getElementById(`arrow-${index}`);
+            
+            content.classList.toggle('expanded');
+            
+            if (content.classList.contains('expanded')) {
+                arrow.style.transform = 'rotate(180deg)';
+            } else {
+                arrow.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        function initDashboard() {
+            const container = document.getElementById('criteria-container');
+            criteria.forEach((criterion, index) => {
+                const card = generateCriterionCard(criterion, index);
+                container.appendChild(card);
+            });
+            
+            // Open first card by default
+            setTimeout(() => toggleCriterion(0), 300);
+            
+            // Smooth scroll setup
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+        }
+
+        window.addEventListener('DOMContentLoaded', initDashboard);
+    </script>
+</body>
+</html>
