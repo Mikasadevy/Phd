@@ -76,7 +76,7 @@
       <div class="flex items-center gap-1 md:gap-2">
         <a href="#quick-links" class="px-3 py-1.5 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-100 transition">Quick Links</a>
         <a href="#phases" class="px-3 py-1.5 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-100 transition">Phases</a>
-        <a href="https://trello.com/b/ttyXPGO5/mika-phd-research-board" target="_blank" rel="noopener" class="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-50 text-blue-700 text-sm font-semibold hover:bg-blue-100 transition border border-blue-100 ml-2">
+        <a href="https://trello.com/b/ttyXPGO5/mika-phd-research-board" target="_blank" rel="noopener noreferrer" class="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-50 text-blue-700 text-sm font-semibold hover:bg-blue-100 transition border border-blue-100 ml-2">
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h-4v-8h4v8zm6 0h-4v-5h4v5z"/></svg>
           Trello Board
         </a>
@@ -90,21 +90,19 @@
     <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-blue-100/40 via-transparent to-transparent"></div>
 
     <div class="max-w-4xl mx-auto px-4 relative text-center">
-      <!-- Status Pill -->
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-slate-200 shadow-sm text-xs font-bold text-slate-600 mb-6">
-        <span class="w-2 h-2 bg-violet-500 rounded-full animate-pulse"></span>
-        Current Status: Phase 3 Active
+      <!-- Status Pill: Content injected via JS -->
+      <div id="hero-status-pill" class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-slate-200 shadow-sm text-xs font-bold text-slate-600 mb-6">
+        <!-- JS will populate this -->
       </div>
 
       <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight text-slate-900 leading-[1.1]">
         Mika Research <br class="hidden md:block"/>
         <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-600">Dashboard</span>
       </h1>
-      
     </div>
   </header>
 
-  <!-- Quick Links Slider (Carousel) -->
+  <!-- Quick Links Slider -->
   <section id="quick-links" class="max-w-7xl mx-auto px-4 mb-16">
     <div class="flex items-center justify-between mb-4 px-1">
       <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
@@ -116,11 +114,9 @@
       </h2>
     </div>
 
-    <!-- Scroll Container -->
     <div class="flex overflow-x-auto gap-4 pb-6 snap-x snap-mandatory no-scrollbar" style="-webkit-overflow-scrolling: touch;">
-      
-      <!-- Card 1: Waste Mapping -->
-      <a href="https://mikaresearch.info/phase1/Waste%20Mapping/LebanonWasteMapping.html" target="_blank" rel="noopener" 
+      <!-- Card 1 -->
+      <a href="https://mikaresearch.info/phase1/Waste%20Mapping/LebanonWasteMapping.html" target="_blank" rel="noopener noreferrer" 
          class="snap-start shrink-0 w-72 p-5 rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-md transition-all group">
         <div class="flex items-start justify-between">
           <span class="text-2xl group-hover:scale-110 transition-transform duration-300">🗺️</span>
@@ -130,8 +126,8 @@
         <p class="mt-1 text-xs text-slate-500">Interactive regional mapping & waste cards database.</p>
       </a>
 
-      <!-- Card 2: Agro Production -->
-      <a href="https://mikaresearch.info/phase1/Waste%20Mapping/AgroProductionLebanon.html" target="_blank" rel="noopener" 
+      <!-- Card 2 -->
+      <a href="https://mikaresearch.info/phase1/Waste%20Mapping/AgroProductionLebanon.html" target="_blank" rel="noopener noreferrer" 
          class="snap-start shrink-0 w-72 p-5 rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-md transition-all group">
         <div class="flex items-start justify-between">
           <span class="text-2xl group-hover:scale-110 transition-transform duration-300">🌾</span>
@@ -141,8 +137,8 @@
         <p class="mt-1 text-xs text-slate-500">Lebanon production baseline dashboard (FAOSTAT).</p>
       </a>
 
-      <!-- Card 3: MCDA Tool (Added) -->
-      <a href="https://mikaresearch.info/phase1/Region%20Selection/MCDA_Sensitivity_Region_Selection.html" target="_blank" rel="noopener" 
+      <!-- Card 3 -->
+      <a href="https://mikaresearch.info/phase1/Region%20Selection/MCDA_Sensitivity_Region_Selection.html" target="_blank" rel="noopener noreferrer" 
          class="snap-start shrink-0 w-72 p-5 rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-md transition-all group">
         <div class="flex items-start justify-between">
           <span class="text-2xl group-hover:scale-110 transition-transform duration-300">📊</span>
@@ -151,7 +147,18 @@
         <h3 class="mt-3 font-bold text-slate-900">MCDA Region Tool</h3>
         <p class="mt-1 text-xs text-slate-500">Region selection sensitivity analysis and decision matrix.</p>
       </a>
-      
+
+      <!-- Card 4 (NEW): Sequential Filter -->
+      <a href="https://mikaresearch.info/phase2/sequential_waste_filtration.html" target="_blank" rel="noopener noreferrer" 
+         class="snap-start shrink-0 w-72 p-5 rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-md transition-all group">
+        <div class="flex items-start justify-between">
+          <span class="text-2xl group-hover:scale-110 transition-transform duration-300">🔻</span>
+          <svg class="w-4 h-4 text-slate-300 group-hover:text-rose-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+        </div>
+        <h3 class="mt-3 font-bold text-slate-900">Sequential Filtration</h3>
+        <p class="mt-1 text-xs text-slate-500">Binary elimination of non-feasible wastes.</p>
+      </a>
+
     </div>
   </section>
 
@@ -164,77 +171,9 @@
       </div>
     </div>
 
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-
-      <!-- PHASE 1: COMPLETED (Green Theme) -->
-      <button onclick="openPhase('p1')" class="group relative text-left rounded-3xl p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg bg-gradient-to-br from-emerald-50 to-teal-50/50 border border-emerald-100 ring-1 ring-emerald-100/50">
-        <div class="absolute top-4 right-4">
-          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/80 border border-emerald-100 text-[10px] font-bold text-emerald-700 shadow-sm backdrop-blur-sm">
-            <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-            COMPLETED
-          </span>
-        </div>
-        <div class="text-xs font-bold text-emerald-600/80 uppercase tracking-wider mb-2">Phase 01</div>
-        <h3 class="text-xl font-bold text-slate-900 mb-2 group-hover:text-emerald-800 transition-colors">Regional & Waste Mapping</h3>
-        <p class="text-sm text-slate-600 leading-relaxed">Region selection via MCDA and comprehensive waste stream identification.</p>
-      </button>
-
-      <!-- PHASE 2: COMPLETED (Green Theme) -->
-      <button onclick="openPhase('p2')" class="group relative text-left rounded-3xl p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg bg-gradient-to-br from-emerald-50 to-teal-50/50 border border-emerald-100 ring-1 ring-emerald-100/50">
-        <div class="absolute top-4 right-4">
-          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/80 border border-emerald-100 text-[10px] font-bold text-emerald-700 shadow-sm backdrop-blur-sm">
-            <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-            COMPLETED
-          </span>
-        </div>
-        <div class="text-xs font-bold text-emerald-600/80 uppercase tracking-wider mb-2">Phase 02</div>
-        <h3 class="text-xl font-bold text-slate-900 mb-2 group-hover:text-emerald-800 transition-colors">Waste Stream Prioritisation</h3>
-        <p class="text-sm text-slate-600 leading-relaxed">Ranking mapped wastes using multi-criteria analysis to select materials for testing.</p>
-      </button>
-
-      <!-- PHASE 3: ACTIVE (Violet/Blue Theme) -->
-      <button onclick="openPhase('p3')" class="group relative text-left rounded-3xl p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg bg-gradient-to-br from-violet-50 to-blue-50/50 border border-violet-200 ring-1 ring-violet-100 shadow-soft">
-        <div class="absolute top-4 right-4">
-          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-violet-600 border border-violet-600 text-[10px] font-bold text-white shadow-md animate-pulse">
-            <span class="w-1.5 h-1.5 rounded-full bg-white"></span>
-            LIVE
-          </span>
-        </div>
-        <div class="text-xs font-bold text-violet-600/80 uppercase tracking-wider mb-2">Phase 03</div>
-        <h3 class="text-xl font-bold text-slate-900 mb-2 group-hover:text-violet-800 transition-colors">Fieldwork & Sampling</h3>
-        <p class="text-sm text-slate-600 leading-relaxed">End-to-end fieldwork: source identification, sampling, and regulatory compliance.</p>
-      </button>
-
-      <!-- PHASE 4: UPCOMING (Amber Theme) - NO POPUP -->
-      <div class="relative text-left rounded-3xl p-6 bg-gradient-to-br from-amber-50 to-orange-50/50 border border-amber-100 ring-1 ring-amber-100/50 opacity-90">
-        <div class="absolute top-4 right-4">
-           <span class="px-2.5 py-1 rounded-full bg-white/50 border border-slate-100 text-[10px] font-bold text-slate-400">UPCOMING</span>
-        </div>
-        <div class="text-xs font-bold text-amber-500/80 uppercase tracking-wider mb-2">Phase 04</div>
-        <h3 class="text-xl font-bold text-slate-900 mb-2">Waste Characterisation</h3>
-        <p class="text-sm text-slate-600 leading-relaxed">Literature synthesis and experimental planning for material properties.</p>
-      </div>
-
-      <!-- PHASE 5: UPCOMING (Rose Theme) - NO POPUP -->
-      <div class="relative text-left rounded-3xl p-6 bg-gradient-to-br from-rose-50 to-pink-50/50 border border-rose-100 ring-1 ring-rose-100/50 opacity-90">
-        <div class="absolute top-4 right-4">
-           <span class="px-2.5 py-1 rounded-full bg-white/50 border border-slate-100 text-[10px] font-bold text-slate-400">UPCOMING</span>
-        </div>
-        <div class="text-xs font-bold text-rose-500/80 uppercase tracking-wider mb-2">Phase 05</div>
-        <h3 class="text-xl font-bold text-slate-900 mb-2">Material Development</h3>
-        <p class="text-sm text-slate-600 leading-relaxed">Matrix selection strategy, formulation design, and initial trial planning.</p>
-      </div>
-
-      <!-- PHASE 6: UPCOMING (Indigo Theme) - NO POPUP -->
-      <div class="relative text-left rounded-3xl p-6 bg-gradient-to-br from-indigo-50 to-slate-50/50 border border-indigo-100 ring-1 ring-indigo-100/50 opacity-90">
-        <div class="absolute top-4 right-4">
-           <span class="px-2.5 py-1 rounded-full bg-white/50 border border-slate-100 text-[10px] font-bold text-slate-400">UPCOMING</span>
-        </div>
-        <div class="text-xs font-bold text-indigo-500/80 uppercase tracking-wider mb-2">Phase 06</div>
-        <h3 class="text-xl font-bold text-slate-900 mb-2">Testing & Evaluation</h3>
-        <p class="text-sm text-slate-600 leading-relaxed">Performance testing, environmental assessment (LCA), and results analysis.</p>
-      </div>
-
+    <!-- Grid: Populated dynamically via JS -->
+    <div id="phases-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Injected by script -->
     </div>
   </section>
 
@@ -244,7 +183,6 @@
       <div class="text-sm font-medium text-slate-500">
         Mika's PhD Research • University of Bath
       </div>
-      <!-- Removed External Links -->
     </div>
   </footer>
 
@@ -267,13 +205,13 @@
       <div class="p-6">
         <p id="modalBrief" class="text-sm text-slate-600 leading-relaxed mb-6">Brief</p>
         
-        <!-- Phase Summary Dashboard Button (Injected via JS if available) -->
+        <!-- Phase Summary Dashboard Button -->
         <div id="modalSummary" class="mb-6 empty:hidden"></div>
 
         <div class="mb-3">
           <div class="text-xs font-bold text-slate-900 uppercase tracking-wider mb-3">Outputs & Evidence</div>
           <div id="modalLinks" class="grid sm:grid-cols-2 gap-3">
-            <!-- injected links -->
+            <!-- Injected links -->
           </div>
         </div>
       </div>
@@ -281,12 +219,25 @@
   </div>
 
   <script>
+    /* =========================================
+       1. CORE CONFIGURATION & STATE
+       Single source of truth for dashboard state.
+       ========================================= */
+    
+    // Set the current active phase here.
+    const CURRENT_PHASE = "p3"; 
+
+    // Full Methodology Data
     const PHASES = {
       p1: {
-        kicker: "Phase 1 • Completed",
+        id: "p1",
+        label: "Phase 01",
+        status: "completed",
+        clickable: true,
         title: "Regional & Waste Stream Mapping",
         brief: "Literature review for regional selection, extraction of criteria, and mapping of major waste streams using a Net Domestic Supply model.",
         dashboardUrl: "https://mikaresearch.info/phase1/Waste%20Mapping/wastemappingdashboard.html",
+        theme: "emerald",
         links: [
           { label: "1.1 Regional Evidence Review", desc: "Criteria extraction and framework synthesis.", href: "https://trello.com/c/GdFVPDpj/40-11-regional-evidence-review", icon: "📄" },
           { label: "1.2 Regional Assessment", desc: "Scoring candidate regions and justification.", href: "https://mikaresearch.info/phase1/Region%20Selection/MCDA_Sensitivity_Region_Selection.html", icon: "📊" },
@@ -295,22 +246,30 @@
       },
 
       p2: {
-        kicker: "Phase 2 • Completed",
+        id: "p2",
+        label: "Phase 02",
+        status: "completed",
+        clickable: true,
         title: "Waste Stream Prioritisation",
         brief: "Binary elimination of weak waste streams followed by a weighted Multi-Criteria Decision Analysis (MCDA) to select the final 2-3 materials.",
         dashboardUrl: null,
+        theme: "emerald",
         links: [
-          { label: "2.1 Hard Pre-Filter", desc: "Binary elimination of non-feasible wastes.", href: "https://trello.com/c/f3jsl7q6/51-21-hard-pre-filter-of-candidate-wastes-13-%E2%86%92-5", icon: "🔻" },
+          { label: "Sequential Filtration Framework", desc: "Binary elimination of non-feasible wastes.", href: "https://mikaresearch.info/phase2/sequential_waste_filtration.html", icon: "🔻" },
           { label: "2.2 MCDA Scoring", desc: "Weighted criteria application on shortlist.", href: "https://trello.com/c/cF3thbkI/52-22-mcda-on-shortlisted-wastes", icon: "🧮" },
           { label: "2.3 Final Selection", desc: "Justification of top 3 chosen wastes.", href: "https://trello.com/c/bSbI3DsH/53-23-final-waste-selection", icon: "🏆" }
         ]
       },
 
       p3: {
-        kicker: "Phase 3 • Active",
+        id: "p3",
+        label: "Phase 03",
+        status: "active",
+        clickable: true,
         title: "Fieldwork, Sampling & Compliance",
-        brief: "Engaging networks, conducting on-site sampling, performing preliminary non-destructive testing, and ensuring regulatory compliance for transport.",
+        brief: "Engaging agricultural networks, conducting on-site sampling protocols, performing preliminary non-destructive testing, and ensuring DEFRA/APHA regulatory compliance for shipping.",
         dashboardUrl: null,
+        theme: "violet",
         links: [
           { label: "3.1 Stakeholder Engagement", desc: "Mapping networks and identifying intermediaries.", href: "https://trello.com/c/XEQmDvi9/54-31-networks-stakeholder-engagement", icon: "🤝" },
           { label: "3.2 Fieldwork & Sampling", desc: "Source ID, outreach, and sample collection.", href: "https://trello.com/c/UOMjT4Vo/55-32-waste-1-fieldwork-sampling", icon: "🚜" },
@@ -318,14 +277,156 @@
           { label: "3.4 Compliance & Shipping", desc: "DEFRA/APHA pathways and logistics.", href: "https://trello.com/c/cfteFjF6/59-34-regulatory-compliance-shipping", icon: "📦" }
         ]
       },
-      // Removed p4, p5, p6 from object as they no longer trigger modals
+
+      p4: {
+        id: "p4",
+        label: "Phase 04",
+        status: "upcoming",
+        clickable: false,
+        title: "Waste Characterisation",
+        brief: "Literature synthesis using Consensus platform and detailed experimental planning for physical, chemical, and mechanical properties.",
+        dashboardUrl: null,
+        theme: "amber",
+        links: []
+      },
+
+      p5: {
+        id: "p5",
+        label: "Phase 05",
+        status: "upcoming",
+        clickable: false,
+        title: "Material Development",
+        brief: "Matrix selection strategy, formulation design (DOE), and planning for the first round of composite trials.",
+        dashboardUrl: null,
+        theme: "rose",
+        links: []
+      },
+
+      p6: {
+        id: "p6",
+        label: "Phase 06",
+        status: "upcoming",
+        clickable: false,
+        title: "Testing & Evaluation",
+        brief: "Performance testing (ISO/ASTM), environmental assessment (LCA baseline), and results analysis for optimisation.",
+        dashboardUrl: null,
+        theme: "indigo",
+        links: []
+      }
     };
+
+    /* =========================================
+       2. UI RENDERING LOGIC
+       Generates HTML based on the PHASES object.
+       ========================================= */
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderHeroStatus();
+      renderPhaseGrid();
+    });
+
+    function renderHeroStatus() {
+      const activePhase = PHASES[CURRENT_PHASE];
+      const pill = document.getElementById("hero-status-pill");
+      
+      // Determine color based on active phase theme
+      let dotColor = "bg-emerald-500";
+      if (activePhase.theme === "violet") dotColor = "bg-violet-500";
+      if (activePhase.theme === "blue") dotColor = "bg-blue-500";
+
+      pill.innerHTML = `
+        <span class="w-2 h-2 ${dotColor} rounded-full animate-pulse"></span>
+        Current Status: ${activePhase.label} Active
+      `;
+    }
+
+    function renderPhaseGrid() {
+      const grid = document.getElementById("phases-grid");
+      grid.innerHTML = ""; // Clear existing content
+
+      Object.values(PHASES).forEach(phase => {
+        const card = document.createElement(phase.clickable ? "button" : "div");
+        
+        // Base classes
+        let classes = "group relative text-left rounded-3xl p-6 transition-all duration-300 border shadow-sm";
+        
+        // Theme logic
+        if (phase.status === "completed") {
+          classes += " bg-gradient-to-br from-emerald-50 to-teal-50/50 border-emerald-100 hover:-translate-y-1 hover:shadow-lg";
+        } else if (phase.status === "active") {
+          classes += " bg-gradient-to-br from-violet-50 to-blue-50/50 border-violet-200 ring-1 ring-violet-100 shadow-soft hover:-translate-y-1 hover:shadow-lg";
+        } else {
+          // Upcoming - NOW PURELY GREYSCALE AND DISABLED LOOKING
+          classes += " bg-slate-50 border-slate-200/60 opacity-75 cursor-default";
+        }
+
+        card.className = classes;
+        
+        // Click handler
+        if (phase.clickable) {
+          card.onclick = () => openPhase(phase.id);
+        }
+
+        // Badge Logic
+        let badgeHTML = "";
+        if (phase.status === "completed") {
+          badgeHTML = `
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/80 border border-emerald-100 text-[10px] font-bold text-emerald-700 shadow-sm backdrop-blur-sm">
+              <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              COMPLETED
+            </span>`;
+        } else if (phase.status === "active") {
+          badgeHTML = `
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-violet-600 border border-violet-600 text-[10px] font-bold text-white shadow-md animate-pulse">
+              <span class="w-1.5 h-1.5 rounded-full bg-white"></span>
+              LIVE
+            </span>`;
+        } else {
+          badgeHTML = `<span class="px-2.5 py-1 rounded-full bg-white/50 border border-slate-200 text-[10px] font-bold text-slate-400">UPCOMING</span>`;
+        }
+
+        // Text Colors
+        let kickerColor = "text-slate-400";
+        let titleColor = "text-slate-900";
+        let descColor = "text-slate-600";
+
+        if (phase.status === "completed") {
+          kickerColor = "text-emerald-600/80";
+          titleColor = "text-slate-900 group-hover:text-emerald-800 transition-colors";
+        } else if (phase.status === "active") {
+          kickerColor = "text-violet-600/80";
+          titleColor = "text-slate-900 group-hover:text-violet-800 transition-colors";
+        } else {
+          // Greyed out look for upcoming phases
+          kickerColor = "text-slate-400";
+          titleColor = "text-slate-500";
+          descColor = "text-slate-400";
+        }
+
+        card.innerHTML = `
+          <div class="absolute top-4 right-4">${badgeHTML}</div>
+          <div class="text-xs font-bold ${kickerColor} uppercase tracking-wider mb-2">${phase.label}</div>
+          <h3 class="text-xl font-bold ${titleColor} mb-2">${phase.title}</h3>
+          <p class="text-sm ${descColor} leading-relaxed">${phase.brief}</p>
+        `;
+
+        grid.appendChild(card);
+      });
+    }
+
+    /* =========================================
+       3. MODAL INTERACTION LOGIC
+       Handles opening/closing details.
+       ========================================= */
 
     function openPhase(phaseId) {
       const phase = PHASES[phaseId];
-      if (!phase) return;
+      // Guard Clause: Prevent opening locked phases
+      if (!phase || !phase.clickable) return;
 
-      document.getElementById("modalKicker").textContent = phase.kicker;
+      // Populate Modal Text
+      const statusCapitalized = phase.status.charAt(0).toUpperCase() + phase.status.slice(1);
+      document.getElementById("modalKicker").textContent = `${phase.label} • ${statusCapitalized}`;
       document.getElementById("modalTitle").textContent  = phase.title;
       document.getElementById("modalBrief").textContent  = phase.brief;
 
@@ -335,7 +436,7 @@
       
       if (phase.dashboardUrl) {
         summaryWrap.innerHTML = `
-          <a href="${phase.dashboardUrl}" target="_blank" class="block w-full p-4 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg hover:shadow-xl hover:scale-[1.01] transition-all group relative overflow-hidden">
+          <a href="${phase.dashboardUrl}" target="_blank" rel="noopener noreferrer" class="block w-full p-4 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg hover:shadow-xl hover:scale-[1.01] transition-all group relative overflow-hidden">
             <div class="absolute top-0 right-0 p-4 opacity-10">
               <svg class="w-32 h-32" fill="currentColor" viewBox="0 0 24 24"><path d="M3 3h18v18H3V3zm16 16V5H5v14h14zM7 10h2v7H7v-7zm4-3h2v10h-2V7zm4 6h2v4h-2v-4z"/></svg>
             </div>
@@ -359,14 +460,15 @@
         summaryWrap.classList.add('hidden');
       }
 
+      // Populate Links
       const linksWrap = document.getElementById("modalLinks");
       linksWrap.innerHTML = "";
 
       phase.links.forEach(item => {
         const a = document.createElement("a");
         a.href = item.href || "#";
-        a.target = (item.href && item.href.startsWith("http")) ? "_blank" : "_self";
-        a.rel = "noopener";
+        a.target = "_blank";
+        a.rel = "noopener noreferrer"; // Security best practice
         a.className = "flex items-start gap-3 p-3 rounded-xl border border-slate-100 bg-white hover:border-brand-primary/30 hover:shadow-md transition-all group";
         a.innerHTML = `
           <div class="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-lg group-hover:bg-emerald-50 transition-colors">${item.icon || "🔗"}</div>
@@ -378,13 +480,13 @@
         linksWrap.appendChild(a);
       });
 
+      // Show Modal
       const backdrop = document.getElementById("modalBackdrop");
       const panel = document.getElementById("modalPanel");
       
       backdrop.classList.remove("hidden");
       backdrop.classList.add("flex");
       
-      // Animation frame for smooth opacity transition
       requestAnimationFrame(() => {
         panel.classList.remove("scale-95", "opacity-0");
         panel.classList.add("scale-100", "opacity-100");
@@ -403,7 +505,7 @@
       setTimeout(() => {
         backdrop.classList.add("hidden");
         backdrop.classList.remove("flex");
-      }, 200); // match transition duration
+      }, 200);
 
       window.removeEventListener("keydown", escClose);
     }
