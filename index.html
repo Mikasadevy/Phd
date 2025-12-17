@@ -76,7 +76,6 @@
       <div class="flex items-center gap-1 md:gap-2">
         <a href="#quick-links" class="px-3 py-1.5 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-100 transition">Quick Links</a>
         <a href="#phases" class="px-3 py-1.5 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-100 transition">Phases</a>
-        <!-- Trello Moved Here -->
         <a href="https://trello.com/b/ttyXPGO5/mika-phd-research-board" target="_blank" rel="noopener" class="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-50 text-blue-700 text-sm font-semibold hover:bg-blue-100 transition border border-blue-100 ml-2">
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h-4v-8h4v8zm6 0h-4v-5h4v5z"/></svg>
           Trello Board
@@ -93,19 +92,15 @@
     <div class="max-w-4xl mx-auto px-4 relative text-center">
       <!-- Status Pill -->
       <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-slate-200 shadow-sm text-xs font-bold text-slate-600 mb-6">
-        <span class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></span>
-        Current Status: Phase 2 Active
+        <span class="w-2 h-2 bg-violet-500 rounded-full animate-pulse"></span>
+        Current Status: Phase 3 Active
       </div>
 
       <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight text-slate-900 leading-[1.1]">
-        Sustainable Bio-Based <br class="hidden md:block"/>
-        <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-600">Construction Materials</span>
+        Mika Research <br class="hidden md:block"/>
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-600">Dashboard</span>
       </h1>
       
-      <p class="mt-6 text-lg md:text-xl text-slate-600 leading-relaxed max-w-2xl mx-auto">
-        A professional workspace tracking the research journey from regional mapping to material development. 
-        Evidence-based, modular, and transparent.
-      </p>
     </div>
   </header>
 
@@ -119,14 +114,13 @@
         </svg>
         Quick Access
       </h2>
-      <div class="text-xs font-medium text-slate-500">Swipe for more →</div>
     </div>
 
     <!-- Scroll Container -->
     <div class="flex overflow-x-auto gap-4 pb-6 snap-x snap-mandatory no-scrollbar" style="-webkit-overflow-scrolling: touch;">
       
-      <!-- Card 1 -->
-      <a href="https://mikasadevy.github.io/waste-mapping-all/" target="_blank" rel="noopener" 
+      <!-- Card 1: Waste Mapping -->
+      <a href="https://mikaresearch.info/phase1/Waste%20Mapping/LebanonWasteMapping.html" target="_blank" rel="noopener" 
          class="snap-start shrink-0 w-72 p-5 rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-md transition-all group">
         <div class="flex items-start justify-between">
           <span class="text-2xl group-hover:scale-110 transition-transform duration-300">🗺️</span>
@@ -136,8 +130,8 @@
         <p class="mt-1 text-xs text-slate-500">Interactive regional mapping & waste cards database.</p>
       </a>
 
-      <!-- Card 2 -->
-      <a href="https://mikasadevy.github.io/waste-mapping-all/AgroProductionLebanon.html" target="_blank" rel="noopener" 
+      <!-- Card 2: Agro Production -->
+      <a href="https://mikaresearch.info/phase1/Waste%20Mapping/AgroProductionLebanon.html" target="_blank" rel="noopener" 
          class="snap-start shrink-0 w-72 p-5 rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-md transition-all group">
         <div class="flex items-start justify-between">
           <span class="text-2xl group-hover:scale-110 transition-transform duration-300">🌾</span>
@@ -147,11 +141,16 @@
         <p class="mt-1 text-xs text-slate-500">Lebanon production baseline dashboard (FAOSTAT).</p>
       </a>
 
-      <!-- Card 3: Placeholder/Add New -->
-      <div class="snap-start shrink-0 w-72 p-5 rounded-2xl bg-slate-50 border border-slate-200 border-dashed flex flex-col items-center justify-center text-center">
-        <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 mb-2">+</div>
-        <div class="text-sm font-medium text-slate-500">Add New Resource</div>
-      </div>
+      <!-- Card 3: MCDA Tool (Added) -->
+      <a href="https://mikaresearch.info/phase1/Region%20Selection/MCDA_Sensitivity_Region_Selection.html" target="_blank" rel="noopener" 
+         class="snap-start shrink-0 w-72 p-5 rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-md transition-all group">
+        <div class="flex items-start justify-between">
+          <span class="text-2xl group-hover:scale-110 transition-transform duration-300">📊</span>
+          <svg class="w-4 h-4 text-slate-300 group-hover:text-violet-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+        </div>
+        <h3 class="mt-3 font-bold text-slate-900">MCDA Region Tool</h3>
+        <p class="mt-1 text-xs text-slate-500">Region selection sensitivity analysis and decision matrix.</p>
+      </a>
       
     </div>
   </section>
@@ -180,47 +179,60 @@
         <p class="text-sm text-slate-600 leading-relaxed">Region selection via MCDA and comprehensive waste stream identification.</p>
       </button>
 
-      <!-- PHASE 2: ACTIVE (Blue Theme) -->
-      <button onclick="openPhase('p2')" class="group relative text-left rounded-3xl p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg bg-gradient-to-br from-blue-50 to-cyan-50/50 border border-blue-200 ring-1 ring-blue-100 shadow-soft">
+      <!-- PHASE 2: COMPLETED (Green Theme) -->
+      <button onclick="openPhase('p2')" class="group relative text-left rounded-3xl p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg bg-gradient-to-br from-emerald-50 to-teal-50/50 border border-emerald-100 ring-1 ring-emerald-100/50">
         <div class="absolute top-4 right-4">
-          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-600 border border-blue-600 text-[10px] font-bold text-white shadow-md animate-pulse">
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/80 border border-emerald-100 text-[10px] font-bold text-emerald-700 shadow-sm backdrop-blur-sm">
+            <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+            COMPLETED
+          </span>
+        </div>
+        <div class="text-xs font-bold text-emerald-600/80 uppercase tracking-wider mb-2">Phase 02</div>
+        <h3 class="text-xl font-bold text-slate-900 mb-2 group-hover:text-emerald-800 transition-colors">Waste Stream Prioritisation</h3>
+        <p class="text-sm text-slate-600 leading-relaxed">Ranking mapped wastes using multi-criteria analysis to select materials for testing.</p>
+      </button>
+
+      <!-- PHASE 3: ACTIVE (Violet/Blue Theme) -->
+      <button onclick="openPhase('p3')" class="group relative text-left rounded-3xl p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg bg-gradient-to-br from-violet-50 to-blue-50/50 border border-violet-200 ring-1 ring-violet-100 shadow-soft">
+        <div class="absolute top-4 right-4">
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-violet-600 border border-violet-600 text-[10px] font-bold text-white shadow-md animate-pulse">
             <span class="w-1.5 h-1.5 rounded-full bg-white"></span>
             LIVE
           </span>
         </div>
-        <div class="text-xs font-bold text-blue-600/80 uppercase tracking-wider mb-2">Phase 02</div>
-        <h3 class="text-xl font-bold text-slate-900 mb-2 group-hover:text-blue-800 transition-colors">Waste Stream Prioritisation</h3>
-        <p class="text-sm text-slate-600 leading-relaxed">Ranking mapped wastes using multi-criteria analysis to select materials for testing.</p>
+        <div class="text-xs font-bold text-violet-600/80 uppercase tracking-wider mb-2">Phase 03</div>
+        <h3 class="text-xl font-bold text-slate-900 mb-2 group-hover:text-violet-800 transition-colors">Fieldwork & Sampling</h3>
+        <p class="text-sm text-slate-600 leading-relaxed">End-to-end fieldwork: source identification, sampling, and regulatory compliance.</p>
       </button>
 
-      <!-- PHASE 3: FUTURE (Violet Theme) -->
-      <div class="relative text-left rounded-3xl p-6 bg-gradient-to-br from-violet-50 to-fuchsia-50/30 border border-violet-100 opacity-90">
-        <div class="absolute top-4 right-4 opacity-50">
-          <span class="px-2.5 py-1 rounded-full bg-white/50 border border-slate-100 text-[10px] font-bold text-slate-400">UPCOMING</span>
+      <!-- PHASE 4: UPCOMING (Amber Theme) - NO POPUP -->
+      <div class="relative text-left rounded-3xl p-6 bg-gradient-to-br from-amber-50 to-orange-50/50 border border-amber-100 ring-1 ring-amber-100/50 opacity-90">
+        <div class="absolute top-4 right-4">
+           <span class="px-2.5 py-1 rounded-full bg-white/50 border border-slate-100 text-[10px] font-bold text-slate-400">UPCOMING</span>
         </div>
-        <div class="text-xs font-bold text-violet-400 uppercase tracking-wider mb-2">Phase 03</div>
-        <h3 class="text-xl font-bold text-slate-700 mb-2">Characterisation & Sourcing</h3>
-        <p class="text-sm text-slate-500 leading-relaxed">Defining material properties, variability, and securing compliant supply chains.</p>
+        <div class="text-xs font-bold text-amber-500/80 uppercase tracking-wider mb-2">Phase 04</div>
+        <h3 class="text-xl font-bold text-slate-900 mb-2">Waste Characterisation</h3>
+        <p class="text-sm text-slate-600 leading-relaxed">Literature synthesis and experimental planning for material properties.</p>
       </div>
 
-      <!-- PHASE 4: FUTURE (Amber Theme) -->
-      <div class="relative text-left rounded-3xl p-6 bg-gradient-to-br from-amber-50 to-orange-50/30 border border-amber-100 opacity-90">
-        <div class="absolute top-4 right-4 opacity-50">
-          <span class="px-2.5 py-1 rounded-full bg-white/50 border border-slate-100 text-[10px] font-bold text-slate-400">UPCOMING</span>
+      <!-- PHASE 5: UPCOMING (Rose Theme) - NO POPUP -->
+      <div class="relative text-left rounded-3xl p-6 bg-gradient-to-br from-rose-50 to-pink-50/50 border border-rose-100 ring-1 ring-rose-100/50 opacity-90">
+        <div class="absolute top-4 right-4">
+           <span class="px-2.5 py-1 rounded-full bg-white/50 border border-slate-100 text-[10px] font-bold text-slate-400">UPCOMING</span>
         </div>
-        <div class="text-xs font-bold text-amber-500/70 uppercase tracking-wider mb-2">Phase 04</div>
-        <h3 class="text-xl font-bold text-slate-700 mb-2">Material Development</h3>
-        <p class="text-sm text-slate-500 leading-relaxed">Matrix selection, formulation design, processing protocols, and initial trials.</p>
+        <div class="text-xs font-bold text-rose-500/80 uppercase tracking-wider mb-2">Phase 05</div>
+        <h3 class="text-xl font-bold text-slate-900 mb-2">Material Development</h3>
+        <p class="text-sm text-slate-600 leading-relaxed">Matrix selection strategy, formulation design, and initial trial planning.</p>
       </div>
 
-      <!-- PHASE 5: FUTURE (Rose Theme) -->
-      <div class="relative text-left rounded-3xl p-6 bg-gradient-to-br from-rose-50 to-pink-50/30 border border-rose-100 opacity-90">
-        <div class="absolute top-4 right-4 opacity-50">
-          <span class="px-2.5 py-1 rounded-full bg-white/50 border border-slate-100 text-[10px] font-bold text-slate-400">UPCOMING</span>
+      <!-- PHASE 6: UPCOMING (Indigo Theme) - NO POPUP -->
+      <div class="relative text-left rounded-3xl p-6 bg-gradient-to-br from-indigo-50 to-slate-50/50 border border-indigo-100 ring-1 ring-indigo-100/50 opacity-90">
+        <div class="absolute top-4 right-4">
+           <span class="px-2.5 py-1 rounded-full bg-white/50 border border-slate-100 text-[10px] font-bold text-slate-400">UPCOMING</span>
         </div>
-        <div class="text-xs font-bold text-rose-400 uppercase tracking-wider mb-2">Phase 05</div>
-        <h3 class="text-xl font-bold text-slate-700 mb-2">Testing & Evaluation</h3>
-        <p class="text-sm text-slate-500 leading-relaxed">Performance testing, environmental impact assessment, and optimisation.</p>
+        <div class="text-xs font-bold text-indigo-500/80 uppercase tracking-wider mb-2">Phase 06</div>
+        <h3 class="text-xl font-bold text-slate-900 mb-2">Testing & Evaluation</h3>
+        <p class="text-sm text-slate-600 leading-relaxed">Performance testing, environmental assessment (LCA), and results analysis.</p>
       </div>
 
     </div>
@@ -230,12 +242,9 @@
   <footer class="border-t border-slate-200 bg-white/50">
     <div class="max-w-7xl mx-auto px-4 py-8 flex flex-col md:flex-row items-center justify-between gap-4">
       <div class="text-sm font-medium text-slate-500">
-        © 2025 Mika's PhD Research • University of Bath
+        Mika's PhD Research • University of Bath
       </div>
-      <div class="flex gap-4">
-        <a href="https://trello.com/b/ttyXPGO5/mika-phd-research-board" target="_blank" class="text-sm text-slate-400 hover:text-slate-600 transition">Research Board</a>
-        <a href="https://github.com/mikasadevy" target="_blank" class="text-sm text-slate-400 hover:text-slate-600 transition">GitHub</a>
-      </div>
+      <!-- Removed External Links -->
     </div>
   </footer>
 
@@ -258,6 +267,9 @@
       <div class="p-6">
         <p id="modalBrief" class="text-sm text-slate-600 leading-relaxed mb-6">Brief</p>
         
+        <!-- Phase Summary Dashboard Button (Injected via JS if available) -->
+        <div id="modalSummary" class="mb-6 empty:hidden"></div>
+
         <div class="mb-3">
           <div class="text-xs font-bold text-slate-900 uppercase tracking-wider mb-3">Outputs & Evidence</div>
           <div id="modalLinks" class="grid sm:grid-cols-2 gap-3">
@@ -273,24 +285,40 @@
       p1: {
         kicker: "Phase 1 • Completed",
         title: "Regional & Waste Stream Mapping",
-        brief: "This phase established the geographical focus via MCDA and mapped the available waste universe. The output is a confidence-tagged database of potential raw materials.",
+        brief: "Literature review for regional selection, extraction of criteria, and mapping of major waste streams using a Net Domestic Supply model.",
+        dashboardUrl: "https://mikaresearch.info/phase1/Waste%20Mapping/wastemappingdashboard.html",
         links: [
-          { label: "Region Selection MCDA", desc: "Interactive decision matrix.", href: "RegionSelectionMCDA.html", icon: "📈" },
-          { label: "Waste Mapping Baseline", desc: "Net Domestic Supply model.", href: "WasteMappingBaseline.html", icon: "🔬" },
-          { label: "Interactive Regional Map", desc: "Geospatial waste data.", href: "LebanonWasteMapping.html", icon: "🗺️" }
+          { label: "1.1 Regional Evidence Review", desc: "Criteria extraction and framework synthesis.", href: "https://trello.com/c/GdFVPDpj/40-11-regional-evidence-review", icon: "📄" },
+          { label: "1.2 Regional Assessment", desc: "Scoring candidate regions and justification.", href: "https://mikaresearch.info/phase1/Region%20Selection/MCDA_Sensitivity_Region_Selection.html", icon: "📊" },
+          { label: "1.3 Waste Mapping", desc: "Interactive map and waste inventory.", href: "https://mikaresearch.info/phase1/Waste%20Mapping/LebanonWasteMapping.html", icon: "🗺️" }
         ]
       },
 
       p2: {
-        kicker: "Phase 2 • Active",
+        kicker: "Phase 2 • Completed",
         title: "Waste Stream Prioritisation",
-        brief: "Currently ranking the mapped waste streams to identify the top candidates for experimental characterisation. Focus is on availability, impact, and feasibility.",
+        brief: "Binary elimination of weak waste streams followed by a weighted Multi-Criteria Decision Analysis (MCDA) to select the final 2-3 materials.",
+        dashboardUrl: null,
         links: [
-          { label: "Prioritisation Framework", desc: "Weighting logic & criteria.", href: "#", icon: "🧮" },
-          { label: "Waste Scoring Matrix", desc: "Live scoring table.", href: "#", icon: "📊" },
-          { label: "Shortlist Justification", desc: "Defense of selected materials.", href: "#", icon: "🏆" }
+          { label: "2.1 Hard Pre-Filter", desc: "Binary elimination of non-feasible wastes.", href: "https://trello.com/c/f3jsl7q6/51-21-hard-pre-filter-of-candidate-wastes-13-%E2%86%92-5", icon: "🔻" },
+          { label: "2.2 MCDA Scoring", desc: "Weighted criteria application on shortlist.", href: "https://trello.com/c/cF3thbkI/52-22-mcda-on-shortlisted-wastes", icon: "🧮" },
+          { label: "2.3 Final Selection", desc: "Justification of top 3 chosen wastes.", href: "https://trello.com/c/bSbI3DsH/53-23-final-waste-selection", icon: "🏆" }
         ]
-      }
+      },
+
+      p3: {
+        kicker: "Phase 3 • Active",
+        title: "Fieldwork, Sampling & Compliance",
+        brief: "Engaging networks, conducting on-site sampling, performing preliminary non-destructive testing, and ensuring regulatory compliance for transport.",
+        dashboardUrl: null,
+        links: [
+          { label: "3.1 Stakeholder Engagement", desc: "Mapping networks and identifying intermediaries.", href: "https://trello.com/c/XEQmDvi9/54-31-networks-stakeholder-engagement", icon: "🤝" },
+          { label: "3.2 Fieldwork & Sampling", desc: "Source ID, outreach, and sample collection.", href: "https://trello.com/c/UOMjT4Vo/55-32-waste-1-fieldwork-sampling", icon: "🚜" },
+          { label: "3.3 Preliminary Testing", desc: "Non-destructive screening and datasheets.", href: "https://trello.com/c/7uJGwFQ8/58-33-preliminary-testing-material-datasheets", icon: "🔎" },
+          { label: "3.4 Compliance & Shipping", desc: "DEFRA/APHA pathways and logistics.", href: "https://trello.com/c/cfteFjF6/59-34-regulatory-compliance-shipping", icon: "📦" }
+        ]
+      },
+      // Removed p4, p5, p6 from object as they no longer trigger modals
     };
 
     function openPhase(phaseId) {
@@ -300,6 +328,36 @@
       document.getElementById("modalKicker").textContent = phase.kicker;
       document.getElementById("modalTitle").textContent  = phase.title;
       document.getElementById("modalBrief").textContent  = phase.brief;
+
+      // Handle Summary Dashboard Button
+      const summaryWrap = document.getElementById("modalSummary");
+      summaryWrap.innerHTML = "";
+      
+      if (phase.dashboardUrl) {
+        summaryWrap.innerHTML = `
+          <a href="${phase.dashboardUrl}" target="_blank" class="block w-full p-4 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg hover:shadow-xl hover:scale-[1.01] transition-all group relative overflow-hidden">
+            <div class="absolute top-0 right-0 p-4 opacity-10">
+              <svg class="w-32 h-32" fill="currentColor" viewBox="0 0 24 24"><path d="M3 3h18v18H3V3zm16 16V5H5v14h14zM7 10h2v7H7v-7zm4-3h2v10h-2V7zm4 6h2v4h-2v-4z"/></svg>
+            </div>
+            <div class="relative flex items-center justify-between z-10">
+              <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center text-2xl shadow-inner">📊</div>
+                <div>
+                  <div class="font-bold text-lg leading-tight">Phase Summary Dashboard</div>
+                  <div class="text-indigo-100 text-xs font-medium mt-1 uppercase tracking-wide opacity-90">Full Informative View</div>
+                </div>
+              </div>
+              <div class="bg-white/20 px-4 py-2 rounded-full text-xs font-bold group-hover:bg-white/30 transition-colors flex items-center gap-1">
+                Open View 
+                <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+              </div>
+            </div>
+          </a>
+        `;
+        summaryWrap.classList.remove('hidden');
+      } else {
+        summaryWrap.classList.add('hidden');
+      }
 
       const linksWrap = document.getElementById("modalLinks");
       linksWrap.innerHTML = "";
