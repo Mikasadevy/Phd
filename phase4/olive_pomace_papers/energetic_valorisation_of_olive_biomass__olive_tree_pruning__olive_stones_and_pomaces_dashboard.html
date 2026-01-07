@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Paper Dashboard – García Martín et al. 2020 | Olive Biomass Valorisation</title>
+    <meta name="description" content="Academic research dashboard analyzing the energetic valorisation of olive tree pruning, olive stones, and pomaces">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['Lora', 'Georgia', 'serif'],
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        },
+                        olive: {
+                            50: '#f7fee7',
+                            100: '#ecfccb',
+                            200: '#d9f99d',
+                            300: '#bef264',
+                            400: '#a3e635',
+                            500: '#84cc16',
+                            600: '#65a30d',
+                            700: '#4d7c0f',
+                            800: '#3f6212',
+                            900: '#365314',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* Base Typography */
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            font-size: 16px;
+            line-height: 1.75;
+            color: #1e293b;
+            background: #ffffff;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Lora', Georgia, serif;
+            font-weight: 600;
+            line-height: 1.3;
+            color: #0f172a;
+        }
+        
+        h1 { font-size: 2.25rem; margin-bottom: 1rem; }
+        h2 { font-size: 1.875rem; margin-bottom: 0.875rem; }
+        h3 { font-size: 1.5rem; margin-bottom: 0.75rem; }
+        h4 { font-size: 1.25rem; margin-bottom: 0.625rem; }
+        
+        /* Academic Card Style */
+        .card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            transition: box-shadow 0.2s ease;
+        }
+        
+        .card:hover {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        
+        .card-elevated {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Badge System */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.375rem 0.875rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border: 1.5px solid;
+        }
+        
+        .badge-core {
+            background: #dbeafe;
+            color: #1e40af;
+            border-color: #3b82f6;
+        }
+        
+        .badge-experimental {
+            background: #fef3c7;
+            color: #92400e;
+            border-color: #f59e0b;
+        }
+        
+        .badge-review {
+            background: #e0e7ff;
+            color: #3730a3;
+            border-color: #6366f1;
+        }
+        
+        .badge-interpretive {
+            background: #fce7f3;
+            color: #9f1239;
+            border-color: #f472b6;
+        }
+        
+        .badge-extracted {
+            background: #dcfce7;
+            color: #166534;
+            border-color: #22c55e;
+        }
+        
+        /* Tab Navigation */
+        .tab-nav {
+            display: flex;
+            flex-wrap: nowrap;
+            justify-content: center;
+            align-items: center;
+            overflow-x: auto;
+            gap: 0.25rem;
+            border-bottom: 2px solid #e2e8f0;
+            padding: 0.75rem 0.25rem;
+            margin-bottom: 2rem;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        .tab-nav::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .tab-button {
+            flex: 0 0 auto;
+            padding: 0.35rem 0.6rem;
+            border-radius: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+            background: #f8fafc;
+            color: #64748b;
+            white-space: nowrap;
+        }
+        
+        .tab-button:hover {
+            background: #f1f5f9;
+            color: #334155;
+        }
+        
+        .tab-button.active {
+            color: #ffffff;
+        }
+
+        .tab-button.active.btn-info { background: #64748b; border-color: #475569; box-shadow: 0 2px 4px rgba(100, 116, 139, 0.3); }
+        .tab-button.active.btn-overview { background: #2563eb; border-color: #1d4ed8; box-shadow: 0 2px 4px rgba(37, 99, 235, 0.3); }
+        .tab-button.active.btn-materials { background: #65a30d; border-color: #4d7c0f; box-shadow: 0 2px 4px rgba(101, 163, 13, 0.3); }
+        .tab-button.active.btn-limitations { background: #dc2626; border-color: #b91c1c; box-shadow: 0 2px 4px rgba(220, 38, 38, 0.3); }
+        .tab-button.active.btn-phd { background: #9333ea; border-color: #7e22ce; box-shadow: 0 2px 4px rgba(147, 51, 234, 0.3); }
+        .tab-button.active.btn-sustainability { background: #059669; border-color: #047857; box-shadow: 0 2px 4px rgba(5, 150, 105, 0.3); }
+        
+        /* Data Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+        }
+        
+        thead {
+            background: #f8fafc;
+            border-bottom: 2px solid #cbd5e1;
+        }
+        
+        th {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: #475569;
+            font-size: 0.8125rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        tbody tr:hover {
+            background: #f8fafc;
+        }
+        
+        /* Metric Cards */
+        .metric-card {
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            border: 1px solid #e2e8f0;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        
+        /* Progress Bar */
+        .progress-bar {
+            height: 3px;
+            background: #e2e8f0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 9999;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #65a30d 0%, #06b6d4 100%);
+            transition: width 0.15s ease-out;
+        }
+        
+        /* Alert Boxes */
+        .alert {
+            padding: 1rem 1.25rem;
+            border-radius: 0.5rem;
+            border-left: 4px solid;
+            font-size: 0.875rem;
+            line-height: 1.6;
+        }
+        
+        .alert-info {
+            background: #dbeafe;
+            border-color: #3b82f6;
+            color: #1e3a8a;
+        }
+        
+        .alert-warning {
+            background: #fef3c7;
+            border-color: #f59e0b;
+            color: #78350f;
+        }
+        
+        .alert-success {
+            background: #dcfce7;
+            border-color: #22c55e;
+            color: #14532d;
+        }
+        
+        .alert-danger {
+            background: #fee2e2;
+            border-color: #ef4444;
+            color: #7f1d1d;
+        }
+        
+        /* Sticky Navigation */
+        .sticky-nav {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .provenance-marker {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.625rem;
+            padding: 0.125rem 0.375rem;
+            border-radius: 0.25rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .provenance-extracted { background: #dcfce7; color: #166534; }
+        .provenance-derived { background: #fef3c7; color: #92400e; }
+        .provenance-interpretive { background: #fce7f3; color: #9f1239; }
+        .provenance-citation { background: #e0e7ff; color: #3730a3; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    
+    <!-- Progress Bar -->
+    <div class="progress-bar">
+        <div id="progressFill" class="progress-fill" style="width: 0%"></div>
+    </div>
+    
+    <!-- Navigation Header -->
+    <nav class="sticky-nav">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-olive-500 to-green-600 rounded-lg flex items-center justify-center shadow-md">
+                        <span class="text-white font-bold text-xl">📄</span>
+                    </div>
+                    <div>
+                        <h1 class="text-base font-bold text-gray-900">Research Paper Dashboard</h1>
+                        <p class="text-xs text-gray-500">Olive Biomass Review</p>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="window.print()" class="px-3 py-2 rounded-lg bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 text-sm font-medium transition flex items-center gap-2">
+                        <span>🖨️</span> Print
+                    </button>
+                    <button onclick="copyCitation()" class="px-3 py-2 rounded-lg bg-olive-600 hover:bg-olive-700 text-white text-sm font-medium transition flex items-center gap-2">
+                        <span>📋</span> Citation
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- Hero Section -->
+        <div class="card card-elevated p-8 mb-8">
+            <div class="flex items-start gap-6 mb-6">
+                <div class="flex-shrink-0">
+                    <div class="w-20 h-20 bg-gradient-to-br from-olive-500 to-green-600 rounded-2xl flex items-center justify-center shadow-lg">
+                        <span class="text-4xl">🌳</span>
+                    </div>
+                </div>
+                <div class="flex-1">
+                    <div class="flex flex-wrap gap-2 mb-3">
+                        <span class="badge badge-review">📚 Review Article</span>
+                        <span class="badge badge-experimental">⚠️ Tier B/C Viable</span>
+                    </div>
+                    <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4 leading-tight">
+                        Energetic Valorisation of Olive Biomass: Olive-Tree Pruning, Olive Stones and Pomaces
+                    </h1>
+                    <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-4">
+                        <span class="flex items-center gap-1">
+                            <span class="icon">👥</span>
+                            J.F. García Martín, M. Cuevas, C.H. Feng, P. Álvarez Mateos, M. Torres García, S. Sánchez
+                        </span>
+                        <span>•</span>
+                        <span>📅 2020</span>
+                        <span>•</span>
+                        <span>📖 Processes (Vol. 8, Issue 511)</span>
+                    </div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="text-sm text-gray-500 font-medium">DOI:</span>
+                        <code class="text-sm">10.3390/pr8050511</code>
+                        <a href="https://doi.org/10.3390/pr8050511" 
+                           target="_blank" 
+                           class="px-3 py-1 rounded bg-olive-600 hover:bg-olive-700 text-white text-xs font-medium transition">
+                            🔗 Open Paper
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Context Banner -->
+            <div class="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-xl p-6 border border-yellow-200">
+                <div class="flex flex-col md:flex-row items-start gap-6">
+                    <div class="flex-shrink-0">
+                        <div class="w-16 h-16 bg-yellow-100 rounded-xl flex items-center justify-center border-2 border-yellow-300 shadow-sm">
+                            <span class="text-3xl">⚠️</span>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-xl font-bold text-gray-900 mb-3 flex items-center gap-2">
+                            <span>🎓</span> Data Utilization Context
+                            <span class="provenance-marker provenance-interpretive ml-auto">⚡ Interpretive</span>
+                        </h3>
+                        <p class="text-gray-700 leading-relaxed mb-4">
+                            This is a <strong>Review Article</strong> focusing on energy generation (combustion, gasification, pyrolysis) from olive biomass. It does <strong>not</strong> contain original batch-specific experimental data on construction material performance (e.g., mortar strength, mix designs). 
+                            <br><br>
+                            <strong>Reuse Strategy:</strong> Use this paper as a <em>supporting reference</em> for the chemical and physical characterization of raw olive biomass (Pruning debris, Stones, Pomace) and to establish the environmental problem statement regarding waste disposal.
+                        </p>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="bg-white rounded-lg p-4 border border-yellow-200 hover:border-yellow-400 transition">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="w-1 h-10 bg-yellow-500 rounded-full"></div>
+                                    <div class="text-xs text-yellow-700 uppercase tracking-widest font-bold">Eligibility</div>
+                                </div>
+                                <div class="text-lg font-bold text-gray-900 pl-4">Supporting Reference <span class="text-sm font-normal text-gray-500">(Score: 0.4)</span></div>
+                            </div>
+                            
+                            <div class="bg-white rounded-lg p-4 border border-green-200 hover:border-green-400 transition">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="w-1 h-10 bg-green-500 rounded-full"></div>
+                                    <div class="text-xs text-green-700 uppercase tracking-widest font-bold">Key Data</div>
+                                </div>
+                                <div class="text-lg font-bold text-gray-900 pl-4">Lignocellulosic Comp.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="metric-card">
+                <div class="text-center">
+                    <div class="text-4xl mb-3">🫒</div>
+                    <div class="text-3xl font-bold text-olive-600 mb-1">3</div>
+                    <div class="text-sm font-medium text-gray-600 mb-2">Biomass Types</div>
+                    <div class="text-xs text-gray-500">Pruning (OP), Stones (OS), Pomace</div>
+                    <span class="provenance-marker provenance-extracted mt-2">✓ Extracted</span>
+                </div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="text-center">
+                    <div class="text-4xl mb-3">🧪</div>
+                    <div class="text-3xl font-bold text-blue-600 mb-1">Review</div>
+                    <div class="text-sm font-medium text-gray-600 mb-2">Methodology</div>
+                    <div class="text-xs text-gray-500">No original experimental batch</div>
+                    <span class="provenance-marker provenance-extracted mt-2">✓ Extracted</span>
+                </div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="text-center">
+                    <div class="text-4xl mb-3">📄</div>
+                    <div class="text-3xl font-bold text-purple-600 mb-1">38</div>
+                    <div class="text-sm font-medium text-gray-600 mb-2">Pages Processed</div>
+                    <div class="text-xs text-gray-500">Deep extraction complete</div>
+                    <span class="provenance-marker provenance-extracted mt-2">✓ Extracted</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="card p-6 mb-8">
+            <div class="tab-nav">
+                <button class="tab-button active btn-overview" onclick="switchTab('overview')">
+                    📋 Overview
+                </button>
+                <button class="tab-button btn-materials" onclick="switchTab('materials')">
+                    🫒 Materials & Properties
+                </button>
+                <button class="tab-button btn-limitations" onclick="switchTab('limitations')">
+                    ⚠️ Data Gaps
+                </button>
+                <button class="tab-button btn-sustainability" onclick="switchTab('sustainability')">
+                    🌱 Sustainability
+                </button>
+                <button class="tab-button btn-info" onclick="switchTab('info')">
+                    ℹ️ Info
+                </button>
+            </div>
+
+            <!-- Tab Content: Overview -->
+            <div id="tab-overview" class="tab-content">
+                <div class="space-y-8">
+                    
+                    <!-- Research Objective -->
+                    <div id="objective" class="section-anchor">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>🎯</span> Research Objective & Scope
+                        </h2>
+                        <div class="card p-6">
+                            <div class="space-y-6">
+                                <div>
+                                    <div class="flex items-center justify-between mb-3">
+                                        <h3 class="text-lg font-semibold text-gray-900">Primary Objective</h3>
+                                        <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                                    </div>
+                                    <p class="text-gray-700 leading-relaxed bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+                                        "Comprehensively review the latest advances focused on energy production from olive-pruning debris, olive stones and pomaces"
+                                    </p>
+                                </div>
+                                
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div class="bg-orange-50 p-4 rounded-lg border-l-4 border-orange-500">
+                                        <h4 class="font-bold text-gray-900 mb-2">Problem Definition</h4>
+                                        <p class="text-sm text-gray-700">The disposal of these by-products in the field can led to environmental problems. Notwithstanding, these by-products have a huge potential as source of energy.</p>
+                                    </div>
+                                    <div class="bg-green-50 p-4 rounded-lg border-l-4 border-green-500">
+                                        <h4 class="font-bold text-gray-900 mb-2">Application Intent</h4>
+                                        <p class="text-sm text-gray-700"><strong>Function:</strong> Fuel Source</p>
+                                        <p class="text-sm text-gray-700"><strong>Target:</strong> Energy Generation (Combustion, Gasification, Pyrolysis)</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Scope -->
+                    <div class="card p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-bold text-gray-900">Geographical & Material Context</h3>
+                            <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-gray-50 p-3 rounded">
+                                <div class="text-xs text-gray-500 mb-1">Region</div>
+                                <div class="text-base font-bold text-gray-900">Mediterranean (Spain, Italy)</div>
+                            </div>
+                            <div class="bg-gray-50 p-3 rounded">
+                                <div class="text-xs text-gray-500 mb-1">Source Facility</div>
+                                <div class="text-base font-bold text-gray-900">Agricultural Fields & Olive Mills</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Materials -->
+            <div id="tab-materials" class="tab-content hidden">
+                <div class="space-y-8">
+                    
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>🫒</span> Biomass Characterization
+                        </h2>
+                        
+                        <!-- Material Variants -->
+                        <div class="card p-6 mb-6 border-l-4 border-olive-500">
+                            <h3 class="text-xl font-bold text-gray-900 mb-4">Extracted Biomass Variants</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div class="bg-olive-50 p-4 rounded border border-olive-200">
+                                    <div class="text-2xl mb-2">🌿</div>
+                                    <h4 class="font-bold text-gray-900">Olive-Pruning Debris (OP)</h4>
+                                    <p class="text-xs text-gray-600 mt-2">Thin branches (<5cm) and leaves. Usually grinded and ploughed or incinerated.</p>
+                                </div>
+                                <div class="bg-amber-50 p-4 rounded border border-amber-200">
+                                    <div class="text-2xl mb-2">🪨</div>
+                                    <h4 class="font-bold text-gray-900">Olive Stones (OS)</h4>
+                                    <p class="text-xs text-gray-600 mt-2">Fragmented endocarps generated in olive oil mills.</p>
+                                </div>
+                                <div class="bg-yellow-50 p-4 rounded border border-yellow-200">
+                                    <div class="text-2xl mb-2">🏭</div>
+                                    <h4 class="font-bold text-gray-900">Olive Pomace</h4>
+                                    <p class="text-xs text-gray-600 mt-2">Wet byproduct from oil extraction process.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Chemical Composition Chart -->
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <div class="card p-6">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h3 class="text-lg font-bold text-gray-900">Lignocellulosic Composition</h3>
+                                    <span class="provenance-marker provenance-citation">📖 Lit. Cited</span>
+                                </div>
+                                <div class="h-64">
+                                    <canvas id="compositionChart"></canvas>
+                                </div>
+                                <p class="text-xs text-center text-gray-500 mt-4">Representative values extracted from review tables.</p>
+                            </div>
+
+                            <!-- Physical Properties Table -->
+                            <div class="card p-6">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h3 class="text-lg font-bold text-gray-900">Key Properties</h3>
+                                    <span class="provenance-marker provenance-citation">📖 Lit. Cited</span>
+                                </div>
+                                <table class="w-full text-sm text-left">
+                                    <thead class="bg-gray-50 text-gray-600">
+                                        <tr>
+                                            <th class="p-3">Property</th>
+                                            <th class="p-3">Value</th>
+                                            <th class="p-3">Unit</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-100">
+                                        <tr>
+                                            <td class="p-3 font-medium">Bulk Density</td>
+                                            <td class="p-3">272 – 347.9</td>
+                                            <td class="p-3">kg/m³</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="p-3 font-medium">Ash Content</td>
+                                            <td class="p-3">0.78</td>
+                                            <td class="p-3">%</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="p-3 font-medium">Cellulose</td>
+                                            <td class="p-3">36.6</td>
+                                            <td class="p-3">%</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="p-3 font-medium">Hemicellulose</td>
+                                            <td class="p-3">19.7</td>
+                                            <td class="p-3">%</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="p-3 font-medium">Lignin</td>
+                                            <td class="p-3">20.8</td>
+                                            <td class="p-3">%</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="alert alert-info mt-4 text-xs">
+                                    <strong>Note:</strong> Values are representative citations found in the review. Variability is high depending on origin and moisture content.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Data Gaps -->
+            <div id="tab-limitations" class="tab-content hidden">
+                <div class="space-y-8">
+                    
+                    <div class="card p-6 border-l-4 border-red-500">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4">⚠️ Missingness Profile</h2>
+                        <p class="text-gray-700 mb-4">The following critical parameters for construction material modeling are <strong>absent</strong> because this is a review paper focused on energy, not a materials engineering experimental study.</p>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-red-50 p-4 rounded">
+                                <h4 class="font-bold text-red-800 text-sm uppercase mb-2">Critical Missing Data</h4>
+                                <ul class="list-disc list-inside text-sm text-red-900 space-y-1">
+                                    <li>Batch-specific material identity</li>
+                                    <li>Control reference definitions</li>
+                                    <li>Test ages (e.g., 7, 28, 90 days)</li>
+                                    <li>Curing conditions</li>
+                                    <li>Replacement levels or dosages</li>
+                                    <li>Mechanical metrics (Strength, MOE)</li>
+                                </ul>
+                            </div>
+                            <div class="bg-yellow-50 p-4 rounded">
+                                <h4 class="font-bold text-yellow-800 text-sm uppercase mb-2">Impact on Reusability</h4>
+                                <div class="text-lg font-bold text-gray-900 mb-1">SEVERE</div>
+                                <p class="text-sm text-gray-700">
+                                    This paper cannot be used for quantitative meta-analysis of mortar/concrete strength. It serves only as a qualitative reference for biomass origin and chemical properties.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Sustainability -->
+            <div id="tab-sustainability" class="tab-content hidden">
+                <div class="space-y-8">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>🌱</span> Waste Valorisation Context
+                        </h2>
+                        
+                        <div class="bg-green-50 rounded-xl p-6 border border-green-200 mb-6">
+                            <div class="flex items-start gap-4">
+                                <span class="text-4xl">♻️</span>
+                                <div>
+                                    <h3 class="text-xl font-bold text-gray-900 mb-2">Environmental Motivation</h3>
+                                    <p class="text-gray-700 leading-relaxed">
+                                        "The future of the olive oil industry must move towards a greater interrelation between olive oil production, conservation of the environment and energy generation."
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card p-6">
+                            <h3 class="text-lg font-bold text-gray-900 mb-4">Valorisation Pathways</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div class="p-4 border border-gray-200 rounded text-center">
+                                    <div class="text-2xl mb-2">🔥</div>
+                                    <div class="font-bold text-gray-900">Combustion</div>
+                                    <div class="text-xs text-gray-500">Direct heat/energy</div>
+                                </div>
+                                <div class="p-4 border border-gray-200 rounded text-center">
+                                    <div class="text-2xl mb-2">💨</div>
+                                    <div class="font-bold text-gray-900">Gasification</div>
+                                    <div class="text-xs text-gray-500">Syngas production</div>
+                                </div>
+                                <div class="p-4 border border-gray-200 rounded text-center">
+                                    <div class="text-2xl mb-2">⚗️</div>
+                                    <div class="font-bold text-gray-900">Pyrolysis</div>
+                                    <div class="text-xs text-gray-500">Biochar & Bio-oil</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Info -->
+            <div id="tab-info" class="tab-content hidden">
+                <div class="space-y-8">
+                    <div class="card p-6">
+                        <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>🔤</span> Acronyms & Terminology
+                        </h2>
+                        <table class="w-full">
+                            <thead>
+                                <tr>
+                                    <th>Abbreviation</th>
+                                    <th>Full Term</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100">
+                                <tr>
+                                    <td class="font-mono text-blue-600 font-bold">OP</td>
+                                    <td>Olive-Pruning Debris</td>
+                                </tr>
+                                <tr>
+                                    <td class="font-mono text-blue-600 font-bold">OS</td>
+                                    <td>Olive Stones</td>
+                                </tr>
+                                <tr>
+                                    <td class="font-mono text-blue-600 font-bold">Pomace</td>
+                                    <td>Olive Pomace (By-product of oil extraction)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="card p-6">
+                        <h2 class="text-xl font-bold text-gray-900 mb-4">Metadata</h2>
+                        <div class="text-sm space-y-2">
+                            <div class="flex justify-between border-b py-2">
+                                <span class="text-gray-600">Schema Version</span>
+                                <span class="font-mono">2.0-hardened</span>
+                            </div>
+                            <div class="flex justify-between border-b py-2">
+                                <span class="text-gray-600">Last Updated</span>
+                                <span class="font-mono">2026-01-03</span>
+                            </div>
+                            <div class="flex justify-between border-b py-2">
+                                <span class="text-gray-600">Extraction Date</span>
+                                <span class="font-mono">2025-05-15</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-100 border-t border-gray-200 py-8 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col items-center justify-center text-center">
+                <p class="text-gray-700 text-sm">
+                    <strong>Research Intelligence Dashboard</strong> • Extracted from Processes 2020, 8, 511
+                </p>
+                <p class="text-gray-500 text-xs mt-2">
+                    Automated Extraction: 2025-05-15 • Schema: 2.0-hardened
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Paper Data
+        const paperData = {
+            title: "Energetic Valorisation of Olive Biomass: Olive-Tree Pruning, Olive Stones and Pomaces",
+            doi: "10.3390/pr8050511",
+            authors: ["Juan Francisco García Martín", "Manuel Cuevas", "Chao-Hui Feng", "Paloma Álvarez Mateos", "Miguel Torres García", "Sebastián Sánchez"],
+            year: 2020,
+            journal: "Processes",
+            publisher: "MDPI"
+        };
+
+        let currentTab = 'overview';
+
+        function switchTab(tabName) {
+            currentTab = tabName;
+            
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.add('hidden');
+            });
+            
+            const targetTab = document.getElementById(`tab-${tabName}`);
+            if (targetTab) {
+                targetTab.classList.remove('hidden');
+            }
+            
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            const targetBtn = document.querySelector(`.btn-${tabName}`);
+            if (targetBtn) {
+                targetBtn.classList.add('active');
+            }
+            
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const progressFill = document.getElementById('progressFill');
+            if (!progressFill) return;
+            
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+            
+            progressFill.style.width = `${Math.min(100, Math.max(0, progress))}%`;
+        }
+
+        function copyCitation() {
+            const citation = `${paperData.authors[0]} et al. (${paperData.year}). ${paperData.title}. ${paperData.journal}. https://doi.org/${paperData.doi}`;
+            
+            navigator.clipboard.writeText(citation).then(() => {
+                const btn = event.target.closest('button');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<span>✓</span> Copied!';
+                btn.classList.add('bg-green-600');
+                btn.classList.remove('bg-olive-600');
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.classList.remove('bg-green-600');
+                    btn.classList.add('bg-olive-600');
+                }, 2000);
+            }).catch(err => {
+                alert('Failed to copy citation.');
+            });
+        }
+
+        function initializeCharts() {
+            // Lignocellulosic Composition Chart (From Chemical Composition Data)
+            const compCtx = document.getElementById('compositionChart');
+            if (compCtx) {
+                new Chart(compCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Cellulose', 'Hemicellulose', 'Lignin', 'Ash', 'Other/Extractives'],
+                        datasets: [{
+                            data: [36.6, 19.7, 20.8, 0.78, 22.12], // 22.12 is remainder
+                            backgroundColor: [
+                                '#4d7c0f', // Cellulose (Dark Green)
+                                '#84cc16', // Hemicellulose (Light Green)
+                                '#854d0e', // Lignin (Brown)
+                                '#57534e', // Ash (Grey)
+                                '#e5e7eb'  // Other (Light Grey)
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'right',
+                                labels: {
+                                    font: { family: "'Inter', sans-serif" }
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return context.label + ': ' + context.parsed + '%';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeCharts();
+            window.addEventListener('scroll', updateProgress, { passive: true });
+        });
+    </script>
+</body>
+</html>

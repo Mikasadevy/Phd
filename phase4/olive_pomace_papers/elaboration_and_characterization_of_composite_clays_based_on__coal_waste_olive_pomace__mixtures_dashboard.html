@@ -1,0 +1,1394 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Paper Dashboard – Harrami et al. 2022 | Coal Waste & Olive Pomace Clays</title>
+    <meta name="description" content="Academic research dashboard analyzing characterization of coal waste and olive pomace for composite clays">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['Lora', 'Georgia', 'serif'],
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        },
+                        accent: {
+                            50: '#fef3c7',
+                            100: '#fde68a',
+                            200: '#fcd34d',
+                            300: '#fbbf24',
+                            400: '#f59e0b',
+                            500: '#d97706',
+                            600: '#b45309',
+                            700: '#92400e',
+                            800: '#78350f',
+                            900: '#451a03',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* Base Typography */
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            font-size: 16px;
+            line-height: 1.75;
+            color: #1e293b;
+            background: #ffffff;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Lora', Georgia, serif;
+            font-weight: 600;
+            line-height: 1.3;
+            color: #0f172a;
+        }
+        
+        h1 { font-size: 2.25rem; margin-bottom: 1rem; }
+        h2 { font-size: 1.875rem; margin-bottom: 0.875rem; }
+        h3 { font-size: 1.5rem; margin-bottom: 0.75rem; }
+        h4 { font-size: 1.25rem; margin-bottom: 0.625rem; }
+        
+        /* Academic Card Style */
+        .card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            transition: box-shadow 0.2s ease;
+        }
+        
+        .card:hover {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        
+        .card-elevated {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Badge System */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.375rem 0.875rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border: 1.5px solid;
+        }
+        
+        .badge-core {
+            background: #dbeafe;
+            color: #1e40af;
+            border-color: #3b82f6;
+        }
+        
+        .badge-experimental {
+            background: #fef3c7;
+            color: #92400e;
+            border-color: #f59e0b;
+        }
+        
+        .badge-danger {
+            background: #fee2e2;
+            color: #991b1b;
+            border-color: #f87171;
+        }
+        
+        .badge-extracted {
+            background: #dcfce7;
+            color: #166534;
+            border-color: #22c55e;
+        }
+        
+        /* Tab Navigation */
+        .tab-nav {
+            display: flex;
+            flex-wrap: nowrap;
+            justify-content: center;
+            align-items: center;
+            overflow-x: auto;
+            gap: 0.25rem;
+            border-bottom: 2px solid #e2e8f0;
+            padding: 0.75rem 0.25rem;
+            margin-bottom: 2rem;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        .tab-nav::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .tab-button {
+            flex: 0 0 auto;
+            padding: 0.35rem 0.6rem;
+            border-radius: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+            background: #f8fafc;
+            color: #64748b;
+            white-space: nowrap;
+        }
+        
+        .tab-button:hover {
+            background: #f1f5f9;
+            color: #334155;
+        }
+        
+        .tab-button.active {
+            color: #ffffff;
+        }
+
+        .tab-button.active.btn-info { background: #64748b; border-color: #475569; box-shadow: 0 2px 4px rgba(100, 116, 139, 0.3); }
+        .tab-button.active.btn-overview { background: #2563eb; border-color: #1d4ed8; box-shadow: 0 2px 4px rgba(37, 99, 235, 0.3); }
+        .tab-button.active.btn-materials { background: #16a34a; border-color: #15803d; box-shadow: 0 2px 4px rgba(22, 163, 74, 0.3); }
+        .tab-button.active.btn-formulation { background: #ea580c; border-color: #c2410c; box-shadow: 0 2px 4px rgba(234, 88, 12, 0.3); }
+        .tab-button.active.btn-testing { background: #4f46e5; border-color: #4338ca; box-shadow: 0 2px 4px rgba(79, 70, 229, 0.3); }
+        .tab-button.active.btn-results { background: #0891b2; border-color: #0e7490; box-shadow: 0 2px 4px rgba(8, 145, 178, 0.3); }
+        .tab-button.active.btn-limitations { background: #dc2626; border-color: #b91c1c; box-shadow: 0 2px 4px rgba(220, 38, 38, 0.3); }
+        .tab-button.active.btn-phd { background: #9333ea; border-color: #7e22ce; box-shadow: 0 2px 4px rgba(147, 51, 234, 0.3); }
+        .tab-button.active.btn-sustainability { background: #059669; border-color: #047857; box-shadow: 0 2px 4px rgba(5, 150, 105, 0.3); }
+        
+        /* Data Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+        }
+        
+        thead {
+            background: #f8fafc;
+            border-bottom: 2px solid #cbd5e1;
+        }
+        
+        th {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: #475569;
+            font-size: 0.8125rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        tbody tr:hover {
+            background: #f8fafc;
+        }
+        
+        /* Metric Cards */
+        .metric-card {
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            border: 1px solid #e2e8f0;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        
+        /* Progress Bar */
+        .progress-bar {
+            height: 3px;
+            background: #e2e8f0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 9999;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #0ea5e9 0%, #06b6d4 100%);
+            transition: width 0.15s ease-out;
+            box-shadow: 0 0 10px rgba(14, 165, 233, 0.5);
+        }
+        
+        /* Alert Boxes */
+        .alert {
+            padding: 1rem 1.25rem;
+            border-radius: 0.5rem;
+            border-left: 4px solid;
+            font-size: 0.875rem;
+            line-height: 1.6;
+        }
+        
+        .alert-info {
+            background: #dbeafe;
+            border-color: #3b82f6;
+            color: #1e3a8a;
+        }
+        
+        .alert-warning {
+            background: #fef3c7;
+            border-color: #f59e0b;
+            color: #78350f;
+        }
+        
+        .alert-success {
+            background: #dcfce7;
+            border-color: #22c55e;
+            color: #14532d;
+        }
+        
+        .alert-danger {
+            background: #fee2e2;
+            border-color: #ef4444;
+            color: #7f1d1d;
+        }
+        
+        /* Section Anchors */
+        .section-anchor {
+            scroll-margin-top: 100px;
+        }
+        
+        /* Print Styles */
+        @media print {
+            body {
+                font-size: 11pt;
+                line-height: 1.5;
+            }
+            
+            .no-print {
+                display: none !important;
+            }
+            
+            .card {
+                break-inside: avoid;
+                border: 1px solid #cbd5e1;
+                box-shadow: none;
+            }
+            
+            h2, h3, h4 {
+                break-after: avoid;
+            }
+            
+            .page-break {
+                page-break-before: always;
+            }
+            
+            .tab-content {
+                display: block !important;
+            }
+        }
+        
+        /* Code Blocks */
+        code {
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Courier New', monospace;
+            background: #f1f5f9;
+            padding: 0.125rem 0.375rem;
+            border-radius: 0.25rem;
+            font-size: 0.875em;
+            color: #0369a1;
+        }
+        
+        /* Tooltip */
+        [title] {
+            cursor: help;
+            text-decoration: underline;
+            text-decoration-style: dotted;
+            text-decoration-color: #94a3b8;
+        }
+        
+        /* Sticky Navigation */
+        .sticky-nav {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        /* Icon styling */
+        .icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            h1 { font-size: 1.75rem; }
+            h2 { font-size: 1.5rem; }
+            h3 { font-size: 1.25rem; }
+            
+            .tab-nav {
+                justify-content: center;
+            }
+        }
+        
+        /* Smooth transitions */
+        * {
+            transition: background-color 0.15s ease;
+        }
+        
+        /* Data provenance markers */
+        .provenance-marker {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.625rem;
+            padding: 0.125rem 0.375rem;
+            border-radius: 0.25rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .provenance-extracted {
+            background: #dcfce7;
+            color: #166534;
+        }
+        
+        .provenance-derived {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .provenance-interpretive {
+            background: #fce7f3;
+            color: #9f1239;
+        }
+        
+        /* Enhanced accessibility */
+        a:focus, button:focus {
+            outline: 2px solid #0ea5e9;
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    
+    <!-- Progress Bar -->
+    <div class="progress-bar no-print">
+        <div id="progressFill" class="progress-fill" style="width: 0%"></div>
+    </div>
+    
+    <!-- Navigation Header -->
+    <nav class="sticky-nav no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center shadow-md">
+                        <span class="text-white font-bold text-xl">📄</span>
+                    </div>
+                    <div>
+                        <h1 class="text-base font-bold text-gray-900">Research Paper Dashboard</h1>
+                        <p class="text-xs text-gray-500">Coal Waste & Olive Pomace</p>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="window.print()" class="px-3 py-2 rounded-lg bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 text-sm font-medium transition flex items-center gap-2">
+                        <span>🖨️</span> Print
+                    </button>
+                    <button onclick="copyCitation()" class="px-3 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium transition flex items-center gap-2">
+                        <span>📋</span> Citation
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+
+        <!-- Hero Section -->
+        <div class="card card-elevated p-8 mb-8">
+            <div class="flex items-start gap-6 mb-6">
+                <div class="flex-shrink-0">
+                    <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl flex items-center justify-center shadow-lg">
+                        <span class="text-4xl">🔬</span>
+                    </div>
+                </div>
+                <div class="flex-1">
+                    <div class="flex flex-wrap gap-2 mb-3">
+                        <span class="badge badge-experimental">🧪 Experimental Study</span>
+                        <span class="badge badge-core">Raw Material Characterization</span>
+                    </div>
+                    <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4 leading-tight">
+                        Elaboration and characterization of composite clays based on "Coal waste-Olive pomace" mixtures
+                    </h1>
+                    <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-4">
+                        <span class="flex items-center gap-1">
+                            <span class="icon">👥</span>
+                            M. Harrami, N. El Fami, A. Moussadik, N. Khachani, M. Taibi, A. Diouri
+                        </span>
+                        <span>•</span>
+                        <span>📅 2022</span>
+                        <span>•</span>
+                        <span>📖 Materials Today: Proceedings</span>
+                    </div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="text-sm text-gray-500 font-medium">DOI:</span>
+                        <code class="text-sm">10.1016/j.matpr.2022.03.555</code>
+                        <a href="https://doi.org/10.1016/j.matpr.2022.03.555" 
+                           target="_blank" 
+                           class="px-3 py-1 rounded bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium transition">
+                            🔗 Open Paper
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PhD Context Banner -->
+            <div class="bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl p-6 border border-purple-200">
+                <div class="flex flex-col md:flex-row items-start gap-6">
+                    <div class="flex-shrink-0">
+                        <div class="w-16 h-16 bg-purple-100 rounded-xl flex items-center justify-center border-2 border-purple-300 shadow-sm">
+                            <span class="text-3xl">⚠️</span>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-xl font-bold text-gray-900 mb-3 flex items-center gap-2">
+                            <span>🎓</span> Critical Takeaway for PhD
+                            <span class="provenance-marker provenance-interpretive ml-auto">⚡ Interpretive</span>
+                        </h3>
+                        <p class="text-gray-700 leading-relaxed mb-4">
+                            This paper provides <strong class="text-purple-700">chemical and mineralogical data</strong> for coal waste (CW) and olive pomace (OP) but contains <strong class="text-red-700">NO mechanical performance data</strong> for the resulting composite material. It should be used solely as a reference for raw material composition of Moroccan coal waste and olive pomace, not for performance modeling.
+                        </p>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="bg-white rounded-lg p-4 border border-red-200 hover:border-red-400 transition">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="w-1 h-10 bg-red-500 rounded-full"></div>
+                                    <div class="text-xs text-red-700 uppercase tracking-widest font-bold">Risk Level</div>
+                                </div>
+                                <div class="text-lg font-bold text-gray-900 pl-4">Substantial</div>
+                                <div class="text-xs text-gray-500 pl-4">Do not use for performance prediction</div>
+                            </div>
+                            
+                            <div class="bg-white rounded-lg p-4 border border-blue-200 hover:border-blue-400 transition">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="w-1 h-10 bg-blue-500 rounded-full"></div>
+                                    <div class="text-xs text-blue-700 uppercase tracking-widest font-bold">Utility</div>
+                                </div>
+                                <div class="text-lg font-bold text-gray-900 pl-4">Reference Only</div>
+                                <div class="text-xs text-gray-500 pl-4">Raw material chemistry</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="metric-card">
+                <div class="text-center">
+                    <div class="text-4xl mb-3">🧪</div>
+                    <div class="text-3xl font-bold text-blue-600 mb-1">5</div>
+                    <div class="text-sm font-medium text-gray-600 mb-2">Raw Material Fractions</div>
+                    <div class="text-xs text-gray-500">CW1, CW2, CW3, OP1, OP2</div>
+                    <span class="provenance-marker provenance-extracted mt-2">✓ Extracted</span>
+                </div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="text-center">
+                    <div class="text-4xl mb-3">🧱</div>
+                    <div class="text-3xl font-bold text-gray-400 mb-1">N/A</div>
+                    <div class="text-sm font-medium text-gray-600 mb-2">Mix Designs</div>
+                    <div class="text-xs text-gray-500">No formulation tested</div>
+                    <span class="provenance-marker provenance-extracted mt-2">✓ Extracted</span>
+                </div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="text-center">
+                    <div class="text-4xl mb-3">📄</div>
+                    <div class="text-3xl font-bold text-purple-600 mb-1">5</div>
+                    <div class="text-sm font-medium text-gray-600 mb-2">Pages Analyzed</div>
+                    <div class="text-xs text-gray-500">Complete extraction</div>
+                    <span class="provenance-marker provenance-extracted mt-2">✓ Extracted</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="card p-6 mb-8">
+            <div class="tab-nav">
+                <button class="tab-button btn-info" onclick="switchTab('info')">
+                    ℹ️ Info
+                </button>
+                <button class="tab-button active btn-overview" onclick="switchTab('overview')">
+                    📋 Overview
+                </button>
+                <button class="tab-button btn-materials" onclick="switchTab('materials')">
+                    🫒 Materials
+                </button>
+                <button class="tab-button btn-formulation" onclick="switchTab('formulation')">
+                    🧱 Formulation
+                </button>
+                <button class="tab-button btn-testing" onclick="switchTab('testing')">
+                    ⚙️ Characterization
+                </button>
+                <button class="tab-button btn-results" onclick="switchTab('results')">
+                    📊 Results
+                </button>
+                <button class="tab-button btn-limitations" onclick="switchTab('limitations')">
+                    ⚠️ Limitations
+                </button>
+                <button class="tab-button btn-phd" onclick="switchTab('phd')">
+                    🎓 PhD Context
+                </button>
+                <button class="tab-button btn-sustainability" onclick="switchTab('sustainability')">
+                    🌱 Sustainability
+                </button>
+            </div>
+
+            <!-- Tab Content: Info -->
+            <div id="tab-info" class="tab-content hidden">
+                <div class="space-y-8">
+                    <div class="card card-elevated p-6 border-l-4 border-purple-500">
+                        <div class="flex items-start gap-4">
+                            <div class="flex-shrink-0">
+                                <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
+                                    <span class="text-2xl">ℹ️</span>
+                                </div>
+                            </div>
+                            <div class="flex-1">
+                                <h2 class="text-xl font-bold text-gray-900 mb-2">📊 Data Provenance &amp; Interpretation Notice</h2>
+                                <p class="text-sm text-gray-700 leading-relaxed mb-4">
+                                    This dashboard extracts, synthesizes, and interprets data from the original research paper. All extracted values are traced to their source (page/table/figure). Interpretive statements are explicitly labeled. This is a <strong>research intelligence artifact</strong> intended for academic review, not a substitute for the original publication.
+                                </p>
+                                <div class="flex flex-wrap gap-2 mb-2">
+                                    <span class="provenance-marker provenance-extracted">✓ Extracted: Verbatim from paper</span>
+                                    <span class="provenance-marker provenance-derived">≈ Derived: Calculated from reported data</span>
+                                    <span class="provenance-marker provenance-interpretive">⚡ Interpretive: Author-level synthesis</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card p-6">
+                        <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>🔤</span> Acronym &amp; Abbreviation Legend
+                        </h2>
+                        <div class="overflow-x-auto">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Abbreviation</th>
+                                        <th>Meaning</th>
+                                        <th>Context</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="font-semibold">CW</td>
+                                        <td>Coal Waste</td>
+                                        <td>Primary waste material from mining</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-semibold">OP</td>
+                                        <td>Olive Pomace</td>
+                                        <td>Agricultural waste material</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-semibold">XRF</td>
+                                        <td>X-ray Fluorescence</td>
+                                        <td>Chemical composition analysis</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-semibold">XRD</td>
+                                        <td>X-ray Diffraction</td>
+                                        <td>Mineralogical analysis</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-semibold">FTIR</td>
+                                        <td>Fourier-Transform Infrared Spectroscopy</td>
+                                        <td>Functional groups analysis</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-semibold">LOI</td>
+                                        <td>Loss on Ignition</td>
+                                        <td>Volatile content measurement</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Overview -->
+            <div id="tab-overview" class="tab-content">
+                <div class="space-y-8">
+                    
+                    <!-- Research Objective -->
+                    <div id="objective" class="section-anchor">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>🎯</span> Research Objective & Problem Statement
+                        </h2>
+                        <div class="card p-6">
+                            <div class="space-y-6">
+                                <div>
+                                    <div class="flex items-center justify-between mb-3">
+                                        <h3 class="text-lg font-semibold text-gray-900">Primary Objective</h3>
+                                        <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                                    </div>
+                                    <p class="text-gray-700 leading-relaxed bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+                                        "Characterize the materials (coal waste and olive pomace) used in a composite clay based on CW-OP mixtures"
+                                    </p>
+                                </div>
+                                
+                                <div>
+                                    <div class="flex items-center justify-between mb-3">
+                                        <h3 class="text-lg font-semibold text-gray-900">Problem Definition</h3>
+                                        <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                                    </div>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div class="bg-orange-50 p-4 rounded-lg border-l-4 border-orange-500">
+                                            <h4 class="font-bold text-gray-900 mb-2">Technical Challenge</h4>
+                                            <p class="text-sm text-gray-700">Need to characterize raw materials before use in composite clay mixtures.</p>
+                                        </div>
+                                        <div class="bg-green-50 p-4 rounded-lg border-l-4 border-green-500">
+                                            <h4 class="font-bold text-gray-900 mb-2">Environmental Challenge</h4>
+                                            <p class="text-sm text-gray-700">Pollution from olive oil industry effluents and coal mining waste accumulation.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <h3 class="text-lg font-semibold text-gray-900 mb-3">Application Intent</h3>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                                            <div class="text-xs text-gray-500 mb-1">Target Application</div>
+                                            <div class="text-base font-bold text-gray-900">Brick</div>
+                                        </div>
+                                        <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                                            <div class="text-xs text-gray-500 mb-1">Material Function</div>
+                                            <div class="text-base font-bold text-gray-900">Load Bearing Concrete / Structural</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Material System Context -->
+                    <div id="system" class="section-anchor">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>🧱</span> Material System Context
+                        </h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="card p-6 border-t-4 border-blue-500">
+                                <div class="text-3xl mb-3">🔥</div>
+                                <h3 class="text-base font-bold text-gray-900 mb-2">Primary System</h3>
+                                <p class="text-lg font-bold text-blue-600">Fired Clay</p>
+                                <p class="text-xs text-gray-500 mt-2">Composite clay mixture</p>
+                                <span class="provenance-marker provenance-extracted mt-3">✓ Extracted</span>
+                            </div>
+                            
+                            <div class="card p-6 border-t-4 border-green-500">
+                                <div class="text-3xl mb-3">⚙️</div>
+                                <h3 class="text-base font-bold text-gray-900 mb-2">Functional Role</h3>
+                                <p class="text-lg font-bold text-green-600">Structural</p>
+                                <p class="text-xs text-gray-500 mt-2">Manufacturing high efficiency bricks</p>
+                                <span class="provenance-marker provenance-extracted mt-3">✓ Extracted</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Materials -->
+            <div id="tab-materials" class="tab-content hidden">
+                <div class="space-y-8">
+                    
+                    <!-- Primary Waste Materials -->
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>🫒</span> Waste Material Identity
+                        </h2>
+                        
+                        <!-- Coal Waste -->
+                        <div class="card p-6 mb-6 border-l-4 border-gray-600">
+                            <div class="flex items-start gap-4 mb-4">
+                                <div class="text-5xl">⛏️</div>
+                                <div class="flex-1">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <h3 class="text-xl font-bold text-gray-900">Coal Waste (CW)</h3>
+                                        <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                                    </div>
+                                    <p class="text-gray-700 leading-relaxed mb-4 bg-gray-50 p-3 rounded">
+                                        Mining waste collected from the Jerada coal mine in Morocco.
+                                    </p>
+                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                        <div class="bg-gray-50 p-3 rounded border border-gray-200">
+                                            <div class="text-xs text-gray-500 mb-1">Origin</div>
+                                            <div class="text-sm font-bold text-gray-900">Jerada, Morocco</div>
+                                        </div>
+                                        <div class="bg-gray-50 p-3 rounded border border-gray-200">
+                                            <div class="text-xs text-gray-500 mb-1">Physical Form</div>
+                                            <div class="text-sm font-bold text-gray-900">Powder</div>
+                                        </div>
+                                        <div class="bg-gray-50 p-3 rounded border border-gray-200">
+                                            <div class="text-xs text-gray-500 mb-1">Processing</div>
+                                            <div class="text-sm font-bold text-gray-900">Sieving</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- CW Fractions -->
+                            <div class="mt-4">
+                                <h4 class="text-sm font-bold text-gray-900 mb-2">Processed Fractions</h4>
+                                <div class="overflow-x-auto">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Label</th>
+                                                <th>Particle Size</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="font-bold">CW1</td>
+                                                <td>&lt; 40 µm</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="font-bold">CW2</td>
+                                                <td>40 µm – 100 µm</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="font-bold">CW3</td>
+                                                <td>100 µm – 500 µm</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Olive Pomace -->
+                        <div class="card p-6 border-l-4 border-green-500">
+                            <div class="flex items-start gap-4 mb-4">
+                                <div class="text-5xl">🫒</div>
+                                <div class="flex-1">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <h3 class="text-xl font-bold text-gray-900">Olive Pomace (OP)</h3>
+                                        <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                                    </div>
+                                    <p class="text-gray-700 leading-relaxed mb-4 bg-green-50 p-3 rounded">
+                                        Collected from Sidi Kacem olive mill, Morocco.
+                                    </p>
+                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                        <div class="bg-gray-50 p-3 rounded border border-gray-200">
+                                            <div class="text-xs text-gray-500 mb-1">Origin</div>
+                                            <div class="text-sm font-bold text-gray-900">Sidi Kacem, Morocco</div>
+                                        </div>
+                                        <div class="bg-gray-50 p-3 rounded border border-gray-200">
+                                            <div class="text-xs text-gray-500 mb-1">Facility Type</div>
+                                            <div class="text-sm font-bold text-gray-900">Olive Mill</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- OP Fractions -->
+                            <div class="mt-4">
+                                <h4 class="text-sm font-bold text-gray-900 mb-2">Processed Fractions</h4>
+                                <div class="overflow-x-auto">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Label</th>
+                                                <th>Particle Size</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="font-bold">OP1</td>
+                                                <td>&lt; 100 µm</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="font-bold">OP2</td>
+                                                <td>100 µm – 500 µm</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chemical Composition -->
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <h2 class="text-2xl font-bold text-gray-900 flex items-center gap-2">
+                                <span>🔬</span> Chemical Composition (XRF)
+                            </h2>
+                            <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                        </div>
+                        
+                        <div class="card p-6 mb-6">
+                            <div class="overflow-x-auto">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Oxide / Property</th>
+                                            <th>CW1 (&lt;40µm)</th>
+                                            <th>CW2 (40-100µm)</th>
+                                            <th>CW3 (100-500µm)</th>
+                                            <th>OP (Olive Pomace)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="font-bold text-gray-900">SiO₂</td>
+                                            <td>45.1%</td>
+                                            <td>33.3%</td>
+                                            <td>55.6%</td>
+                                            <td>16.14%</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="font-bold text-gray-900">Al₂O₃</td>
+                                            <td>20.5%</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>6.91%</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="font-bold text-gray-900">Fe₂O₃</td>
+                                            <td>4.66%</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="font-bold text-gray-900">CaO</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td class="text-green-600 font-bold">36.34%</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="font-bold text-gray-900">K₂O</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>19.08%</td>
+                                        </tr>
+                                        <tr class="bg-gray-50 border-t-2">
+                                            <td class="font-bold text-gray-900">LOI (Loss on Ignition)</td>
+                                            <td>18.36%</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="mt-4 text-xs text-gray-500">
+                                Note: Dash (-) indicates value not reported in extracted JSON.
+                            </div>
+                        </div>
+
+                        <!-- Chart: Oxide Comparison -->
+                        <div class="card p-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-lg font-bold text-gray-900">📊 Oxide Composition Comparison (CW1 vs OP)</h3>
+                                <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                            </div>
+                            <div class="h-80">
+                                <canvas id="compositionChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Formulation -->
+            <div id="tab-formulation" class="tab-content hidden">
+                <div class="space-y-8">
+                    
+                    <div class="card p-8 border-l-4 border-red-500 bg-red-50">
+                        <div class="flex items-start gap-4">
+                            <div class="text-3xl">🚫</div>
+                            <div>
+                                <h2 class="text-xl font-bold text-red-900 mb-2">Data Missing: Mix Design</h2>
+                                <p class="text-red-800">
+                                    The extracted data indicates that no specific mix design, substitution ratios, or formulation variants were reported for the composite material. The paper focuses solely on the characterization of the raw materials.
+                                </p>
+                                <div class="mt-4">
+                                    <span class="badge badge-danger">Status: Absent</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card p-6">
+                        <h3 class="text-lg font-bold text-gray-900 mb-4">Processing Strategy</h3>
+                        <div class="bg-blue-50 rounded-lg p-4 border-l-4 border-blue-500">
+                            <div class="flex items-center gap-3 mb-2">
+                                <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm">1</div>
+                                <h4 class="text-base font-bold text-gray-900">Sieving</h4>
+                            </div>
+                            <p class="text-sm text-gray-700 mb-3">
+                                <strong>Purpose:</strong> Study the impact of particle size.
+                            </p>
+                            <div class="bg-white p-2 rounded text-xs inline-block">
+                                <span class="text-gray-500">Cut-off:</span>
+                                <span class="text-gray-900 font-bold ml-1">0.5 mm</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Characterization -->
+            <div id="tab-testing" class="tab-content hidden">
+                <div class="space-y-8">
+                    
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>⚙️</span> Characterization Methods
+                        </h2>
+
+                        <div class="card p-6">
+                            <div class="space-y-4">
+                                <div class="bg-gray-50 rounded p-4 flex items-center gap-4">
+                                    <div class="w-10 h-10 bg-purple-600 rounded flex items-center justify-center text-white font-bold">XRF</div>
+                                    <div>
+                                        <div class="text-base font-bold text-gray-900">X-ray Fluorescence</div>
+                                        <div class="text-sm text-gray-600">Chemical composition analysis. Showed that the three CW fractions have the same composition in terms of major elements.</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="bg-gray-50 rounded p-4 flex items-center gap-4">
+                                    <div class="w-10 h-10 bg-purple-600 rounded flex items-center justify-center text-white font-bold">XRD</div>
+                                    <div>
+                                        <div class="text-base font-bold text-gray-900">X-ray Diffraction</div>
+                                        <div class="text-sm text-gray-600">Mineralogical analysis. Identified phases like quartz, clinochlore, muscovite in CW.</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="bg-gray-50 rounded p-4 flex items-center gap-4">
+                                    <div class="w-10 h-10 bg-purple-600 rounded flex items-center justify-center text-white font-bold">FTIR</div>
+                                    <div>
+                                        <div class="text-base font-bold text-gray-900">Infrared Spectroscopy</div>
+                                        <div class="text-sm text-gray-600">Used to study functional groups.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Results -->
+            <div id="tab-results" class="tab-content hidden">
+                <div class="space-y-8">
+                    
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-2xl font-bold text-gray-900 flex items-center gap-2">
+                            <span>📊</span> Characterization Results
+                        </h2>
+                    </div>
+
+                    <!-- Alert: No Mechanical Data -->
+                    <div class="alert alert-danger mb-6">
+                        <strong>⚠️ Notice:</strong> No compressive strength, density, porosity, or thermal conductivity results were reported for the composite material. This section details the raw material properties only.
+                    </div>
+
+                    <!-- Mineralogical Observations -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="card p-6 border-l-4 border-gray-600">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-lg font-bold text-gray-900">Coal Waste Mineralogy</h3>
+                                <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                            </div>
+                            <ul class="space-y-2 text-sm text-gray-700">
+                                <li class="flex items-start gap-2">
+                                    <span class="text-gray-900 font-bold">•</span>
+                                    <span>Quartz (Major proportion)</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span class="text-gray-900 font-bold">•</span>
+                                    <span>Clinochlore</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span class="text-gray-900 font-bold">•</span>
+                                    <span>Muscovite</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span class="text-gray-900 font-bold">•</span>
+                                    <span>Illite</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span class="text-gray-900 font-bold">•</span>
+                                    <span>Hematite</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="card p-6 border-l-4 border-green-500">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-lg font-bold text-gray-900">Olive Pomace Mineralogy</h3>
+                                <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                            </div>
+                            <ul class="space-y-2 text-sm text-gray-700">
+                                <li class="flex items-start gap-2">
+                                    <span class="text-green-700 font-bold">•</span>
+                                    <span>Gaylussite</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span class="text-green-700 font-bold">•</span>
+                                    <span>Quartz</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span class="text-green-700 font-bold">•</span>
+                                    <span>Tricalcium magnesium disilicon</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span class="text-green-700 font-bold">•</span>
+                                    <span>Portlandite</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span class="text-green-700 font-bold">•</span>
+                                    <span>Calcium carbonate</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="card p-6 mt-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-bold text-gray-900">Strict Summary of Findings</h3>
+                            <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                        </div>
+                        <p class="text-gray-700 leading-relaxed text-sm">
+                            This study characterized coal waste (CW) and olive pomace (OP) as potential raw materials for composite bricks. Materials were sieved into fractions (CW1, CW2, CW3, OP1, OP2) and analyzed via XRF, XRD, and FTIR. Results showed CW is rich in silica, alumina, and iron oxide, with quartz as the major phase. OP showed high calcium oxide (36.34%) and potassium oxide (19.08%) content, with minerals including gaylussite and portlandite. No composite bricks were fabricated or tested in this specific paper.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Limitations -->
+            <div id="tab-limitations" class="tab-content hidden">
+                <div class="space-y-8">
+                    
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>⚠️</span> Eligibility & Limitations
+                        </h2>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                            <div class="card p-5 border-l-4 border-red-500">
+                                <div class="flex items-start gap-3">
+                                    <span class="text-2xl">🚫</span>
+                                    <div>
+                                        <h3 class="text-base font-bold text-gray-900 mb-2">No Mechanical Metrics</h3>
+                                        <p class="text-sm text-gray-700">No mechanical or physical performance metrics for the composite material reported.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card p-5 border-l-4 border-red-500">
+                                <div class="flex items-start gap-3">
+                                    <span class="text-2xl">🚫</span>
+                                    <div>
+                                        <h3 class="text-base font-bold text-gray-900 mb-2">No Mix Design</h3>
+                                        <p class="text-sm text-gray-700">No mix design or formulation tested. Replacement levels or dosages are missing.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card p-6">
+                            <h3 class="text-lg font-bold text-gray-900 mb-3">Missing Critical Parameters</h3>
+                            <ul class="list-disc pl-5 space-y-1 text-sm text-gray-700">
+                                <li>At least one mechanical or physical metric</li>
+                                <li>Replacement levels or dosages</li>
+                                <li>Control reference definition</li>
+                                <li>Test age</li>
+                                <li>Curing or firing conditions</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: PhD Context -->
+            <div id="tab-phd" class="tab-content hidden">
+                <div class="space-y-8">
+                    
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>🎓</span> PhD Context & Actionable Takeaway
+                        </h2>
+
+                        <div class="card p-6 border-t-4 border-blue-500">
+                            <h3 class="text-lg font-bold text-gray-900 mb-3">Value for Workstream</h3>
+                            <p class="text-sm text-gray-700 leading-relaxed mb-4">
+                                Use as reference for raw material composition of Moroccan coal waste and olive pomace.
+                            </p>
+                            
+                            <div class="bg-red-50 p-4 rounded border border-red-200">
+                                <h4 class="text-sm font-bold text-red-900 mb-2">Risk if Used Uncritically</h4>
+                                <p class="text-sm text-red-800">
+                                    Attempting to use this paper for performance modeling will fail as no performance data exists. Risk level: Substantial.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-6">
+                            <h3 class="text-lg font-bold text-gray-900 mb-3">Final Verdict</h3>
+                            <div class="flex items-center gap-3">
+                                <span class="px-3 py-1 bg-gray-200 rounded text-gray-700 font-bold text-sm">Exclude from Core Dataset</span>
+                                <span class="text-sm text-gray-600">Paper lacks quantitative performance results for the composite material; it is a raw material characterization study.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Sustainability -->
+            <div id="tab-sustainability" class="tab-content hidden">
+                <div class="space-y-8">
+                    
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>🌱</span> Sustainability Context
+                        </h2>
+                        
+                        <div class="card p-6">
+                            <div class="space-y-4">
+                                <div class="bg-green-50 p-4 rounded border border-green-200">
+                                    <h4 class="text-sm font-bold text-green-900 mb-2">Olive Oil Industry</h4>
+                                    <p class="text-sm text-gray-700">
+                                        Effluents from olive oil industry cause soil contamination.
+                                    </p>
+                                </div>
+                                <div class="bg-gray-50 p-4 rounded border border-gray-200">
+                                    <h4 class="text-sm font-bold text-gray-900 mb-2">Mining Industry</h4>
+                                    <p class="text-sm text-gray-700">
+                                        Mining waste, such as coal gangue, represents also the risk of acids and toxic elements.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-100 border-t border-gray-200 py-8 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col items-center justify-center text-center">
+                <p class="text-gray-700 text-sm">
+                    <strong>PhD Scholar Dashboard</strong> • Literature Review System
+                </p>
+                <p class="text-gray-500 text-xs mt-2">
+                    Waste Valorisation & Sustainable Construction Materials Research
+                </p>
+             
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Paper Data
+        const paperData = {
+            title: "Elaboration and characterization of composite clays based on 'Coal waste-Olive pomace' mixtures",
+            doi: "10.1016/j.matpr.2022.03.555",
+            authors: ["M. Harrami", "N. El Fami", "A. Moussadik", "N. Khachani", "M. Taibi", "A. Diouri"],
+            year: 2022,
+            journal: "Materials Today: Proceedings"
+        };
+
+        let currentTab = 'overview';
+
+        // Tab Switching
+        function switchTab(tabName) {
+            currentTab = tabName;
+            
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.add('hidden');
+            });
+            
+            // Show selected tab
+            const targetTab = document.getElementById(`tab-${tabName}`);
+            if (targetTab) {
+                targetTab.classList.remove('hidden');
+            }
+            
+            // Update button states
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Activate target button
+            const targetBtn = document.querySelector(`.btn-${tabName}`);
+            if (targetBtn) {
+                targetBtn.classList.add('active');
+            }
+            
+            // Do not change scroll position when switching tabs
+            updateProgress();
+        }
+
+        // Section Scrolling
+        function scrollToSection(id) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        // Progress Bar Update
+        function updateProgress() {
+            const progressFill = document.getElementById('progressFill');
+            if (!progressFill) return;
+            
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+            
+            progressFill.style.width = `${Math.min(100, Math.max(0, progress))}%`;
+        }
+
+        // Copy Citation
+        function copyCitation() {
+            const citation = `${paperData.authors.join(', ')} (${paperData.year}). ${paperData.title}. ${paperData.journal}. https://doi.org/${paperData.doi}`;
+            
+            navigator.clipboard.writeText(citation).then(() => {
+                const btn = event.target.closest('button');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<span>✓</span> Copied!';
+                btn.classList.add('bg-green-600');
+                btn.classList.remove('bg-blue-600');
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.classList.remove('bg-green-600');
+                    btn.classList.add('bg-blue-600');
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy citation:', err);
+                alert('Failed to copy citation. Please try again.');
+            });
+        }
+
+        // Initialize Charts
+        function initializeCharts() {
+            // Composition Chart (CW1 vs OP)
+            const compositionCtx = document.getElementById('compositionChart');
+            if (compositionCtx) {
+                new Chart(compositionCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['SiO₂', 'Al₂O₃', 'CaO', 'K₂O', 'Fe₂O₃'],
+                        datasets: [
+                            {
+                                label: 'CW1 (Coal Waste)',
+                                data: [45.1, 20.5, 0, 0, 4.66],
+                                backgroundColor: 'rgba(75, 85, 99, 0.7)', // Gray for coal
+                                borderColor: 'rgba(75, 85, 99, 1)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'OP (Olive Pomace)',
+                                data: [16.14, 6.91, 36.34, 19.08, 0],
+                                backgroundColor: 'rgba(34, 197, 94, 0.7)', // Green for olive
+                                borderColor: 'rgba(34, 197, 94, 1)',
+                                borderWidth: 1
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Composition (%)'
+                                }
+                            }
+                        },
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Chemical Composition Comparison'
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeCharts();
+            updateProgress();
+            window.addEventListener('scroll', updateProgress, { passive: true });
+            
+            // Make tables responsive
+            const tables = document.querySelectorAll('table');
+            tables.forEach(table => {
+                if (!table.parentElement.classList.contains('overflow-x-auto')) {
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'overflow-x-auto';
+                    table.parentNode.insertBefore(wrapper, table);
+                    wrapper.appendChild(table);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

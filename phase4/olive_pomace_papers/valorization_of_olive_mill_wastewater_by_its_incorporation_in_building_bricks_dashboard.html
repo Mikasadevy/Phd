@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Paper Dashboard – Mekki et al. 2008 | OMW in Building Bricks</title>
+    <meta name="description" content="Academic research dashboard analyzing the valorization of olive mill wastewater in building bricks">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['Lora', 'Georgia', 'serif'],
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        },
+                        accent: {
+                            50: '#fef3c7',
+                            100: '#fde68a',
+                            200: '#fcd34d',
+                            300: '#fbbf24',
+                            400: '#f59e0b',
+                            500: '#d97706',
+                            600: '#b45309',
+                            700: '#92400e',
+                            800: '#78350f',
+                            900: '#451a03',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* Base Typography */
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            font-size: 16px;
+            line-height: 1.75;
+            color: #1e293b;
+            background: #ffffff;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Lora', Georgia, serif;
+            font-weight: 600;
+            line-height: 1.3;
+            color: #0f172a;
+        }
+        
+        h1 { font-size: 2.25rem; margin-bottom: 1rem; }
+        h2 { font-size: 1.875rem; margin-bottom: 0.875rem; }
+        h3 { font-size: 1.5rem; margin-bottom: 0.75rem; }
+        h4 { font-size: 1.25rem; margin-bottom: 0.625rem; }
+        
+        /* Academic Card Style */
+        .card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            transition: box-shadow 0.2s ease;
+        }
+        
+        .card:hover {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        
+        .card-elevated {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Badge System */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.375rem 0.875rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border: 1.5px solid;
+        }
+        
+        .badge-core {
+            background: #dbeafe;
+            color: #1e40af;
+            border-color: #3b82f6;
+        }
+        
+        .badge-experimental {
+            background: #fef3c7;
+            color: #92400e;
+            border-color: #f59e0b;
+        }
+        
+        .badge-interpretive {
+            background: #fce7f3;
+            color: #9f1239;
+            border-color: #f472b6;
+        }
+        
+        .badge-extracted {
+            background: #dcfce7;
+            color: #166534;
+            border-color: #22c55e;
+        }
+        
+        /* Tab Navigation */
+        .tab-nav {
+            display: flex;
+            flex-wrap: nowrap;
+            justify-content: center;
+            align-items: center;
+            overflow-x: auto;
+            gap: 0.25rem;
+            border-bottom: 2px solid #e2e8f0;
+            padding: 0.75rem 0.25rem;
+            margin-bottom: 2rem;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        .tab-nav::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .tab-button {
+            flex: 0 0 auto;
+            padding: 0.35rem 0.6rem;
+            border-radius: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+            background: #f8fafc;
+            color: #64748b;
+            white-space: nowrap;
+        }
+        
+        .tab-button:hover {
+            background: #f1f5f9;
+            color: #334155;
+        }
+        
+        .tab-button.active {
+            color: #ffffff;
+        }
+
+        .tab-button.active.btn-info { background: #64748b; border-color: #475569; box-shadow: 0 2px 4px rgba(100, 116, 139, 0.3); }
+        .tab-button.active.btn-overview { background: #2563eb; border-color: #1d4ed8; box-shadow: 0 2px 4px rgba(37, 99, 235, 0.3); }
+        .tab-button.active.btn-materials { background: #16a34a; border-color: #15803d; box-shadow: 0 2px 4px rgba(22, 163, 74, 0.3); }
+        .tab-button.active.btn-formulation { background: #ea580c; border-color: #c2410c; box-shadow: 0 2px 4px rgba(234, 88, 12, 0.3); }
+        .tab-button.active.btn-testing { background: #4f46e5; border-color: #4338ca; box-shadow: 0 2px 4px rgba(79, 70, 229, 0.3); }
+        .tab-button.active.btn-results { background: #0891b2; border-color: #0e7490; box-shadow: 0 2px 4px rgba(8, 145, 178, 0.3); }
+        .tab-button.active.btn-limitations { background: #dc2626; border-color: #b91c1c; box-shadow: 0 2px 4px rgba(220, 38, 38, 0.3); }
+        .tab-button.active.btn-phd { background: #9333ea; border-color: #7e22ce; box-shadow: 0 2px 4px rgba(147, 51, 234, 0.3); }
+        .tab-button.active.btn-sustainability { background: #059669; border-color: #047857; box-shadow: 0 2px 4px rgba(5, 150, 105, 0.3); }
+        
+        /* Data Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+        }
+        
+        thead {
+            background: #f8fafc;
+            border-bottom: 2px solid #cbd5e1;
+        }
+        
+        th {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: #475569;
+            font-size: 0.8125rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        tbody tr:hover {
+            background: #f8fafc;
+        }
+        
+        /* Metric Cards */
+        .metric-card {
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            border: 1px solid #e2e8f0;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        
+        /* Progress Bar */
+        .progress-bar {
+            height: 3px;
+            background: #e2e8f0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 9999;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #0ea5e9 0%, #06b6d4 100%);
+            transition: width 0.15s ease-out;
+            box-shadow: 0 0 10px rgba(14, 165, 233, 0.5);
+        }
+        
+        /* Alert Boxes */
+        .alert {
+            padding: 1rem 1.25rem;
+            border-radius: 0.5rem;
+            border-left: 4px solid;
+            font-size: 0.875rem;
+            line-height: 1.6;
+        }
+        
+        .alert-info {
+            background: #dbeafe;
+            border-color: #3b82f6;
+            color: #1e3a8a;
+        }
+        
+        .alert-warning {
+            background: #fef3c7;
+            border-color: #f59e0b;
+            color: #78350f;
+        }
+        
+        .alert-success {
+            background: #dcfce7;
+            border-color: #22c55e;
+            color: #14532d;
+        }
+        
+        .alert-danger {
+            background: #fee2e2;
+            border-color: #ef4444;
+            color: #7f1d1d;
+        }
+        
+        /* Section Anchors */
+        .section-anchor {
+            scroll-margin-top: 100px;
+        }
+        
+        /* Print Styles */
+        @media print {
+            body {
+                font-size: 11pt;
+                line-height: 1.5;
+            }
+            
+            .no-print {
+                display: none !important;
+            }
+            
+            .card {
+                break-inside: avoid;
+                border: 1px solid #cbd5e1;
+                box-shadow: none;
+            }
+            
+            h2, h3, h4 {
+                break-after: avoid;
+            }
+            
+            .page-break {
+                page-break-before: always;
+            }
+            
+            .tab-content {
+                display: block !important;
+            }
+        }
+        
+        /* Code Blocks */
+        code {
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Courier New', monospace;
+            background: #f1f5f9;
+            padding: 0.125rem 0.375rem;
+            border-radius: 0.25rem;
+            font-size: 0.875em;
+            color: #0369a1;
+        }
+        
+        /* Tooltip */
+        [title] {
+            cursor: help;
+            text-decoration: underline;
+            text-decoration-style: dotted;
+            text-decoration-color: #94a3b8;
+        }
+        
+        /* Sticky Navigation */
+        .sticky-nav {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        /* Icon styling */
+        .icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            h1 { font-size: 1.75rem; }
+            h2 { font-size: 1.5rem; }
+            h3 { font-size: 1.25rem; }
+            
+            .tab-nav {
+                justify-content: center;
+            }
+        }
+        
+        /* Smooth transitions */
+        * {
+            transition: background-color 0.15s ease;
+        }
+        
+        /* Data provenance markers */
+        .provenance-marker {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.625rem;
+            padding: 0.125rem 0.375rem;
+            border-radius: 0.25rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .provenance-extracted {
+            background: #dcfce7;
+            color: #166534;
+        }
+        
+        .provenance-derived {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .provenance-interpretive {
+            background: #fce7f3;
+            color: #9f1239;
+        }
+        
+        /* Enhanced accessibility */
+        a:focus, button:focus {
+            outline: 2px solid #0ea5e9;
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    
+    <!-- Progress Bar -->
+    <div class="progress-bar no-print">
+        <div id="progressFill" class="progress-fill" style="width: 0%"></div>
+    </div>
+    
+    <!-- Navigation Header -->
+    <nav class="sticky-nav no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center shadow-md">
+                        <span class="text-white font-bold text-xl">📄</span>
+                    </div>
+                    <div>
+                        <h1 class="text-base font-bold text-gray-900">Research Paper Dashboard</h1>
+                        <p class="text-xs text-gray-500">Olive Mill Wastewater Valorization</p>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="window.print()" class="px-3 py-2 rounded-lg bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 text-sm font-medium transition flex items-center gap-2">
+                        <span>🖨️</span> Print
+                    </button>
+                    <button onclick="copyCitation()" class="px-3 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium transition flex items-center gap-2">
+                        <span>📋</span> Citation
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+
+        <!-- Hero Section -->
+        <div class="card card-elevated p-8 mb-8">
+            <div class="flex items-start gap-6 mb-6">
+                <div class="flex-shrink-0">
+                    <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl flex items-center justify-center shadow-lg">
+                        <span class="text-4xl">🧱</span>
+                    </div>
+                </div>
+                <div class="flex-1">
+                    <div class="flex flex-wrap gap-2 mb-3">
+                        <span class="badge badge-experimental">🧪 Experimental Study</span>
+                        <span class="badge badge-core">Tier A Core Data</span>
+                    </div>
+                    <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4 leading-tight">
+                        Valorization of olive mill wastewater by its incorporation in building bricks
+                    </h1>
+                    <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-4">
+                        <span class="flex items-center gap-1">
+                            <span class="icon">👥</span>
+                            Mekki, H., Anderson, M., Benzina, M., Ammar, E.
+                        </span>
+                        <span>•</span>
+                        <span>📅 2008</span>
+                        <span>•</span>
+                        <span>📖 Journal of Hazardous Materials</span>
+                    </div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="text-sm text-gray-500 font-medium">DOI:</span>
+                        <code class="text-sm">10.1016/j.jhazmat.2008.01.104</code>
+                        <a href="https://doi.org/10.1016/j.jhazmat.2008.01.104" 
+                           target="_blank" 
+                           class="px-3 py-1 rounded bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium transition">
+                            🔗 Open Paper
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Context Banner -->
+            <div class="bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl p-6 border border-purple-200">
+                <div class="flex flex-col md:flex-row items-start gap-6">
+                    <div class="flex-shrink-0">
+                        <div class="w-16 h-16 bg-purple-100 rounded-xl flex items-center justify-center border-2 border-purple-300 shadow-sm">
+                            <span class="text-3xl">💡</span>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-xl font-bold text-gray-900 mb-3 flex items-center gap-2">
+                            <span>🎓</span> Core Takeaway
+                            <span class="provenance-marker provenance-extracted ml-auto">✓ Extracted</span>
+                        </h3>
+                        <p class="text-gray-700 leading-relaxed mb-4">
+                            Substituting 100% of mixing water with Olive Mill Wastewater (OMW) in fired clay bricks is feasible at industrial scale. The process results in a product with comparable density, though water absorption increases by 12% and shrinkage by 10%.
+                        </p>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="bg-white rounded-lg p-4 border border-green-200 hover:border-green-400 transition">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="w-1 h-10 bg-green-500 rounded-full"></div>
+                                    <div class="text-xs text-green-700 uppercase tracking-widest font-bold">Target Application</div>
+                                </div>
+                                <div class="text-lg font-bold text-gray-900 pl-4">Building Bricks</div>
+                            </div>
+                            
+                            <div class="bg-white rounded-lg p-4 border border-purple-200 hover:border-purple-400 transition">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="w-1 h-10 bg-purple-500 rounded-full"></div>
+                                    <div class="text-xs text-purple-700 uppercase tracking-widest font-bold">Innovation Type</div>
+                                </div>
+                                <div class="text-lg font-bold text-gray-900 pl-4">Process Pathway (Liquid Substitution)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="metric-card">
+                <div class="text-center">
+                    <div class="text-4xl mb-3">🧪</div>
+                    <div class="text-3xl font-bold text-blue-600 mb-1">2</div>
+                    <div class="text-sm font-medium text-gray-600 mb-2">Mix Variants</div>
+                    <div class="text-xs text-gray-500">Control (Water) vs OMW</div>
+                    <span class="provenance-marker provenance-extracted mt-2">✓ Extracted</span>
+                </div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="text-center">
+                    <div class="text-4xl mb-3">💧</div>
+                    <div class="text-3xl font-bold text-green-600 mb-1">100%</div>
+                    <div class="text-sm font-medium text-gray-600 mb-2">Substitution Level</div>
+                    <div class="text-xs text-gray-500">Liquid phase replacement</div>
+                    <span class="provenance-marker provenance-extracted mt-2">✓ Extracted</span>
+                </div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="text-center">
+                    <div class="text-4xl mb-3">🔥</div>
+                    <div class="text-3xl font-bold text-purple-600 mb-1">920°C</div>
+                    <div class="text-sm font-medium text-gray-600 mb-2">Firing Temperature</div>
+                    <div class="text-xs text-gray-500">Industrial Tunnel Kiln</div>
+                    <span class="provenance-marker provenance-extracted mt-2">✓ Extracted</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="card p-6 mb-8">
+            <div class="tab-nav">
+                <button class="tab-button btn-info" onclick="switchTab('info')">
+                    ℹ️ Info
+                </button>
+                <button class="tab-button active btn-overview" onclick="switchTab('overview')">
+                    📋 Overview
+                </button>
+                <button class="tab-button btn-materials" onclick="switchTab('materials')">
+                    🫒 Materials
+                </button>
+                <button class="tab-button btn-formulation" onclick="switchTab('formulation')">
+                    🧱 Formulation
+                </button>
+                <button class="tab-button btn-testing" onclick="switchTab('testing')">
+                    ⚙️ Testing
+                </button>
+                <button class="tab-button btn-results" onclick="switchTab('results')">
+                    📊 Results
+                </button>
+                <button class="tab-button btn-limitations" onclick="switchTab('limitations')">
+                    ⚠️ Limitations
+                </button>
+                <button class="tab-button btn-phd" onclick="switchTab('phd')">
+                    🎓 PhD Context
+                </button>
+                <button class="tab-button btn-sustainability" onclick="switchTab('sustainability')">
+                    🌱 Sustainability
+                </button>
+            </div>
+
+            <!-- Tab Content: Info -->
+            <div id="tab-info" class="tab-content hidden">
+                <div class="space-y-8">
+                    <div class="card card-elevated p-6 border-l-4 border-purple-500">
+                        <div class="flex items-start gap-4">
+                            <div class="flex-shrink-0">
+                                <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
+                                    <span class="text-2xl">ℹ️</span>
+                                </div>
+                            </div>
+                            <div class="flex-1">
+                                <h2 class="text-xl font-bold text-gray-900 mb-2">📊 Data Provenance &amp; Interpretation Notice</h2>
+                                <p class="text-sm text-gray-700 leading-relaxed mb-4">
+                                    This dashboard extracts, synthesizes, and interprets data from the original research paper. All extracted values are traced to their source (page/table/figure).
+                                </p>
+                                <div class="flex flex-wrap gap-2 mb-2">
+                                    <span class="provenance-marker provenance-extracted">✓ Extracted: Verbatim from paper</span>
+                                    <span class="provenance-marker provenance-derived">≈ Derived: Calculated from reported data</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card p-6">
+                        <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>🔤</span> Acronym &amp; Abbreviation Legend
+                        </h2>
+                        <div class="overflow-x-auto">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Abbreviation</th>
+                                        <th>Meaning</th>
+                                        <th>Context</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="font-semibold">OMW</td>
+                                        <td>Olive Mill Wastewater</td>
+                                        <td>Liquid effluent from olive oil extraction</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-semibold">LOI</td>
+                                        <td>Loss on Ignition</td>
+                                        <td>Measure of volatile content at high temp</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-semibold">NF P</td>
+                                        <td>Norme Française</td>
+                                        <td>French Standard used for brick characterization</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Overview -->
+            <div id="tab-overview" class="tab-content">
+                <div class="space-y-8">
+                    
+                    <!-- Research Objective -->
+                    <div id="objective" class="section-anchor">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>🎯</span> Research Objective & Problem Statement
+                        </h2>
+                        <div class="card p-6">
+                            <div class="space-y-6">
+                                <div>
+                                    <div class="flex items-center justify-between mb-3">
+                                        <h3 class="text-lg font-semibold text-gray-900">Primary Objective</h3>
+                                        <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                                    </div>
+                                    <p class="text-gray-700 leading-relaxed bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+                                        "Assess the impact of OMW incorporation in unfired and fired bricks."
+                                    </p>
+                                </div>
+                                
+                                <div>
+                                    <div class="flex items-center justify-between mb-3">
+                                        <h3 class="text-lg font-semibold text-gray-900">Problem Definition</h3>
+                                        <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                                    </div>
+                                    <div class="bg-orange-50 p-4 rounded-lg border-l-4 border-orange-500">
+                                        <h4 class="font-bold text-gray-900 mb-2">Environmental Challenge</h4>
+                                        <p class="text-sm text-gray-700">OMW has a heavy load of organic matter, especially polyphenols, which are problematic for conventional wastewater treatment.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Material System Context -->
+                    <div id="system" class="section-anchor">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>🧱</span> Material System Context
+                        </h2>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="card p-6 border-t-4 border-blue-500">
+                                <div class="text-3xl mb-3">🧱</div>
+                                <h3 class="text-base font-bold text-gray-900 mb-2">Primary System</h3>
+                                <p class="text-lg font-bold text-blue-600">Fired Clay</p>
+                                <span class="provenance-marker provenance-extracted mt-3">✓ Extracted</span>
+                            </div>
+                            
+                            <div class="card p-6 border-t-4 border-green-500">
+                                <div class="text-3xl mb-3">⚙️</div>
+                                <h3 class="text-base font-bold text-gray-900 mb-2">Functional Role</h3>
+                                <p class="text-lg font-bold text-green-600">Structural</p>
+                                <span class="provenance-marker provenance-extracted mt-3">✓ Extracted</span>
+                            </div>
+                            
+                            <div class="card p-6 border-t-4 border-purple-500">
+                                <div class="text-3xl mb-3">📊</div>
+                                <h3 class="text-base font-bold text-gray-900 mb-2">Baseline Reference</h3>
+                                <p class="text-lg font-bold text-purple-600">Conventional Brick</p>
+                                <p class="text-xs text-gray-500 mt-2">With Fresh Water</p>
+                                <span class="provenance-marker provenance-extracted mt-3">✓ Extracted</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Research Scope -->
+                    <div id="scope" class="section-anchor">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>🔍</span> Research Scope & Context
+                        </h2>
+                        <div class="card p-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <div class="flex items-center justify-between mb-3">
+                                        <h3 class="text-lg font-semibold text-gray-900">Geographical Context</h3>
+                                        <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                                    </div>
+                                    <p class="text-gray-700 leading-relaxed">
+                                        🇹🇳 <strong>Tunisia</strong> (Sfax region)
+                                    </p>
+                                    <p class="text-xs text-gray-500 mt-2">OMW collected near Agareb brick factory.</p>
+                                </div>
+                                <div>
+                                    <div class="flex items-center justify-between mb-3">
+                                        <h3 class="text-lg font-semibold text-gray-900">Industrial Feasibility</h3>
+                                        <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                                    </div>
+                                    <p class="text-gray-700 leading-relaxed">
+                                        Study includes trials at industrial scale using standard brickworks equipment (stiff-mud process).
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Materials -->
+            <div id="tab-materials" class="tab-content hidden">
+                <div class="space-y-8">
+                    
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>🫒</span> Waste Material Characterization
+                        </h2>
+                        
+                        <!-- Olive Mill Wastewater -->
+                        <div class="card p-6 mb-6 border-l-4 border-green-500">
+                            <div class="flex items-start gap-4 mb-4">
+                                <div class="text-5xl">🫒</div>
+                                <div class="flex-1">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <h3 class="text-xl font-bold text-gray-900">Olive Mill Wastewater (OMW)</h3>
+                                        <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                                    </div>
+                                    <p class="text-gray-700 leading-relaxed mb-4 bg-green-50 p-3 rounded">
+                                        Liquid effluent resulting from olive oil extraction activity.
+                                    </p>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                        <div class="bg-gray-50 p-3 rounded border border-gray-200">
+                                            <div class="text-xs text-gray-500 mb-1">Source</div>
+                                            <div class="text-sm font-bold text-gray-900">Agareb, Tunisia</div>
+                                        </div>
+                                        <div class="bg-gray-50 p-3 rounded border border-gray-200">
+                                            <div class="text-xs text-gray-500 mb-1">Form</div>
+                                            <div class="text-sm font-bold text-gray-900">Raw Liquid Effluent</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-4">
+                                <h4 class="text-lg font-bold text-gray-900 mb-3">Physico-chemical Properties (Table 5)</h4>
+                                <div class="overflow-x-auto">
+                                    <table class="w-full text-sm">
+                                        <thead class="bg-gray-50">
+                                            <tr>
+                                                <th class="p-2 text-left">Property</th>
+                                                <th class="p-2 text-left">Value</th>
+                                                <th class="p-2 text-left">Unit</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr class="border-b">
+                                                <td class="p-2 font-medium">Bulk Density</td>
+                                                <td class="p-2">1.04</td>
+                                                <td class="p-2">kg/m³</td>
+                                            </tr>
+                                            <tr class="border-b">
+                                                <td class="p-2 font-medium">Mineral Matter (Ash)</td>
+                                                <td class="p-2">15.80</td>
+                                                <td class="p-2">g/dm³</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Clay Characterization -->
+                     <div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>🧱</span> Clay Characterization
+                        </h2>
+                        <div class="card p-6">
+                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <h4 class="text-lg font-bold text-gray-900 mb-2">Oxide Composition</h4>
+                                    <div class="h-64">
+                                        <canvas id="oxideChart"></canvas>
+                                    </div>
+                                </div>
+                                <div>
+                                     <h4 class="text-lg font-bold text-gray-900 mb-2">Thermal Properties</h4>
+                                     <div class="bg-gray-50 p-3 rounded border border-gray-200">
+                                        <div class="text-xs text-gray-500 mb-1">Loss on Ignition (LOI)</div>
+                                        <div class="text-sm font-bold text-gray-900">10.17%</div>
+                                        <div class="text-xs text-gray-500 mt-1">Measured for Clay A</div>
+                                    </div>
+                                </div>
+                             </div>
+                        </div>
+                     </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Formulation -->
+            <div id="tab-formulation" class="tab-content hidden">
+                <div class="space-y-8">
+                    
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>🧱</span> Formulation & Mix Design
+                        </h2>
+                        
+                        <div class="card p-6 mb-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-lg font-bold text-gray-900">Substitution Strategy</h3>
+                                <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+                                    <h4 class="font-bold text-gray-900 mb-2">Control (CTRL-0)</h4>
+                                    <p class="text-sm text-gray-700">Standard clay mixture using fresh water as the liquid phase.</p>
+                                </div>
+                                <div class="bg-green-50 p-4 rounded-lg border-l-4 border-green-500">
+                                    <h4 class="font-bold text-gray-900 mb-2">OMW Variant (OMW-Repl)</h4>
+                                    <p class="text-sm text-gray-700">100% replacement of fresh water with OMW effluent.</p>
+                                    <p class="text-xs text-gray-600 mt-2"><strong>Ratio:</strong> 19.5% liquid content by mass of mixture.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card p-6">
+                            <h3 class="text-lg font-bold text-gray-900 mb-4">Mix Composition Table</h3>
+                            <div class="overflow-x-auto">
+                                <table class="w-full">
+                                    <thead>
+                                        <tr class="bg-gray-100">
+                                            <th class="p-3 text-left">Variant ID</th>
+                                            <th class="p-3 text-left">Clay Solids (%)</th>
+                                            <th class="p-3 text-left">Fresh Water (%)</th>
+                                            <th class="p-3 text-left">OMW Effluent (%)</th>
+                                            <th class="p-3 text-left">Liquid Substitution</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="border-b">
+                                            <td class="p-3 font-bold">CTRL-0</td>
+                                            <td class="p-3">80.5</td>
+                                            <td class="p-3">19.5</td>
+                                            <td class="p-3">0</td>
+                                            <td class="p-3">0%</td>
+                                        </tr>
+                                        <tr class="border-b bg-green-50">
+                                            <td class="p-3 font-bold">OMW-Repl</td>
+                                            <td class="p-3">80.5</td>
+                                            <td class="p-3">0</td>
+                                            <td class="p-3">19.5</td>
+                                            <td class="p-3 font-bold text-green-700">100%</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Testing -->
+            <div id="tab-testing" class="tab-content hidden">
+                <div class="space-y-8">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>⚙️</span> Processing & Testing Protocols
+                        </h2>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <div class="card p-6">
+                                <h3 class="text-lg font-bold text-gray-900 mb-3">Processing Steps</h3>
+                                <ol class="space-y-3">
+                                    <li class="flex items-center gap-3">
+                                        <span class="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center text-xs font-bold">1</span>
+                                        <span class="text-sm"><strong>Grinding:</strong> Clays crushed and sieved (0.8–1.0 mm)</span>
+                                    </li>
+                                    <li class="flex items-center gap-3">
+                                        <span class="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center text-xs font-bold">2</span>
+                                        <span class="text-sm"><strong>Forming:</strong> Stiff-mud process / Extrusion</span>
+                                    </li>
+                                    <li class="flex items-center gap-3">
+                                        <span class="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center text-xs font-bold">3</span>
+                                        <span class="text-sm"><strong>Drying:</strong> 48 hours total process</span>
+                                    </li>
+                                    <li class="flex items-center gap-3">
+                                        <span class="w-6 h-6 rounded-full bg-red-100 text-red-700 flex items-center justify-center text-xs font-bold">4</span>
+                                        <span class="text-sm"><strong>Firing:</strong> Tunnel kiln at 920°C (24h cycle)</span>
+                                    </li>
+                                </ol>
+                            </div>
+
+                            <div class="card p-6">
+                                <h3 class="text-lg font-bold text-gray-900 mb-3">Specimen Details</h3>
+                                <div class="space-y-3">
+                                    <div class="bg-gray-50 p-3 rounded">
+                                        <div class="text-xs text-gray-500">Lab Scale</div>
+                                        <div class="text-sm font-bold">Rods (120mm x 10mm)</div>
+                                    </div>
+                                    <div class="bg-gray-50 p-3 rounded">
+                                        <div class="text-xs text-gray-500">Industrial Trial</div>
+                                        <div class="text-sm font-bold">Bricks (65mm x 45mm x 20mm)</div>
+                                    </div>
+                                    <div class="bg-gray-50 p-3 rounded">
+                                        <div class="text-xs text-gray-500">Curing</div>
+                                        <div class="text-sm font-bold">5 Days Air Curing</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Results -->
+            <div id="tab-results" class="tab-content hidden">
+                <div class="space-y-8">
+                    
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-2xl font-bold text-gray-900 flex items-center gap-2">
+                            <span>📊</span> Quantitative Results (Table 6)
+                        </h2>
+                        <span class="badge badge-extracted">✓ Extracted Data</span>
+                    </div>
+
+                    <!-- Results Matrix Table -->
+                    <div class="card p-6 mb-6">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm">
+                                <thead>
+                                    <tr class="bg-gray-100 border-b border-gray-300">
+                                        <th class="p-3">Specimen</th>
+                                        <th class="p-3">Condition</th>
+                                        <th class="p-3">Variant</th>
+                                        <th class="p-3">Density (g/cm³)</th>
+                                        <th class="p-3">Water Absorption (%)</th>
+                                        <th class="p-3">Shrinkage (%)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Rods Unfired -->
+                                    <tr class="border-b hover:bg-gray-50">
+                                        <td class="p-3">Rod</td>
+                                        <td class="p-3"><span class="px-2 py-1 bg-gray-200 rounded text-xs">Unfired</span></td>
+                                        <td class="p-3 font-semibold">Control</td>
+                                        <td class="p-3">0.92 ± 0.10</td>
+                                        <td class="p-3">12.0 ± 0.10</td>
+                                        <td class="p-3">9.30 ± 0.20</td>
+                                    </tr>
+                                    <tr class="border-b hover:bg-gray-50">
+                                        <td class="p-3">Rod</td>
+                                        <td class="p-3"><span class="px-2 py-1 bg-gray-200 rounded text-xs">Unfired</span></td>
+                                        <td class="p-3 font-semibold text-green-700">OMW</td>
+                                        <td class="p-3">0.93 ± 0.10</td>
+                                        <td class="p-3">13.6 ± 0.20</td>
+                                        <td class="p-3">9.90 ± 0.20</td>
+                                    </tr>
+                                    <!-- Rods Fired -->
+                                    <tr class="border-b hover:bg-gray-50 bg-red-50">
+                                        <td class="p-3">Rod</td>
+                                        <td class="p-3"><span class="px-2 py-1 bg-red-100 text-red-800 rounded text-xs">Fired 920°C</span></td>
+                                        <td class="p-3 font-semibold">Control</td>
+                                        <td class="p-3">0.83 ± 0.30</td>
+                                        <td class="p-3">-</td>
+                                        <td class="p-3">1.70 ± 0.04</td>
+                                    </tr>
+                                    <tr class="border-b hover:bg-gray-50 bg-red-50">
+                                        <td class="p-3">Rod</td>
+                                        <td class="p-3"><span class="px-2 py-1 bg-red-100 text-red-800 rounded text-xs">Fired 920°C</span></td>
+                                        <td class="p-3 font-semibold text-green-700">OMW</td>
+                                        <td class="p-3">0.84 ± 0.20</td>
+                                        <td class="p-3">-</td>
+                                        <td class="p-3">1.90 ± 0.10</td>
+                                    </tr>
+                                    <!-- Bricks Unfired -->
+                                    <tr class="border-b hover:bg-gray-50">
+                                        <td class="p-3">Brick</td>
+                                        <td class="p-3"><span class="px-2 py-1 bg-gray-200 rounded text-xs">Unfired</span></td>
+                                        <td class="p-3 font-semibold">Control</td>
+                                        <td class="p-3">2.09 ± 0.20</td>
+                                        <td class="p-3">11.5 ± 0.20</td>
+                                        <td class="p-3">7.30 ± 0.10</td>
+                                    </tr>
+                                    <tr class="border-b hover:bg-gray-50">
+                                        <td class="p-3">Brick</td>
+                                        <td class="p-3"><span class="px-2 py-1 bg-gray-200 rounded text-xs">Unfired</span></td>
+                                        <td class="p-3 font-semibold text-green-700">OMW</td>
+                                        <td class="p-3">2.05 ± 0.20</td>
+                                        <td class="p-3">14.8 ± 0.20</td>
+                                        <td class="p-3">7.50 ± 0.20</td>
+                                    </tr>
+                                    <!-- Bricks Fired -->
+                                    <tr class="border-b hover:bg-gray-50 bg-red-50">
+                                        <td class="p-3">Brick</td>
+                                        <td class="p-3"><span class="px-2 py-1 bg-red-100 text-red-800 rounded text-xs">Fired 920°C</span></td>
+                                        <td class="p-3 font-semibold">Control</td>
+                                        <td class="p-3">1.97 ± 0.20</td>
+                                        <td class="p-3">-</td>
+                                        <td class="p-3">1.08 ± 0.10</td>
+                                    </tr>
+                                    <tr class="border-b hover:bg-gray-50 bg-red-50">
+                                        <td class="p-3">Brick</td>
+                                        <td class="p-3"><span class="px-2 py-1 bg-red-100 text-red-800 rounded text-xs">Fired 920°C</span></td>
+                                        <td class="p-3 font-semibold text-green-700">OMW</td>
+                                        <td class="p-3">1.92 ± 0.20</td>
+                                        <td class="p-3">-</td>
+                                        <td class="p-3">1.20 ± 0.10</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Charts Area -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Chart 1: Shrinkage -->
+                        <div class="card p-6">
+                            <h3 class="text-lg font-bold text-gray-900 mb-4">Comparison of Shrinkage (Bricks)</h3>
+                            <div class="h-64">
+                                <canvas id="shrinkageChart"></canvas>
+                            </div>
+                            <p class="text-xs text-center text-gray-500 mt-2">OMW leads to slightly higher shrinkage in both fired and unfired states.</p>
+                        </div>
+                        
+                        <!-- Chart 2: Density -->
+                        <div class="card p-6">
+                            <h3 class="text-lg font-bold text-gray-900 mb-4">Comparison of Density (Bricks)</h3>
+                            <div class="h-64">
+                                <canvas id="densityChart"></canvas>
+                            </div>
+                             <p class="text-xs text-center text-gray-500 mt-2">Density is comparable, with minimal reduction in OMW samples.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Limitations -->
+            <div id="tab-limitations" class="tab-content hidden">
+                <div class="space-y-8">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>⚠️</span> Data Gaps & Limitations
+                        </h2>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="card p-5 border-l-4 border-red-500">
+                                <h3 class="font-bold text-gray-900 mb-2">Missing Metrics</h3>
+                                <p class="text-sm text-gray-700">
+                                    <strong>Compressive Strength</strong> is not reported in the quantitative results table.
+                                    <br>
+                                    <strong>Thermal Conductivity</strong> is missing, despite potential benefits of porosity.
+                                </p>
+                            </div>
+                            
+                            <div class="card p-5 border-l-4 border-orange-500">
+                                <h3 class="font-bold text-gray-900 mb-2">Tensile Strength</h3>
+                                <p class="text-sm text-gray-700">
+                                    Text mentions a <strong>~9% reduction</strong> in tensile strength, but this data point is missing from the summary table and lacks statistical detail.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: PhD Context -->
+            <div id="tab-phd" class="tab-content hidden">
+                <div class="space-y-8">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>🎓</span> PhD Relevance
+                        </h2>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div class="card p-6 border-t-4 border-blue-500">
+                                <div class="text-3xl mb-3">🏷️</div>
+                                <h3 class="text-lg font-bold text-gray-900 mb-3">Classification</h3>
+                                <p class="text-lg font-bold text-blue-600">Tier C</p>
+                                <p class="text-sm text-gray-600 mt-2">Useful for context and benchmarking density/shrinkage values.</p>
+                            </div>
+
+                            <div class="card p-6 border-t-4 border-green-500">
+                                <div class="text-3xl mb-3">✅</div>
+                                <h3 class="text-lg font-bold text-gray-900 mb-3">Utility</h3>
+                                <p class="text-sm text-gray-700">
+                                    Supports <strong>model training</strong> and <strong>benchmarking</strong> for liquid waste incorporation in fired clay.
+                                </p>
+                            </div>
+
+                            <div class="card p-6 border-t-4 border-orange-500">
+                                <div class="text-3xl mb-3">🚀</div>
+                                <h3 class="text-lg font-bold text-gray-900 mb-3">Action</h3>
+                                <p class="text-sm text-gray-700">
+                                    Include in core dataset. Focus on the industrial feasibility aspect.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Sustainability -->
+            <div id="tab-sustainability" class="tab-content hidden">
+                 <div class="space-y-8">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>🌱</span> Sustainability Impact
+                        </h2>
+                        
+                        <div class="card p-6 mb-6">
+                            <div class="flex items-start gap-4">
+                                <span class="text-4xl">♻️</span>
+                                <div>
+                                    <h3 class="text-xl font-bold text-gray-900 mb-2">Waste Valorization</h3>
+                                    <p class="text-gray-700 leading-relaxed">
+                                        Olive Mill Wastewater contains problematic polyphenols. Incorporating it into bricks immobilizes these compounds within the ceramic matrix, offering an eco-friendly disposal route for the olive oil industry.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="card p-5 border-l-4 border-teal-500">
+                                <h4 class="font-bold text-gray-900 mb-2">Water Conservation</h4>
+                                <p class="text-sm text-gray-700">100% substitution of fresh water reduces the water footprint of brick manufacturing in arid regions (like Tunisia).</p>
+                            </div>
+                             <div class="card p-5 border-l-4 border-green-500">
+                                <h4 class="font-bold text-gray-900 mb-2">Industrial Integration</h4>
+                                <p class="text-sm text-gray-700">Requires no changes to existing "stiff-mud" industrial processes, ensuring high practical feasibility.</p>
+                            </div>
+                         </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-100 border-t border-gray-200 py-8 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col items-center justify-center text-center">
+                <p class="text-gray-700 text-sm">
+                    <strong>PhD Scholar Dashboard</strong> • Automated Extraction • 2025
+                </p>
+                <p class="text-gray-500 text-xs mt-2">
+                    Source: Valorization of olive mill wastewater by its incorporation in building bricks
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Paper Data
+        const paperData = {
+            title: "Valorization of olive mill wastewater by its incorporation in building bricks",
+            doi: "10.1016/j.jhazmat.2008.01.104",
+            authors: ["Houda Mekki", "Michael Anderson", "Mourad Benzina", "Emna Ammar"],
+            year: 2008,
+            journal: "Journal of Hazardous Materials"
+        };
+
+        let currentTab = 'overview';
+
+        // Tab Switching
+        function switchTab(tabName) {
+            currentTab = tabName;
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+            const targetTab = document.getElementById(`tab-${tabName}`);
+            if (targetTab) targetTab.classList.remove('hidden');
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            const targetBtn = document.querySelector(`.btn-${tabName}`);
+            if (targetBtn) targetBtn.classList.add('active');
+            updateProgress();
+        }
+
+        // Progress Bar
+        function updateProgress() {
+            const progressFill = document.getElementById('progressFill');
+            if (!progressFill) return;
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+            progressFill.style.width = `${Math.min(100, Math.max(0, progress))}%`;
+        }
+
+        // Copy Citation
+        function copyCitation() {
+            const citation = `${paperData.authors.join(', ')} (${paperData.year}). ${paperData.title}. ${paperData.journal}. https://doi.org/${paperData.doi}`;
+            navigator.clipboard.writeText(citation).then(() => {
+                const btn = event.target.closest('button');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<span>✓</span> Copied!';
+                setTimeout(() => btn.innerHTML = originalText, 2000);
+            });
+        }
+
+        // Initialize Charts
+        function initializeCharts() {
+            // Chart 1: Clay Oxide Composition
+            const oxideCtx = document.getElementById('oxideChart');
+            if (oxideCtx) {
+                new Chart(oxideCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['SiO2', 'Al2O3', 'Fe2O3', 'Other'],
+                        datasets: [{
+                            data: [62.31, 12.79, 0.13, 24.77],
+                            backgroundColor: [
+                                'rgba(59, 130, 246, 0.7)',
+                                'rgba(16, 185, 129, 0.7)',
+                                'rgba(239, 68, 68, 0.7)',
+                                'rgba(156, 163, 175, 0.7)'
+                            ]
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { position: 'right' },
+                            title: { display: true, text: 'Clay Oxide Composition (%)' }
+                        }
+                    }
+                });
+            }
+
+            // Chart 2: Shrinkage Comparison
+            const shrinkageCtx = document.getElementById('shrinkageChart');
+            if (shrinkageCtx) {
+                new Chart(shrinkageCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Unfired', 'Fired (920°C)'],
+                        datasets: [
+                            {
+                                label: 'Control',
+                                data: [7.30, 1.08],
+                                backgroundColor: 'rgba(107, 114, 128, 0.7)',
+                                borderColor: 'rgba(107, 114, 128, 1)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'OMW',
+                                data: [7.50, 1.20],
+                                backgroundColor: 'rgba(5, 150, 105, 0.7)',
+                                borderColor: 'rgba(5, 150, 105, 1)',
+                                borderWidth: 1
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            title: { display: true, text: 'Linear Shrinkage (%) - Bricks' }
+                        },
+                        scales: {
+                            y: { beginAtZero: true, title: { display: true, text: 'Shrinkage (%)' } }
+                        }
+                    }
+                });
+            }
+
+            // Chart 3: Density Comparison
+            const densityCtx = document.getElementById('densityChart');
+            if (densityCtx) {
+                new Chart(densityCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Unfired', 'Fired (920°C)'],
+                        datasets: [
+                            {
+                                label: 'Control',
+                                data: [2.09, 1.97],
+                                backgroundColor: 'rgba(107, 114, 128, 0.7)',
+                                borderColor: 'rgba(107, 114, 128, 1)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'OMW',
+                                data: [2.05, 1.92],
+                                backgroundColor: 'rgba(5, 150, 105, 0.7)',
+                                borderColor: 'rgba(5, 150, 105, 1)',
+                                borderWidth: 1
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            title: { display: true, text: 'Bulk Density (g/cm³) - Bricks' }
+                        },
+                        scales: {
+                            y: { beginAtZero: true, title: { display: true, text: 'Density (g/cm³)' } }
+                        }
+                    }
+                });
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeCharts();
+            window.addEventListener('scroll', updateProgress, { passive: true });
+        });
+    </script>
+</body>
+</html>

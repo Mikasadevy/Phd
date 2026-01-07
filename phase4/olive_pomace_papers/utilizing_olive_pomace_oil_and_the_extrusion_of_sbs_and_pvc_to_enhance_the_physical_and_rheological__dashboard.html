@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Paper Dashboard – Arabani et al. 2024 | Bio-Modified Asphalt Binder</title>
+    <meta name="description" content="Academic research dashboard analyzing asphalt binder modification using olive pomace oil and extruded SBS/PVC polymer blend">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['Lora', 'Georgia', 'serif'],
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        },
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* Base Typography */
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            font-size: 16px;
+            line-height: 1.75;
+            color: #1e293b;
+            background: #ffffff;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Lora', Georgia, serif;
+            font-weight: 600;
+            line-height: 1.3;
+            color: #0f172a;
+        }
+        
+        h1 { font-size: 2.25rem; margin-bottom: 1rem; }
+        h2 { font-size: 1.875rem; margin-bottom: 0.875rem; }
+        h3 { font-size: 1.5rem; margin-bottom: 0.75rem; }
+        h4 { font-size: 1.25rem; margin-bottom: 0.625rem; }
+        
+        /* Academic Card Style */
+        .card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            transition: box-shadow 0.2s ease;
+        }
+        
+        .card:hover {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        
+        .card-elevated {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Badge System */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.375rem 0.875rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border: 1.5px solid;
+        }
+        
+        .badge-core {
+            background: #dbeafe;
+            color: #1e40af;
+            border-color: #3b82f6;
+        }
+        
+        .badge-experimental {
+            background: #fef3c7;
+            color: #92400e;
+            border-color: #f59e0b;
+        }
+        
+        .badge-tier-a {
+            background: #dcfce7;
+            color: #166534;
+            border-color: #22c55e;
+        }
+        
+        /* Tab Navigation */
+        .tab-nav {
+            display: flex;
+            flex-wrap: nowrap;
+            justify-content: center;
+            align-items: center;
+            overflow-x: auto;
+            gap: 0.25rem;
+            border-bottom: 2px solid #e2e8f0;
+            padding: 0.75rem 0.25rem;
+            margin-bottom: 2rem;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        .tab-nav::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .tab-button {
+            flex: 0 0 auto;
+            padding: 0.35rem 0.6rem;
+            border-radius: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+            background: #f8fafc;
+            color: #64748b;
+            white-space: nowrap;
+        }
+        
+        .tab-button:hover {
+            background: #f1f5f9;
+            color: #334155;
+        }
+        
+        .tab-button.active {
+            color: #ffffff;
+        }
+
+        .tab-button.active.btn-info { background: #64748b; border-color: #475569; }
+        .tab-button.active.btn-overview { background: #2563eb; border-color: #1d4ed8; }
+        .tab-button.active.btn-materials { background: #16a34a; border-color: #15803d; }
+        .tab-button.active.btn-formulation { background: #ea580c; border-color: #c2410c; }
+        .tab-button.active.btn-testing { background: #4f46e5; border-color: #4338ca; }
+        .tab-button.active.btn-results { background: #0891b2; border-color: #0e7490; }
+        .tab-button.active.btn-limitations { background: #dc2626; border-color: #b91c1c; }
+        .tab-button.active.btn-phd { background: #9333ea; border-color: #7e22ce; }
+        .tab-button.active.btn-sustainability { background: #059669; border-color: #047857; }
+        
+        /* Data Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+        }
+        
+        thead {
+            background: #f8fafc;
+            border-bottom: 2px solid #cbd5e1;
+        }
+        
+        th {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: #475569;
+            font-size: 0.8125rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        tbody tr:hover {
+            background: #f8fafc;
+        }
+        
+        /* Metric Cards */
+        .metric-card {
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            border: 1px solid #e2e8f0;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        
+        /* Progress Bar */
+        .progress-bar {
+            height: 3px;
+            background: #e2e8f0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 9999;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #0ea5e9 0%, #06b6d4 100%);
+            transition: width 0.15s ease-out;
+        }
+        
+        /* Alert Boxes */
+        .alert {
+            padding: 1rem 1.25rem;
+            border-radius: 0.5rem;
+            border-left: 4px solid;
+            font-size: 0.875rem;
+            line-height: 1.6;
+        }
+        
+        .alert-info { background: #dbeafe; border-color: #3b82f6; color: #1e3a8a; }
+        .alert-warning { background: #fef3c7; border-color: #f59e0b; color: #78350f; }
+        .alert-success { background: #dcfce7; border-color: #22c55e; color: #14532d; }
+        .alert-danger { background: #fee2e2; border-color: #ef4444; color: #7f1d1d; }
+        
+        /* Provenance Markers */
+        .provenance-marker {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.625rem;
+            padding: 0.125rem 0.375rem;
+            border-radius: 0.25rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .provenance-extracted { background: #dcfce7; color: #166534; }
+        .provenance-derived { background: #fef3c7; color: #92400e; }
+        .provenance-interpretive { background: #fce7f3; color: #9f1239; }
+
+        .sticky-nav {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        @media print {
+            .no-print { display: none !important; }
+            .tab-content { display: block !important; }
+        }
+        
+        code {
+            font-family: 'SF Mono', Monaco, monospace;
+            background: #f1f5f9;
+            padding: 0.125rem 0.375rem;
+            border-radius: 0.25rem;
+            font-size: 0.875em;
+            color: #0369a1;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    
+    <!-- Progress Bar -->
+    <div class="progress-bar no-print">
+        <div id="progressFill" class="progress-fill" style="width: 0%"></div>
+    </div>
+    
+    <!-- Navigation Header -->
+    <nav class="sticky-nav no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center shadow-md">
+                        <span class="text-white font-bold text-xl">📄</span>
+                    </div>
+                    <div>
+                        <h1 class="text-base font-bold text-gray-900">Research Paper Dashboard</h1>
+                        <p class="text-xs text-gray-500">Arabani et al. 2024</p>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="window.print()" class="px-3 py-2 rounded-lg bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 text-sm font-medium transition flex items-center gap-2">
+                        <span>🖨️</span> Print
+                    </button>
+                    <button onclick="copyCitation()" class="px-3 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium transition flex items-center gap-2">
+                        <span>📋</span> Citation
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- Hero Section -->
+        <div class="card card-elevated p-8 mb-8">
+            <div class="flex items-start gap-6 mb-6">
+                <div class="flex-shrink-0">
+                    <div class="w-20 h-20 bg-gradient-to-br from-gray-800 to-black rounded-2xl flex items-center justify-center shadow-lg">
+                        <span class="text-4xl">🛢️</span>
+                    </div>
+                </div>
+                <div class="flex-1">
+                    <div class="flex flex-wrap gap-2 mb-3">
+                        <span class="badge badge-tier-a">🏆 Tier A</span>
+                        <span class="badge badge-core">Core Dataset</span>
+                        <span class="badge badge-experimental">🧪 Experimental</span>
+                    </div>
+                    <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4 leading-tight">
+                        Utilizing olive pomace oil and the extrusion of SBS and PVC to enhance the physical and rheological characteristics of asphalt binder
+                    </h1>
+                    <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-4">
+                        <span class="flex items-center gap-1">
+                            <span>👥</span>
+                            M. Arabani, A. Amiri, M.H. Hassanjani
+                        </span>
+                        <span>•</span>
+                        <span>📅 2024</span>
+                        <span>•</span>
+                        <span>📖 Case Studies in Construction Materials</span>
+                    </div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="text-sm text-gray-500 font-medium">DOI:</span>
+                        <code class="text-sm">10.1016/j.cscm.2024.e04097</code>
+                        <a href="https://doi.org/10.1016/j.cscm.2024.e04097" target="_blank" 
+                           class="px-3 py-1 rounded bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium transition">
+                            🔗 Open Paper
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PhD Context Banner -->
+            <div class="bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl p-6 border border-purple-200">
+                <div class="flex flex-col md:flex-row items-start gap-6">
+                    <div class="flex-shrink-0">
+                        <div class="w-16 h-16 bg-purple-100 rounded-xl flex items-center justify-center border-2 border-purple-300 shadow-sm">
+                            <span class="text-3xl">💡</span>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-xl font-bold text-gray-900 mb-3 flex items-center gap-2">
+                            <span>🎓</span> Core Takeaway for Research
+                            <span class="provenance-marker provenance-interpretive ml-auto">⚡ Interpretive</span>
+                        </h3>
+                        <p class="text-gray-700 leading-relaxed mb-4">
+                            Combining 6% olive pomace oil substitution with 5% extruded SBS/PVC blend improved the asphalt binder performance grade from <strong>PG 64-16</strong> to <strong>PG 76-28</strong>, balancing high-temperature rutting resistance with low-temperature flexibility.
+                        </p>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="bg-white rounded-lg p-4 border border-green-200 hover:border-green-400 transition">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="w-1 h-10 bg-green-500 rounded-full"></div>
+                                    <div class="text-xs text-green-700 uppercase tracking-widest font-bold">Strategy</div>
+                                </div>
+                                <div class="text-lg font-bold text-gray-900 pl-4">Hybrid: Bio-Oil + Polymer</div>
+                            </div>
+                            
+                            <div class="bg-white rounded-lg p-4 border border-purple-200 hover:border-purple-400 transition">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="w-1 h-10 bg-purple-500 rounded-full"></div>
+                                    <div class="text-xs text-purple-700 uppercase tracking-widest font-bold">Innovation</div>
+                                </div>
+                                <div class="text-lg font-bold text-gray-900 pl-4">Extruded SBS+PVC Blend</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="metric-card">
+                <div class="text-center">
+                    <div class="text-4xl mb-3">🧪</div>
+                    <div class="text-3xl font-bold text-blue-600 mb-1">5</div>
+                    <div class="text-sm font-medium text-gray-600 mb-2">Binder Variants</div>
+                    <div class="text-xs text-gray-500">Control + 3 OPO + 1 Hybrid</div>
+                    <span class="provenance-marker provenance-extracted mt-2">✓ Extracted</span>
+                </div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="text-center">
+                    <div class="text-4xl mb-3">🫒</div>
+                    <div class="text-3xl font-bold text-green-600 mb-1">3 – 9%</div>
+                    <div class="text-sm font-medium text-gray-600 mb-2">Replacement Range</div>
+                    <div class="text-xs text-gray-500">Olive Pomace Oil</div>
+                    <span class="provenance-marker provenance-extracted mt-2">✓ Extracted</span>
+                </div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="text-center">
+                    <div class="text-4xl mb-3">📈</div>
+                    <div class="text-3xl font-bold text-purple-600 mb-1">+12°C</div>
+                    <div class="text-sm font-medium text-gray-600 mb-2">Performance Grade Bump</div>
+                    <div class="text-xs text-gray-500">PG 64 -> PG 76 (Hybrid)</div>
+                    <span class="provenance-marker provenance-extracted mt-2">✓ Extracted</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="card p-6 mb-8">
+            <div class="tab-nav">
+                <button class="tab-button active btn-overview" onclick="switchTab('overview')">📋 Overview</button>
+                <button class="tab-button btn-materials" onclick="switchTab('materials')">🫒 Materials</button>
+                <button class="tab-button btn-formulation" onclick="switchTab('formulation')">🧪 Formulation</button>
+                <button class="tab-button btn-testing" onclick="switchTab('testing')">⚙️ Testing</button>
+                <button class="tab-button btn-results" onclick="switchTab('results')">📊 Results</button>
+                <button class="tab-button btn-limitations" onclick="switchTab('limitations')">⚠️ Limitations</button>
+                <button class="tab-button btn-phd" onclick="switchTab('phd')">🎓 PhD Context</button>
+                <button class="tab-button btn-sustainability" onclick="switchTab('sustainability')">🌱 Sustainability</button>
+            </div>
+
+            <!-- Tab Content: Overview -->
+            <div id="tab-overview" class="tab-content">
+                <div class="space-y-8">
+                    <!-- Research Objective -->
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>🎯</span> Research Objective & Problem Statement
+                        </h2>
+                        <div class="card p-6">
+                            <div class="space-y-6">
+                                <div>
+                                    <div class="flex items-center justify-between mb-3">
+                                        <h3 class="text-lg font-semibold text-gray-900">Primary Objective</h3>
+                                        <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                                    </div>
+                                    <p class="text-gray-700 leading-relaxed bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+                                        Evaluate the efficacy of olive pomace oil (OPO) and polymer blend, created with polyvinyl chloride (PVC) and styrene-butadiene-styrene (SBS), in modifying the properties of asphalt binder.
+                                    </p>
+                                </div>
+                                
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div class="bg-orange-50 p-4 rounded-lg border-l-4 border-orange-500">
+                                        <h4 class="font-bold text-gray-900 mb-2">Technical Problem</h4>
+                                        <p class="text-sm text-gray-700">Bio-oils improve low-temperature performance but diminish high-temperature performance (rutting resistance).</p>
+                                    </div>
+                                    <div class="bg-green-50 p-4 rounded-lg border-l-4 border-green-500">
+                                        <h4 class="font-bold text-gray-900 mb-2">Environmental Problem</h4>
+                                        <p class="text-sm text-gray-700">Depletion of petroleum resources and disposal of olive pomace waste causing pollution.</p>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <h3 class="text-lg font-semibold text-gray-900 mb-3">Application Intent</h3>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                                            <div class="text-xs text-gray-500 mb-1">Target Application</div>
+                                            <div class="text-base font-bold text-gray-900">Road Construction (Pavement)</div>
+                                        </div>
+                                        <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                                            <div class="text-xs text-gray-500 mb-1">Material Function</div>
+                                            <div class="text-base font-bold text-gray-900">Binder Replacement/Modification</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Materials -->
+            <div id="tab-materials" class="tab-content hidden">
+                <div class="space-y-8">
+                    <!-- Primary Waste Materials -->
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>🫒</span> Waste Material Identity
+                        </h2>
+                        
+                        <div class="card p-6 mb-6 border-l-4 border-green-500">
+                            <div class="flex items-start gap-4 mb-4">
+                                <div class="text-5xl">🫒</div>
+                                <div class="flex-1">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <h3 class="text-xl font-bold text-gray-900">Olive Pomace Oil (OPO)</h3>
+                                        <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                                    </div>
+                                    <p class="text-gray-700 leading-relaxed mb-4 bg-green-50 p-3 rounded">
+                                        Cellulose-based material composed of pulp, husks, and seeds converted into oil.
+                                    </p>
+                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                        <div class="bg-gray-50 p-3 rounded border border-gray-200">
+                                            <div class="text-xs text-gray-500 mb-1">Source Type</div>
+                                            <div class="text-sm font-bold text-gray-900">Olive Mill Waste</div>
+                                        </div>
+                                        <div class="bg-gray-50 p-3 rounded border border-gray-200">
+                                            <div class="text-xs text-gray-500 mb-1">Origin</div>
+                                            <div class="text-sm font-bold text-gray-900">Rudbar, Guilan, Iran 🇮🇷</div>
+                                        </div>
+                                        <div class="bg-gray-50 p-3 rounded border border-gray-200">
+                                            <div class="text-xs text-gray-500 mb-1">Form at Use</div>
+                                            <div class="text-sm font-bold text-gray-900">Extracted Oil</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Processing Flow -->
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-900 mb-3">Processing & Extraction</h3>
+                            <div class="card p-6">
+                                <div class="space-y-4">
+                                    <div class="flex items-start gap-4">
+                                        <div class="flex-shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold">1</div>
+                                        <div>
+                                            <h4 class="font-bold text-gray-900">Chemical Activation (Extraction)</h4>
+                                            <p class="text-sm text-gray-600">Microwave oven using Isopropanol. 10–15 minutes at 120°C.</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start gap-4">
+                                        <div class="flex-shrink-0 w-8 h-8 bg-purple-600 text-white rounded-full flex items-center justify-center font-bold">2</div>
+                                        <div>
+                                            <h4 class="font-bold text-gray-900">Polymer Extrusion</h4>
+                                            <p class="text-sm text-gray-600">Twin screw extruder. 50% PVC + 50% SBS. 160°C at 80 rpm.</p>
+                                        </div>
+                                    </div>
+                                    <div class="alert alert-success mt-2 text-sm">
+                                        <strong>Rationale:</strong> Heat application grounded in thermodynamics to reduce solvent viscosity and optimize extraction efficiency.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Formulation -->
+            <div id="tab-formulation" class="tab-content hidden">
+                <div class="space-y-8">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>🧪</span> Formulation & Mix Design
+                        </h2>
+                        
+                        <!-- Control Mix -->
+                        <div class="card p-6 mb-6 border-l-4 border-blue-500">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="flex items-center gap-3">
+                                    <span class="text-2xl">📌</span>
+                                    <h3 class="text-xl font-bold text-gray-900">Control Reference</h3>
+                                    <span class="badge badge-core">Baseline</span>
+                                </div>
+                                <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="bg-gray-50 p-4 rounded border border-gray-200">
+                                    <div class="text-xs text-gray-500 mb-1">Base Binder</div>
+                                    <div class="text-lg font-bold text-gray-900">PG 64-16</div>
+                                    <div class="text-xs text-gray-600 mt-1">Jey Oil Company</div>
+                                </div>
+                                <div class="bg-gray-50 p-4 rounded border border-gray-200">
+                                    <div class="text-xs text-gray-500 mb-1">Replacement Strategy</div>
+                                    <div class="text-lg font-bold text-green-600">Mass Percent</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Variants Table -->
+                        <div class="card p-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-lg font-bold text-gray-900">Experimental Variants</h3>
+                                <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Variant ID</th>
+                                            <th>Description</th>
+                                            <th>OPO Content (%)</th>
+                                            <th>Polymer Blend (%)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="bg-blue-50 font-bold">
+                                            <td>AB</td>
+                                            <td>Control Binder</td>
+                                            <td>0%</td>
+                                            <td>0%</td>
+                                        </tr>
+                                        <tr>
+                                            <td>ABOP-3</td>
+                                            <td>Modified Binder</td>
+                                            <td>3%</td>
+                                            <td>0%</td>
+                                        </tr>
+                                        <tr>
+                                            <td>ABOP-6</td>
+                                            <td>Modified Binder</td>
+                                            <td>6%</td>
+                                            <td>0%</td>
+                                        </tr>
+                                        <tr>
+                                            <td>ABOP-9</td>
+                                            <td>Modified Binder</td>
+                                            <td>9%</td>
+                                            <td>0%</td>
+                                        </tr>
+                                        <tr class="bg-purple-50 font-bold">
+                                            <td class="text-purple-700">OPPM-65</td>
+                                            <td>Hybrid Modified</td>
+                                            <td>6%</td>
+                                            <td>5% (SBS+PVC)</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="alert alert-info mt-4 text-sm">
+                                <strong>Note:</strong> Polymer blend added at 5% relative to the bio-binder's weight in the 6% OPO specimen.
+                            </div>
+                        </div>
+
+                        <!-- Chart: Replacement Levels -->
+                        <div class="card p-6 mt-6">
+                            <h3 class="text-lg font-bold text-gray-900 mb-4">OPO Replacement Levels</h3>
+                            <div class="h-64">
+                                <canvas id="replacementChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Testing -->
+            <div id="tab-testing" class="tab-content hidden">
+                <div class="space-y-8">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>⚙️</span> Characterization Protocols
+                        </h2>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Standards -->
+                            <div class="card p-6">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h3 class="text-lg font-bold text-gray-900">Standards Cited</h3>
+                                    <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                                </div>
+                                <div class="space-y-2">
+                                    <div class="flex justify-between items-center bg-gray-50 p-2 rounded">
+                                        <span class="text-sm">Penetration</span>
+                                        <code class="text-xs">ASTM D5</code>
+                                    </div>
+                                    <div class="flex justify-between items-center bg-gray-50 p-2 rounded">
+                                        <span class="text-sm">Softening Point</span>
+                                        <code class="text-xs">ASTM D36</code>
+                                    </div>
+                                    <div class="flex justify-between items-center bg-gray-50 p-2 rounded">
+                                        <span class="text-sm">Ductility</span>
+                                        <code class="text-xs">ASTM D113</code>
+                                    </div>
+                                    <div class="flex justify-between items-center bg-gray-50 p-2 rounded">
+                                        <span class="text-sm">RTFO Aging</span>
+                                        <code class="text-xs">ASTM D2872</code>
+                                    </div>
+                                    <div class="flex justify-between items-center bg-gray-50 p-2 rounded">
+                                        <span class="text-sm">PAV Aging</span>
+                                        <code class="text-xs">ASTM D6521</code>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Conditioning -->
+                            <div class="card p-6">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h3 class="text-lg font-bold text-gray-900">Conditioning & Aging</h3>
+                                    <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                                </div>
+                                <ul class="space-y-3">
+                                    <li class="flex items-center gap-3 bg-gray-50 p-3 rounded">
+                                        <span class="text-2xl">🌱</span>
+                                        <div>
+                                            <span class="font-bold text-gray-900">Unaged</span>
+                                            <div class="text-xs text-gray-500">Fresh samples</div>
+                                        </div>
+                                    </li>
+                                    <li class="flex items-center gap-3 bg-gray-50 p-3 rounded">
+                                        <span class="text-2xl">🔥</span>
+                                        <div>
+                                            <span class="font-bold text-gray-900">RTFO (Short-term)</span>
+                                            <div class="text-xs text-gray-500">Rolling Thin Film Oven</div>
+                                        </div>
+                                    </li>
+                                    <li class="flex items-center gap-3 bg-gray-50 p-3 rounded">
+                                        <span class="text-2xl">⏳</span>
+                                        <div>
+                                            <span class="font-bold text-gray-900">PAV (Long-term)</span>
+                                            <div class="text-xs text-gray-500">Pressure Aging Vessel</div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Results -->
+            <div id="tab-results" class="tab-content hidden">
+                <div class="space-y-8">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-2xl font-bold text-gray-900 flex items-center gap-2">
+                            <span>📊</span> Key Findings & Numeric Results
+                        </h2>
+                    </div>
+
+                    <!-- Charts Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div class="card p-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-lg font-bold text-gray-900">Softening Point (°C)</h3>
+                                <span class="badge badge-experimental">High Temp Performance</span>
+                            </div>
+                            <div class="h-64">
+                                <canvas id="softeningPointChart"></canvas>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-2 text-center">Polymer addition drastically improves high-temperature stability.</p>
+                        </div>
+                        <div class="card p-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-lg font-bold text-gray-900">Ductility (cm)</h3>
+                                <span class="badge badge-experimental">Flexibility</span>
+                            </div>
+                            <div class="h-64">
+                                <canvas id="ductilityChart"></canvas>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-2 text-center">OPO improves flexibility; Hybrid mix maintains good ductility.</p>
+                        </div>
+                    </div>
+
+                    <!-- Detailed Results Table -->
+                    <div class="card p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-bold text-gray-900">Quantitative Matrix</h3>
+                            <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Variant</th>
+                                        <th>Softening Point (°C)</th>
+                                        <th>Ductility (cm)</th>
+                                        <th>G* @ 64°C (kPa)</th>
+                                        <th>Source Trace</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="bg-gray-50">
+                                        <td class="font-bold">AB (Control)</td>
+                                        <td>57.5</td>
+                                        <td>< 127</td>
+                                        <td>1.18</td>
+                                        <td class="text-xs text-gray-500">Page 9, 10</td>
+                                    </tr>
+                                    <tr>
+                                        <td>ABOP-3</td>
+                                        <td>55.9</td>
+                                        <td>127</td>
+                                        <td>-</td>
+                                        <td class="text-xs text-gray-500">Page 9</td>
+                                    </tr>
+                                    <tr>
+                                        <td>ABOP-6</td>
+                                        <td>53.5</td>
+                                        <td>143</td>
+                                        <td>-</td>
+                                        <td class="text-xs text-gray-500">Page 9</td>
+                                    </tr>
+                                    <tr>
+                                        <td>ABOP-9</td>
+                                        <td>52.4</td>
+                                        <td>150</td>
+                                        <td>-</td>
+                                        <td class="text-xs text-gray-500">Page 9</td>
+                                    </tr>
+                                    <tr class="bg-purple-50 font-bold border-l-4 border-purple-500">
+                                        <td class="text-purple-700">OPPM-65</td>
+                                        <td>73.3</td>
+                                        <td>132</td>
+                                        <td>3.90</td>
+                                        <td class="text-xs text-gray-500">Table 3, 5</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Limitations -->
+            <div id="tab-limitations" class="tab-content hidden">
+                <div class="space-y-8">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>⚠️</span> Limitations & Boundaries
+                        </h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="card p-5 border-l-4 border-orange-500">
+                                <div class="flex items-start gap-3">
+                                    <span class="text-2xl">🧱</span>
+                                    <div>
+                                        <h3 class="text-base font-bold text-gray-900 mb-2">Binder Only</h3>
+                                        <p class="text-sm text-gray-700">Study limited to asphalt binder properties. No mixture performance tests (Marshall stability, mixture fatigue) were conducted.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card p-5 border-l-4 border-yellow-500">
+                                <div class="flex items-start gap-3">
+                                    <span class="text-2xl">📊</span>
+                                    <div>
+                                        <h3 class="text-base font-bold text-gray-900 mb-2">Statistical Data</h3>
+                                        <p class="text-sm text-gray-700">Standard deviations for most metrics were not explicitly reported in the text snippets.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: PhD Context -->
+            <div id="tab-phd" class="tab-content hidden">
+                <div class="space-y-8">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>🎓</span> PhD Context & Relevance
+                        </h2>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <div class="card p-6 border-t-4 border-green-500">
+                                <h3 class="text-lg font-bold text-gray-900 mb-3">Value for Workstream</h3>
+                                <ul class="space-y-2 text-sm text-gray-700">
+                                    <li>✅ <strong>Experimental Design:</strong> Validated hybrid bio-polymer modification protocol.</li>
+                                    <li>✅ <strong>Benchmarking:</strong> Provides numeric rheological data points for OPO-modified bitumen.</li>
+                                    <li>✅ <strong>Literature Positioning:</strong> Demonstrates synergy between bio-waste and recycled polymers.</li>
+                                </ul>
+                            </div>
+                            <div class="card p-6 border-t-4 border-blue-500">
+                                <h3 class="text-lg font-bold text-gray-900 mb-3">Recommended Actions</h3>
+                                <ul class="space-y-2 text-sm text-gray-700">
+                                    <li>🚀 <strong>Extend:</strong> Perform mixture performance tests (moisture damage, stripping) using this binder formulation.</li>
+                                    <li>🔍 <strong>Focus:</strong> Replicate the 6% OPO + 5% Polymer blend ratio.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Sustainability -->
+            <div id="tab-sustainability" class="tab-content hidden">
+                <div class="space-y-8">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>🌱</span> Sustainability & Circular Economy
+                        </h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="card p-6 border-t-4 border-green-500">
+                                <div class="flex items-center gap-3 mb-4">
+                                    <span class="text-3xl">♻️</span>
+                                    <h3 class="text-xl font-bold text-gray-900">Waste Valorisation</h3>
+                                </div>
+                                <div class="space-y-3">
+                                    <div class="bg-green-50 p-4 rounded border border-green-200">
+                                        <h4 class="text-sm font-bold text-green-700 mb-1">Olive Pomace</h4>
+                                        <p class="text-sm text-gray-700">Transforms a major agricultural byproduct (pulp, husks, seeds) into a functional asphalt modifier.</p>
+                                    </div>
+                                    <div class="bg-blue-50 p-4 rounded border border-blue-200">
+                                        <h4 class="text-sm font-bold text-blue-700 mb-1">Circular Economy</h4>
+                                        <p class="text-sm text-gray-700">Reduces reliance on petroleum-based bitumen while upcycling industrial polymer waste (PVC/SBS).</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-100 border-t border-gray-200 py-8 mt-12 no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col items-center justify-center text-center">
+                <p class="text-gray-700 text-sm">
+                    <strong>PhD Scholar Dashboard</strong> • University of Bath • Literature Review System
+                </p>
+                <p class="text-gray-500 text-xs mt-2">
+                    Waste Valorisation & Sustainable Construction Materials Research
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Paper Data from JSON
+        const paperData = {
+            title: "Utilizing olive pomace oil and the extrusion of SBS and PVC to enhance the physical and rheological characteristics of asphalt binder",
+            doi: "10.1016/j.cscm.2024.e04097",
+            authors: ["Mahyar Arabani", "Amir Amiri", "Mohammad Hossein Hassanjani"],
+            year: 2024,
+            journal: "Case Studies in Construction Materials"
+        };
+
+        let currentTab = 'overview';
+
+        // Tab Switching Logic
+        function switchTab(tabName) {
+            currentTab = tabName;
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+            document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.btn-${tabName}`).classList.add('active');
+            updateProgress();
+        }
+
+        // Progress Bar
+        function updateProgress() {
+            const progressFill = document.getElementById('progressFill');
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+            progressFill.style.width = `${Math.min(100, Math.max(0, progress))}%`;
+        }
+
+        // Copy Citation
+        function copyCitation() {
+            const citation = `${paperData.authors[0]} et al. (${paperData.year}). ${paperData.title}. ${paperData.journal}. https://doi.org/${paperData.doi}`;
+            navigator.clipboard.writeText(citation).then(() => alert('Citation copied!'));
+        }
+
+        // Initialize Charts
+        function initializeCharts() {
+            // Softening Point Chart
+            const softCtx = document.getElementById('softeningPointChart');
+            if (softCtx) {
+                new Chart(softCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['AB (Control)', 'ABOP-3', 'ABOP-6', 'ABOP-9', 'OPPM-65 (Hybrid)'],
+                        datasets: [{
+                            label: 'Softening Point (°C)',
+                            data: [57.5, 55.9, 53.5, 52.4, 73.3],
+                            backgroundColor: [
+                                'rgba(100, 116, 139, 0.7)', 
+                                'rgba(59, 130, 246, 0.7)',
+                                'rgba(59, 130, 246, 0.7)',
+                                'rgba(59, 130, 246, 0.7)',
+                                'rgba(147, 51, 234, 0.9)' // Highlight hybrid
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { title: { display: false } },
+                        scales: { y: { beginAtZero: false, min: 40 } }
+                    }
+                });
+            }
+
+            // Ductility Chart
+            const ductCtx = document.getElementById('ductilityChart');
+            if (ductCtx) {
+                new Chart(ductCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['ABOP-3', 'ABOP-6', 'ABOP-9', 'OPPM-65'],
+                        datasets: [{
+                            label: 'Ductility (cm)',
+                            data: [127, 143, 150, 132],
+                            backgroundColor: 'rgba(34, 197, 94, 0.7)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { title: { display: false } }
+                    }
+                });
+            }
+
+            // Replacement Chart
+            const repCtx = document.getElementById('replacementChart');
+            if (repCtx) {
+                new Chart(repCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['ABOP-3', 'ABOP-6', 'ABOP-9', 'OPPM-65'],
+                        datasets: [{
+                            label: 'Olive Pomace Oil (%)',
+                            data: [3, 6, 9, 6],
+                            backgroundColor: 'rgba(34, 197, 94, 0.8)',
+                            stack: 'Stack 0'
+                        }, {
+                            label: 'Polymer Blend (%)',
+                            data: [0, 0, 0, 5],
+                            backgroundColor: 'rgba(147, 51, 234, 0.8)',
+                            stack: 'Stack 0'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: { x: { stacked: true }, y: { stacked: true } }
+                    }
+                });
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeCharts();
+            window.addEventListener('scroll', updateProgress);
+        });
+    </script>
+</body>
+</html>

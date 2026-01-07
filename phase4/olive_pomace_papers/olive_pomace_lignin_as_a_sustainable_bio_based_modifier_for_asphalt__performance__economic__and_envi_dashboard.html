@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Paper Dashboard – Alobeidyeen et al. 2025 | Olive Pomace Lignin in Asphalt</title>
+    <meta name="description" content="Academic research dashboard analyzing Olive Pomace Lignin (OPL) as a sustainable modifier for asphalt binders">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['Lora', 'Georgia', 'serif'],
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        },
+                        olive: {
+                            50: '#f7fee7',
+                            100: '#ecfccb',
+                            200: '#d9f99d',
+                            300: '#bef264',
+                            400: '#a3e635',
+                            500: '#84cc16',
+                            600: '#65a30d',
+                            700: '#4d7c0f',
+                            800: '#3f6212',
+                            900: '#365314',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* Base Typography */
+        body { font-family: 'Inter', sans-serif; font-size: 16px; line-height: 1.75; color: #1e293b; background: #ffffff; }
+        h1, h2, h3, h4 { font-family: 'Lora', serif; font-weight: 600; line-height: 1.3; color: #0f172a; }
+        h1 { font-size: 2.25rem; margin-bottom: 1rem; }
+        h2 { font-size: 1.875rem; margin-bottom: 0.875rem; }
+        h3 { font-size: 1.5rem; margin-bottom: 0.75rem; }
+        
+        /* UI Components */
+        .card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 0.75rem; box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1); transition: box-shadow 0.2s; }
+        .card:hover { box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .card-elevated { box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+        
+        .badge { display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; border: 1px solid; }
+        .badge-core { background: #dbeafe; color: #1e40af; border-color: #3b82f6; }
+        .badge-experimental { background: #fef3c7; color: #92400e; border-color: #f59e0b; }
+        
+        .tab-nav { display: flex; overflow-x: auto; gap: 0.5rem; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.75rem; margin-bottom: 2rem; scrollbar-width: none; }
+        .tab-button { padding: 0.5rem 1rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 600; transition: all 0.2s; white-space: nowrap; background: #f8fafc; color: #64748b; }
+        .tab-button:hover { background: #f1f5f9; color: #334155; }
+        .tab-button.active { color: #ffffff; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        
+        /* Tab Active Colors */
+        .tab-button.active.btn-info { background: #64748b; }
+        .tab-button.active.btn-overview { background: #2563eb; }
+        .tab-button.active.btn-materials { background: #65a30d; } /* Olive */
+        .tab-button.active.btn-formulation { background: #ea580c; }
+        .tab-button.active.btn-testing { background: #4f46e5; }
+        .tab-button.active.btn-results { background: #0891b2; }
+        .tab-button.active.btn-limitations { background: #dc2626; }
+        .tab-button.active.btn-phd { background: #9333ea; }
+        .tab-button.active.btn-sustainability { background: #059669; }
+
+        table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+        thead { background: #f8fafc; border-bottom: 2px solid #cbd5e1; }
+        th, td { padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; text-align: left; }
+        th { font-weight: 600; color: #475569; text-transform: uppercase; font-size: 0.75rem; }
+        
+        .metric-card { padding: 1.5rem; border-radius: 0.75rem; border: 1px solid #e2e8f0; background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); transition: transform 0.2s; }
+        .metric-card:hover { transform: translateY(-2px); }
+        
+        .progress-bar { height: 3px; background: #e2e8f0; position: fixed; top: 0; left: 0; right: 0; z-index: 9999; }
+        .progress-fill { height: 100%; background: #65a30d; transition: width 0.15s; }
+        
+        .provenance-marker { display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.625rem; padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-weight: 600; text-transform: uppercase; }
+        .provenance-measured { background: #dcfce7; color: #166534; }
+        .provenance-explicit { background: #e0f2fe; color: #0369a1; }
+        
+        .sticky-nav { position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border-bottom: 1px solid #e2e8f0; }
+
+        @media print {
+            .no-print { display: none !important; }
+            .card { break-inside: avoid; border: 1px solid #cbd5e1; box-shadow: none; }
+            .tab-content { display: block !important; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    
+    <div class="progress-bar no-print"><div id="progressFill" class="progress-fill" style="width: 0%"></div></div>
+    
+    <nav class="sticky-nav no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-olive-600 rounded-lg flex items-center justify-center shadow-md">
+                        <span class="text-white font-bold text-xl">🧬</span>
+                    </div>
+                    <div>
+                        <h1 class="text-base font-bold text-gray-900">Research Dashboard</h1>
+                        <p class="text-xs text-gray-500">Olive Pomace Lignin</p>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="window.print()" class="px-3 py-2 rounded-lg border hover:bg-gray-50 text-sm font-medium transition">🖨️ Print</button>
+                    <button onclick="copyCitation()" class="px-3 py-2 rounded-lg bg-olive-600 hover:bg-olive-700 text-white text-sm font-medium transition">📋 Citation</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- Hero Section -->
+        <div class="card card-elevated p-8 mb-8">
+            <div class="flex items-start gap-6 mb-6 flex-col md:flex-row">
+                <div class="flex-shrink-0">
+                    <div class="w-20 h-20 bg-gradient-to-br from-olive-500 to-green-600 rounded-2xl flex items-center justify-center shadow-lg text-4xl">
+                        🫒
+                    </div>
+                </div>
+                <div class="flex-1">
+                    <div class="flex flex-wrap gap-2 mb-3">
+                        <span class="badge badge-experimental">🧪 Experimental</span>
+                        <span class="badge badge-core">Tier A Core Data</span>
+                    </div>
+                    <h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-4 leading-tight">
+                        Olive pomace lignin as a sustainable bio-based modifier for asphalt: performance, economic, and environmental evaluation
+                    </h1>
+                    <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-4">
+                        <span class="flex items-center gap-1 font-medium">
+                            👤 Ala Alobeidyeen, Amal Al-Hanaktah, Amani Abdallah Assolie
+                        </span>
+                        <span>•</span>
+                        <span>📅 2025</span>
+                        <span>•</span>
+                        <span>📖 Discover Applied Sciences</span>
+                    </div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="text-sm text-gray-500 font-medium">DOI:</span>
+                        <code class="text-sm bg-gray-100 px-2 py-1 rounded">10.1007/s42452-025-07294-6</code>
+                        <a href="https://doi.org/10.1007/s42452-025-07294-6" target="_blank" class="text-olive-600 hover:text-olive-700 text-xs font-bold uppercase tracking-wide">🔗 Open Paper</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Executive Summary Banner -->
+            <div class="bg-gradient-to-br from-olive-50 to-emerald-50 rounded-xl p-6 border border-olive-200">
+                <div class="flex flex-col md:flex-row items-start gap-6">
+                    <div class="flex-1">
+                        <h3 class="text-lg font-bold text-gray-900 mb-2 flex items-center gap-2">
+                            <span>💡</span> Core Takeaway
+                            <span class="provenance-marker provenance-explicit ml-auto">Explicit</span>
+                        </h3>
+                        <p class="text-gray-800 font-medium leading-relaxed mb-4">
+                            10% olive pomace lignin (OPL) addition to asphalt binder increased Marshall stability by 29% and softening point by 8°C while reducing cost by 22.3% and CO₂ emissions by ~9%.
+                        </p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="bg-white/80 rounded-lg p-3 border border-olive-200">
+                                <div class="text-xs text-olive-800 uppercase font-bold tracking-wider mb-1">Optimal Dosage</div>
+                                <div class="text-2xl font-bold text-gray-900">10% <span class="text-sm font-normal text-gray-600">by weight of AC</span></div>
+                            </div>
+                            <div class="bg-white/80 rounded-lg p-3 border border-olive-200">
+                                <div class="text-xs text-olive-800 uppercase font-bold tracking-wider mb-1">Economic Impact</div>
+                                <div class="text-2xl font-bold text-gray-900">22.3% <span class="text-sm font-normal text-gray-600">Cost Savings</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="metric-card border-l-4 border-olive-500">
+                <div class="text-center">
+                    <div class="text-3xl mb-2">🧪</div>
+                    <div class="text-3xl font-bold text-olive-700 mb-1">6</div>
+                    <div class="text-sm font-medium text-gray-600">Variants Tested</div>
+                    <div class="text-xs text-gray-500 mt-1">0% to 12% Dosage</div>
+                </div>
+            </div>
+            <div class="metric-card border-l-4 border-blue-500">
+                <div class="text-center">
+                    <div class="text-3xl mb-2">💪</div>
+                    <div class="text-3xl font-bold text-blue-700 mb-1">1590 kg</div>
+                    <div class="text-sm font-medium text-gray-600">Max Stability</div>
+                    <div class="text-xs text-gray-500 mt-1">vs 1235 kg Control</div>
+                </div>
+            </div>
+            <div class="metric-card border-l-4 border-purple-500">
+                <div class="text-center">
+                    <div class="text-3xl mb-2">🌡️</div>
+                    <div class="text-3xl font-bold text-purple-700 mb-1">59°C</div>
+                    <div class="text-sm font-medium text-gray-600">Softening Point</div>
+                    <div class="text-xs text-gray-500 mt-1">After TFOT Aging</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="card p-6 mb-8">
+            <div class="tab-nav">
+                <button class="tab-button btn-info" onclick="switchTab('info')">ℹ️ Info</button>
+                <button class="tab-button active btn-overview" onclick="switchTab('overview')">📋 Overview</button>
+                <button class="tab-button btn-materials" onclick="switchTab('materials')">🫒 Materials</button>
+                <button class="tab-button btn-formulation" onclick="switchTab('formulation')">🧱 Formulation</button>
+                <button class="tab-button btn-testing" onclick="switchTab('testing')">⚙️ Testing</button>
+                <button class="tab-button btn-results" onclick="switchTab('results')">📊 Results</button>
+                <button class="tab-button btn-limitations" onclick="switchTab('limitations')">⚠️ Limitations</button>
+                <button class="tab-button btn-phd" onclick="switchTab('phd')">🎓 PhD Context</button>
+                <button class="tab-button btn-sustainability" onclick="switchTab('sustainability')">🌱 Sustainability</button>
+            </div>
+
+            <!-- Tab: Info -->
+            <div id="tab-info" class="tab-content hidden">
+                <div class="space-y-6">
+                    <div class="alert bg-blue-50 border-l-4 border-blue-500 p-4 rounded text-sm text-blue-900">
+                        <strong>Data Provenance:</strong> This dashboard displays raw data extracted directly from the paper "Olive pomace lignin as a sustainable bio-based modifier for asphalt" (2025). Values are strictly measured/reported by the authors.
+                    </div>
+                    <div class="card p-6">
+                        <h3 class="font-bold mb-4">Acronyms & Abbreviations</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="flex justify-between border-b py-2"><span>OPL</span><span class="font-mono text-gray-600">Olive Pomace Lignin</span></div>
+                            <div class="flex justify-between border-b py-2"><span>AC</span><span class="font-mono text-gray-600">Asphalt Cement (Binder)</span></div>
+                            <div class="flex justify-between border-b py-2"><span>TFOT</span><span class="font-mono text-gray-600">Thin Film Oven Test (Aging)</span></div>
+                            <div class="flex justify-between border-b py-2"><span>MR</span><span class="font-mono text-gray-600">Resilient Modulus</span></div>
+                            <div class="flex justify-between border-b py-2"><span>OP</span><span class="font-mono text-gray-600">Olive Pomace</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Overview -->
+            <div id="tab-overview" class="tab-content">
+                <div class="space-y-8">
+                    <div class="card p-6">
+                        <h2 class="text-xl font-bold mb-4">Research Objective</h2>
+                        <p class="text-gray-700 leading-relaxed mb-6">
+                            Investigates the potential of olive pomace lignin (OPL), extracted via acid hydrolysis, as a sustainable and eco-friendly modifier for asphalt binders and concrete mixtures. The study aims to replace fossil-based bitumen and improve mechanical performance.
+                        </p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="bg-red-50 p-4 rounded border border-red-100">
+                                <h4 class="font-bold text-red-800 mb-2">Problem Definition</h4>
+                                <ul class="list-disc pl-5 text-sm text-red-900 space-y-1">
+                                    <li>Environmental pollution from agricultural waste.</li>
+                                    <li>Depletion of fossil resources (bitumen).</li>
+                                    <li>Need for renewable road materials.</li>
+                                </ul>
+                            </div>
+                            <div class="bg-green-50 p-4 rounded border border-green-100">
+                                <h4 class="font-bold text-green-800 mb-2">Solution Proposed</h4>
+                                <ul class="list-disc pl-5 text-sm text-green-900 space-y-1">
+                                    <li>Extraction of lignin from olive pomace.</li>
+                                    <li>Modification of AC 60/70 binder with 4-12% OPL.</li>
+                                    <li>Validation via Marshall Stability and Resilient Modulus.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Materials -->
+            <div id="tab-materials" class="tab-content hidden">
+                <div class="space-y-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Raw Material -->
+                        <div class="card p-6 border-t-4 border-olive-500">
+                            <h3 class="text-lg font-bold mb-3 flex items-center gap-2">
+                                🫒 Olive Pomace Lignin (OPL)
+                                <span class="provenance-marker provenance-measured">Measured</span>
+                            </h3>
+                            <div class="space-y-2 text-sm">
+                                <div class="flex justify-between py-1 border-b">
+                                    <span class="text-gray-600">Source</span>
+                                    <span class="font-medium">Three-phase olive mill (Southern Jordan)</span>
+                                </div>
+                                <div class="flex justify-between py-1 border-b">
+                                    <span class="text-gray-600">Physical Form</span>
+                                    <span class="font-medium">Powder (Sieved Mesh 30)</span>
+                                </div>
+                                <div class="flex justify-between py-1 border-b">
+                                    <span class="text-gray-600">Lignin Content</span>
+                                    <span class="font-medium">47% (Dry Basis)</span>
+                                </div>
+                                <div class="flex justify-between py-1 border-b">
+                                    <span class="text-gray-600">Ash Content</span>
+                                    <span class="font-medium">0.89%</span>
+                                </div>
+                                <div class="flex justify-between py-1 border-b">
+                                    <span class="text-gray-600">Moisture Content</span>
+                                    <span class="font-medium">5.2%</span>
+                                </div>
+                            </div>
+                            <!-- Chart: Composition -->
+                            <div class="mt-6 h-48">
+                                <canvas id="compositionChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Processing -->
+                        <div class="card p-6">
+                            <h3 class="text-lg font-bold mb-4">Processing Route (Extraction)</h3>
+                            <div class="space-y-4">
+                                <div class="flex gap-4">
+                                    <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center font-bold text-gray-600">1</div>
+                                    <div>
+                                        <h4 class="font-bold text-sm">Grinding & Sieving</h4>
+                                        <p class="text-xs text-gray-500">Milled to 1mm particles.</p>
+                                    </div>
+                                </div>
+                                <div class="flex gap-4">
+                                    <div class="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center font-bold text-orange-600">2</div>
+                                    <div>
+                                        <h4 class="font-bold text-sm">Drying</h4>
+                                        <p class="text-xs text-gray-500">Oven dried at 80°C to constant weight.</p>
+                                    </div>
+                                </div>
+                                <div class="flex gap-4">
+                                    <div class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center font-bold text-purple-600">3</div>
+                                    <div>
+                                        <h4 class="font-bold text-sm">Chemical Activation</h4>
+                                        <p class="text-xs text-gray-500">72% Sulfuric Acid hydrolysis at 40°C for 2h.</p>
+                                    </div>
+                                </div>
+                                <div class="flex gap-4">
+                                    <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center font-bold text-blue-600">4</div>
+                                    <div>
+                                        <h4 class="font-bold text-sm">Purification</h4>
+                                        <p class="text-xs text-gray-500">Washed with 1% Formic Acid.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Formulation -->
+            <div id="tab-formulation" class="tab-content hidden">
+                <div class="space-y-8">
+                    <div class="card p-6">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="text-xl font-bold">Mix Design Variants</h2>
+                            <span class="badge badge-core">Control: AC 60/70</span>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Variant ID</th>
+                                        <th>Variant Label</th>
+                                        <th>OPL Dosage (%)</th>
+                                        <th>AC Content (%)</th>
+                                        <th>Role</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="bg-gray-50">
+                                        <td class="font-mono text-xs">CTRL-0</td>
+                                        <td>Plain-0 OPL</td>
+                                        <td class="font-bold">0%</td>
+                                        <td>5.50%</td>
+                                        <td>Control Reference</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-mono text-xs">OPL-4</td>
+                                        <td>Modified-4 OPL</td>
+                                        <td>4%</td>
+                                        <td>5.28%</td>
+                                        <td>Binder Replacement</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-mono text-xs">OPL-6</td>
+                                        <td>Modified-6 OPL</td>
+                                        <td>6%</td>
+                                        <td>5.17%</td>
+                                        <td>Binder Replacement</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-mono text-xs">OPL-8</td>
+                                        <td>Modified-8 OPL</td>
+                                        <td>8%</td>
+                                        <td>5.06%</td>
+                                        <td>Binder Replacement</td>
+                                    </tr>
+                                    <tr class="bg-olive-50 border-l-4 border-olive-500">
+                                        <td class="font-mono text-xs font-bold text-olive-800">OPL-10</td>
+                                        <td class="font-bold text-olive-800">Modified-10 OPL (Optimal)</td>
+                                        <td class="font-bold text-olive-800">10%</td>
+                                        <td class="text-olive-800">4.95%</td>
+                                        <td class="text-olive-800">Optimal Performance</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-mono text-xs">OPL-12</td>
+                                        <td>Modified-12 OPL</td>
+                                        <td>12%</td>
+                                        <td>4.84%</td>
+                                        <td>Binder Replacement</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="mt-4 text-xs text-gray-500">
+                            * Replacement Definition: OPL replaces bitumen by mass percent.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Testing -->
+            <div id="tab-testing" class="tab-content hidden">
+                <div class="card p-6">
+                    <h3 class="font-bold mb-4">Experimental Protocols</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="border p-3 rounded bg-gray-50">
+                            <div class="text-xs font-bold text-gray-500 uppercase">Binder Testing</div>
+                            <ul class="mt-2 space-y-1 text-sm">
+                                <li>• <strong>Penetration:</strong> ASTM D5</li>
+                                <li>• <strong>Softening Point:</strong> ASTM D36</li>
+                                <li>• <strong>Ductility:</strong> ASTM D113</li>
+                                <li>• <strong>Aging:</strong> TFOT (ASTM D1754)</li>
+                            </ul>
+                        </div>
+                        <div class="border p-3 rounded bg-gray-50">
+                            <div class="text-xs font-bold text-gray-500 uppercase">Mixture Testing</div>
+                            <ul class="mt-2 space-y-1 text-sm">
+                                <li>• <strong>Marshall Stability & Flow:</strong> ASTM D6927</li>
+                                <li>• <strong>Resilient Modulus (MR):</strong> ASTM D7369 (at 10, 25, 40°C)</li>
+                                <li>• <strong>Specimens:</strong> Cylindrical, 3 replicates per test</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Results -->
+            <div id="tab-results" class="tab-content hidden">
+                <div class="space-y-8">
+                    
+                    <!-- Marshall Stability Card -->
+                    <div class="card p-6">
+                        <div class="flex justify-between items-end mb-4">
+                            <div>
+                                <h3 class="text-lg font-bold text-gray-900">Marshall Stability</h3>
+                                <p class="text-sm text-gray-500">Resistance to plastic flow (Load bearing capacity)</p>
+                            </div>
+                            <span class="badge badge-core">Critical Metric</span>
+                        </div>
+                        <div class="h-64">
+                            <canvas id="stabilityChart"></canvas>
+                        </div>
+                        <div class="mt-4 grid grid-cols-2 gap-4 text-center">
+                            <div class="bg-gray-50 p-2 rounded">
+                                <span class="block text-xs text-gray-500">Control (0%)</span>
+                                <span class="font-bold text-gray-800">1235 kg</span>
+                            </div>
+                            <div class="bg-olive-50 p-2 rounded border border-olive-200">
+                                <span class="block text-xs text-olive-800">Optimal (10%)</span>
+                                <span class="font-bold text-olive-700">1590 kg (+29%)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Resilient Modulus -->
+                    <div class="card p-6">
+                        <h3 class="text-lg font-bold text-gray-900 mb-4">Resilient Modulus (Stiffness)</h3>
+                        <div class="h-64">
+                            <canvas id="mrChart"></canvas>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-2 text-center">Comparing Control vs 12% OPL at different service temperatures.</p>
+                    </div>
+
+                    <!-- Binder Properties Table -->
+                    <div class="card p-6">
+                        <h3 class="text-lg font-bold mb-4">Binder Rheology (Fresh vs Aged)</h3>
+                        <div class="overflow-x-auto">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Property</th>
+                                        <th>Control (Fresh)</th>
+                                        <th>10% OPL (Fresh)</th>
+                                        <th>10% OPL (Aged TFOT)</th>
+                                        <th>Trend</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Penetration (0.1mm)</td>
+                                        <td>66</td>
+                                        <td>45</td>
+                                        <td>-</td>
+                                        <td class="text-red-600 font-bold">↓ Stiffening</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Softening Point (°C)</td>
+                                        <td>49</td>
+                                        <td>57</td>
+                                        <td>59</td>
+                                        <td class="text-green-600 font-bold">↑ Heat Resistance</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Ductility</td>
+                                        <td>High</td>
+                                        <td>Reduced</td>
+                                        <td>-</td>
+                                        <td class="text-orange-600 font-bold">↓ Flexibility</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Limitations -->
+            <div id="tab-limitations" class="tab-content hidden">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="card p-6 border-l-4 border-yellow-500">
+                        <h3 class="font-bold text-yellow-800 mb-2">Technical Risks</h3>
+                        <ul class="list-disc pl-5 text-sm space-y-2">
+                            <li><strong>Brittleness:</strong> Increased stiffness at high dosages (>10%) may lead to low-temperature cracking.</li>
+                            <li><strong>Ductility Loss:</strong> Significant reduction in ductility indicates reduced flexibility.</li>
+                        </ul>
+                    </div>
+                    <div class="card p-6 border-l-4 border-orange-500">
+                        <h3 class="font-bold text-orange-800 mb-2">Data Limitations</h3>
+                        <ul class="list-disc pl-5 text-sm space-y-2">
+                            <li><strong>Material Variability:</strong> Biomass source (olive mill type) can affect lignin purity.</li>
+                            <li><strong>Missing Long-term Data:</strong> PAV (Long-term aging) and low-temperature cracking (TSR) data absent.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: PhD Context -->
+            <div id="tab-phd" class="tab-content hidden">
+                <div class="space-y-6">
+                    <div class="card p-6 bg-gradient-to-r from-gray-50 to-white">
+                        <h2 class="text-xl font-bold mb-4">Relevance to PhD</h2>
+                        <div class="flex items-start gap-4">
+                            <span class="text-3xl">🎓</span>
+                            <div>
+                                <p class="text-gray-700 mb-2">
+                                    This paper provides a <strong>Tier A</strong> dataset for bio-modified asphalt. It explicitly quantifies the trade-off between stiffness (Stability/MR) and flexibility (Ductility) using a waste-derived lignin.
+                                </p>
+                                <div class="flex gap-2 mt-3">
+                                    <span class="badge badge-core">Core Dataset</span>
+                                    <span class="badge badge-experimental">Replication Recommended</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="border p-4 rounded bg-white">
+                            <div class="font-bold text-sm mb-1">Parameters to Focus On</div>
+                            <p class="text-xs text-gray-600">Lignin Purity, 10% Dosage, Aging Behavior.</p>
+                        </div>
+                        <div class="border p-4 rounded bg-white">
+                            <div class="font-bold text-sm mb-1">Parameters to Avoid</div>
+                            <p class="text-xs text-gray-600">Dosages above 12% (Excessive brittleness).</p>
+                        </div>
+                        <div class="border p-4 rounded bg-white">
+                            <div class="font-bold text-sm mb-1">Suggested Extension</div>
+                            <p class="text-xs text-gray-600">Low-temperature cracking tests & Long-term PAV aging.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Sustainability -->
+            <div id="tab-sustainability" class="tab-content hidden">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="metric-card bg-emerald-50 border-emerald-200">
+                        <div class="text-center">
+                            <div class="text-3xl mb-2">💰</div>
+                            <div class="text-2xl font-bold text-emerald-700">22.3%</div>
+                            <div class="text-sm font-medium text-emerald-900">Cost Savings</div>
+                        </div>
+                    </div>
+                    <div class="metric-card bg-teal-50 border-teal-200">
+                        <div class="text-center">
+                            <div class="text-3xl mb-2">⚡</div>
+                            <div class="text-2xl font-bold text-teal-700">5-7%</div>
+                            <div class="text-sm font-medium text-teal-900">Energy Reduction</div>
+                        </div>
+                    </div>
+                    <div class="metric-card bg-green-50 border-green-200">
+                        <div class="text-center">
+                            <div class="text-3xl mb-2">🌍</div>
+                            <div class="text-2xl font-bold text-green-700">9.8%</div>
+                            <div class="text-sm font-medium text-green-900">CO₂ Reduction</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card p-6 mt-6">
+                    <h3 class="font-bold mb-2">Circular Economy Impact</h3>
+                    <p class="text-sm text-gray-700">
+                        Transforms agricultural waste (Olive Pomace) into functional road material, promoting circular economy principles in the pavement industry.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-100 border-t border-gray-200 py-8 mt-12 no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-gray-600 text-sm">Generated for PhD Research Database • Based on extraction 2.0-hardened</p>
+        </div>
+    </footer>
+
+    <script>
+        // Tab Switching Logic
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById('tab-' + tabId).classList.remove('hidden');
+            
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            document.querySelector('.btn-' + tabId).classList.add('active');
+        }
+
+        // Charts Initialization
+        document.addEventListener('DOMContentLoaded', function() {
+            // 1. Composition Chart
+            new Chart(document.getElementById('compositionChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Lignin', 'Moisture', 'Ash', 'Other Organics'],
+                    datasets: [{
+                        data: [47, 5.2, 0.89, 46.91],
+                        backgroundColor: ['#65a30d', '#3b82f6', '#4b5563', '#d1d5db']
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+
+            // 2. Marshall Stability Chart
+            new Chart(document.getElementById('stabilityChart'), {
+                type: 'bar',
+                data: {
+                    labels: ['Control (0%)', 'OPL (10%)'],
+                    datasets: [{
+                        label: 'Marshall Stability (kg)',
+                        data: [1235, 1590],
+                        backgroundColor: ['#9ca3af', '#65a30d'],
+                        borderWidth: 1
+                    }]
+                },
+                options: { 
+                    responsive: true, 
+                    maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: true, title: { display: true, text: 'Stability (kg)' } } }
+                }
+            });
+
+            // 3. Resilient Modulus Chart
+            new Chart(document.getElementById('mrChart'), {
+                type: 'bar',
+                data: {
+                    labels: ['10°C', '25°C', '40°C'],
+                    datasets: [
+                        {
+                            label: 'Control (0% OPL)',
+                            data: [3497, 2000, 790],
+                            backgroundColor: '#9ca3af'
+                        },
+                        {
+                            label: '12% OPL',
+                            data: [4275, 2700, 1140],
+                            backgroundColor: '#65a30d'
+                        }
+                    ]
+                },
+                options: { 
+                    responsive: true, 
+                    maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: true, title: { display: true, text: 'Resilient Modulus (MPa)' } } }
+                }
+            });
+        });
+
+        // Citation Copy
+        function copyCitation() {
+            navigator.clipboard.writeText("Alobeidyeen, A., Al-Hanaktah, A., & Assolie, A. A. (2025). Olive pomace lignin as a sustainable bio-based modifier for asphalt: performance, economic, and environmental evaluation. Discover Applied Sciences. doi:10.1007/s42452-025-07294-6");
+            alert("Citation copied to clipboard!");
+        }
+    </script>
+</body>
+</html>

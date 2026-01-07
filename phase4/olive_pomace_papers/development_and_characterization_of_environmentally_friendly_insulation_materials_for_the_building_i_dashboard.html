@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Dashboard – Gutierrez et al. 2020 | Olive Pomace Insulation</title>
+    <meta name="description" content="Academic research dashboard analyzing environmentally friendly insulation materials from olive pomace waste">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['Lora', 'Georgia', 'serif'],
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            300: '#86efac',
+                            400: '#4ade80',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* Base Typography */
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            font-size: 16px;
+            line-height: 1.75;
+            color: #1e293b;
+            background: #ffffff;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Lora', Georgia, serif;
+            font-weight: 600;
+            line-height: 1.3;
+            color: #0f172a;
+        }
+        
+        h1 { font-size: 2.25rem; margin-bottom: 1rem; }
+        h2 { font-size: 1.875rem; margin-bottom: 0.875rem; }
+        h3 { font-size: 1.5rem; margin-bottom: 0.75rem; }
+        h4 { font-size: 1.25rem; margin-bottom: 0.625rem; }
+        
+        /* Academic Card Style */
+        .card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            transition: box-shadow 0.2s ease;
+        }
+        
+        .card:hover {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        
+        .card-elevated {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Badge System */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.375rem 0.875rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border: 1.5px solid;
+        }
+        
+        .badge-core {
+            background: #dbeafe;
+            color: #1e40af;
+            border-color: #3b82f6;
+        }
+        
+        .badge-experimental {
+            background: #fef3c7;
+            color: #92400e;
+            border-color: #f59e0b;
+        }
+        
+        .badge-interpretive {
+            background: #fce7f3;
+            color: #9f1239;
+            border-color: #f472b6;
+        }
+        
+        .badge-extracted {
+            background: #dcfce7;
+            color: #166534;
+            border-color: #22c55e;
+        }
+        
+        /* Tab Navigation */
+        .tab-nav {
+            display: flex;
+            flex-wrap: nowrap;
+            justify-content: center;
+            align-items: center;
+            overflow-x: auto;
+            gap: 0.25rem;
+            border-bottom: 2px solid #e2e8f0;
+            padding: 0.75rem 0.25rem;
+            margin-bottom: 2rem;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        .tab-nav::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .tab-button {
+            flex: 0 0 auto;
+            padding: 0.35rem 0.6rem;
+            border-radius: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+            background: #f8fafc;
+            color: #64748b;
+            white-space: nowrap;
+        }
+        
+        .tab-button:hover {
+            background: #f1f5f9;
+            color: #334155;
+        }
+        
+        .tab-button.active {
+            color: #ffffff;
+        }
+
+        .tab-button.active.btn-info { background: #64748b; border-color: #475569; box-shadow: 0 2px 4px rgba(100, 116, 139, 0.3); }
+        .tab-button.active.btn-overview { background: #15803d; border-color: #166534; box-shadow: 0 2px 4px rgba(21, 128, 61, 0.3); }
+        .tab-button.active.btn-materials { background: #854d0e; border-color: #713f12; box-shadow: 0 2px 4px rgba(133, 77, 14, 0.3); }
+        .tab-button.active.btn-processing { background: #ea580c; border-color: #c2410c; box-shadow: 0 2px 4px rgba(234, 88, 12, 0.3); }
+        .tab-button.active.btn-formulation { background: #4f46e5; border-color: #4338ca; box-shadow: 0 2px 4px rgba(79, 70, 229, 0.3); }
+        .tab-button.active.btn-results { background: #0891b2; border-color: #0e7490; box-shadow: 0 2px 4px rgba(8, 145, 178, 0.3); }
+        .tab-button.active.btn-phd { background: #9333ea; border-color: #7e22ce; box-shadow: 0 2px 4px rgba(147, 51, 234, 0.3); }
+        .tab-button.active.btn-sustainability { background: #059669; border-color: #047857; box-shadow: 0 2px 4px rgba(5, 150, 105, 0.3); }
+        
+        /* Data Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+        }
+        
+        thead {
+            background: #f8fafc;
+            border-bottom: 2px solid #cbd5e1;
+        }
+        
+        th {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: #475569;
+            font-size: 0.8125rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        tbody tr:hover {
+            background: #f8fafc;
+        }
+        
+        /* Metric Cards */
+        .metric-card {
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            border: 1px solid #e2e8f0;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        
+        /* Progress Bar */
+        .progress-bar {
+            height: 3px;
+            background: #e2e8f0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 9999;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #22c55e 0%, #16a34a 100%);
+            transition: width 0.15s ease-out;
+            box-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
+        }
+        
+        /* Section Anchors */
+        .section-anchor {
+            scroll-margin-top: 100px;
+        }
+        
+        /* Sticky Navigation */
+        .sticky-nav {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        /* Provenance Markers */
+        .provenance-marker {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.625rem;
+            padding: 0.125rem 0.375rem;
+            border-radius: 0.25rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .provenance-extracted { background: #dcfce7; color: #166534; }
+        .provenance-derived { background: #fef3c7; color: #92400e; }
+        .provenance-interpretive { background: #fce7f3; color: #9f1239; }
+
+        @media print {
+            .no-print { display: none !important; }
+            .card { break-inside: avoid; border: 1px solid #cbd5e1; box-shadow: none; }
+            .tab-content { display: block !important; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    
+    <!-- Progress Bar -->
+    <div class="progress-bar no-print">
+        <div id="progressFill" class="progress-fill" style="width: 0%"></div>
+    </div>
+    
+    <!-- Navigation Header -->
+    <nav class="sticky-nav no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-green-500 to-lime-600 rounded-lg flex items-center justify-center shadow-md">
+                        <span class="text-white font-bold text-xl">🫒</span>
+                    </div>
+                    <div>
+                        <h1 class="text-base font-bold text-gray-900">Paper Dashboard</h1>
+                        <p class="text-xs text-gray-500">Gutierrez et al. 2020</p>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="window.print()" class="px-3 py-2 rounded-lg bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 text-sm font-medium transition flex items-center gap-2">
+                        <span>🖨️</span> Print
+                    </button>
+                    <button onclick="copyCitation()" class="px-3 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-white text-sm font-medium transition flex items-center gap-2">
+                        <span>📋</span> Citation
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- Hero Section -->
+        <div class="card card-elevated p-8 mb-8">
+            <div class="flex items-start gap-6 mb-6">
+                <div class="flex-shrink-0">
+                    <div class="w-20 h-20 bg-gradient-to-br from-green-500 to-lime-600 rounded-2xl flex items-center justify-center shadow-lg">
+                        <span class="text-4xl">🏗️</span>
+                    </div>
+                </div>
+                <div class="flex-1">
+                    <div class="flex flex-wrap gap-2 mb-3">
+                        <span class="badge badge-experimental">🧪 Experimental Study</span>
+                        <span class="badge badge-core">Core Dataset</span>
+                        <span class="badge badge-extracted">Tier A Data</span>
+                    </div>
+                    <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4 leading-tight">
+                        Development and Characterization of Environmentally Friendly Insulation Materials for the Building Industry from Olive Pomace Waste
+                    </h1>
+                    <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-4">
+                        <span class="flex items-center gap-1">
+                            <span class="icon">👥</span>
+                            O. Gutierrez, R. Balart, D. Lascano, L. Quiles-Carrillo, E. Fages, L. Sanchez-Nacher
+                        </span>
+                        <span>•</span>
+                        <span>📅 2020</span>
+                        <span>•</span>
+                        <span>📖 Fibers and Polymers</span>
+                    </div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="text-sm text-gray-500 font-medium">DOI:</span>
+                        <code class="text-sm">10.1007/s12221-020-9701-6</code>
+                        <a href="https://doi.org/10.1007/s12221-020-9701-6" target="_blank" class="px-3 py-1 rounded bg-green-600 hover:bg-green-700 text-white text-xs font-medium transition">
+                            🔗 Open Paper
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Context Banner -->
+            <div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-6 border border-green-200">
+                <div class="flex flex-col md:flex-row items-start gap-6">
+                    <div class="flex-shrink-0">
+                        <div class="w-16 h-16 bg-green-100 rounded-xl flex items-center justify-center border-2 border-green-300 shadow-sm">
+                            <span class="text-3xl">💡</span>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-xl font-bold text-gray-900 mb-3 flex items-center gap-2">
+                            <span>🎓</span> Core Contribution: Waste Valorisation
+                            <span class="provenance-marker provenance-interpretive ml-auto">⚡ Interpretive</span>
+                        </h3>
+                        <p class="text-gray-700 leading-relaxed mb-4">
+                            This study establishes the viability of using <strong>Olive Pomace Waste</strong> (80% by weight) combined with polymer fibers to manufacture thermal insulation panels. It contrasts two manufacturing routes: <strong>Hot-Press Moulding</strong> and <strong>Continuous Lamination</strong>. The findings provide a comprehensive dataset on density, thermal conductivity, and thermal resistance for bio-composite insulators.
+                        </p>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="bg-white rounded-lg p-4 border border-green-200 hover:border-green-400 transition">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="w-1 h-10 bg-green-500 rounded-full"></div>
+                                    <div class="text-xs text-green-700 uppercase tracking-widest font-bold">Key Material</div>
+                                </div>
+                                <div class="text-lg font-bold text-gray-900 pl-4">Olive Pomace <span class="text-sm font-normal text-gray-500">(80% Loading)</span></div>
+                            </div>
+                            
+                            <div class="bg-white rounded-lg p-4 border border-blue-200 hover:border-blue-400 transition">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="w-1 h-10 bg-blue-500 rounded-full"></div>
+                                    <div class="text-xs text-blue-700 uppercase tracking-widest font-bold">Performance</div>
+                                </div>
+                                <div class="text-lg font-bold text-gray-900 pl-4">λ = 0.035 - 0.093 W/mK</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="metric-card">
+                <div class="text-center">
+                    <div class="text-4xl mb-3">🔢</div>
+                    <div class="text-3xl font-bold text-blue-600 mb-1">12</div>
+                    <div class="text-sm font-medium text-gray-600 mb-2">Tested Variants</div>
+                    <div class="text-xs text-gray-500">Based on formulation & processing</div>
+                    <span class="provenance-marker provenance-extracted mt-2">✓ Extracted</span>
+                </div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="text-center">
+                    <div class="text-4xl mb-3">🌡️</div>
+                    <div class="text-3xl font-bold text-green-600 mb-1">0.035</div>
+                    <div class="text-sm font-medium text-gray-600 mb-2">Min. Thermal Cond. (W/mK)</div>
+                    <div class="text-xs text-gray-500">Variant IOB300 (Laminated)</div>
+                    <span class="provenance-marker provenance-extracted mt-2">✓ Extracted</span>
+                </div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="text-center">
+                    <div class="text-4xl mb-3">📄</div>
+                    <div class="text-3xl font-bold text-purple-600 mb-1">10</div>
+                    <div class="text-sm font-medium text-gray-600 mb-2">Pages Processed</div>
+                    <div class="text-xs text-gray-500">Full Extraction</div>
+                    <span class="provenance-marker provenance-extracted mt-2">✓ Extracted</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="card p-6 mb-8">
+            <div class="tab-nav">
+                <button class="tab-button btn-info" onclick="switchTab('info')">ℹ️ Info</button>
+                <button class="tab-button active btn-overview" onclick="switchTab('overview')">📋 Overview</button>
+                <button class="tab-button btn-materials" onclick="switchTab('materials')">🫒 Materials</button>
+                <button class="tab-button btn-processing" onclick="switchTab('processing')">⚙️ Processing</button>
+                <button class="tab-button btn-formulation" onclick="switchTab('formulation')">🧪 Formulation</button>
+                <button class="tab-button btn-results" onclick="switchTab('results')">📊 Results</button>
+                <button class="tab-button btn-phd" onclick="switchTab('phd')">🎓 PhD Context</button>
+                <button class="tab-button btn-sustainability" onclick="switchTab('sustainability')">🌱 Sustainability</button>
+            </div>
+
+            <!-- Tab: Info -->
+            <div id="tab-info" class="tab-content hidden">
+                <div class="space-y-8">
+                    <div class="card card-elevated p-6 border-l-4 border-purple-500">
+                        <h2 class="text-xl font-bold text-gray-900 mb-2">Data Provenance</h2>
+                        <p class="text-sm text-gray-700 leading-relaxed mb-4">
+                            Data extracted via semi-automated pipeline (Version 2.0-hardened). All values traced to original text, tables, or figures.
+                        </p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                            <span class="provenance-marker provenance-derived">≈ Derived</span>
+                            <span class="provenance-marker provenance-interpretive">⚡ Interpretive</span>
+                        </div>
+                    </div>
+                    
+                    <div class="card p-6">
+                        <h2 class="text-xl font-bold text-gray-900 mb-4">Acronyms</h2>
+                        <table class="w-full">
+                            <thead><tr><th>Acronym</th><th>Meaning</th></tr></thead>
+                            <tbody>
+                                <tr><td class="font-bold">OP / OB</td><td>Olive Pomace (Variants)</td></tr>
+                                <tr><td class="font-bold">PLA</td><td>Polylactic Acid</td></tr>
+                                <tr><td class="font-bold">PES/PE</td><td>Polyester/Polyethylene Bicomponent Fiber</td></tr>
+                                <tr><td class="font-bold">C-Series</td><td>Hot-Press Moulding Samples</td></tr>
+                                <tr><td class="font-bold">I-Series</td><td>Continuous Lamination Samples</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Overview -->
+            <div id="tab-overview" class="tab-content">
+                <div class="space-y-8">
+                    <!-- Research Objective -->
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>🎯</span> Research Objective & Problem
+                        </h2>
+                        <div class="card p-6">
+                            <div class="space-y-6">
+                                <div>
+                                    <div class="flex items-center justify-between mb-3">
+                                        <h3 class="text-lg font-semibold text-gray-900">Primary Objective</h3>
+                                        <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                                    </div>
+                                    <p class="text-gray-700 leading-relaxed bg-green-50 p-4 rounded-lg border-l-4 border-green-500">
+                                        "assess the potential of the wet-laid technique to upgrade olive pomace wastes for uses in the construction and building industry as thermal and acoustic insulation materials"
+                                    </p>
+                                </div>
+                                
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                                        <h4 class="font-bold text-gray-900 mb-2">Technical Problem</h4>
+                                        <p class="text-sm text-gray-700">High moisture content (60-65%) of pomace leads to putrefaction.</p>
+                                    </div>
+                                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                                        <h4 class="font-bold text-gray-900 mb-2">Environmental Problem</h4>
+                                        <p class="text-sm text-gray-700">Huge volumes of industrial waste discarded in landfills.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Material System Context -->
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>🧱</span> Material System Context
+                        </h2>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="card p-6 border-t-4 border-blue-500">
+                                <h3 class="text-base font-bold text-gray-900 mb-2">Primary System</h3>
+                                <p class="text-lg font-bold text-blue-600">Polymer Composite</p>
+                                <span class="provenance-marker provenance-extracted mt-3">✓ Extracted</span>
+                            </div>
+                            <div class="card p-6 border-t-4 border-green-500">
+                                <h3 class="text-base font-bold text-gray-900 mb-2">Function</h3>
+                                <p class="text-lg font-bold text-green-600">Thermal Insulation</p>
+                                <span class="provenance-marker provenance-extracted mt-3">✓ Extracted</span>
+                            </div>
+                            <div class="card p-6 border-t-4 border-purple-500">
+                                <h3 class="text-base font-bold text-gray-900 mb-2">Baseline Comparison</h3>
+                                <p class="text-lg font-bold text-purple-600">Rock/Glass Wool, PU Foam</p>
+                                <span class="provenance-marker provenance-extracted mt-3">✓ Extracted</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Materials -->
+            <div id="tab-materials" class="tab-content hidden">
+                <div class="space-y-8">
+                    <!-- Waste Material -->
+                    <div class="card p-6 border-l-4 border-green-600">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center gap-3">
+                                <span class="text-3xl">🫒</span>
+                                <h3 class="text-xl font-bold text-gray-900">Olive Pomace Waste</h3>
+                            </div>
+                            <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <p class="text-sm text-gray-600 mb-2"><strong>Origin:</strong> Extremadura, Spain (Supplied by CTAEX)</p>
+                                <p class="text-sm text-gray-600 mb-2"><strong>Form:</strong> Dried and Grinded</p>
+                                <p class="text-sm text-gray-600 mb-2"><strong>Particle Size:</strong> 3-4 μm to 1 mm</p>
+                            </div>
+                            <div class="bg-gray-50 p-4 rounded">
+                                <h4 class="text-sm font-bold text-gray-900 mb-2">Chemical Composition (Literature Cited)</h4>
+                                <ul class="text-sm space-y-1">
+                                    <li class="flex justify-between"><span>Lignin</span> <span class="font-bold">22%</span></li>
+                                    <li class="flex justify-between"><span>Hemicellulose</span> <span class="font-bold">11.3%</span></li>
+                                    <li class="flex justify-between"><span>Cellulose</span> <span class="font-bold">10.1%</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Binders/Admixtures -->
+                    <div class="card p-6">
+                        <h3 class="text-lg font-bold text-gray-900 mb-4">Binders & Admixtures</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm text-left">
+                                <thead class="bg-gray-50 text-gray-700 uppercase">
+                                    <tr>
+                                        <th class="px-4 py-3">Material</th>
+                                        <th class="px-4 py-3">Role</th>
+                                        <th class="px-4 py-3">Dosage in Mix</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-b">
+                                        <td class="px-4 py-3 font-medium">Lyocell</td>
+                                        <td class="px-4 py-3">Binder / Reinforcement</td>
+                                        <td class="px-4 py-3">10%</td>
+                                    </tr>
+                                    <tr class="border-b">
+                                        <td class="px-4 py-3 font-medium">PES/PE (Bicomponent)</td>
+                                        <td class="px-4 py-3">Thermal Binder</td>
+                                        <td class="px-4 py-3">10% (in OB series)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-3 font-medium">PLA (Polylactic Acid)</td>
+                                        <td class="px-4 py-3">Biodegradable Binder</td>
+                                        <td class="px-4 py-3">10% (in OP series)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Processing -->
+            <div id="tab-processing" class="tab-content hidden">
+                <div class="space-y-8">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Manufacturing Process</h2>
+                    
+                    <div class="relative border-l-4 border-gray-200 ml-4 space-y-8">
+                        <!-- Step 1 -->
+                        <div class="mb-8 ml-6">
+                            <span class="absolute flex items-center justify-center w-8 h-8 bg-blue-100 rounded-full -left-4 ring-4 ring-white">
+                                1
+                            </span>
+                            <div class="card p-4">
+                                <h3 class="text-lg font-bold text-gray-900">Sieving / Wet-Laid Preparation</h3>
+                                <p class="text-sm text-gray-600">High shear stirring (2400 rpm, 10 min) to disperse fibers in water.</p>
+                                <span class="provenance-marker provenance-extracted mt-2">✓ Extracted</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 2 -->
+                        <div class="mb-8 ml-6">
+                            <span class="absolute flex items-center justify-center w-8 h-8 bg-orange-100 rounded-full -left-4 ring-4 ring-white">
+                                2
+                            </span>
+                            <div class="card p-4">
+                                <h3 class="text-lg font-bold text-gray-900">Drying</h3>
+                                <p class="text-sm text-gray-600">Continuous hot air dryer. Temperature: <strong>190 ºC</strong>. Speed: 1 m/min.</p>
+                                <span class="provenance-marker provenance-extracted mt-2">✓ Extracted</span>
+                            </div>
+                        </div>
+
+                        <!-- Step 3 -->
+                        <div class="ml-6">
+                            <span class="absolute flex items-center justify-center w-8 h-8 bg-red-100 rounded-full -left-4 ring-4 ring-white">
+                                3
+                            </span>
+                            <div class="card p-4">
+                                <h3 class="text-lg font-bold text-gray-900">Consolidation (Two Routes)</h3>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+                                    <div class="bg-red-50 p-3 rounded border border-red-100">
+                                        <div class="font-bold text-red-800 text-sm">Hot-Press Moulding (C-Series)</div>
+                                        <div class="text-xs text-red-600">165 ºC, 6 tons force, 12 min.</div>
+                                    </div>
+                                    <div class="bg-blue-50 p-3 rounded border border-blue-100">
+                                        <div class="font-bold text-blue-800 text-sm">Continuous Lamination (I-Series)</div>
+                                        <div class="text-xs text-blue-600">Uses copolyamide web & foil (120 ºC).</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Formulation -->
+            <div id="tab-formulation" class="tab-content hidden">
+                <div class="space-y-8">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Mix Design & Formulation</h2>
+                    <div class="card p-6">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm text-left">
+                                <thead class="bg-gray-100">
+                                    <tr>
+                                        <th class="px-4 py-3">Variant Series</th>
+                                        <th class="px-4 py-3">Olive Pomace (%)</th>
+                                        <th class="px-4 py-3">Lyocell (%)</th>
+                                        <th class="px-4 py-3">Binder Fiber (%)</th>
+                                        <th class="px-4 py-3">Binder Type</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-b">
+                                        <td class="px-4 py-3 font-bold">OB (100/200/300)</td>
+                                        <td class="px-4 py-3">80%</td>
+                                        <td class="px-4 py-3">10%</td>
+                                        <td class="px-4 py-3">10%</td>
+                                        <td class="px-4 py-3">PES/PE</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-3 font-bold">OP (100/200/300)</td>
+                                        <td class="px-4 py-3">80%</td>
+                                        <td class="px-4 py-3">10%</td>
+                                        <td class="px-4 py-3">10%</td>
+                                        <td class="px-4 py-3">PLA</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-4">
+                            * Note: Suffixes (100, 200, 300) likely denote variations in ply count (10, 15, 25 plies) or specific manufacturing thickness settings as inferred from the quantitative results.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Results -->
+            <div id="tab-results" class="tab-content hidden">
+                <div class="space-y-8">
+                    
+                    <div class="flex flex-col md:flex-row gap-4 items-start justify-between">
+                        <div>
+                            <h2 class="text-2xl font-bold text-gray-900 flex items-center gap-2">
+                                <span>📊</span> Quantitative Results
+                            </h2>
+                            <p class="text-sm text-gray-600 mt-1">Comparison of Hot-Pressed (C) vs Laminated (I) composites.</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <span class="text-xs px-3 py-1 rounded-full bg-green-100 border border-green-300 text-green-800 font-semibold">
+                                Standards: ISO 10534-2, ISO 12667
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Charts Section -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- Thermal Conductivity Chart -->
+                        <div class="card p-6">
+                            <h3 class="text-lg font-bold text-gray-900 mb-4">Thermal Conductivity (W/mK)</h3>
+                            <div class="h-64">
+                                <canvas id="conductivityChart"></canvas>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-2 text-center">Lower is Better. Laminated (I-Series) performs significantly better.</p>
+                        </div>
+
+                        <!-- Thermal Resistance Chart -->
+                        <div class="card p-6">
+                            <h3 class="text-lg font-bold text-gray-900 mb-4">Thermal Resistance (m²K/W)</h3>
+                            <div class="h-64">
+                                <canvas id="resistanceChart"></canvas>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-2 text-center">Higher is Better. Laminated (I-Series) shows superior insulation.</p>
+                        </div>
+                    </div>
+
+                    <!-- Comprehensive Data Table -->
+                    <div class="card p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-bold text-gray-900">Full Dataset</h3>
+                            <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm text-left">
+                                <thead class="bg-gray-100 text-gray-700">
+                                    <tr>
+                                        <th class="px-4 py-2">ID</th>
+                                        <th class="px-4 py-2">Process</th>
+                                        <th class="px-4 py-2">Density (kg/m³)</th>
+                                        <th class="px-4 py-2">Thermal Cond. (W/mK)</th>
+                                        <th class="px-4 py-2">Thermal Res. (m²K/W)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Hot Pressed -->
+                                    <tr class="bg-red-50 border-b"><td class="px-4 py-2 font-medium">COB100</td><td>Hot-Press</td><td>2687</td><td>0.087</td><td>0.278</td></tr>
+                                    <tr class="bg-red-50 border-b"><td class="px-4 py-2 font-medium">COB200</td><td>Hot-Press</td><td>2842</td><td>0.090</td><td>0.189</td></tr>
+                                    <tr class="bg-red-50 border-b"><td class="px-4 py-2 font-medium">COB300</td><td>Hot-Press</td><td>2809</td><td>0.091</td><td>0.124</td></tr>
+                                    <tr class="bg-red-50 border-b"><td class="px-4 py-2 font-medium">COP100</td><td>Hot-Press</td><td>2620</td><td>0.088</td><td>0.190</td></tr>
+                                    <tr class="bg-red-50 border-b"><td class="px-4 py-2 font-medium">COP200</td><td>Hot-Press</td><td>2783</td><td>0.091</td><td>0.093</td></tr>
+                                    <tr class="bg-red-50 border-b"><td class="px-4 py-2 font-medium">COP300</td><td>Hot-Press</td><td>2911</td><td>0.093</td><td>0.114</td></tr>
+                                    
+                                    <!-- Laminated -->
+                                    <tr class="bg-blue-50 border-b"><td class="px-4 py-2 font-medium">IOB100</td><td>Laminated</td><td>3350</td><td>0.048</td><td>0.401</td></tr>
+                                    <tr class="bg-blue-50 border-b"><td class="px-4 py-2 font-medium">IOB200</td><td>Laminated</td><td>3302</td><td>0.040</td><td>0.486</td></tr>
+                                    <tr class="bg-blue-50 border-b"><td class="px-4 py-2 font-medium">IOB300</td><td>Laminated</td><td>3167</td><td>0.035</td><td>0.524</td></tr>
+                                    <tr class="bg-blue-50 border-b"><td class="px-4 py-2 font-medium">IOP100</td><td>Laminated</td><td>3278</td><td>0.041</td><td>0.468</td></tr>
+                                    <tr class="bg-blue-50 border-b"><td class="px-4 py-2 font-medium">IOP200</td><td>Laminated</td><td>3239</td><td>0.039</td><td>0.513</td></tr>
+                                    <tr class="bg-blue-50"><td class="px-4 py-2 font-medium">IOP300</td><td>Laminated</td><td>3270</td><td>0.036</td><td>0.529</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: PhD Context -->
+            <div id="tab-phd" class="tab-content hidden">
+                <div class="space-y-8">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">PhD Relevance & Decision Support</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="card p-6 border-l-4 border-green-500">
+                            <h3 class="text-lg font-bold text-gray-900 mb-3">Relevance Verdict</h3>
+                            <ul class="space-y-2 text-sm text-gray-700">
+                                <li class="flex items-center gap-2">✅ <strong>Benchmarking:</strong> Supports material property comparison.</li>
+                                <li class="flex items-center gap-2">✅ <strong>Modeling:</strong> Useful for parameter training.</li>
+                                <li class="flex items-center gap-2">✅ <strong>Core Dataset:</strong> Recommended for reuse.</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="card p-6 border-l-4 border-yellow-500">
+                            <h3 class="text-lg font-bold text-gray-900 mb-3">Missing Data Profile</h3>
+                            <ul class="space-y-2 text-sm text-gray-700">
+                                <li>⚠️ Control reference definition missing.</li>
+                                <li>⚠️ Curing/firing conditions not fully specified.</li>
+                                <li>⚠️ Test age not specified.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card p-6">
+                        <h3 class="text-lg font-bold text-gray-900 mb-3">One Sentence Takeaway</h3>
+                        <p class="text-lg text-gray-800 italic border-l-4 border-blue-500 pl-4">
+                            "Continuous lamination of wet-laid olive pomace non-wovens produces insulation panels with thermal conductivity (0.035-0.048 W/mK) comparable to commercial insulators."
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Sustainability -->
+            <div id="tab-sustainability" class="tab-content hidden">
+                <div class="space-y-8">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Sustainability & Impact</h2>
+                    
+                    <div class="bg-gradient-to-br from-green-50 to-teal-50 rounded-xl p-6 border border-green-200">
+                        <div class="flex items-start gap-4">
+                            <span class="text-5xl">♻️</span>
+                            <div>
+                                <h3 class="text-2xl font-bold text-gray-900 mb-3">Circular Economy</h3>
+                                <p class="text-gray-700 leading-relaxed text-lg">
+                                    Transforms <strong>Olive Pomace Waste</strong>, a high-moisture agricultural byproduct prone to putrefaction, into a functional building material.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="card p-6 border-t-4 border-green-500">
+                            <h3 class="text-lg font-bold text-gray-900 mb-3">Waste Valorisation</h3>
+                            <p class="text-sm text-gray-700">Directly addresses the disposal issue of industrial olive oil extraction waste in Spain.</p>
+                        </div>
+                        <div class="card p-6 border-t-4 border-blue-500">
+                            <h3 class="text-lg font-bold text-gray-900 mb-3">Energy Efficiency</h3>
+                            <p class="text-sm text-gray-700">Creates thermal insulation (Conductivity < 0.05 W/mK for laminated samples) to reduce building energy consumption.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-100 border-t border-gray-200 py-8 mt-12 no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col items-center justify-center text-center">
+                <p class="text-gray-700 text-sm">
+                    <strong>Research Dashboard</strong> • Generated from Schema 2.0-hardened Extraction
+                </p>
+                <p class="text-gray-500 text-xs mt-2">
+                    Source ID: 10.1007/s12221-020-9701-6
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Paper Data for Citation
+        const paperData = {
+            title: "Development and Characterization of Environmentally Friendly Insulation Materials for the Building Industry from Olive Pomace Waste",
+            doi: "10.1007/s12221-020-9701-6",
+            authors: ["O. Gutierrez", "R. Balart", "D. Lascano", "L. Quiles-Carrillo", "E. Fages"],
+            year: 2020,
+            journal: "Fibers and Polymers"
+        };
+
+        // Tab Switching Logic
+        function switchTab(tabName) {
+            // Hide all contents
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.add('hidden');
+            });
+            // Show target
+            document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+            
+            // Update buttons
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`.btn-${tabName}`).classList.add('active');
+        }
+
+        // Copy Citation
+        function copyCitation() {
+            const citation = `${paperData.authors[0]} et al. (${paperData.year}). ${paperData.title}. ${paperData.journal}. https://doi.org/${paperData.doi}`;
+            navigator.clipboard.writeText(citation).then(() => {
+                alert('Citation copied to clipboard!');
+            });
+        }
+
+        // Chart Initialization
+        document.addEventListener('DOMContentLoaded', function() {
+            // Data Arrays
+            const labels = ['OB100', 'OB200', 'OB300', 'OP100', 'OP200', 'OP300'];
+            
+            // Conductivity Data
+            const condHotPress = [0.087, 0.090, 0.091, 0.088, 0.091, 0.093]; // COB/COP
+            const condLaminated = [0.048, 0.040, 0.035, 0.041, 0.039, 0.036]; // IOB/IOP
+
+            // Resistance Data
+            const resHotPress = [0.278, 0.189, 0.124, 0.190, 0.093, 0.114];
+            const resLaminated = [0.401, 0.486, 0.524, 0.468, 0.513, 0.529];
+
+            // Thermal Conductivity Chart
+            const ctxCond = document.getElementById('conductivityChart');
+            if (ctxCond) {
+                new Chart(ctxCond, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: 'Hot-Press (C-Series)',
+                                data: condHotPress,
+                                backgroundColor: 'rgba(239, 68, 68, 0.7)',
+                                borderColor: 'rgba(239, 68, 68, 1)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Laminated (I-Series)',
+                                data: condLaminated,
+                                backgroundColor: 'rgba(59, 130, 246, 0.7)',
+                                borderColor: 'rgba(59, 130, 246, 1)',
+                                borderWidth: 1
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return context.dataset.label + ': ' + context.parsed.y + ' W/mK';
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                title: { display: true, text: 'Thermal Conductivity (W/mK)' },
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Thermal Resistance Chart
+            const ctxRes = document.getElementById('resistanceChart');
+            if (ctxRes) {
+                new Chart(ctxRes, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: 'Hot-Press (C-Series)',
+                                data: resHotPress,
+                                backgroundColor: 'rgba(239, 68, 68, 0.7)',
+                                borderColor: 'rgba(239, 68, 68, 1)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Laminated (I-Series)',
+                                data: resLaminated,
+                                backgroundColor: 'rgba(59, 130, 246, 0.7)',
+                                borderColor: 'rgba(59, 130, 246, 1)',
+                                borderWidth: 1
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return context.dataset.label + ': ' + context.parsed.y + ' m²K/W';
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                title: { display: true, text: 'Thermal Resistance (m²K/W)' },
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

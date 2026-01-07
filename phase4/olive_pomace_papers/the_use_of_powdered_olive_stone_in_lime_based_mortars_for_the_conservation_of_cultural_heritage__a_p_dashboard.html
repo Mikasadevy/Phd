@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Paper Dashboard – Zicarelli et al. 2025 | POS Lime Mortars</title>
+    <meta name="description" content="Academic research dashboard analyzing powdered olive stone in lime-based mortars for cultural heritage conservation">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['Lora', 'Georgia', 'serif'],
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            900: '#0c4a6e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* Base Typography */
+        body { font-family: 'Inter', system-ui, sans-serif; color: #1e293b; background: #ffffff; }
+        h1, h2, h3, h4 { font-family: 'Lora', serif; color: #0f172a; }
+        
+        /* Components */
+        .card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 0.75rem; box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1); }
+        .card:hover { box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .badge { display: inline-flex; align-items: center; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; border: 1px solid; }
+        .badge-core { background: #dbeafe; color: #1e40af; border-color: #3b82f6; }
+        .provenance-marker { display: inline-flex; font-size: 0.625rem; padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-weight: 600; text-transform: uppercase; }
+        .provenance-extracted { background: #dcfce7; color: #166534; }
+        
+        /* Tabs */
+        .tab-nav { display: flex; overflow-x: auto; gap: 0.5rem; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem; margin-bottom: 2rem; }
+        .tab-button { padding: 0.5rem 1rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 600; color: #64748b; transition: all 0.2s; white-space: nowrap; }
+        .tab-button:hover { background: #f1f5f9; color: #334155; }
+        .tab-button.active { color: #ffffff; background: #0f172a; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+
+        /* Tables */
+        table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+        th { background: #f8fafc; padding: 0.75rem; text-align: left; font-weight: 600; border-bottom: 2px solid #cbd5e1; }
+        td { padding: 0.75rem; border-bottom: 1px solid #e2e8f0; }
+
+        /* Utilities */
+        .progress-bar { height: 4px; background: #e2e8f0; fixed: top; left: 0; right: 0; z-index: 50; }
+        .progress-fill { height: 100%; background: #0ea5e9; width: 0%; transition: width 0.2s; }
+        .sticky-nav { position: sticky; top: 0; z-index: 40; background: rgba(255,255,255,0.95); backdrop-filter: blur(8px); border-bottom: 1px solid #e2e8f0; }
+        
+        @media print { .no-print { display: none; } .tab-content { display: block !important; } }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <!-- Progress Bar -->
+    <div class="fixed top-0 left-0 right-0 h-1 bg-gray-200 z-50">
+        <div id="progressFill" class="h-full bg-blue-600 transition-all duration-300" style="width: 0%"></div>
+    </div>
+
+    <!-- Sticky Header -->
+    <nav class="sticky-nav py-3 px-4 shadow-sm no-print">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center text-white text-lg">🫒</div>
+                <div>
+                    <h1 class="text-sm font-bold text-gray-900 leading-none">Paper Dashboard</h1>
+                    <span class="text-xs text-gray-500">Zicarelli et al. 2025</span>
+                </div>
+            </div>
+            <div class="flex gap-2">
+                <button onclick="window.print()" class="px-3 py-1.5 bg-white border border-gray-300 rounded text-xs font-medium hover:bg-gray-50">🖨️ Print</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-4 py-8">
+
+        <!-- Hero Section -->
+        <div class="card p-8 mb-8 border-l-4 border-green-600">
+            <div class="flex flex-col md:flex-row gap-6">
+                <div class="flex-1">
+                    <div class="flex flex-wrap gap-2 mb-3">
+                        <span class="badge badge-core">Core Dataset</span>
+                        <span class="badge bg-yellow-100 text-yellow-800 border-yellow-300">Experimental</span>
+                    </div>
+                    <h1 class="text-3xl font-bold text-gray-900 mb-4 leading-tight">
+                        The use of powdered olive stone in lime-based mortars for the conservation of cultural heritage: A performance evaluation
+                    </h1>
+                    <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-4">
+                        <span class="font-medium">👥 Zicarelli, Adomako, Ruffolo, et al.</span>
+                        <span>•</span>
+                        <span>📅 2025</span>
+                        <span>•</span>
+                        <span class="italic">Construction and Building Materials</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <code class="text-xs bg-gray-100 px-2 py-1 rounded text-blue-700">DOI: 10.1016/j.conbuildmat.2025.144137</code>
+                        <a href="https://doi.org/10.1016/j.conbuildmat.2025.144137" target="_blank" class="text-xs text-blue-600 hover:underline">🔗 Open Original Source</a>
+                    </div>
+                </div>
+                <div class="md:w-1/3 bg-gray-50 rounded-xl p-5 border border-gray-100">
+                    <h3 class="text-sm font-bold text-gray-900 uppercase tracking-wide mb-3">Key Takeaway</h3>
+                    <p class="text-sm text-gray-700 leading-relaxed">
+                        POS substitution up to 15% in lime mortars reduces density and strength while increasing porosity. Nanosilica pre-treatment partially mitigates density loss but high replacement levels increase vulnerability to salt crystallization.
+                    </p>
+                    <div class="mt-3 flex gap-2">
+                        <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+            <div class="card p-4 flex items-center gap-4">
+                <div class="text-3xl">🧱</div>
+                <div>
+                    <div class="text-2xl font-bold text-gray-900">7</div>
+                    <div class="text-xs text-gray-500">Mix Variants</div>
+                </div>
+            </div>
+            <div class="card p-4 flex items-center gap-4">
+                <div class="text-3xl">🫒</div>
+                <div>
+                    <div class="text-2xl font-bold text-gray-900">5–15%</div>
+                    <div class="text-xs text-gray-500">Replacement Level</div>
+                </div>
+            </div>
+            <div class="card p-4 flex items-center gap-4">
+                <div class="text-3xl">🧪</div>
+                <div>
+                    <div class="text-2xl font-bold text-gray-900">POS-SL</div>
+                    <div class="text-xs text-gray-500">Nanosilica Treated</div>
+                </div>
+            </div>
+            <div class="card p-4 flex items-center gap-4">
+                <div class="text-3xl">⏳</div>
+                <div>
+                    <div class="text-2xl font-bold text-gray-900">90d</div>
+                    <div class="text-xs text-gray-500">Max Curing Age</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="tab-nav no-print">
+            <button class="tab-button active" onclick="switchTab('overview')">📋 Overview</button>
+            <button class="tab-button" onclick="switchTab('materials')">🫒 Materials</button>
+            <button class="tab-button" onclick="switchTab('formulation')">⚗️ Formulation</button>
+            <button class="tab-button" onclick="switchTab('testing')">⚙️ Testing</button>
+            <button class="tab-button" onclick="switchTab('results')">📊 Results</button>
+            <button class="tab-button" onclick="switchTab('limitations')">⚠️ Limitations</button>
+            <button class="tab-button" onclick="switchTab('phd')">🎓 PhD Context</button>
+        </div>
+
+        <!-- Tab: Overview -->
+        <div id="tab-overview" class="tab-content space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="card p-6">
+                    <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">🎯 Objective & Problem</h2>
+                    <div class="space-y-4">
+                        <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+                            <h3 class="text-sm font-bold text-blue-900 mb-1">Primary Objective</h3>
+                            <p class="text-gray-700 text-sm">Investigate the use of Powdered Olive Stone (POS) as a partial replacement for quartz sand in lime-based mortars.</p>
+                        </div>
+                        <div class="bg-orange-50 p-4 rounded-lg border-l-4 border-orange-500">
+                            <h3 class="text-sm font-bold text-orange-900 mb-1">Problem Definition</h3>
+                            <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+                                <li>Need for compatible repair mortars for historical structures.</li>
+                                <li>Waste disposal of olive stones and depletion of natural aggregates.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card p-6">
+                    <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">🔍 Scope</h2>
+                    <table class="w-full text-sm">
+                        <tbody>
+                            <tr>
+                                <td class="font-medium text-gray-500">Material System</td>
+                                <td class="font-bold">Lime-based mortars</td>
+                            </tr>
+                            <tr>
+                                <td class="font-medium text-gray-500">Application</td>
+                                <td class="font-bold">Repair & conservation (Historical structures)</td>
+                            </tr>
+                            <tr>
+                                <td class="font-medium text-gray-500">Geographic Origin</td>
+                                <td class="font-bold">Spain (POS Source)</td>
+                            </tr>
+                            <tr>
+                                <td class="font-medium text-gray-500">Function</td>
+                                <td class="font-bold">Non-structural / Binder replacement</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card p-6">
+                <h3 class="font-bold text-gray-900 mb-3">Acronyms & Definitions</h3>
+                <div class="flex flex-wrap gap-2">
+                    <span class="px-3 py-1 bg-gray-100 rounded text-xs font-mono">POS: Powdered Olive Stone</span>
+                    <span class="px-3 py-1 bg-gray-100 rounded text-xs font-mono">POS-SL: POS treated with Nanosilica</span>
+                    <span class="px-3 py-1 bg-gray-100 rounded text-xs font-mono">UPV: Ultrasonic Pulse Velocity</span>
+                    <span class="px-3 py-1 bg-gray-100 rounded text-xs font-mono">SEM: Scanning Electron Microscopy</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: Materials -->
+        <div id="tab-materials" class="tab-content hidden space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                <!-- Waste Material -->
+                <div class="card p-6 border-t-4 border-green-600">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h2 class="text-xl font-bold text-gray-900">Powdered Olive Stone (POS)</h2>
+                            <span class="text-xs text-gray-500">Primary Waste Material</span>
+                        </div>
+                        <div class="text-4xl">🫒</div>
+                    </div>
+                    
+                    <div class="space-y-3">
+                        <div class="flex justify-between border-b pb-2">
+                            <span class="text-sm text-gray-600">Origin</span>
+                            <span class="text-sm font-bold">Spain (BioPowder.com)</span>
+                        </div>
+                        <div class="flex justify-between border-b pb-2">
+                            <span class="text-sm text-gray-600">Type</span>
+                            <span class="text-sm font-bold">Agricultural By-product</span>
+                        </div>
+                        <div class="flex justify-between border-b pb-2">
+                            <span class="text-sm text-gray-600">Form</span>
+                            <span class="text-sm font-bold">Ground Powder</span>
+                        </div>
+                        <div class="flex justify-between border-b pb-2">
+                            <span class="text-sm text-gray-600">Particle Size</span>
+                            <span class="text-sm font-bold">100–315 µm</span>
+                        </div>
+                        <div class="mt-4 bg-gray-50 p-3 rounded text-sm">
+                            <strong>Microstructure:</strong> Bundles of cells characterized by large lumens and cracks (SEM/EDS).
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pre-treatment -->
+                <div class="card p-6 border-t-4 border-blue-600">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h2 class="text-xl font-bold text-gray-900">Chemical Activation</h2>
+                            <span class="text-xs text-gray-500">Processing Strategy</span>
+                        </div>
+                        <div class="text-4xl">⚗️</div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="flex items-start gap-3">
+                            <div class="w-6 h-6 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-xs font-bold shrink-0">1</div>
+                            <p class="text-sm text-gray-700"><strong>Impregnation:</strong> POS treated with diluted nanosilica suspension (10 wt%).</p>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <div class="w-6 h-6 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-xs font-bold shrink-0">2</div>
+                            <p class="text-sm text-gray-700"><strong>Ratio:</strong> 0.35 w/w nanosilica-to-POS ratio until saturation.</p>
+                        </div>
+                        <div class="bg-blue-50 p-3 rounded text-sm text-blue-800">
+                            <strong>Purpose:</strong> To enhance the reactivity and bonding of the organic filler within the inorganic lime matrix.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: Formulation -->
+        <div id="tab-formulation" class="tab-content hidden space-y-6">
+            <div class="card p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold text-gray-900">Mix Design & Proportions</h2>
+                    <span class="badge badge-core">Quantitative Data</span>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr>
+                                <th>Variant ID</th>
+                                <th>Description</th>
+                                <th>Repl. Level</th>
+                                <th>Binder Ratio</th>
+                                <th>Aggregate Ratio</th>
+                                <th>Waste Ratio</th>
+                                <th>w/b Ratio</th>
+                                <th>Admixture</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="bg-gray-50">
+                                <td class="font-bold">L (Control)</td>
+                                <td>Lime Ref.</td>
+                                <td>0%</td>
+                                <td>1</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold">POS5L</td>
+                                <td>Raw POS</td>
+                                <td>5%</td>
+                                <td>1</td>
+                                <td>2.85</td>
+                                <td>0.15</td>
+                                <td>2.21</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold">POS10L</td>
+                                <td>Raw POS</td>
+                                <td>10%</td>
+                                <td>1</td>
+                                <td>2.70</td>
+                                <td>0.30</td>
+                                <td>2.27</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold">POS15L</td>
+                                <td>Raw POS</td>
+                                <td>15%</td>
+                                <td>1</td>
+                                <td>2.55</td>
+                                <td>0.45</td>
+                                <td>2.30</td>
+                                <td>-</td>
+                            </tr>
+                            <tr class="bg-blue-50">
+                                <td class="font-bold text-blue-800">POS5-SL</td>
+                                <td>Silica Treated</td>
+                                <td>5%</td>
+                                <td>1</td>
+                                <td>2.85</td>
+                                <td>0.15</td>
+                                <td>1.88</td>
+                                <td>Nanosilica (0.35)</td>
+                            </tr>
+                            <tr class="bg-blue-50">
+                                <td class="font-bold text-blue-800">POS10-SL</td>
+                                <td>Silica Treated</td>
+                                <td>10%</td>
+                                <td>1</td>
+                                <td>2.70</td>
+                                <td>0.30</td>
+                                <td>1.88</td>
+                                <td>Nanosilica (0.35)</td>
+                            </tr>
+                            <tr class="bg-blue-50">
+                                <td class="font-bold text-blue-800">POS15-SL</td>
+                                <td>Silica Treated</td>
+                                <td>15%</td>
+                                <td>1</td>
+                                <td>2.55</td>
+                                <td>0.45</td>
+                                <td>1.88</td>
+                                <td>Nanosilica (0.35)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-4 text-xs text-gray-500 text-right">
+                    *Ratios by weight/volume as reported in Table 1
+                </div>
+            </div>
+
+            <div class="card p-6 w-full md:w-1/2 mx-auto">
+                <h3 class="font-bold text-center mb-4">Replacement Strategy (Volume %)</h3>
+                <canvas id="replacementChart" height="200"></canvas>
+            </div>
+        </div>
+
+        <!-- Tab: Testing -->
+        <div id="tab-testing" class="tab-content hidden space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="card p-6">
+                    <h2 class="text-xl font-bold text-gray-900 mb-4">Experimental Conditions</h2>
+                    <dl class="space-y-3 text-sm">
+                        <div class="flex justify-between">
+                            <dt class="text-gray-500">Curing Mode</dt>
+                            <dd class="font-bold">Air Curing</dd>
+                        </div>
+                        <div class="flex justify-between">
+                            <dt class="text-gray-500">Environment</dt>
+                            <dd class="font-bold">20 ± 5°C, 60 ± 10% RH</dd>
+                        </div>
+                        <div class="flex justify-between">
+                            <dt class="text-gray-500">Duration</dt>
+                            <dd class="font-bold">Up to 90 days</dd>
+                        </div>
+                        <div class="flex justify-between">
+                            <dt class="text-gray-500">Replicates</dt>
+                            <dd class="font-bold">3 samples per test</dd>
+                        </div>
+                    </dl>
+                </div>
+
+                <div class="card p-6">
+                    <h2 class="text-xl font-bold text-gray-900 mb-4">Standards & Protocols</h2>
+                    <ul class="space-y-2 text-sm">
+                        <li class="flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-gray-400"></span>
+                            <span><strong>Colorimetric:</strong> EN 15886:2010</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-gray-400"></span>
+                            <span><strong>Mechanical:</strong> EN 1015-11:2019</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-gray-400"></span>
+                            <span><strong>Salt Crystallization:</strong> EN 12370:1999</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-gray-400"></span>
+                            <span><strong>Specimen Dimensions:</strong> 40x40x160mm, 50mm cubes</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: Results -->
+        <div id="tab-results" class="tab-content hidden space-y-6">
+            
+            <!-- Key Numeric Results -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                
+                <!-- Chart: Density -->
+                <div class="card p-6 lg:col-span-2">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-bold text-gray-900">Bulk Density (90 Days)</h3>
+                        <span class="text-xs text-gray-500">Unit: kg/m³</span>
+                    </div>
+                    <canvas id="densityChart"></canvas>
+                    <p class="mt-4 text-sm text-gray-600">
+                        Density decreases as POS content increases (1.64 → 1.38 g/cm³). Nanosilica treatment (POS-SL) helps recover some density (avg 1.58 g/cm³ for POS5-SL).
+                    </p>
+                </div>
+
+                <!-- Durability Alert -->
+                <div class="card p-6 border-l-4 border-red-500 bg-red-50">
+                    <h3 class="font-bold text-red-900 mb-2">⚠️ Durability Critical Finding</h3>
+                    <div class="text-4xl font-bold text-red-700 mb-1">16%</div>
+                    <div class="text-sm text-red-800 font-medium mb-4">Mass Gain (POS15L)</div>
+                    <p class="text-xs text-red-800 leading-relaxed">
+                        High replacement levels (15%) led to significant vulnerability in salt crystallization tests (EN 12370), causing macroscopic exfoliation and cracking. POS5-SL performed better (9% gain).
+                    </p>
+                </div>
+            </div>
+
+            <!-- UPV Chart -->
+            <div class="card p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-gray-900">Ultrasonic Pulse Velocity (UPV - 28 Days)</h3>
+                    <span class="text-xs text-gray-500">Unit: m/s</span>
+                </div>
+                <div class="h-64">
+                    <canvas id="upvChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Data Gaps Note -->
+            <div class="card p-4 bg-yellow-50 border border-yellow-200">
+                <div class="flex items-start gap-3">
+                    <span class="text-xl">📊</span>
+                    <div>
+                        <h4 class="text-sm font-bold text-yellow-900">Note on Mechanical Strength</h4>
+                        <p class="text-xs text-yellow-800 mt-1">
+                            Specific numeric values for Compressive and Flexural strength for all variants were presented in box plots in the original paper and were not explicitly extracted as raw numbers. The control (L) showed ~1.52 MPa compressive strength at 90 days.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed Table -->
+            <div class="card p-6">
+                <h3 class="font-bold text-gray-900 mb-4">Workability & Physical Metrics</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr>
+                                <th>Variant</th>
+                                <th>Workability (mm)</th>
+                                <th>Density 90d (g/cm³)</th>
+                                <th>UPV 28d (m/s)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="bg-gray-50"><td class="font-bold">L</td><td>128</td><td>1.64</td><td>2014.69</td></tr>
+                            <tr><td>POS5L</td><td>128</td><td>1.51</td><td>1897.98</td></tr>
+                            <tr><td>POS10L</td><td>128</td><td>-</td><td>1710.14</td></tr>
+                            <tr><td>POS15L</td><td>128</td><td>1.38</td><td>1630.80</td></tr>
+                            <tr class="bg-blue-50 text-blue-900"><td>POS5-SL</td><td>126</td><td>1.58</td><td>1611.05</td></tr>
+                            <tr class="bg-blue-50 text-blue-900"><td>POS10-SL</td><td>127</td><td>-</td><td>1588.74</td></tr>
+                            <tr class="bg-blue-50 text-blue-900"><td>POS15-SL</td><td>128</td><td>-</td><td>1370.63</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: Limitations -->
+        <div id="tab-limitations" class="tab-content hidden space-y-6">
+            <div class="card p-6 border-l-4 border-yellow-500">
+                <h2 class="text-xl font-bold text-gray-900 mb-4">Study Limitations</h2>
+                <ul class="space-y-4">
+                    <li class="flex items-start gap-3">
+                        <span class="text-2xl">📉</span>
+                        <div>
+                            <h4 class="font-bold text-sm">Reporting Gaps</h4>
+                            <p class="text-sm text-gray-600">Mechanical strength values for variants are presented in box plots without explicit mean numeric values in the text, preventing precise benchmarking.</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <span class="text-2xl">🧂</span>
+                        <div>
+                            <h4 class="font-bold text-sm">Performance Trade-off</h4>
+                            <p class="text-sm text-gray-600">High POS replacement (15%) significantly compromises salt crystallization resistance, a critical factor for cultural heritage conservation.</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Tab: PhD Context -->
+        <div id="tab-phd" class="tab-content hidden space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="card p-6">
+                    <h2 class="text-xl font-bold text-gray-900 mb-4">Research Positioning</h2>
+                    <div class="space-y-3">
+                        <div class="flex justify-between border-b pb-2">
+                            <span class="text-gray-600">Criticality</span>
+                            <span class="badge bg-green-100 text-green-800">CORE</span>
+                        </div>
+                        <div class="flex justify-between border-b pb-2">
+                            <span class="text-gray-600">Tier</span>
+                            <span class="font-bold">A</span>
+                        </div>
+                        <div class="flex justify-between border-b pb-2">
+                            <span class="text-gray-600">Focus</span>
+                            <span class="font-bold">Material Characterization</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card p-6 bg-purple-50 border border-purple-200">
+                    <h2 class="text-xl font-bold text-purple-900 mb-3">Actionable Takeaway</h2>
+                    <p class="text-sm text-purple-800 mb-4 leading-relaxed">
+                        POS substitution up to 15% in lime mortars significantly reduces density and mechanical strength while increasing porosity and vulnerability to salt crystallization. However, nanosilica pre-treatment offers a viable pathway to mitigate density loss.
+                    </p>
+                    <div class="flex gap-2">
+                        <span class="px-2 py-1 bg-white rounded border border-purple-200 text-xs font-bold text-purple-700">Rec: Replicate Experiment</span>
+                        <span class="px-2 py-1 bg-white rounded border border-purple-200 text-xs font-bold text-purple-700">Focus: Nanosilica Treatment</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-100 border-t border-gray-200 py-8 mt-12 no-print">
+        <div class="max-w-7xl mx-auto px-4 text-center text-gray-500 text-sm">
+            <p>Generated for PhD Research Database • Based on Zicarelli et al. 2025</p>
+        </div>
+    </footer>
+
+    <script>
+        // Tab Switching Logic
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById('tab-' + tabId).classList.remove('hidden');
+            
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Scroll Progress
+        window.onscroll = function() {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("progressFill").style.width = scrolled + "%";
+        };
+
+        // Charts Initialization
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // Replacement Chart
+            new Chart(document.getElementById('replacementChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Control (0%)', '5%', '10%', '15%'],
+                    datasets: [{
+                        data: [0, 5, 10, 15],
+                        backgroundColor: ['#e2e8f0', '#bbf7d0', '#86efac', '#4ade80']
+                    }]
+                },
+                options: { plugins: { legend: { position: 'bottom' } } }
+            });
+
+            // Density Chart
+            const densityCanvas = document.getElementById('densityChart');
+            if(densityCanvas) {
+                new Chart(densityCanvas, {
+                    type: 'bar',
+                    data: {
+                        labels: ['L (Ref)', 'POS5L', 'POS15L', 'POS5-SL'],
+                        datasets: [{
+                            label: 'Bulk Density (g/cm³)',
+                            data: [1.64, 1.51, 1.38, 1.58],
+                            backgroundColor: ['#94a3b8', '#fbbf24', '#f59e0b', '#3b82f6'],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: { y: { beginAtZero: false, min: 1.0 } }
+                    }
+                });
+            }
+
+            // UPV Chart
+            const upvCanvas = document.getElementById('upvChart');
+            if(upvCanvas) {
+                new Chart(upvCanvas, {
+                    type: 'line',
+                    data: {
+                        labels: ['L', 'POS5', 'POS10', 'POS15', 'POS5-SL', 'POS10-SL', 'POS15-SL'],
+                        datasets: [{
+                            label: 'UPV (m/s)',
+                            data: [2014.69, 1897.98, 1710.14, 1630.80, 1611.05, 1588.74, 1370.63],
+                            borderColor: '#0ea5e9',
+                            backgroundColor: '#e0f2fe',
+                            fill: true,
+                            tension: 0.3
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: { y: { beginAtZero: false, min: 1000 } }
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

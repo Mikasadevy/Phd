@@ -1,0 +1,1501 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Paper Dashboard – Mesli et al. 2026 | OPW Composite Plaster</title>
+    <meta name="description" content="Academic research dashboard analyzing composite plaster mortars with olive pomace waste">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['Lora', 'Georgia', 'serif'],
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        },
+                        accent: {
+                            50: '#fef3c7',
+                            100: '#fde68a',
+                            200: '#fcd34d',
+                            300: '#fbbf24',
+                            400: '#f59e0b',
+                            500: '#d97706',
+                            600: '#b45309',
+                            700: '#92400e',
+                            800: '#78350f',
+                            900: '#451a03',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* Base Typography */
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            font-size: 16px;
+            line-height: 1.75;
+            color: #1e293b;
+            background: #ffffff;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Lora', Georgia, serif;
+            font-weight: 600;
+            line-height: 1.3;
+            color: #0f172a;
+        }
+        
+        h1 { font-size: 2.25rem; margin-bottom: 1rem; }
+        h2 { font-size: 1.875rem; margin-bottom: 0.875rem; }
+        h3 { font-size: 1.5rem; margin-bottom: 0.75rem; }
+        h4 { font-size: 1.25rem; margin-bottom: 0.625rem; }
+        
+        /* Academic Card Style */
+        .card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            transition: box-shadow 0.2s ease;
+        }
+        
+        .card:hover {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        
+        .card-elevated {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Badge System */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.375rem 0.875rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border: 1.5px solid;
+        }
+        
+        .badge-core {
+            background: #dbeafe;
+            color: #1e40af;
+            border-color: #3b82f6;
+        }
+        
+        .badge-experimental {
+            background: #fef3c7;
+            color: #92400e;
+            border-color: #f59e0b;
+        }
+        
+        .badge-interpretive {
+            background: #fce7f3;
+            color: #9f1239;
+            border-color: #f472b6;
+        }
+        
+        .badge-extracted {
+            background: #dcfce7;
+            color: #166534;
+            border-color: #22c55e;
+        }
+
+        .badge-tier-a {
+            background: #d1fae5;
+            color: #065f46;
+            border-color: #10b981;
+        }
+        
+        /* Tab Navigation */
+        .tab-nav {
+            display: flex;
+            flex-wrap: nowrap;
+            justify-content: center;
+            align-items: center;
+            overflow-x: auto;
+            gap: 0.25rem;
+            border-bottom: 2px solid #e2e8f0;
+            padding: 0.75rem 0.25rem;
+            margin-bottom: 2rem;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        .tab-nav::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .tab-button {
+            flex: 0 0 auto;
+            padding: 0.35rem 0.6rem;
+            border-radius: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+            background: #f8fafc;
+            color: #64748b;
+            white-space: nowrap;
+        }
+        
+        .tab-button:hover {
+            background: #f1f5f9;
+            color: #334155;
+        }
+        
+        .tab-button.active {
+            color: #ffffff;
+        }
+
+        .tab-button.active.btn-info { background: #64748b; border-color: #475569; box-shadow: 0 2px 4px rgba(100, 116, 139, 0.3); }
+        .tab-button.active.btn-overview { background: #2563eb; border-color: #1d4ed8; box-shadow: 0 2px 4px rgba(37, 99, 235, 0.3); }
+        .tab-button.active.btn-materials { background: #16a34a; border-color: #15803d; box-shadow: 0 2px 4px rgba(22, 163, 74, 0.3); }
+        .tab-button.active.btn-formulation { background: #ea580c; border-color: #c2410c; box-shadow: 0 2px 4px rgba(234, 88, 12, 0.3); }
+        .tab-button.active.btn-testing { background: #4f46e5; border-color: #4338ca; box-shadow: 0 2px 4px rgba(79, 70, 229, 0.3); }
+        .tab-button.active.btn-results { background: #0891b2; border-color: #0e7490; box-shadow: 0 2px 4px rgba(8, 145, 178, 0.3); }
+        .tab-button.active.btn-limitations { background: #dc2626; border-color: #b91c1c; box-shadow: 0 2px 4px rgba(220, 38, 38, 0.3); }
+        .tab-button.active.btn-phd { background: #9333ea; border-color: #7e22ce; box-shadow: 0 2px 4px rgba(147, 51, 234, 0.3); }
+        .tab-button.active.btn-sustainability { background: #059669; border-color: #047857; box-shadow: 0 2px 4px rgba(5, 150, 105, 0.3); }
+        
+        /* Data Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+        }
+        
+        thead {
+            background: #f8fafc;
+            border-bottom: 2px solid #cbd5e1;
+        }
+        
+        th {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: #475569;
+            font-size: 0.8125rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        tbody tr:hover {
+            background: #f8fafc;
+        }
+        
+        /* Metric Cards */
+        .metric-card {
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            border: 1px solid #e2e8f0;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        
+        /* Progress Bar */
+        .progress-bar {
+            height: 3px;
+            background: #e2e8f0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 9999;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #0ea5e9 0%, #06b6d4 100%);
+            transition: width 0.15s ease-out;
+            box-shadow: 0 0 10px rgba(14, 165, 233, 0.5);
+        }
+        
+        /* Alert Boxes */
+        .alert {
+            padding: 1rem 1.25rem;
+            border-radius: 0.5rem;
+            border-left: 4px solid;
+            font-size: 0.875rem;
+            line-height: 1.6;
+        }
+        
+        .alert-info {
+            background: #dbeafe;
+            border-color: #3b82f6;
+            color: #1e3a8a;
+        }
+        
+        .alert-warning {
+            background: #fef3c7;
+            border-color: #f59e0b;
+            color: #78350f;
+        }
+        
+        .alert-success {
+            background: #dcfce7;
+            border-color: #22c55e;
+            color: #14532d;
+        }
+        
+        .alert-danger {
+            background: #fee2e2;
+            border-color: #ef4444;
+            color: #7f1d1d;
+        }
+        
+        /* Section Anchors */
+        .section-anchor {
+            scroll-margin-top: 100px;
+        }
+        
+        /* Print Styles */
+        @media print {
+            body {
+                font-size: 11pt;
+                line-height: 1.5;
+            }
+            
+            .no-print {
+                display: none !important;
+            }
+            
+            .card {
+                break-inside: avoid;
+                border: 1px solid #cbd5e1;
+                box-shadow: none;
+            }
+            
+            h2, h3, h4 {
+                break-after: avoid;
+            }
+            
+            .page-break {
+                page-break-before: always;
+            }
+            
+            .tab-content {
+                display: block !important;
+            }
+        }
+        
+        /* Code Blocks */
+        code {
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Courier New', monospace;
+            background: #f1f5f9;
+            padding: 0.125rem 0.375rem;
+            border-radius: 0.25rem;
+            font-size: 0.875em;
+            color: #0369a1;
+        }
+        
+        /* Tooltip */
+        [title] {
+            cursor: help;
+            text-decoration: underline;
+            text-decoration-style: dotted;
+            text-decoration-color: #94a3b8;
+        }
+        
+        /* Sticky Navigation */
+        .sticky-nav {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        /* Icon styling */
+        .icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            h1 { font-size: 1.75rem; }
+            h2 { font-size: 1.5rem; }
+            h3 { font-size: 1.25rem; }
+            
+            .tab-nav {
+                justify-content: center;
+            }
+        }
+        
+        /* Smooth transitions */
+        * {
+            transition: background-color 0.15s ease;
+        }
+        
+        /* Data provenance markers */
+        .provenance-marker {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.625rem;
+            padding: 0.125rem 0.375rem;
+            border-radius: 0.25rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .provenance-extracted {
+            background: #dcfce7;
+            color: #166534;
+        }
+        
+        .provenance-derived {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .provenance-interpretive {
+            background: #fce7f3;
+            color: #9f1239;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    
+    <!-- Progress Bar -->
+    <div class="progress-bar no-print">
+        <div id="progressFill" class="progress-fill" style="width: 0%"></div>
+    </div>
+    
+    <!-- Navigation Header -->
+    <nav class="sticky-nav no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center shadow-md">
+                        <span class="text-white font-bold text-xl">📄</span>
+                    </div>
+                    <div>
+                        <h1 class="text-base font-bold text-gray-900">Research Paper Dashboard</h1>
+                        <p class="text-xs text-gray-500">Olive Pomace Waste Plaster</p>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="window.print()" class="px-3 py-2 rounded-lg bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 text-sm font-medium transition flex items-center gap-2">
+                        <span>🖨️</span> Print
+                    </button>
+                    <button onclick="copyCitation()" class="px-3 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium transition flex items-center gap-2">
+                        <span>📋</span> Citation
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+
+        <!-- Hero Section -->
+        <div class="card card-elevated p-8 mb-8">
+            <div class="flex items-start gap-6 mb-6">
+                <div class="flex-shrink-0">
+                    <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl flex items-center justify-center shadow-lg">
+                        <span class="text-4xl">🫒</span>
+                    </div>
+                </div>
+                <div class="flex-1">
+                    <div class="flex flex-wrap gap-2 mb-3">
+                        <span class="badge badge-experimental">🧪 Experimental & Numerical</span>
+                        <span class="badge badge-tier-a">🏆 Tier A</span>
+                        <span class="badge badge-core">Core Dataset</span>
+                    </div>
+                    <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4 leading-tight">
+                        Enhancing thermal insulation and humidity control in composite plaster mortars with olive pomace waste
+                    </h1>
+                    <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-4">
+                        <span class="flex items-center gap-1">
+                            <span class="icon">👥</span>
+                            Mesli, I.F.Z., Hachemi, H., Benosman, A.S., Taleb, O., Houti, F.B., Seladji, C., Mouaissa, M.S.
+                        </span>
+                        <span>•</span>
+                        <span>📅 2026</span>
+                        <span>•</span>
+                        <span>📖 Energy & Buildings (Vol. 351)</span>
+                    </div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="text-sm text-gray-500 font-medium">DOI:</span>
+                        <code class="text-sm">10.1016/j.enbuild.2025.116726</code>
+                        <a href="https://doi.org/10.1016/j.enbuild.2025.116726" 
+                           target="_blank" 
+                           class="px-3 py-1 rounded bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium transition">
+                            🔗 Open Paper
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PhD Context Banner -->
+            <div class="bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl p-6 border border-purple-200">
+                <div class="flex flex-col md:flex-row items-start gap-6">
+                    <div class="flex-shrink-0">
+                        <div class="w-16 h-16 bg-purple-100 rounded-xl flex items-center justify-center border-2 border-purple-300 shadow-sm">
+                            <span class="text-3xl">💡</span>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-xl font-bold text-gray-900 mb-3 flex items-center gap-2">
+                            <span>🎓</span> Core Research Contribution
+                            <span class="provenance-marker provenance-interpretive ml-auto">⚡ Interpretive</span>
+                        </h3>
+                        <p class="text-gray-700 leading-relaxed mb-4">
+                            High-quality experimental data with full replacement range (0-100%) and numerical validation. The study confirms that <strong>Olive Pomace Waste (OPW)</strong> can replace sand up to 100% in plaster mortars, halving thermal conductivity while maintaining strength above 2 MPa, making it a strong candidate for insulation material selection.
+                        </p>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="bg-white rounded-lg p-4 border border-green-200 hover:border-green-400 transition">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="w-1 h-10 bg-green-500 rounded-full"></div>
+                                    <div class="text-xs text-green-700 uppercase tracking-widest font-bold">🎯 Research Alignment</div>
+                                </div>
+                                <div class="text-lg font-bold text-gray-900 pl-4">Waste Valorisation + Hygrothermal Insulation</div>
+                            </div>
+                            
+                            <div class="bg-white rounded-lg p-4 border border-purple-200 hover:border-purple-400 transition">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="w-1 h-10 bg-purple-500 rounded-full"></div>
+                                    <div class="text-xs text-purple-700 uppercase tracking-widest font-bold">🔬 Key Innovation</div>
+                                </div>
+                                <div class="text-lg font-bold text-gray-900 pl-4">100% Sand Replacement <span class="text-sm font-normal text-gray-600">(OPW)</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="metric-card">
+                <div class="text-center">
+                    <div class="text-4xl mb-3">🧱</div>
+                    <div class="text-3xl font-bold text-blue-600 mb-1">5</div>
+                    <div class="text-sm font-medium text-gray-600 mb-2">Mortar Mix Designs</div>
+                    <div class="text-xs text-gray-500">Control + 4 variants (0-100%)</div>
+                    <span class="provenance-marker provenance-extracted mt-2">✓ Extracted</span>
+                </div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="text-center">
+                    <div class="text-4xl mb-3">🌡️</div>
+                    <div class="text-3xl font-bold text-green-600 mb-1">37%</div>
+                    <div class="text-sm font-medium text-gray-600 mb-2">Conductivity Reduction</div>
+                    <div class="text-xs text-gray-500">From 0.621 to 0.389 W/mK</div>
+                    <span class="provenance-marker provenance-extracted mt-2">✓ Extracted</span>
+                </div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="text-center">
+                    <div class="text-4xl mb-3">📊</div>
+                    <div class="text-3xl font-bold text-purple-600 mb-1">35</div>
+                    <div class="text-sm font-medium text-gray-600 mb-2">Numeric Points</div>
+                    <div class="text-xs text-gray-500">Metrics Extracted</div>
+                    <span class="provenance-marker provenance-extracted mt-2">✓ Extracted</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="card p-6 mb-8">
+            <div class="tab-nav">
+                <button class="tab-button btn-info" onclick="switchTab('info')">
+                    ℹ️ Info
+                </button>
+                <button class="tab-button active btn-overview" onclick="switchTab('overview')">
+                    📋 Overview
+                </button>
+                <button class="tab-button btn-materials" onclick="switchTab('materials')">
+                    🫒 Materials
+                </button>
+                <button class="tab-button btn-formulation" onclick="switchTab('formulation')">
+                    🧱 Formulation
+                </button>
+                <button class="tab-button btn-testing" onclick="switchTab('testing')">
+                    ⚙️ Testing
+                </button>
+                <button class="tab-button btn-results" onclick="switchTab('results')">
+                    📊 Results
+                </button>
+                <button class="tab-button btn-limitations" onclick="switchTab('limitations')">
+                    ⚠️ Limitations
+                </button>
+                <button class="tab-button btn-phd" onclick="switchTab('phd')">
+                    🎓 PhD Context
+                </button>
+                <button class="tab-button btn-sustainability" onclick="switchTab('sustainability')">
+                    🌱 Sustainability
+                </button>
+            </div>
+
+            <!-- Tab Content: Info -->
+            <div id="tab-info" class="tab-content hidden">
+                <div class="space-y-8">
+                    <div class="card card-elevated p-6 border-l-4 border-purple-500">
+                        <div class="flex items-start gap-4">
+                            <div class="flex-shrink-0">
+                                <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
+                                    <span class="text-2xl">ℹ️</span>
+                                </div>
+                            </div>
+                            <div class="flex-1">
+                                <h2 class="text-xl font-bold text-gray-900 mb-2">📊 Data Provenance &amp; Interpretation Notice</h2>
+                                <p class="text-sm text-gray-700 leading-relaxed mb-4">
+                                    This dashboard extracts, synthesizes, and interprets data from the original research paper. All extracted values are traced to their source (page/table/figure). Interpretive statements are explicitly labeled. This is a <strong>research intelligence artifact</strong> intended for academic review, not a substitute for the original publication.
+                                </p>
+                                <div class="flex flex-wrap gap-2 mb-2">
+                                    <span class="provenance-marker provenance-extracted">✓ Extracted: Verbatim from paper</span>
+                                    <span class="provenance-marker provenance-derived">≈ Derived: Calculated from reported data</span>
+                                    <span class="provenance-marker provenance-interpretive">⚡ Interpretive: Author-level synthesis</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card p-6">
+                        <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>🔤</span> Acronym &amp; Abbreviation Legend
+                        </h2>
+                        <div class="overflow-x-auto">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Abbreviation</th>
+                                        <th>Meaning</th>
+                                        <th>Context</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="font-semibold">OPW</td>
+                                        <td>Olive Pomace Waste</td>
+                                        <td>Waste material replacing sand</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-semibold">CPM</td>
+                                        <td>Composite Plaster Mortar</td>
+                                        <td>Control mix and base matrix</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-semibold">FEM</td>
+                                        <td>Finite Element Method</td>
+                                        <td>Numerical simulation method</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-semibold">W/P</td>
+                                        <td>Water-to-Plaster Ratio</td>
+                                        <td>Fixed at 0.6 for all mixes</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-semibold">EN</td>
+                                        <td>European Standard</td>
+                                        <td>Testing protocols (e.g., EN 13279-2)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-semibold">ASTM</td>
+                                        <td>American Society for Testing and Materials</td>
+                                        <td>Testing protocols (e.g., ASTM D5334)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Overview -->
+            <div id="tab-overview" class="tab-content">
+                <div class="space-y-8">
+                    
+                    <!-- Mini Navigation -->
+                    <div class="flex flex-wrap gap-2 p-3 bg-gray-50 rounded-lg border border-gray-200">
+                        <span class="text-xs text-gray-600 font-medium">Quick Jump:</span>
+                        <button onclick="scrollToSection('objective')" class="text-xs px-2 py-1 rounded bg-white border border-gray-300 hover:bg-gray-100 transition">Objective</button>
+                        <button onclick="scrollToSection('system')" class="text-xs px-2 py-1 rounded bg-white border border-gray-300 hover:bg-gray-100 transition">System</button>
+                        <button onclick="scrollToSection('scope')" class="text-xs px-2 py-1 rounded bg-white border border-gray-300 hover:bg-gray-100 transition">Scope</button>
+                    </div>
+                    
+                    <!-- Research Objective -->
+                    <div id="objective" class="section-anchor">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>🎯</span> Research Objective & Problem Statement
+                        </h2>
+                        <div class="card p-6">
+                            <div class="space-y-6">
+                                <div>
+                                    <div class="flex items-center justify-between mb-3">
+                                        <h3 class="text-lg font-semibold text-gray-900">Primary Objective</h3>
+                                        <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                                    </div>
+                                    <p class="text-gray-700 leading-relaxed bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+                                        "Evaluate the impact of olive pomace waste on the thermal, hygrothermal, and mechanical properties of composite plaster mortars."
+                                    </p>
+                                </div>
+                                
+                                <div>
+                                    <div class="flex items-center justify-between mb-3">
+                                        <h3 class="text-lg font-semibold text-gray-900">Problem Definition</h3>
+                                        <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                                    </div>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div class="bg-orange-50 p-4 rounded-lg border-l-4 border-orange-500">
+                                            <h4 class="font-bold text-gray-900 mb-2">Technical Problem</h4>
+                                            <p class="text-sm text-gray-700">Urgent need to address energy efficiency in buildings and manage agricultural waste.</p>
+                                        </div>
+                                        <div class="bg-green-50 p-4 rounded-lg border-l-4 border-green-500">
+                                            <h4 class="font-bold text-gray-900 mb-2">Environmental Problem</h4>
+                                            <p class="text-sm text-gray-700">Effective management of agricultural waste and reducing energy consumption in the construction sector.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <h3 class="text-lg font-semibold text-gray-900 mb-3">Application Intent</h3>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                                            <div class="text-xs text-gray-500 mb-1">Target Application</div>
+                                            <div class="text-base font-bold text-gray-900">Building insulation materials</div>
+                                        </div>
+                                        <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                                            <div class="text-xs text-gray-500 mb-1">Material Function</div>
+                                            <div class="text-base font-bold text-gray-900">Thermal Insulation</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Material System Context -->
+                    <div id="system" class="section-anchor">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>🧱</span> Material System Context
+                        </h2>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="card p-6 border-t-4 border-blue-500">
+                                <div class="text-3xl mb-3">🧱</div>
+                                <h3 class="text-base font-bold text-gray-900 mb-2">Primary System</h3>
+                                <p class="text-lg font-bold text-blue-600">Gypsum-based</p>
+                                <p class="text-xs text-gray-500 mt-2">Knauf Fleurus construction plaster</p>
+                                <span class="provenance-marker provenance-extracted mt-3">✓ Extracted</span>
+                            </div>
+                            
+                            <div class="card p-6 border-t-4 border-green-500">
+                                <div class="text-3xl mb-3">⚙️</div>
+                                <h3 class="text-base font-bold text-gray-900 mb-2">Functional Role</h3>
+                                <p class="text-lg font-bold text-green-600">Thermal Insulation</p>
+                                <p class="text-xs text-gray-500 mt-2">Interior dry exposure</p>
+                                <span class="provenance-marker provenance-extracted mt-3">✓ Extracted</span>
+                            </div>
+                            
+                            <div class="card p-6 border-t-4 border-purple-500">
+                                <div class="text-3xl mb-3">📊</div>
+                                <h3 class="text-base font-bold text-gray-900 mb-2">Baseline Reference</h3>
+                                <p class="text-lg font-bold text-purple-600">Standard Gypsum</p>
+                                <p class="text-xs text-gray-500 mt-2">CPM (0% OPW)</p>
+                                <span class="provenance-marker provenance-extracted mt-3">✓ Extracted</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Research Scope -->
+                    <div id="scope" class="section-anchor">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>🔍</span> Research Scope & Context
+                        </h2>
+                        <div class="card p-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <div class="flex items-center justify-between mb-3">
+                                        <h3 class="text-lg font-semibold text-gray-900">What's in Scope</h3>
+                                        <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                                    </div>
+                                    <p class="text-gray-700 leading-relaxed">
+                                        Physical, mechanical, thermal, and hygrothermal characterization of CPM with OPW.
+                                    </p>
+                                </div>
+                                <div>
+                                    <div class="flex items-center justify-between mb-3">
+                                        <h3 class="text-lg font-semibold text-gray-900">Geographical Context</h3>
+                                        <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                                    </div>
+                                    <p class="text-gray-700 leading-relaxed">
+                                        🇩🇿 <strong>Algeria</strong> (Tlemcen)
+                                    </p>
+                                    <p class="text-xs text-gray-500 mt-2">OPW sourced from Ouzidane, Chetouane district</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+
+            <!-- Tab Content: Materials -->
+            <div id="tab-materials" class="tab-content hidden">
+                <div class="space-y-8">
+                    
+                    <!-- Primary Waste Materials -->
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>🫒</span> Primary Waste Materials
+                        </h2>
+                        
+                        <!-- Olive Pomace Waste -->
+                        <div class="card p-6 mb-6 border-l-4 border-green-500">
+                            <div class="flex items-start gap-4 mb-4">
+                                <div class="text-5xl">🫒</div>
+                                <div class="flex-1">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <h3 class="text-xl font-bold text-gray-900">Olive Pomace Waste (OPW)</h3>
+                                        <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                                    </div>
+                                    <p class="text-gray-700 leading-relaxed mb-4 bg-green-50 p-3 rounded">
+                                        "Olive pomace waste (OPW) as a substitute for sand... generated as a by-product during the extraction of olive oil."
+                                    </p>
+                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                        <div class="bg-gray-50 p-3 rounded border border-gray-200">
+                                            <div class="text-xs text-gray-500 mb-1">Physical Form</div>
+                                            <div class="text-sm font-bold text-gray-900">Dried Aggregates</div>
+                                        </div>
+                                        <div class="bg-gray-50 p-3 rounded border border-gray-200">
+                                            <div class="text-xs text-gray-500 mb-1">Bulk Density</div>
+                                            <div class="text-sm font-bold text-gray-900">730 kg/m³</div>
+                                        </div>
+                                        <div class="bg-gray-50 p-3 rounded border border-gray-200">
+                                            <div class="text-xs text-gray-500 mb-1">Origin</div>
+                                            <div class="text-sm font-bold text-gray-900">🇩🇿 Tlemcen, Algeria</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Processing Steps -->
+                            <div class="mt-6">
+                                <h4 class="text-lg font-bold text-gray-900 mb-3 flex items-center justify-between">
+                                    Pre-treatment Steps
+                                    <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                                </h4>
+                                <div class="space-y-3">
+                                    <div class="bg-blue-50 rounded-lg p-3 flex gap-3">
+                                        <span class="font-bold text-blue-800">1. Washing</span>
+                                        <span class="text-gray-700">Using hot water to effectively separate and remove residual fragments of olive pits.</span>
+                                    </div>
+                                    <div class="bg-orange-50 rounded-lg p-3 flex gap-3">
+                                        <span class="font-bold text-orange-800">2. Drying</span>
+                                        <span class="text-gray-700">Controlled thermal treatment process at 40°C for a duration of 48h to reduce moisture content.</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Material Characterization -->
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <h2 class="text-2xl font-bold text-gray-900 flex items-center gap-2">
+                                <span>🔬</span> Material Characterization
+                            </h2>
+                            <div class="text-xs px-3 py-1 rounded-full bg-yellow-100 border border-yellow-300 text-yellow-800 font-semibold">
+                                Chemical Composition: Missing
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <!-- Physical Properties -->
+                            <div class="card p-6">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h3 class="text-lg font-bold text-gray-900 flex items-center gap-2">
+                                        <span>⚙️</span> Physical Properties (OPW)
+                                    </h3>
+                                    <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                                </div>
+                                <div class="space-y-3">
+                                    <div class="flex justify-between items-center p-3 bg-gray-50 rounded">
+                                        <span class="text-sm text-gray-700 font-medium">Bulk Density (Apparent)</span>
+                                        <span class="text-sm font-bold text-gray-900">730 kg/m³</span>
+                                    </div>
+                                    <div class="flex justify-between items-center p-3 bg-gray-50 rounded">
+                                        <span class="text-sm text-gray-700 font-medium">Fineness Modulus</span>
+                                        <span class="text-sm font-bold text-gray-900">4.33</span>
+                                    </div>
+                                    <div class="alert alert-info text-xs">
+                                        <strong>Note:</strong> Chemical composition was not reported in the source text.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Formulation -->
+            <div id="tab-formulation" class="tab-content hidden">
+                <div class="space-y-8">
+                    
+                    <!-- Mix Design Overview -->
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>🧱</span> Formulation & Mix Design
+                        </h2>
+                        
+                        <div class="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-6 border border-blue-200 mb-6">
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                                <div>
+                                    <div class="text-3xl mb-2">🧱</div>
+                                    <div class="text-2xl font-bold text-gray-900">5</div>
+                                    <div class="text-xs text-gray-600 mt-1">Mix Variants</div>
+                                </div>
+                                <div>
+                                    <div class="text-3xl mb-2">🫒</div>
+                                    <div class="text-2xl font-bold text-green-600">Sand</div>
+                                    <div class="text-xs text-gray-600 mt-1">Replaced Material</div>
+                                </div>
+                                <div>
+                                    <div class="text-3xl mb-2">📊</div>
+                                    <div class="text-2xl font-bold text-blue-600">Volume %</div>
+                                    <div class="text-xs text-gray-600 mt-1">Replacement Basis</div>
+                                </div>
+                                <div>
+                                    <div class="text-3xl mb-2">💧</div>
+                                    <div class="text-2xl font-bold text-purple-600">0.6</div>
+                                    <div class="text-xs text-gray-600 mt-1">Water/Plaster Ratio</div>
+                                </div>
+                            </div>
+                            <div class="mt-4 text-center">
+                                <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                            </div>
+                        </div>
+
+                        <!-- Mix Variants Table -->
+                        <div class="card p-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-lg font-bold text-gray-900 flex items-center gap-2">
+                                    <span>📊</span> Detailed Mix Proportions (Traceable Dataset)
+                                </h3>
+                                <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Mix ID</th>
+                                            <th>Plaster (g)</th>
+                                            <th>Sand (g)</th>
+                                            <th>OPW (g)</th>
+                                            <th>Water (ml)</th>
+                                            <th>Lime (g)</th>
+                                            <th>Replacement</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="bg-blue-50 font-bold">
+                                            <td>CPM (Control)</td>
+                                            <td>1400</td>
+                                            <td>700</td>
+                                            <td>0</td>
+                                            <td>840</td>
+                                            <td>84</td>
+                                            <td>0%</td>
+                                        </tr>
+                                        <tr>
+                                            <td>CPMOPW25</td>
+                                            <td>1400</td>
+                                            <td>525</td>
+                                            <td>89.7</td>
+                                            <td>840</td>
+                                            <td>84</td>
+                                            <td>25%</td>
+                                        </tr>
+                                        <tr>
+                                            <td>CPMOPW50</td>
+                                            <td>1400</td>
+                                            <td>350</td>
+                                            <td>179.4</td>
+                                            <td>840</td>
+                                            <td>84</td>
+                                            <td>50%</td>
+                                        </tr>
+                                        <tr>
+                                            <td>CPMOPW75</td>
+                                            <td>1400</td>
+                                            <td>175</td>
+                                            <td>269.1</td>
+                                            <td>840</td>
+                                            <td>84</td>
+                                            <td>75%</td>
+                                        </tr>
+                                        <tr class="bg-green-50 font-bold">
+                                            <td>CPMOPW100</td>
+                                            <td>1400</td>
+                                            <td>0</td>
+                                            <td>358.1</td>
+                                            <td>840</td>
+                                            <td>84</td>
+                                            <td>100%</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="alert alert-info mt-4 text-sm">
+                                ℹ️ <strong>Strategy:</strong> Volumetric replacement. Plaster, Water, and Lime content kept constant. Lime added at 6% of plaster mass.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Testing -->
+            <div id="tab-testing" class="tab-content hidden">
+                <div class="space-y-8">
+                    
+                    <!-- Testing Methods Overview -->
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>⚙️</span> Experimental Conditions
+                        </h2>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <!-- Specimen & Curing -->
+                            <div class="card p-6">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h3 class="text-lg font-bold text-gray-900">Specimen Details</h3>
+                                    <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                                </div>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div class="bg-gray-50 p-3 rounded">
+                                        <div class="text-xs text-gray-500">Shape</div>
+                                        <div class="text-sm font-bold">Prism</div>
+                                    </div>
+                                    <div class="bg-gray-50 p-3 rounded">
+                                        <div class="text-xs text-gray-500">Dimensions</div>
+                                        <div class="text-sm font-bold">40 × 40 × 160 mm</div>
+                                    </div>
+                                    <div class="bg-gray-50 p-3 rounded">
+                                        <div class="text-xs text-gray-500">Test Age</div>
+                                        <div class="text-sm font-bold text-blue-600">56 days</div>
+                                    </div>
+                                    <div class="bg-gray-50 p-3 rounded">
+                                        <div class="text-xs text-gray-500">Curing</div>
+                                        <div class="text-sm font-bold">Air Curing</div>
+                                    </div>
+                                </div>
+                                <div class="alert alert-info mt-4 text-xs">
+                                    <strong>Environment:</strong> 23.8 ± 2°C and 65 ± 1% RH
+                                </div>
+                            </div>
+
+                            <!-- Standards -->
+                            <div class="card p-6">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h3 class="text-lg font-bold text-gray-900">Standards Referenced</h3>
+                                    <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                                </div>
+                                <div class="space-y-2">
+                                    <div class="flex justify-between items-center bg-gray-50 p-2 rounded">
+                                        <span class="text-sm">Mechanical Properties</span>
+                                        <code class="text-xs">EN 13279-2:2014</code>
+                                    </div>
+                                    <div class="flex justify-between items-center bg-gray-50 p-2 rounded">
+                                        <span class="text-sm">Thermal Conductivity</span>
+                                        <code class="text-xs">ASTM D5334-14</code>
+                                    </div>
+                                    <div class="flex justify-between items-center bg-gray-50 p-2 rounded">
+                                        <span class="text-sm">Sorptivity</span>
+                                        <code class="text-xs">ASTM C1585-20</code>
+                                    </div>
+                                    <div class="flex justify-between items-center bg-gray-50 p-2 rounded">
+                                        <span class="text-sm">Adhesion Strength</span>
+                                        <code class="text-xs">UNE-EN 1015-12:2000</code>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Results -->
+            <div id="tab-results" class="tab-content hidden">
+                <div class="space-y-8">
+                    
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-2xl font-bold text-gray-900 flex items-center gap-2">
+                            <span>📊</span> Consolidated Results Overview
+                        </h2>
+                        <div class="text-xs px-3 py-1 rounded-full bg-green-100 border border-green-300 text-green-800 font-semibold">
+                            Replicates: 3 • Age: 56 Days
+                        </div>
+                    </div>
+
+                    <!-- High-level outcome cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                        <div class="card p-5 border-l-4 border-blue-500">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-1 h-10 bg-blue-500 rounded-full"></div>
+                                    <div class="text-xs text-blue-700 uppercase tracking-widest font-bold">Thermal Performance</div>
+                                </div>
+                                <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                            </div>
+                            <div class="text-xl font-bold text-gray-900 pl-4 mb-2">Significant Improvement</div>
+                            <p class="text-sm text-gray-700 pl-4">
+                                Thermal conductivity decreased by <strong>37%</strong> (0.621 to 0.389 W/mK) at 100% OPW replacement.
+                            </p>
+                        </div>
+                        
+                        <div class="card p-5 border-l-4 border-orange-500">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-1 h-10 bg-orange-500 rounded-full"></div>
+                                    <div class="text-xs text-orange-700 uppercase tracking-widest font-bold">Mechanical Impact</div>
+                                </div>
+                                <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                            </div>
+                            <div class="text-xl font-bold text-gray-900 pl-4 mb-2">Strength Reduction</div>
+                            <p class="text-sm text-gray-700 pl-4">
+                                Compressive strength dropped from 15.58 MPa to 7.91 MPa, but remained well above the 2 MPa standard requirement.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Charts Section -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         <!-- Chart 1: Physical & Thermal -->
+                         <div class="card p-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-lg font-bold text-gray-900">Physical & Thermal Properties</h3>
+                                <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                            </div>
+                            <div class="h-64">
+                                <canvas id="physicalChart"></canvas>
+                            </div>
+                        </div>
+
+                         <!-- Chart 2: Mechanical -->
+                         <div class="card p-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-lg font-bold text-gray-900">Mechanical Strength (56 Days)</h3>
+                                <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                            </div>
+                            <div class="h-64">
+                                <canvas id="mechChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Detailed Results Table -->
+                    <div class="card p-6 mt-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-bold text-gray-900 flex items-center gap-2">
+                                <span>📋</span> Full Results Matrix
+                            </h3>
+                            <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Mix ID</th>
+                                        <th>Density (kg/m³)</th>
+                                        <th>Thermal Cond. (W/mK)</th>
+                                        <th>Heat Capacity (J/kgK)</th>
+                                        <th>Flexural Str. (MPa)</th>
+                                        <th>Comp. Str. (MPa)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="bg-blue-50 font-bold">
+                                        <td>CPM (0%)</td>
+                                        <td>1510</td>
+                                        <td>0.621</td>
+                                        <td>1065.56</td>
+                                        <td>4.31</td>
+                                        <td>15.58</td>
+                                    </tr>
+                                    <tr>
+                                        <td>CPMOPW25</td>
+                                        <td>1439</td>
+                                        <td>0.573</td>
+                                        <td>1163.31</td>
+                                        <td>3.82</td>
+                                        <td>13.05</td>
+                                    </tr>
+                                    <tr>
+                                        <td>CPMOPW50</td>
+                                        <td>1376</td>
+                                        <td>0.488</td>
+                                        <td>1220.93</td>
+                                        <td>3.21</td>
+                                        <td>11.59</td>
+                                    </tr>
+                                    <tr>
+                                        <td>CPMOPW75</td>
+                                        <td>1311</td>
+                                        <td>0.427</td>
+                                        <td>1288.33</td>
+                                        <td>2.41</td>
+                                        <td>9.30</td>
+                                    </tr>
+                                    <tr class="bg-green-50 font-bold">
+                                        <td>CPMOPW100</td>
+                                        <td>1295</td>
+                                        <td>0.389</td>
+                                        <td>1325.10</td>
+                                        <td>2.18</td>
+                                        <td>7.91</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Limitations -->
+            <div id="tab-limitations" class="tab-content hidden">
+                <div class="space-y-8">
+                    
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>⚠️</span> Limitations & Missing Data
+                        </h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                            <div class="card p-5 border-l-4 border-red-500">
+                                <div class="flex items-start gap-3">
+                                    <span class="text-2xl">🚫</span>
+                                    <div>
+                                        <h3 class="text-base font-bold text-gray-900 mb-2">Chemical Composition Missing</h3>
+                                        <p class="text-sm text-gray-700">The paper does not report the chemical composition of the Olive Pomace Waste (XRF data absent).</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card p-5 border-l-4 border-orange-500">
+                                <div class="flex items-start gap-3">
+                                    <span class="text-2xl">⚠️</span>
+                                    <div>
+                                        <h3 class="text-base font-bold text-gray-900 mb-2">Durability Not Tested</h3>
+                                        <p class="text-sm text-gray-700">Long-term durability tests (freeze-thaw, wet-dry cycles, organic decay) were not performed, which is critical for organic waste materials.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card p-5 border-l-4 border-yellow-500">
+                                <div class="flex items-start gap-3">
+                                    <span class="text-2xl">⚠️</span>
+                                    <div>
+                                        <h3 class="text-base font-bold text-gray-900 mb-2">Scope Limitation</h3>
+                                        <p class="text-sm text-gray-700">Authors explicitly state the study is limited to "physico-mechanical and hygrothermal characterization" in an exploratory phase.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: PhD Context -->
+            <div id="tab-phd" class="tab-content hidden">
+                <div class="space-y-8">
+                    
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>🎓</span> PhD Context & Verdict
+                        </h2>
+
+                        <!-- Alignment cards -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                            <div class="card p-5 border-t-4 border-green-500 hover:shadow-lg transition">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="w-1 h-10 bg-green-500 rounded-full"></div>
+                                    <div class="text-xs text-green-700 uppercase tracking-widest font-bold">🎯 Relevance</div>
+                                </div>
+                                <div class="text-xl font-bold text-gray-900 pl-4 mb-2">Core Dataset</div>
+                                <p class="text-sm text-gray-700 pl-4">
+                                    Passed eligibility checks (score 1/1). Provides essential data for hygrothermal modeling of bio-based plasters.
+                                </p>
+                            </div>
+                            
+                            <div class="card p-5 border-t-4 border-blue-500 hover:shadow-lg transition">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="w-1 h-10 bg-blue-500 rounded-full"></div>
+                                    <div class="text-xs text-blue-700 uppercase tracking-widest font-bold">🔑 Takeaway</div>
+                                </div>
+                                <p class="text-sm text-gray-700 pl-4 mt-2 font-medium">
+                                    "Olive pomace waste can replace sand up to 100% in plaster mortars, halving conductivity while maintaining strength above 2 MPa."
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Action Plan -->
+                         <div class="card p-6">
+                            <h3 class="text-lg font-bold text-gray-900 mb-3">Recommended Actions</h3>
+                            <ul class="space-y-2 text-sm text-gray-700">
+                                <li class="flex items-start gap-2">
+                                    <span class="text-green-500 font-bold">✓</span>
+                                    <span><strong>Replicate:</strong> 100% replacement level to verify mechanical integrity.</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span class="text-green-500 font-bold">✓</span>
+                                    <span><strong>Extend:</strong> Perform durability testing (missing in this study) to assess organic degradation risks.</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span class="text-green-500 font-bold">✓</span>
+                                    <span><strong>Model:</strong> Use the provided heat capacity and conductivity data for building energy simulations.</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Sustainability -->
+            <div id="tab-sustainability" class="tab-content hidden">
+                <div class="space-y-8">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>🌱</span> Sustainability & Performance
+                        </h2>
+                        
+                        <div class="card p-6 border-t-4 border-green-500 mb-6">
+                            <div class="flex items-center gap-3 mb-4">
+                                <span class="text-3xl">🌡️</span>
+                                <h3 class="text-xl font-bold text-gray-900">Hygrothermal Benefit</h3>
+                            </div>
+                            <p class="text-gray-700 mb-4">
+                                The study demonstrated via simulation that the 100% OPW replacement reduced the internal temperature of a test room by <strong>2.4°C</strong> compared to standard plaster, significantly lowering energy demand for cooling.
+                            </p>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="card p-6">
+                                <h3 class="text-lg font-bold text-gray-900 mb-2">Circular Economy</h3>
+                                <p class="text-sm text-gray-700">
+                                    Utilizes widely available agricultural byproduct (olive pomace) from the olive oil industry, reducing landfill waste and sand extraction.
+                                </p>
+                            </div>
+                            <div class="card p-6">
+                                <h3 class="text-lg font-bold text-gray-900 mb-2">Low Energy Processing</h3>
+                                <p class="text-sm text-gray-700">
+                                    Processing involves only washing and low-temperature drying (40°C), minimizing embodied energy compared to calcined aggregates.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-100 border-t border-gray-200 py-8 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col items-center justify-center text-center">
+                <p class="text-gray-700 text-sm">
+                    <strong>PhD Scholar Dashboard</strong> • Generated from Extraction 2.0-hardened
+                </p>
+                <p class="text-gray-500 text-xs mt-2">
+                    Source: Mesli et al. (2026) | Energy & Buildings
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Paper Data
+        const paperData = {
+            title: "Enhancing thermal insulation and humidity control in composite plaster mortars with olive pomace waste",
+            doi: "10.1016/j.enbuild.2025.116726",
+            authors: ["Mesli et al."],
+            year: 2026,
+            journal: "Energy & Buildings"
+        };
+
+        let currentTab = 'overview';
+
+        // Tab Switching
+        function switchTab(tabName) {
+            currentTab = tabName;
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+            const targetTab = document.getElementById(`tab-${tabName}`);
+            if (targetTab) targetTab.classList.remove('hidden');
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            const targetBtn = document.querySelector(`.btn-${tabName}`);
+            if (targetBtn) targetBtn.classList.add('active');
+            updateProgress();
+        }
+
+        // Section Scrolling
+        function scrollToSection(id) {
+            const element = document.getElementById(id);
+            if (element) element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // Progress Bar
+        function updateProgress() {
+            const progressFill = document.getElementById('progressFill');
+            if (!progressFill) return;
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+            progressFill.style.width = `${Math.min(100, Math.max(0, progress))}%`;
+        }
+
+        // Copy Citation
+        function copyCitation() {
+            const citation = `${paperData.authors.join(', ')} (${paperData.year}). ${paperData.title}. ${paperData.journal}. https://doi.org/${paperData.doi}`;
+            navigator.clipboard.writeText(citation).then(() => alert('Citation copied!'));
+        }
+
+        // Initialize Charts
+        function initializeCharts() {
+            // Chart 1: Physical & Thermal
+            const physCtx = document.getElementById('physicalChart');
+            if (physCtx) {
+                new Chart(physCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['CPM (0%)', 'OPW-25%', 'OPW-50%', 'OPW-75%', 'OPW-100%'],
+                        datasets: [
+                            {
+                                label: 'Density (kg/m³)',
+                                data: [1510, 1439, 1376, 1311, 1295],
+                                backgroundColor: 'rgba(59, 130, 246, 0.5)',
+                                borderColor: 'rgba(59, 130, 246, 1)',
+                                borderWidth: 1,
+                                yAxisID: 'y'
+                            },
+                            {
+                                type: 'line',
+                                label: 'Thermal Conductivity (W/mK)',
+                                data: [0.621, 0.573, 0.488, 0.427, 0.389],
+                                borderColor: 'rgba(234, 88, 12, 1)',
+                                backgroundColor: 'rgba(234, 88, 12, 0.5)',
+                                borderWidth: 2,
+                                yAxisID: 'y1'
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                type: 'linear',
+                                display: true,
+                                position: 'left',
+                                title: { display: true, text: 'Density (kg/m³)' }
+                            },
+                            y1: {
+                                type: 'linear',
+                                display: true,
+                                position: 'right',
+                                title: { display: true, text: 'Thermal Cond. (W/mK)' },
+                                grid: { drawOnChartArea: false }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Chart 2: Mechanical
+            const mechCtx = document.getElementById('mechChart');
+            if (mechCtx) {
+                new Chart(mechCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['CPM (0%)', 'OPW-25%', 'OPW-50%', 'OPW-75%', 'OPW-100%'],
+                        datasets: [
+                            {
+                                label: 'Compressive Strength (MPa)',
+                                data: [15.58, 13.05, 11.59, 9.30, 7.91],
+                                backgroundColor: 'rgba(34, 197, 94, 0.6)',
+                                borderColor: 'rgba(34, 197, 94, 1)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Flexural Strength (MPa)',
+                                data: [4.31, 3.82, 3.21, 2.41, 2.18],
+                                backgroundColor: 'rgba(168, 85, 247, 0.6)',
+                                borderColor: 'rgba(168, 85, 247, 1)',
+                                borderWidth: 1
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: { display: true, text: 'Strength (MPa)' }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeCharts();
+            window.addEventListener('scroll', updateProgress);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Paper Dashboard – Lammi et al. 2018 | Olive Pomace Fractionation</title>
+    <meta name="description" content="Academic research dashboard analyzing dry fractionation of olive pomace for biocomposite fillers">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['Lora', 'Georgia', 'serif'],
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        },
+                        olive: {
+                            50: '#f7fee7',
+                            100: '#ecfccb',
+                            200: '#d9f99d',
+                            300: '#bef264',
+                            400: '#a3e635',
+                            500: '#84cc16',
+                            600: '#65a30d',
+                            700: '#4d7c0f',
+                            800: '#3f6212',
+                            900: '#365314',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* Base Typography */
+        body { font-family: 'Inter', system-ui, -apple-system, sans-serif; font-size: 16px; line-height: 1.75; color: #1e293b; background: #ffffff; }
+        h1, h2, h3, h4, h5, h6 { font-family: 'Lora', Georgia, serif; font-weight: 600; line-height: 1.3; color: #0f172a; }
+        h1 { font-size: 2.25rem; margin-bottom: 1rem; }
+        h2 { font-size: 1.875rem; margin-bottom: 0.875rem; }
+        h3 { font-size: 1.5rem; margin-bottom: 0.75rem; }
+        
+        /* Card Style */
+        .card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 0.75rem; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1); transition: box-shadow 0.2s ease; }
+        .card:hover { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .card-elevated { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        
+        /* Badge System */
+        .badge { display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.375rem 0.875rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; border: 1.5px solid; }
+        .badge-core { background: #dbeafe; color: #1e40af; border-color: #3b82f6; }
+        .badge-experimental { background: #fef3c7; color: #92400e; border-color: #f59e0b; }
+        .badge-extracted { background: #dcfce7; color: #166534; border-color: #22c55e; }
+        
+        /* Tab Navigation */
+        .tab-nav { display: flex; overflow-x: auto; gap: 0.25rem; border-bottom: 2px solid #e2e8f0; padding: 0.75rem 0.25rem; margin-bottom: 2rem; scrollbar-width: none; }
+        .tab-button { padding: 0.35rem 0.6rem; border-radius: 0.5rem; font-size: 0.75rem; font-weight: 600; border: 1px solid transparent; background: #f8fafc; color: #64748b; white-space: nowrap; cursor: pointer; }
+        .tab-button:hover { background: #f1f5f9; color: #334155; }
+        .tab-button.active { color: #ffffff; }
+        .tab-button.active.btn-info { background: #64748b; border-color: #475569; }
+        .tab-button.active.btn-overview { background: #2563eb; border-color: #1d4ed8; }
+        .tab-button.active.btn-processing { background: #84cc16; border-color: #4d7c0f; } /* Olive color */
+        .tab-button.active.btn-results { background: #0891b2; border-color: #0e7490; }
+        .tab-button.active.btn-phd { background: #9333ea; border-color: #7e22ce; }
+        .tab-button.active.btn-sustainability { background: #059669; border-color: #047857; }
+
+        /* Tables */
+        table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+        thead { background: #f8fafc; border-bottom: 2px solid #cbd5e1; }
+        th, td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid #e2e8f0; }
+        
+        /* Metric Cards */
+        .metric-card { padding: 1.5rem; border-radius: 0.75rem; border: 1px solid #e2e8f0; background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); transition: transform 0.2s; }
+        .metric-card:hover { transform: translateY(-2px); }
+        
+        /* Utility */
+        .provenance-marker { display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.625rem; padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-weight: 600; text-transform: uppercase; }
+        .provenance-extracted { background: #dcfce7; color: #166534; }
+        .sticky-nav { position: sticky; top: 0; z-index: 50; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid #e2e8f0; }
+        .progress-bar { height: 3px; background: #e2e8f0; position: fixed; top: 0; left: 0; right: 0; z-index: 9999; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #84cc16 0%, #3b82f6 100%); width: 0%; transition: width 0.1s; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    
+    <!-- Progress Bar -->
+    <div class="progress-bar no-print">
+        <div id="progressFill" class="progress-fill"></div>
+    </div>
+    
+    <!-- Navigation Header -->
+    <nav class="sticky-nav no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-olive-500 to-green-600 rounded-lg flex items-center justify-center shadow-md">
+                        <span class="text-white font-bold text-xl">🌿</span>
+                    </div>
+                    <div>
+                        <h1 class="text-base font-bold text-gray-900">Research Paper Dashboard</h1>
+                        <p class="text-xs text-gray-500">Olive Pomace Valorisation</p>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="window.print()" class="px-3 py-2 rounded-lg bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 text-sm font-medium transition flex items-center gap-2">
+                        <span>🖨️</span> Print
+                    </button>
+                    <button onclick="copyCitation()" class="px-3 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium transition flex items-center gap-2">
+                        <span>📋</span> Citation
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- Hero Section -->
+        <div class="card card-elevated p-8 mb-8">
+            <div class="flex items-start gap-6 mb-6">
+                <div class="flex-shrink-0">
+                    <div class="w-20 h-20 bg-gradient-to-br from-olive-500 to-green-700 rounded-2xl flex items-center justify-center shadow-lg">
+                        <span class="text-4xl">🍂</span>
+                    </div>
+                </div>
+                <div class="flex-1">
+                    <div class="flex flex-wrap gap-2 mb-3">
+                        <span class="badge badge-experimental">🧪 Experimental Study</span>
+                        <span class="badge badge-core">Tier A: Core Dataset</span>
+                    </div>
+                    <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4 leading-tight">
+                        Dry fractionation of olive pomace as a sustainable process to produce fillers for biocomposites
+                    </h1>
+                    <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-4">
+                        <span class="flex items-center gap-1">
+                            <span class="icon">👥</span>
+                            Lammi, Barakat, Mayer-Laigle, Djenane, Gontard, Angellier-Coussy
+                        </span>
+                        <span>•</span>
+                        <span>📅 2018</span>
+                        <span>•</span>
+                        <span>📖 Powder Technology (Vol. 326)</span>
+                    </div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="text-sm text-gray-500 font-medium">DOI:</span>
+                        <code class="text-sm">10.1016/j.powtec.2017.11.060</code>
+                        <a href="https://doi.org/10.1016/j.powtec.2017.11.060" target="_blank" class="px-3 py-1 rounded bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium transition">
+                            🔗 Open Paper
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Context Banner -->
+            <div class="bg-gradient-to-br from-green-50 to-olive-50 rounded-xl p-6 border border-olive-200">
+                <div class="flex flex-col md:flex-row items-start gap-6">
+                    <div class="flex-shrink-0">
+                        <div class="w-16 h-16 bg-olive-100 rounded-xl flex items-center justify-center border-2 border-olive-300 shadow-sm">
+                            <span class="text-3xl">💡</span>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-xl font-bold text-gray-900 mb-3 flex items-center gap-2">
+                            <span>🎓</span> Core Takeaway
+                            <span class="provenance-marker provenance-extracted ml-auto">✓ Extracted</span>
+                        </h3>
+                        <p class="text-gray-700 leading-relaxed mb-4">
+                            Olive pomace can be dry-fractionated using <strong>ball mill friction</strong> to yield <strong>99.4% mass</strong> with distinct pulp/stone characteristics, eliminating water use while maintaining separation efficiency comparable to wet fractionation (which yields only 82.1% and consumes water).
+                        </p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="bg-white rounded-lg p-4 border border-olive-200 hover:border-olive-400 transition">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="w-1 h-10 bg-olive-500 rounded-full"></div>
+                                    <div class="text-xs text-olive-700 uppercase tracking-widest font-bold">🎯 Research Alignment</div>
+                                </div>
+                                <div class="text-lg font-bold text-gray-900 pl-4">Waste Valorisation / Filler Production</div>
+                            </div>
+                            <div class="bg-white rounded-lg p-4 border border-blue-200 hover:border-blue-400 transition">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="w-1 h-10 bg-blue-500 rounded-full"></div>
+                                    <div class="text-xs text-blue-700 uppercase tracking-widest font-bold">🔬 Key Innovation</div>
+                                </div>
+                                <div class="text-lg font-bold text-gray-900 pl-4">Dry Friction Fractionation (No Water)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="metric-card">
+                <div class="text-center">
+                    <div class="text-4xl mb-3">⚙️</div>
+                    <div class="text-3xl font-bold text-blue-600 mb-1">3</div>
+                    <div class="text-sm font-medium text-gray-600 mb-2">Processing Routes</div>
+                    <div class="text-xs text-gray-500">Wet, Grinding, Friction</div>
+                    <span class="provenance-marker provenance-extracted mt-2">✓ Extracted</span>
+                </div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="text-center">
+                    <div class="text-4xl mb-3">🧪</div>
+                    <div class="text-3xl font-bold text-green-600 mb-1">9</div>
+                    <div class="text-sm font-medium text-gray-600 mb-2">Fractions Characterized</div>
+                    <div class="text-xs text-gray-500">Full composition data</div>
+                    <span class="provenance-marker provenance-extracted mt-2">✓ Extracted</span>
+                </div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="text-center">
+                    <div class="text-4xl mb-3">📈</div>
+                    <div class="text-3xl font-bold text-purple-600 mb-1">99.4%</div>
+                    <div class="text-sm font-medium text-gray-600 mb-2">Max Yield (Dry)</div>
+                    <div class="text-xs text-gray-500">vs 82.1% (Wet)</div>
+                    <span class="provenance-marker provenance-extracted mt-2">✓ Extracted</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="card p-6 mb-8">
+            <div class="tab-nav">
+                <button class="tab-button btn-info" onclick="switchTab('info')">ℹ️ Info</button>
+                <button class="tab-button active btn-overview" onclick="switchTab('overview')">📋 Overview</button>
+                <button class="tab-button btn-processing" onclick="switchTab('processing')">⚙️ Processing</button>
+                <button class="tab-button btn-results" onclick="switchTab('results')">📊 Results</button>
+                <button class="tab-button btn-phd" onclick="switchTab('phd')">🎓 PhD Context</button>
+                <button class="tab-button btn-sustainability" onclick="switchTab('sustainability')">🌱 Sustainability</button>
+            </div>
+
+            <!-- Tab: Info -->
+            <div id="tab-info" class="tab-content hidden">
+                <div class="card p-6">
+                    <h2 class="text-xl font-bold text-gray-900 mb-4">🔤 Acronyms & Nomenclature</h2>
+                    <div class="overflow-x-auto">
+                        <table>
+                            <thead>
+                                <tr><th>Abbreviation</th><th>Meaning</th><th>Description</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td class="font-semibold">OP</td><td>Olive Pomace</td><td>Raw agro-industrial residue</td></tr>
+                                <tr><td class="font-semibold">F0</td><td>Feedstock</td><td>Crude olive pomace (Control)</td></tr>
+                                <tr><td class="font-semibold">wS / wP</td><td>Wet Stone / Wet Pulp</td><td>Fractions obtained via wet washing</td></tr>
+                                <tr><td class="font-semibold">dS1 / dP1</td><td>Dry Stone / Dry Pulp (Route A1)</td><td>Obtained via grinding + sieving</td></tr>
+                                <tr><td class="font-semibold">dS3 / dP3</td><td>Dry Stone / Dry Pulp (Route B)</td><td>Obtained via ball mill friction</td></tr>
+                                <tr><td class="font-semibold">TGA</td><td>Thermogravimetric Analysis</td><td>Used for thermal stability</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Overview -->
+            <div id="tab-overview" class="tab-content">
+                <div class="space-y-8">
+                    <!-- Objective -->
+                    <div class="card p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h2 class="text-2xl font-bold text-gray-900">🎯 Research Objective</h2>
+                            <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                        </div>
+                        <p class="text-gray-700 leading-relaxed bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+                            "Exploring the possibility of using dry fractionation (combination of grinding and sorting processes) to produce pulp-rich and stone-rich fractions with the highest purity and yield."
+                        </p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+                            <div class="bg-gray-50 p-4 rounded border border-gray-200">
+                                <div class="text-xs text-gray-500 uppercase font-bold">Target Application</div>
+                                <div class="text-lg font-bold text-gray-900">Reinforcing Fillers for Biocomposites</div>
+                            </div>
+                            <div class="bg-gray-50 p-4 rounded border border-gray-200">
+                                <div class="text-xs text-gray-500 uppercase font-bold">Problem Solved</div>
+                                <div class="text-lg font-bold text-gray-900">Eliminating Water Consumption in Processing</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Material System -->
+                    <div class="card p-6 border-l-4 border-olive-500">
+                        <div class="flex items-center justify-between mb-4">
+                            <h2 class="text-xl font-bold text-gray-900">🌿 Raw Material Identity</h2>
+                            <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <h4 class="text-sm font-bold text-gray-600">Material</h4>
+                                <p class="text-gray-900">Olive Pomace (OP)</p>
+                                <p class="text-xs text-gray-500">Chemlal variety</p>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-bold text-gray-600">Origin</h4>
+                                <p class="text-gray-900">Azazga, Algeria</p>
+                                <p class="text-xs text-gray-500">Traditional press system</p>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-bold text-gray-600">Preparation</h4>
+                                <p class="text-gray-900">Dried in ambient air</p>
+                                <p class="text-xs text-gray-500">Stored at 4°C</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Processing -->
+            <div id="tab-processing" class="tab-content hidden">
+                <div class="space-y-8">
+                    <div class="card p-6">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-6">⚙️ Processing Routes Investigated</h2>
+                        
+                        <!-- Route B (Highlighted Innovation) -->
+                        <div class="bg-green-50 p-6 rounded-lg border-l-4 border-green-600 mb-6">
+                            <div class="flex items-center justify-between mb-3">
+                                <h3 class="text-xl font-bold text-green-900">Route B: Dry Friction (Best Performer)</h3>
+                                <span class="badge badge-core">Recommended</span>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div class="bg-white p-3 rounded shadow-sm">
+                                    <span class="block text-xs text-gray-500 uppercase">Equipment</span>
+                                    <span class="font-bold text-gray-900">Ball Mill (MM 400)</span>
+                                </div>
+                                <div class="bg-white p-3 rounded shadow-sm">
+                                    <span class="block text-xs text-gray-500 uppercase">Frequency</span>
+                                    <span class="font-bold text-gray-900">15 Hz</span>
+                                </div>
+                                <div class="bg-white p-3 rounded shadow-sm">
+                                    <span class="block text-xs text-gray-500 uppercase">Duration</span>
+                                    <span class="font-bold text-gray-900">2 minutes</span>
+                                </div>
+                            </div>
+                            <p class="mt-4 text-sm text-green-800">
+                                <strong>Mechanism:</strong> Friction solicitations detach pulp from stone without crushing the stone, followed by sieving (1mm mesh). High yield (99.4%) with no water use.
+                            </p>
+                        </div>
+
+                        <!-- Other Routes -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="border border-gray-200 p-4 rounded-lg">
+                                <h3 class="font-bold text-gray-900 mb-2">Wet Fractionation (Control)</h3>
+                                <p class="text-sm text-gray-600 mb-2">Water washing + Sieving</p>
+                                <ul class="text-xs text-gray-500 list-disc list-inside">
+                                    <li>High Purity</li>
+                                    <li>Low Yield (82.1%)</li>
+                                    <li>Consumes Water (5:1 ratio)</li>
+                                </ul>
+                            </div>
+                            <div class="border border-gray-200 p-4 rounded-lg">
+                                <h3 class="font-bold text-gray-900 mb-2">Route A: Grinding & Sieving</h3>
+                                <p class="text-sm text-gray-600 mb-2">Knife Mill + Sieving</p>
+                                <ul class="text-xs text-gray-500 list-disc list-inside">
+                                    <li>Lower Purity</li>
+                                    <li>Complex Setup</li>
+                                    <li>Stone fragmentation issues</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Results -->
+            <div id="tab-results" class="tab-content hidden">
+                <div class="space-y-8">
+                    <!-- Key Findings -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="card p-5 border-l-4 border-green-500">
+                            <h3 class="font-bold text-gray-900 mb-2">Yield Comparison</h3>
+                            <div class="flex items-end gap-2">
+                                <span class="text-3xl font-bold text-green-600">99.4%</span>
+                                <span class="text-sm text-gray-600 mb-1">Dry Friction</span>
+                            </div>
+                            <div class="text-sm text-gray-500 mt-1">vs 82.1% (Wet Fractionation)</div>
+                            <p class="text-xs text-gray-400 mt-2">Dry process avoids material loss to effluents.</p>
+                        </div>
+                        <div class="card p-5 border-l-4 border-blue-500">
+                            <h3 class="font-bold text-gray-900 mb-2">Purity Trade-off</h3>
+                            <p class="text-sm text-gray-700">
+                                Dry friction yields stone fractions (dS3) with slightly higher pulp residue (higher ash/lignin) compared to wet washing, but significantly better environmental profile.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Composition Chart -->
+                    <div class="card p-6">
+                        <h3 class="text-lg font-bold text-gray-900 mb-4">📊 Biochemical Composition by Variant</h3>
+                        <div class="h-80">
+                            <canvas id="compositionChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Results Matrix -->
+                    <div class="card p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-bold text-gray-900">🔬 Quantitative Results Matrix</h3>
+                            <span class="provenance-marker provenance-extracted">✓ Extracted Table 2</span>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Variant ID</th>
+                                        <th>Description</th>
+                                        <th>Cellulose (%)</th>
+                                        <th>Lignin (%)</th>
+                                        <th>Ash (%)</th>
+                                        <th>Surface Energy (mJ/m²)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="bg-gray-50 font-bold"><td>F0</td><td>Raw Control</td><td>14.8</td><td>37.8</td><td>3.5</td><td>33.0</td></tr>
+                                    <tr><td>wS</td><td>Wet Stone</td><td>14.2</td><td>37.1</td><td>1.9</td><td>30.6</td></tr>
+                                    <tr><td>wP</td><td>Wet Pulp</td><td>11.5</td><td>43.5</td><td>7.2</td><td>32.4</td></tr>
+                                    <tr><td>dS1</td><td>Dry Stone (A1)</td><td>15.1</td><td>34.1</td><td>4.7</td><td>35.5</td></tr>
+                                    <tr><td>dP1</td><td>Dry Pulp (A1)</td><td>13.0</td><td>38.9</td><td>6.6</td><td>35.5</td></tr>
+                                    <tr class="bg-green-50 font-bold text-green-900"><td>dS3</td><td>Friction Stone</td><td>15.7</td><td>39.2</td><td>5.5</td><td>34.5</td></tr>
+                                    <tr><td>dP3</td><td>Friction Pulp</td><td>9.2</td><td>44.3</td><td>7.6</td><td>29.9</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Surface Energy Chart -->
+                    <div class="card p-6">
+                        <h3 class="text-lg font-bold text-gray-900 mb-4">💧 Surface Free Energy (γ)</h3>
+                        <div class="h-64">
+                            <canvas id="surfaceChart"></canvas>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-2 text-center">Important for predicting filler-matrix compatibility in biocomposites.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: PhD Context -->
+            <div id="tab-phd" class="tab-content hidden">
+                <div class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="card p-6 border-t-4 border-blue-500">
+                            <h3 class="text-lg font-bold text-gray-900 mb-3">🛠️ Utility for PhD Workstream</h3>
+                            <ul class="space-y-3 text-sm text-gray-700">
+                                <li class="flex items-start gap-2">
+                                    <span class="text-blue-500">1.</span>
+                                    <span><strong>Material Selection:</strong> Provides precise composition data for modeling biocomposite properties based on filler purity.</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span class="text-blue-500">2.</span>
+                                    <span><strong>Process Optimization:</strong> Establishes "Ball Mill Friction" as the optimal dry route (15Hz, 2min) for replication.</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span class="text-blue-500">3.</span>
+                                    <span><strong>LCA Input:</strong> Demonstrates water-free processing, critical for sustainability arguments in thesis.</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card p-6 border-t-4 border-red-500">
+                            <h3 class="text-lg font-bold text-gray-900 mb-3">⚠️ Critical Limitations</h3>
+                            <ul class="space-y-3 text-sm text-gray-700">
+                                <li class="flex items-start gap-2">
+                                    <span class="text-red-500">!</span>
+                                    <span><strong>No Composites Tested:</strong> This paper stops at filler production. It does NOT test mechanical strength of final composites.</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span class="text-red-500">!</span>
+                                    <span><strong>Particle Size:</strong> Further grinding steps are noted as necessary to obtain controlled filler sizes.</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Sustainability -->
+            <div id="tab-sustainability" class="tab-content hidden">
+                <div class="card p-6">
+                    <div class="flex items-start gap-4 mb-6">
+                        <span class="text-5xl">🌍</span>
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-900 mb-2">Sustainability Verdict</h3>
+                            <p class="text-gray-700">
+                                The primary innovation is the transition from water-intensive wet fractionation to dry friction processing.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                            <h4 class="font-bold text-blue-800 mb-2">💧 Water Conservation</h4>
+                            <p class="text-sm text-blue-700">Eliminates the 5:1 Water:Biomass ratio required for traditional washing methods.</p>
+                        </div>
+                        <div class="bg-green-50 p-4 rounded-lg border border-green-200">
+                            <h4 class="font-bold text-green-800 mb-2">♻️ Yield Efficiency</h4>
+                            <p class="text-sm text-green-700">Increases yield from 82.1% to 99.4%, reducing waste generation significantly.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Paper Data
+        const paperData = {
+            title: "Dry fractionation of olive pomace...",
+            authors: ["Lammi", "Barakat", "Mayer-Laigle", "Djenane", "Gontard", "Angellier-Coussy"],
+            year: 2018
+        };
+
+        // Tab Switching Logic
+        let currentTab = 'overview';
+        function switchTab(tabName) {
+            currentTab = tabName;
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+            document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.btn-${tabName}`).classList.add('active');
+            updateProgress();
+        }
+
+        // Progress Bar
+        function updateProgress() {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+            document.getElementById('progressFill').style.width = `${progress}%`;
+        }
+        window.addEventListener('scroll', updateProgress);
+
+        // Copy Citation
+        function copyCitation() {
+            const text = "Lammi et al. (2018). Dry fractionation of olive pomace... Powder Technology. DOI: 10.1016/j.powtec.2017.11.060";
+            navigator.clipboard.writeText(text).then(() => alert("Citation copied!"));
+        }
+
+        // Initialize Charts
+        document.addEventListener('DOMContentLoaded', function() {
+            // Composition Chart (Stacked Bar)
+            const ctxComp = document.getElementById('compositionChart');
+            if (ctxComp) {
+                new Chart(ctxComp, {
+                    type: 'bar',
+                    data: {
+                        labels: ['F0 (Raw)', 'wS (Wet Stone)', 'wP (Wet Pulp)', 'dS1 (Dry Stone A1)', 'dS3 (Friction Stone)'],
+                        datasets: [
+                            { label: 'Cellulose', data: [14.8, 14.2, 11.5, 15.1, 15.7], backgroundColor: '#84cc16' },
+                            { label: 'Lignin', data: [37.8, 37.1, 43.5, 34.1, 39.2], backgroundColor: '#854d0e' },
+                            { label: 'Ash', data: [3.5, 1.9, 7.2, 4.7, 5.5], backgroundColor: '#94a3b8' }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: { x: { stacked: true }, y: { stacked: true, title: { display: true, text: 'Composition (%)' } } }
+                    }
+                });
+            }
+
+            // Surface Energy Chart
+            const ctxSurf = document.getElementById('surfaceChart');
+            if (ctxSurf) {
+                new Chart(ctxSurf, {
+                    type: 'bar',
+                    data: {
+                        labels: ['F0', 'wS', 'wP', 'dS1', 'dP1', 'dS3', 'dP3'],
+                        datasets: [{
+                            label: 'Surface Energy (mJ/m²)',
+                            data: [33.0, 30.6, 32.4, 35.5, 35.5, 34.5, 29.9],
+                            backgroundColor: '#3b82f6',
+                            borderColor: '#1d4ed8',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: { y: { beginAtZero: false, min: 25, title: { display: true, text: 'mJ/m²' } } }
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

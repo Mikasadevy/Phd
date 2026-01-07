@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Paper Dashboard – Nemli et al. 2023 | Olive Stone Residue Particleboard</title>
+    <meta name="description" content="Academic research dashboard analyzing particleboards with olive stone residues (OSR) replacing wood particles">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['Lora', 'Georgia', 'serif'],
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* Base Typography */
+        body { font-family: 'Inter', system-ui, -apple-system, sans-serif; font-size: 16px; line-height: 1.75; color: #1e293b; background: #ffffff; }
+        h1, h2, h3, h4, h5, h6 { font-family: 'Lora', Georgia, serif; font-weight: 600; line-height: 1.3; color: #0f172a; }
+        h1 { font-size: 2.25rem; margin-bottom: 1rem; }
+        h2 { font-size: 1.875rem; margin-bottom: 0.875rem; }
+        h3 { font-size: 1.5rem; margin-bottom: 0.75rem; }
+        h4 { font-size: 1.25rem; margin-bottom: 0.625rem; }
+        
+        /* Components */
+        .card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 0.75rem; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1); transition: box-shadow 0.2s ease; }
+        .card:hover { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .card-elevated { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        
+        .badge { display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.375rem 0.875rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; border: 1.5px solid; }
+        .badge-core { background: #dbeafe; color: #1e40af; border-color: #3b82f6; }
+        .badge-experimental { background: #fef3c7; color: #92400e; border-color: #f59e0b; }
+        
+        /* Tabs */
+        .tab-nav { display: flex; flex-wrap: nowrap; justify-content: center; gap: 0.25rem; border-bottom: 2px solid #e2e8f0; padding: 0.75rem 0.25rem; margin-bottom: 2rem; overflow-x: auto; scrollbar-width: none; }
+        .tab-button { flex: 0 0 auto; padding: 0.35rem 0.6rem; border-radius: 0.5rem; font-size: 0.75rem; font-weight: 600; transition: all 0.2s ease; border: 1px solid transparent; background: #f8fafc; color: #64748b; }
+        .tab-button:hover { background: #f1f5f9; color: #334155; }
+        .tab-button.active { color: #ffffff; }
+        
+        /* Active Tab Colors */
+        .tab-button.active.btn-info { background: #64748b; border-color: #475569; }
+        .tab-button.active.btn-overview { background: #2563eb; border-color: #1d4ed8; }
+        .tab-button.active.btn-materials { background: #16a34a; border-color: #15803d; }
+        .tab-button.active.btn-formulation { background: #ea580c; border-color: #c2410c; }
+        .tab-button.active.btn-testing { background: #4f46e5; border-color: #4338ca; }
+        .tab-button.active.btn-results { background: #0891b2; border-color: #0e7490; }
+        .tab-button.active.btn-limitations { background: #dc2626; border-color: #b91c1c; }
+        .tab-button.active.btn-phd { background: #9333ea; border-color: #7e22ce; }
+        .tab-button.active.btn-sustainability { background: #059669; border-color: #047857; }
+        
+        /* Table Styles */
+        table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+        thead { background: #f8fafc; border-bottom: 2px solid #cbd5e1; }
+        th { padding: 0.75rem 1rem; text-align: left; font-weight: 600; color: #475569; font-size: 0.8125rem; text-transform: uppercase; }
+        td { padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; }
+        tbody tr:hover { background: #f8fafc; }
+        
+        /* Utils */
+        .metric-card { padding: 1.5rem; border-radius: 0.75rem; border: 1px solid #e2e8f0; background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); }
+        .progress-bar { height: 3px; background: #e2e8f0; position: fixed; top: 0; left: 0; right: 0; z-index: 9999; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #0ea5e9 0%, #06b6d4 100%); transition: width 0.15s ease-out; }
+        .alert { padding: 1rem 1.25rem; border-radius: 0.5rem; border-left: 4px solid; font-size: 0.875rem; }
+        .alert-info { background: #dbeafe; border-color: #3b82f6; color: #1e3a8a; }
+        .alert-warning { background: #fef3c7; border-color: #f59e0b; color: #78350f; }
+        .alert-danger { background: #fee2e2; border-color: #ef4444; color: #7f1d1d; }
+        .alert-success { background: #dcfce7; border-color: #22c55e; color: #14532d; }
+        
+        .sticky-nav { position: sticky; top: 0; z-index: 50; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid #e2e8f0; }
+        .provenance-marker { display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.625rem; padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-weight: 600; text-transform: uppercase; }
+        .provenance-extracted { background: #dcfce7; color: #166534; }
+        .provenance-derived { background: #fef3c7; color: #92400e; }
+        .provenance-interpretive { background: #fce7f3; color: #9f1239; }
+        code { font-family: monospace; background: #f1f5f9; padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-size: 0.875em; color: #0369a1; }
+
+        @media print { .no-print { display: none !important; } .tab-content { display: block !important; } }
+    </style>
+</head>
+<body class="bg-gray-50">
+    
+    <!-- Progress Bar -->
+    <div class="progress-bar no-print">
+        <div id="progressFill" class="progress-fill" style="width: 0%"></div>
+    </div>
+    
+    <!-- Navigation Header -->
+    <nav class="sticky-nav no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-green-500 to-olive-500 rounded-lg flex items-center justify-center shadow-md">
+                        <span class="text-white font-bold text-xl">🫒</span>
+                    </div>
+                    <div>
+                        <h1 class="text-base font-bold text-gray-900">Research Paper Dashboard</h1>
+                        <p class="text-xs text-gray-500">Olive Stone Residues in Particleboard</p>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="window.print()" class="px-3 py-2 rounded-lg bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 text-sm font-medium transition flex items-center gap-2">
+                        <span>🖨️</span> Print
+                    </button>
+                    <button onclick="copyCitation()" class="px-3 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium transition flex items-center gap-2">
+                        <span>📋</span> Citation
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- Hero Section -->
+        <div class="card card-elevated p-8 mb-8">
+            <div class="flex items-start gap-6 mb-6">
+                <div class="flex-shrink-0">
+                    <div class="w-20 h-20 bg-gradient-to-br from-green-500 to-amber-500 rounded-2xl flex items-center justify-center shadow-lg">
+                        <span class="text-4xl">🪵</span>
+                    </div>
+                </div>
+                <div class="flex-1">
+                    <div class="flex flex-wrap gap-2 mb-3">
+                        <span class="badge badge-core">Core Classification</span>
+                        <span class="badge badge-experimental">🧪 Experimental</span>
+                    </div>
+                    <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4 leading-tight">
+                        Potential Use of Olive Stone Residues in Particleboard Production
+                    </h1>
+                    <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-4">
+                        <span class="flex items-center gap-1">
+                            <span class="icon">👥</span>
+                            G. Nemli, U. Aras, H. Kalaycıoğlu, S. Kuştaş
+                        </span>
+                        <span>•</span>
+                        <span>📅 2023</span>
+                        <span>•</span>
+                        <span>📖 Drvna industrija</span>
+                    </div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="text-sm text-gray-500 font-medium">DOI:</span>
+                        <code class="text-sm">10.5552/drvind.2023.0047</code>
+                        <a href="https://doi.org/10.5552/drvind.2023.0047" 
+                           target="_blank" 
+                           class="px-3 py-1 rounded bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium transition">
+                            🔗 Open Paper
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Context Banner -->
+            <div class="bg-gradient-to-br from-green-50 to-amber-50 rounded-xl p-6 border border-green-200">
+                <div class="flex flex-col md:flex-row items-start gap-6">
+                    <div class="flex-shrink-0">
+                        <div class="w-16 h-16 bg-green-100 rounded-xl flex items-center justify-center border-2 border-green-300 shadow-sm">
+                            <span class="text-3xl">💡</span>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-xl font-bold text-gray-900 mb-3 flex items-center gap-2">
+                            <span>🎓</span> Actionable Takeaway
+                            <span class="provenance-marker provenance-interpretive ml-auto">⚡ Interpretive</span>
+                        </h3>
+                        <p class="text-gray-700 leading-relaxed mb-4">
+                            Olive stone residues (OSR) are viable in particleboard at 
+                            <span class="px-2 py-0.5 bg-green-100 text-green-800 rounded font-semibold">10% substitution</span>
+                             without pre-treatment. Higher loadings (>10%) degrade mechanical strength despite improving thickness swelling and formaldehyde emissions. Alkali pretreatment improves strength for high-volume replacement but negatively impacts swelling.
+                        </p>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="bg-white rounded-lg p-4 border border-green-200">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="w-1 h-10 bg-green-500 rounded-full"></div>
+                                    <div class="text-xs text-green-700 uppercase tracking-widest font-bold">Optimal Threshold</div>
+                                </div>
+                                <div class="text-lg font-bold text-gray-900 pl-4">10% Replacement</div>
+                            </div>
+                            
+                            <div class="bg-white rounded-lg p-4 border border-amber-200">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="w-1 h-10 bg-amber-500 rounded-full"></div>
+                                    <div class="text-xs text-amber-700 uppercase tracking-widest font-bold">Key Benefit</div>
+                                </div>
+                                <div class="text-lg font-bold text-gray-900 pl-4">Reduced Formaldehyde Emissions</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="metric-card">
+                <div class="text-center">
+                    <div class="text-4xl mb-3">🧪</div>
+                    <div class="text-3xl font-bold text-blue-600 mb-1">5</div>
+                    <div class="text-sm font-medium text-gray-600 mb-2">Total Variants</div>
+                    <div class="text-xs text-gray-500">Includes Control & Treated</div>
+                    <span class="provenance-marker provenance-extracted mt-2">✓ Extracted</span>
+                </div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="text-center">
+                    <div class="text-4xl mb-3">📊</div>
+                    <div class="text-3xl font-bold text-green-600 mb-1">10–30%</div>
+                    <div class="text-sm font-medium text-gray-600 mb-2">Replacement Range</div>
+                    <div class="text-xs text-gray-500">Mass percent</div>
+                    <span class="provenance-marker provenance-extracted mt-2">✓ Extracted</span>
+                </div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="text-center">
+                    <div class="text-4xl mb-3">📄</div>
+                    <div class="text-3xl font-bold text-purple-600 mb-1">9</div>
+                    <div class="text-sm font-medium text-gray-600 mb-2">Pages Processed</div>
+                    <div class="text-xs text-gray-500">Tier A - Core</div>
+                    <span class="provenance-marker provenance-extracted mt-2">✓ Extracted</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="card p-6 mb-8">
+            <div class="tab-nav">
+                <button class="tab-button btn-info" onclick="switchTab('info')">ℹ️ Info</button>
+                <button class="tab-button active btn-overview" onclick="switchTab('overview')">📋 Overview</button>
+                <button class="tab-button btn-materials" onclick="switchTab('materials')">🫒 Materials</button>
+                <button class="tab-button btn-formulation" onclick="switchTab('formulation')">🧱 Formulation</button>
+                <button class="tab-button btn-testing" onclick="switchTab('testing')">⚙️ Testing</button>
+                <button class="tab-button btn-results" onclick="switchTab('results')">📊 Results</button>
+                <button class="tab-button btn-limitations" onclick="switchTab('limitations')">⚠️ Limitations</button>
+                <button class="tab-button btn-phd" onclick="switchTab('phd')">🎓 Context</button>
+                <button class="tab-button btn-sustainability" onclick="switchTab('sustainability')">🌱 Sustainability</button>
+            </div>
+
+            <!-- Tab Content: Info -->
+            <div id="tab-info" class="tab-content hidden">
+                <div class="space-y-8">
+                    <div class="card card-elevated p-6 border-l-4 border-purple-500">
+                        <div class="flex items-start gap-4">
+                            <div class="flex-shrink-0">
+                                <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
+                                    <span class="text-2xl">ℹ️</span>
+                                </div>
+                            </div>
+                            <div class="flex-1">
+                                <h2 class="text-xl font-bold text-gray-900 mb-2">Data Provenance & Interpretation Notice</h2>
+                                <p class="text-sm text-gray-700 leading-relaxed mb-4">
+                                    Extracted from "Potential Use of Olive Stone Residues in Particleboard Production". 
+                                    <strong>Note:</strong> Quantitative mechanical data (MOR, MOE, IB) in the original paper is presented in bar charts without exact data labels. This dashboard reports trends and thresholds extracted from the text, rather than estimated numerical values, to maintain high fidelity.
+                                </p>
+                                <div class="flex flex-wrap gap-2 mb-2">
+                                    <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                                    <span class="provenance-marker provenance-derived">≈ Derived</span>
+                                    <span class="provenance-marker provenance-interpretive">⚡ Interpretive</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card p-6">
+                        <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2"><span>🔤</span> Acronyms</h2>
+                        <div class="overflow-x-auto">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Abbreviation</th>
+                                        <th>Meaning</th>
+                                        <th>Context</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td class="font-semibold">OSR</td><td>Olive Stone Residues</td><td>Waste material</td></tr>
+                                    <tr><td class="font-semibold">PB</td><td>Particleboard</td><td>Material system</td></tr>
+                                    <tr><td class="font-semibold">MOR</td><td>Modulus of Rupture</td><td>Bending strength</td></tr>
+                                    <tr><td class="font-semibold">MOE</td><td>Modulus of Elasticity</td><td>Stiffness</td></tr>
+                                    <tr><td class="font-semibold">IB</td><td>Internal Bond</td><td>Tensile strength perpendicular to surface</td></tr>
+                                    <tr><td class="font-semibold">TS</td><td>Thickness Swelling</td><td>Dimensional stability</td></tr>
+                                    <tr><td class="font-semibold">FE</td><td>Formaldehyde Emission</td><td>Environmental metric</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Overview -->
+            <div id="tab-overview" class="tab-content">
+                <div class="space-y-8">
+                    
+                    <div id="objective" class="section-anchor">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2"><span>🎯</span> Objective & Problem</h2>
+                        <div class="card p-6">
+                            <div class="space-y-6">
+                                <div>
+                                    <div class="flex items-center justify-between mb-3">
+                                        <h3 class="text-lg font-semibold text-gray-900">Primary Objective</h3>
+                                        <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                                    </div>
+                                    <p class="text-gray-700 leading-relaxed bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+                                        "This study investigated the possibilities of using OSRs as substitutes for the production of particleboards."
+                                    </p>
+                                </div>
+                                
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div class="bg-amber-50 p-4 rounded-lg border-l-4 border-amber-500">
+                                        <h4 class="font-bold text-gray-900 mb-2">Technical Problem</h4>
+                                        <p class="text-sm text-gray-700">Shortage of wood raw materials caused their prices to skyrocket.</p>
+                                    </div>
+                                    <div class="bg-green-50 p-4 rounded-lg border-l-4 border-green-500">
+                                        <h4 class="font-bold text-gray-900 mb-2">Environmental Problem</h4>
+                                        <p class="text-sm text-gray-700">Disposal of OSR wastes other than oil creates environmental problems.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="system" class="section-anchor">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2"><span>🧱</span> Material System Context</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="card p-6 border-t-4 border-blue-500">
+                                <div class="text-3xl mb-3">🪑</div>
+                                <h3 class="text-base font-bold text-gray-900 mb-2">Application</h3>
+                                <p class="text-lg font-bold text-blue-600">Furniture</p>
+                                <p class="text-xs text-gray-500 mt-2">General purpose & interior equipment</p>
+                            </div>
+                            
+                            <div class="card p-6 border-t-4 border-green-500">
+                                <div class="text-3xl mb-3">🧩</div>
+                                <h3 class="text-base font-bold text-gray-900 mb-2">Function</h3>
+                                <p class="text-lg font-bold text-green-600">Semi-structural</p>
+                                <p class="text-xs text-gray-500 mt-2">Aggregate replacement</p>
+                            </div>
+                            
+                            <div class="card p-6 border-t-4 border-purple-500">
+                                <div class="text-3xl mb-3">📏</div>
+                                <h3 class="text-base font-bold text-gray-900 mb-2">Baseline</h3>
+                                <p class="text-lg font-bold text-purple-600">Populus Alba</p>
+                                <p class="text-xs text-gray-500 mt-2">100% White Poplar particles</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Materials -->
+            <div id="tab-materials" class="tab-content hidden">
+                <div class="space-y-8">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2"><span>🫒</span> Primary Waste Material</h2>
+                        <div class="card p-6 mb-6 border-l-4 border-green-500">
+                            <div class="flex items-start gap-4 mb-4">
+                                <div class="text-5xl">🫒</div>
+                                <div class="flex-1">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <h3 class="text-xl font-bold text-gray-900">Olive Stone Residues (OSR)</h3>
+                                        <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                                    </div>
+                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                        <div class="bg-gray-50 p-3 rounded border border-gray-200">
+                                            <div class="text-xs text-gray-500 mb-1">Origin</div>
+                                            <div class="text-sm font-bold text-gray-900">Turkey (Pirina A.Ş.)</div>
+                                        </div>
+                                        <div class="bg-gray-50 p-3 rounded border border-gray-200">
+                                            <div class="text-xs text-gray-500 mb-1">State</div>
+                                            <div class="text-sm font-bold text-gray-900">Ground & Dried (1% MC)</div>
+                                        </div>
+                                        <div class="bg-gray-50 p-3 rounded border border-gray-200">
+                                            <div class="text-xs text-gray-500 mb-1">Processing</div>
+                                            <div class="text-sm font-bold text-gray-900">Industrial Byproduct</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <h2 class="text-2xl font-bold text-gray-900 flex items-center gap-2"><span>🔬</span> Material Characterization</h2>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <div class="card p-6">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h3 class="text-lg font-bold text-gray-900">Chemical/Physical Properties</h3>
+                                    <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                                </div>
+                                <div class="space-y-3">
+                                    <div class="flex justify-between items-center p-3 bg-gray-50 rounded">
+                                        <span class="text-sm text-gray-700 font-medium">Ash Content</span>
+                                        <span class="text-sm font-bold text-gray-900">7.54%</span>
+                                    </div>
+                                    <div class="flex justify-between items-center p-3 bg-gray-50 rounded">
+                                        <span class="text-sm text-gray-700 font-medium">Moisture Content</span>
+                                        <span class="text-sm font-bold text-gray-900">1.0%</span>
+                                    </div>
+                                    <div class="flex justify-between items-center p-3 bg-gray-50 rounded">
+                                        <span class="text-sm text-gray-700 font-medium">pH</span>
+                                        <span class="text-sm font-bold text-gray-500">Measured (Value not in snippet)</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card p-6">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h3 class="text-lg font-bold text-gray-900">Processing & Pre-treatment</h3>
+                                    <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                                </div>
+                                <div class="space-y-4">
+                                    <div class="bg-blue-50 rounded-lg p-4 border-l-4 border-blue-500">
+                                        <div class="flex items-center gap-3 mb-2">
+                                            <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm">1</div>
+                                            <h4 class="text-base font-bold text-gray-900">Drying</h4>
+                                        </div>
+                                        <p class="text-sm text-gray-700">Dried in oven at 100°C to 1% moisture content.</p>
+                                    </div>
+
+                                    <div class="bg-purple-50 rounded-lg p-4 border-l-4 border-purple-500">
+                                        <div class="flex items-center gap-3 mb-2">
+                                            <div class="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold text-sm">2</div>
+                                            <h4 class="text-base font-bold text-gray-900">Chemical Activation (Variant E)</h4>
+                                        </div>
+                                        <p class="text-sm text-gray-700">
+                                            1% NaOH extraction for 24 hours. Purpose: Remove oil and wax layer to improve bonding.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Formulation -->
+            <div id="tab-formulation" class="tab-content hidden">
+                <div class="space-y-8">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2"><span>🧱</span> Mix Design</h2>
+                        
+                        <div class="card p-6 mb-6 border-l-4 border-blue-500">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="flex items-center gap-3">
+                                    <span class="text-2xl">📌</span>
+                                    <h3 class="text-xl font-bold text-gray-900">Control Reference (A)</h3>
+                                </div>
+                                <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                            </div>
+                            <p class="text-gray-700">100% Populus Alba (White Poplar) particles. Phenol formaldehyde adhesive used.</p>
+                        </div>
+
+                        <div class="card p-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-lg font-bold text-gray-900">Experimental Variants</h3>
+                                <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Variant ID</th>
+                                            <th>Poplar (%)</th>
+                                            <th>OSR (%)</th>
+                                            <th>Treatment</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="bg-blue-50 font-bold">
+                                            <td>A</td><td>100</td><td>0</td><td>None</td>
+                                        </tr>
+                                        <tr>
+                                            <td>B</td><td>90</td><td>10</td><td>None</td>
+                                        </tr>
+                                        <tr>
+                                            <td>C</td><td>80</td><td>20</td><td>None</td>
+                                        </tr>
+                                        <tr>
+                                            <td>D</td><td>70</td><td>30</td><td>None</td>
+                                        </tr>
+                                        <tr class="bg-purple-50 font-bold">
+                                            <td>E</td><td>70</td><td>30</td><td>1% NaOH</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Chart -->
+                        <div class="card p-6 mt-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-lg font-bold text-gray-900">📊 Material Replacement Levels</h3>
+                            </div>
+                            <div class="h-72">
+                                <canvas id="replacementChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Testing -->
+            <div id="tab-testing" class="tab-content hidden">
+                <div class="space-y-8">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2"><span>⚙️</span> Protocols & Conditions</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="card p-6">
+                                <h3 class="text-lg font-bold text-gray-900 mb-3">Specimen Details</h3>
+                                <div class="space-y-2">
+                                    <div class="flex justify-between bg-gray-50 p-2 rounded"><span class="text-sm">Dimensions</span><span class="font-bold text-sm">550 x 550 x 12 mm</span></div>
+                                    <div class="flex justify-between bg-gray-50 p-2 rounded"><span class="text-sm">Target Density</span><span class="font-bold text-sm">0.65 g/cm³</span></div>
+                                    <div class="flex justify-between bg-gray-50 p-2 rounded"><span class="text-sm">Replicates</span><span class="font-bold text-sm">2 boards</span></div>
+                                </div>
+                            </div>
+                            
+                            <div class="card p-6">
+                                <h3 class="text-lg font-bold text-gray-900 mb-3">Manufacturing Conditions</h3>
+                                <div class="space-y-2">
+                                    <div class="flex justify-between bg-gray-50 p-2 rounded"><span class="text-sm">Press Temp</span><span class="font-bold text-sm">150 °C</span></div>
+                                    <div class="flex justify-between bg-gray-50 p-2 rounded"><span class="text-sm">Press Time</span><span class="font-bold text-sm">6 min</span></div>
+                                    <div class="flex justify-between bg-gray-50 p-2 rounded"><span class="text-sm">Conditioning</span><span class="font-bold text-sm">20°C, 65% RH</span></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card p-6 mt-6">
+                            <h3 class="text-lg font-bold text-gray-900 mb-4">Standards Cited</h3>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="badge badge-core">EN 322</span>
+                                <span class="badge badge-core">EN 323</span>
+                                <span class="badge badge-core">EN 317</span>
+                                <span class="badge badge-core">EN 310</span>
+                                <span class="badge badge-core">EN 319</span>
+                                <span class="badge badge-core">ISO 12460-5</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Results -->
+            <div id="tab-results" class="tab-content hidden">
+                <div class="space-y-8">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <h2 class="text-2xl font-bold text-gray-900 flex items-center gap-2"><span>📊</span> Key Findings</h2>
+                            <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                        </div>
+
+                        <div class="alert alert-warning mb-6">
+                            <strong>Note on Data Fidelity:</strong> Explicit numerical values for mechanical properties (MOR, MOE, IB) are present in the source paper as bar charts without data labels. This dashboard reports the <strong>trends and author-verified conclusions</strong> rather than estimated numbers.
+                        </div>
+
+                        <!-- Results Cards -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <div class="card p-6 border-l-4 border-green-500">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="w-1 h-10 bg-green-500 rounded-full"></div>
+                                    <h3 class="text-lg font-bold text-gray-900">Optimal Substitution</h3>
+                                </div>
+                                <div class="text-2xl font-bold text-green-700 mb-1">10% OSR</div>
+                                <p class="text-sm text-gray-700">
+                                    "No significant decrease in mechanical properties was observed at the 10% usage rate."
+                                </p>
+                            </div>
+
+                            <div class="card p-6 border-l-4 border-amber-500">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="w-1 h-10 bg-amber-500 rounded-full"></div>
+                                    <h3 class="text-lg font-bold text-gray-900">Impact of Pretreatment</h3>
+                                </div>
+                                <div class="text-lg font-bold text-gray-900 mb-1">Alkali (1% NaOH)</div>
+                                <p class="text-sm text-gray-700">
+                                    <span class="font-bold text-green-600">↑ Mechanical Properties</span> (increased)<br>
+                                    <span class="font-bold text-red-600">↑ Thickness Swelling</span> (worsened)<br>
+                                    <span class="font-bold text-red-600">↑ Formaldehyde Emission</span> (slightly increased)
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Trend Analysis -->
+                        <div class="card p-6">
+                            <h3 class="text-lg font-bold text-gray-900 mb-4">Property Trends (Effect of Increasing OSR)</h3>
+                            <div class="space-y-4">
+                                <div class="flex items-center justify-between p-3 bg-gray-50 rounded">
+                                    <div>
+                                        <span class="font-bold text-gray-900 block">Bending Strength (MOR)</span>
+                                        <span class="text-xs text-gray-500">Mechanical</span>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <span class="text-sm text-gray-600 text-right">Decreases > 10%</span>
+                                        <span class="text-red-500 font-bold">↘</span>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between p-3 bg-gray-50 rounded">
+                                    <div>
+                                        <span class="font-bold text-gray-900 block">Thickness Swelling</span>
+                                        <span class="text-xs text-gray-500">Physical / Durability</span>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <span class="text-sm text-gray-600 text-right">Decreases (Improves)</span>
+                                        <span class="text-green-500 font-bold">↘</span>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between p-3 bg-gray-50 rounded">
+                                    <div>
+                                        <span class="font-bold text-gray-900 block">Formaldehyde Emission</span>
+                                        <span class="text-xs text-gray-500">Environmental</span>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <span class="text-sm text-gray-600 text-right">Decreases (Improves)</span>
+                                        <span class="text-green-500 font-bold">↘</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Limitations -->
+            <div id="tab-limitations" class="tab-content hidden">
+                <div class="space-y-8">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2"><span>⚠️</span> Limitations</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="card p-5 border-l-4 border-orange-500">
+                                <h3 class="text-base font-bold text-gray-900 mb-2">Data Accessibility</h3>
+                                <p class="text-sm text-gray-700">
+                                    Key mechanical performance data (MOR, MOE, IB, TS) presented only in bar charts without labels; exact numeric extraction impossible without digitization tools.
+                                </p>
+                            </div>
+                            <div class="card p-5 border-l-4 border-yellow-500">
+                                <h3 class="text-base font-bold text-gray-900 mb-2">Scope</h3>
+                                <p class="text-sm text-gray-700">
+                                    Study limited to laboratory scale. Long-term durability tests (biological attack, weathering) beyond standard swelling were not performed.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: PhD Context -->
+            <div id="tab-phd" class="tab-content hidden">
+                <div class="space-y-8">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2"><span>🎓</span> PhD Context</h2>
+                        <div class="card p-6 border-t-4 border-blue-500">
+                            <h3 class="text-lg font-bold text-gray-900 mb-3">Relevance & Utility</h3>
+                            <p class="text-gray-700 leading-relaxed mb-4">
+                                This paper serves as a <strong>Strong Supporting Reference</strong>. It establishes a clear upper bound for OSR inclusion (10%) in particleboards without chemical modification. The findings on reduced formaldehyde emissions are particularly valuable for eco-efficient material design.
+                            </p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="bg-gray-50 p-4 rounded">
+                                    <span class="font-bold text-gray-900 block mb-1">Recommended Action</span>
+                                    <span class="text-sm text-gray-700">Replicate 10% substitution level to establish baseline mechanical values (missing from paper).</span>
+                                </div>
+                                <div class="bg-gray-50 p-4 rounded">
+                                    <span class="font-bold text-gray-900 block mb-1">Focus Parameter</span>
+                                    <span class="text-sm text-gray-700">Formaldehyde emission reduction mechanism.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Sustainability -->
+            <div id="tab-sustainability" class="tab-content hidden">
+                <div class="space-y-8">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2"><span>🌱</span> Sustainability Impact</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="card p-6 border-t-4 border-green-500">
+                                <h3 class="text-xl font-bold text-gray-900 mb-3">Circular Economy</h3>
+                                <p class="text-sm text-gray-700 mb-3">
+                                    Utilizes Olive Stone Residues (OSR), an abundant agricultural waste in Mediterranean regions (e.g., Turkey), addressing disposal issues.
+                                </p>
+                            </div>
+                            <div class="card p-6 border-t-4 border-blue-500">
+                                <h3 class="text-xl font-bold text-gray-900 mb-3">Indoor Air Quality</h3>
+                                <p class="text-sm text-gray-700 mb-3">
+                                    <strong>Key Finding:</strong> Formaldehyde emissions decreased with increasing OSR content, suggesting OSR may act as a scavenger or simply reduce the porous volume available for emission.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-100 border-t border-gray-200 py-8 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-gray-700 text-sm"><strong>PhD Scholar Dashboard</strong> • Automated Extraction Artifact</p>
+            <p class="text-gray-500 text-xs mt-2">Generated from DOI: 10.5552/drvind.2023.0047</p>
+        </div>
+    </footer>
+
+    <script>
+        // Paper Data
+        const paperData = {
+            title: "Potential Use of Olive Stone Residues in Particleboard Production",
+            doi: "10.5552/drvind.2023.0047",
+            authors: ["Gökay Nemli", "Uğur Aras", "Hülya Kalaycıoğlu", "Süleyman Kuştaş"],
+            year: 2023,
+            journal: "Drvna industrija"
+        };
+
+        let currentTab = 'overview';
+
+        function switchTab(tabName) {
+            currentTab = tabName;
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+            const targetTab = document.getElementById(`tab-${tabName}`);
+            if (targetTab) targetTab.classList.remove('hidden');
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            const targetBtn = document.querySelector(`.btn-${tabName}`);
+            if (targetBtn) targetBtn.classList.add('active');
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const progressFill = document.getElementById('progressFill');
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+            progressFill.style.width = `${Math.min(100, Math.max(0, progress))}%`;
+        }
+
+        function copyCitation() {
+            const citation = `${paperData.authors.join(', ')} (${paperData.year}). ${paperData.title}. ${paperData.journal}. https://doi.org/${paperData.doi}`;
+            navigator.clipboard.writeText(citation).then(() => alert('Citation copied!'));
+        }
+
+        function initializeCharts() {
+            // Replacement Chart
+            const replacementCtx = document.getElementById('replacementChart');
+            if (replacementCtx) {
+                new Chart(replacementCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['A (Control)', 'B', 'C', 'D', 'E (Treated)'],
+                        datasets: [{
+                            label: 'Poplar Wood (%)',
+                            data: [100, 90, 80, 70, 70],
+                            backgroundColor: '#94a3b8',
+                        }, {
+                            label: 'Olive Stone Residue (%)',
+                            data: [0, 10, 20, 30, 30],
+                            backgroundColor: '#65a30d',
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: { stacked: true },
+                            y: { stacked: true, title: { display: true, text: 'Composition (%)' } }
+                        }
+                    }
+                });
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeCharts();
+            window.addEventListener('scroll', updateProgress);
+            makeTablesResponsive();
+        });
+
+        function makeTablesResponsive() {
+            document.querySelectorAll('table').forEach(table => {
+                if (!table.parentElement.classList.contains('overflow-x-auto')) {
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'overflow-x-auto';
+                    table.parentNode.insertBefore(wrapper, table);
+                    wrapper.appendChild(table);
+                }
+            });
+        }
+    </script>
+</body>
+</html>

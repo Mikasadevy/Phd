@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Paper Dashboard – Özel et al. 2023 | Olive Pomace Modified Bitumen</title>
+    <meta name="description" content="Academic research dashboard analyzing the evaluation of olive pomace and SBS modified bitumen performance characteristics">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['Lora', 'Georgia', 'serif'],
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        },
+                        olive: {
+                            50: '#f7fee7',
+                            100: '#ecfccb',
+                            500: '#84cc16',
+                            600: '#65a30d',
+                            700: '#4d7c0f',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* Base Typography */
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            font-size: 16px;
+            line-height: 1.75;
+            color: #1e293b;
+            background: #ffffff;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Lora', Georgia, serif;
+            font-weight: 600;
+            line-height: 1.3;
+            color: #0f172a;
+        }
+        
+        h1 { font-size: 2.25rem; margin-bottom: 1rem; }
+        h2 { font-size: 1.875rem; margin-bottom: 0.875rem; }
+        h3 { font-size: 1.5rem; margin-bottom: 0.75rem; }
+        h4 { font-size: 1.25rem; margin-bottom: 0.625rem; }
+        
+        /* Academic Card Style */
+        .card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            transition: box-shadow 0.2s ease;
+        }
+        
+        .card:hover {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        
+        .card-elevated {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Badge System */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.375rem 0.875rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border: 1.5px solid;
+        }
+        
+        .badge-core { background: #dbeafe; color: #1e40af; border-color: #3b82f6; }
+        .badge-experimental { background: #fef3c7; color: #92400e; border-color: #f59e0b; }
+        .badge-context { background: #dcfce7; color: #166534; border-color: #22c55e; }
+        
+        /* Tab Navigation */
+        .tab-nav {
+            display: flex;
+            flex-wrap: nowrap;
+            justify-content: flex-start;
+            align-items: center;
+            overflow-x: auto;
+            gap: 0.5rem;
+            border-bottom: 2px solid #e2e8f0;
+            padding: 0.75rem 0.25rem;
+            margin-bottom: 2rem;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        .tab-button {
+            flex: 0 0 auto;
+            padding: 0.5rem 0.8rem;
+            border-radius: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            border: 1px solid #e2e8f0;
+            background: #ffffff;
+            color: #64748b;
+            white-space: nowrap;
+        }
+        
+        .tab-button:hover { background: #f8fafc; color: #334155; }
+        .tab-button.active { color: #ffffff; border-color: transparent; }
+        
+        .tab-button.active.btn-overview { background: #2563eb; }
+        .tab-button.active.btn-materials { background: #65a30d; }
+        .tab-button.active.btn-formulation { background: #ea580c; }
+        .tab-button.active.btn-testing { background: #4f46e5; }
+        .tab-button.active.btn-results { background: #0891b2; }
+        .tab-button.active.btn-limitations { background: #dc2626; }
+        .tab-button.active.btn-phd { background: #9333ea; }
+        
+        /* Tables */
+        table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+        thead { background: #f8fafc; border-bottom: 2px solid #cbd5e1; }
+        th { padding: 0.75rem 1rem; text-align: left; font-weight: 600; color: #475569; font-size: 0.8125rem; text-transform: uppercase; }
+        td { padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; }
+        tbody tr:hover { background: #f8fafc; }
+        
+        /* Metric Card */
+        .metric-card {
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            border: 1px solid #e2e8f0;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+        }
+        
+        /* Sticky Nav */
+        .sticky-nav {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        /* Provenance Markers */
+        .provenance-marker {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.625rem;
+            padding: 0.125rem 0.375rem;
+            border-radius: 0.25rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .provenance-extracted { background: #dcfce7; color: #166534; }
+        .provenance-derived { background: #fef3c7; color: #92400e; }
+        
+        /* Progress Bar */
+        .progress-bar { height: 3px; background: #e2e8f0; position: fixed; top: 0; left: 0; right: 0; z-index: 9999; }
+        .progress-fill { height: 100%; background: #0ea5e9; transition: width 0.15s ease-out; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    
+    <!-- Progress Bar -->
+    <div class="progress-bar">
+        <div id="progressFill" class="progress-fill" style="width: 0%"></div>
+    </div>
+    
+    <!-- Navigation Header -->
+    <nav class="sticky-nav">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-olive-500 to-green-700 rounded-lg flex items-center justify-center shadow-md">
+                        <span class="text-white font-bold text-xl">🫒</span>
+                    </div>
+                    <div>
+                        <h1 class="text-base font-bold text-gray-900">Research Paper Dashboard</h1>
+                        <p class="text-xs text-gray-500">Olive Pomace in Bitumen</p>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="window.print()" class="px-3 py-2 rounded-lg bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 text-sm font-medium transition flex items-center gap-2">
+                        Print
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- Hero Section -->
+        <div class="card card-elevated p-8 mb-8">
+            <div class="flex items-start gap-6 mb-6">
+                <div class="flex-shrink-0">
+                    <div class="w-20 h-20 bg-gradient-to-br from-gray-700 to-black rounded-2xl flex items-center justify-center shadow-lg">
+                        <span class="text-4xl">🛣️</span>
+                    </div>
+                </div>
+                <div class="flex-1">
+                    <div class="flex flex-wrap gap-2 mb-3">
+                        <span class="badge badge-experimental">🧪 Experimental</span>
+                        <span class="badge badge-core">Tier A Data</span>
+                        <span class="badge badge-context">Waste Valorisation</span>
+                    </div>
+                    <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4 leading-tight">
+                        Evaluation of olive pomace and SBS modified bitumen to the performance characteristics
+                    </h1>
+                    <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-4">
+                        <span class="flex items-center gap-1">
+                            <span class="font-bold">👥 F. Özel, M.T. Deniz, M.İ. Yüce</span>
+                        </span>
+                        <span>•</span>
+                        <span>📅 2023</span>
+                        <span>•</span>
+                        <span>📖 Case Studies in Construction Materials</span>
+                    </div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="text-sm text-gray-500 font-medium">DOI:</span>
+                        <code class="text-sm bg-gray-100 px-2 py-1 rounded">10.1016/j.cscm.2023.e02432</code>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Executive Summary -->
+            <div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-6 border border-green-200">
+                <div class="flex flex-col md:flex-row items-start gap-6">
+                    <div class="flex-shrink-0">
+                        <div class="w-16 h-16 bg-white rounded-xl flex items-center justify-center border-2 border-green-200 shadow-sm">
+                            <span class="text-3xl">💡</span>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">One-Sentence Takeaway</h3>
+                        <p class="text-lg font-medium text-green-900 mb-4">
+                            Addition of 19% olive pomace by weight to bitumen yields rheological and mechanical performance comparable to 4% SBS polymer modification with lower cost.
+                        </p>
+                        <div class="bg-white bg-opacity-60 p-4 rounded-lg text-sm text-gray-700">
+                            <strong>Strict Summary:</strong> The authors modified B 50/70 bitumen with 4-30% Olive Pomace (OP) and compared it to 4-4.5% SBS modified bitumen. OP addition decreased penetration and increased softening point. Rheological testing (DSR, BBR) and Marshall stability tests identified 19% OP as the critical ratio providing performance comparable to 4% SBS, specifically in rutting and fatigue resistance. Cost analysis indicated OP modified bitumen was more economical than SBS modification.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="metric-card">
+                <div class="text-center">
+                    <div class="text-3xl mb-2">🧪</div>
+                    <div class="text-2xl font-bold text-blue-600 mb-1">9</div>
+                    <div class="text-xs font-medium text-gray-500">Variants Tested</div>
+                    <div class="text-[10px] text-gray-400 mt-1">Control, 6 OP, 2 SBS</div>
+                </div>
+            </div>
+            <div class="metric-card">
+                <div class="text-center">
+                    <div class="text-3xl mb-2">⚖️</div>
+                    <div class="text-2xl font-bold text-green-600 mb-1">4–30%</div>
+                    <div class="text-xs font-medium text-gray-500">Dosage Range</div>
+                    <div class="text-[10px] text-gray-400 mt-1">By weight of bitumen</div>
+                </div>
+            </div>
+            <div class="metric-card">
+                <div class="text-center">
+                    <div class="text-3xl mb-2">🏆</div>
+                    <div class="text-2xl font-bold text-purple-600 mb-1">19%</div>
+                    <div class="text-xs font-medium text-gray-500">Optimal OP Content</div>
+                    <div class="text-[10px] text-gray-400 mt-1">Equivalent to 4% SBS</div>
+                </div>
+            </div>
+            <div class="metric-card">
+                <div class="text-center">
+                    <div class="text-3xl mb-2">🌡️</div>
+                    <div class="text-2xl font-bold text-orange-600 mb-1">170°C</div>
+                    <div class="text-xs font-medium text-gray-500">Mixing Temp</div>
+                    <div class="text-[10px] text-gray-400 mt-1">For 60 minutes</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="card p-6 mb-8">
+            <div class="tab-nav">
+                <button class="tab-button active btn-overview" onclick="switchTab('overview')">📋 Overview</button>
+                <button class="tab-button btn-materials" onclick="switchTab('materials')">🫒 Materials</button>
+                <button class="tab-button btn-formulation" onclick="switchTab('formulation')">⚗️ Formulation</button>
+                <button class="tab-button btn-testing" onclick="switchTab('testing')">⚙️ Testing</button>
+                <button class="tab-button btn-results" onclick="switchTab('results')">📊 Results</button>
+                <button class="tab-button btn-limitations" onclick="switchTab('limitations')">⚠️ Limitations</button>
+                <button class="tab-button btn-phd" onclick="switchTab('phd')">🎓 PhD Context</button>
+            </div>
+
+            <!-- TAB: OVERVIEW -->
+            <div id="tab-overview" class="tab-content">
+                <div class="space-y-8">
+                    <!-- Research Positioning -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                                <span>🎯</span> Objective
+                            </h2>
+                            <div class="bg-blue-50 p-5 rounded-lg border-l-4 border-blue-500 h-full">
+                                <p class="text-gray-800 italic">"Investigated the applicability of olive pomace (OP) waste, a biomass waste, in bitumen modification."</p>
+                                <div class="mt-4 pt-4 border-t border-blue-200">
+                                    <h4 class="text-sm font-bold text-blue-900">Problem Definition</h4>
+                                    <p class="text-sm text-blue-800 mt-1">Conventional polymers like SBS are not cost-effective; pure bitumen suffers from fatigue, rutting, and cracking. Need to eliminate environmental damage of biomass waste.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                                <span>🌍</span> Context & Scope
+                            </h2>
+                            <div class="card p-5 h-full">
+                                <ul class="space-y-3 text-sm">
+                                    <li class="flex justify-between border-b pb-2">
+                                        <span class="text-gray-600">Application Intent</span>
+                                        <span class="font-semibold">Road Pavement (Asphalt Binder)</span>
+                                    </li>
+                                    <li class="flex justify-between border-b pb-2">
+                                        <span class="text-gray-600">Material Function</span>
+                                        <span class="font-semibold">Binder Modifier / Additive</span>
+                                    </li>
+                                    <li class="flex justify-between border-b pb-2">
+                                        <span class="text-gray-600">Geographical Origin</span>
+                                        <span class="font-semibold">Turkey (Gaziantep)</span>
+                                    </li>
+                                    <li class="flex justify-between">
+                                        <span class="text-gray-600">Comparison Benchmark</span>
+                                        <span class="font-semibold text-purple-600">SBS Polymer</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: MATERIALS -->
+            <div id="tab-materials" class="tab-content hidden">
+                <div class="space-y-8">
+                    <!-- Primary Waste Material -->
+                    <div class="card p-6 border-l-4 border-olive-500">
+                        <div class="flex items-start gap-4">
+                            <div class="text-4xl">🫒</div>
+                            <div class="flex-1">
+                                <h3 class="text-lg font-bold text-gray-900">Olive Pomace (OP)</h3>
+                                <p class="text-sm text-gray-600 mb-4">Sourced from an olive oil factory in Nizip, Gaziantep, Turkey.</p>
+                                
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div class="bg-gray-50 p-3 rounded border">
+                                        <div class="text-xs text-gray-500">Physical Form</div>
+                                        <div class="font-semibold text-gray-900">Powder</div>
+                                        <div class="text-xs text-gray-400">Dried, Crushed</div>
+                                    </div>
+                                    <div class="bg-gray-50 p-3 rounded border">
+                                        <div class="text-xs text-gray-500">Particle Size</div>
+                                        <div class="font-semibold text-gray-900">&lt; 0.075 mm</div>
+                                        <div class="text-xs text-gray-400">No. 200 Sieve</div>
+                                    </div>
+                                    <div class="bg-gray-50 p-3 rounded border">
+                                        <div class="text-xs text-gray-500">Bulk Density</div>
+                                        <div class="font-semibold text-gray-900">0.92 kg/m³</div>
+                                        <div class="text-xs text-gray-400">AASHTO T84</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Baseline Material -->
+                    <div class="card p-6 border-l-4 border-gray-700">
+                        <div class="flex items-start gap-4">
+                            <div class="text-4xl">⚫</div>
+                            <div class="flex-1">
+                                <h3 class="text-lg font-bold text-gray-900">Base Bitumen</h3>
+                                <p class="text-sm text-gray-600">Pure B 50/70 penetration grade bitumen.</p>
+                                <div class="mt-2 text-xs text-gray-500">
+                                    <strong>Control Role:</strong> Used as the matrix for all modifications.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Missing Data Alert -->
+                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="text-yellow-600 text-lg">⚠️</span>
+                            <span class="font-bold text-yellow-800 text-sm">Data Gap: Chemical Composition</span>
+                        </div>
+                        <p class="text-xs text-yellow-800">
+                            The extracted data indicates that the chemical composition (oxide analysis, cellulose/lignin content) of the Olive Pomace is <strong>missing</strong> from the paper. Only physical properties (density, gradation) were reported.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: FORMULATION -->
+            <div id="tab-formulation" class="tab-content hidden">
+                <div class="space-y-8">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <!-- Mix Design Table -->
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-900 mb-4">Experimental Variants</h3>
+                            <div class="card overflow-hidden">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Variant ID</th>
+                                            <th>Modifier Type</th>
+                                            <th>Content (%)</th>
+                                            <th>Basis</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="bg-gray-100 font-medium">
+                                            <td>CTRL-0</td>
+                                            <td>None</td>
+                                            <td>0%</td>
+                                            <td>Control</td>
+                                        </tr>
+                                        <tr>
+                                            <td>OP4</td>
+                                            <td>Olive Pomace</td>
+                                            <td>4%</td>
+                                            <td>By Weight</td>
+                                        </tr>
+                                        <tr>
+                                            <td>OP8</td>
+                                            <td>Olive Pomace</td>
+                                            <td>8%</td>
+                                            <td>By Weight</td>
+                                        </tr>
+                                        <tr>
+                                            <td>OP15</td>
+                                            <td>Olive Pomace</td>
+                                            <td>15%</td>
+                                            <td>By Weight</td>
+                                        </tr>
+                                        <tr class="bg-green-50 border-l-4 border-green-500">
+                                            <td>OP19</td>
+                                            <td>Olive Pomace</td>
+                                            <td>19%</td>
+                                            <td>Optimal</td>
+                                        </tr>
+                                        <tr>
+                                            <td>OP25</td>
+                                            <td>Olive Pomace</td>
+                                            <td>25%</td>
+                                            <td>By Weight</td>
+                                        </tr>
+                                        <tr>
+                                            <td>OP30</td>
+                                            <td>Olive Pomace</td>
+                                            <td>30%</td>
+                                            <td>By Weight</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-2">Note: SBS modified bitumen (4% and 4.5%) was also tested as a benchmark.</p>
+                        </div>
+
+                        <!-- Processing Conditions -->
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-900 mb-4">Processing Protocol</h3>
+                            <div class="space-y-4">
+                                <div class="flex items-start gap-4">
+                                    <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-sm">1</div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-900 text-sm">Pre-treatment</h4>
+                                        <p class="text-xs text-gray-600">Drying at 110°C for 24h. Crushing (LA machine). Sieving through No. 200 (0.075 mm).</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-4">
+                                    <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-sm">2</div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-900 text-sm">Mixing</h4>
+                                        <p class="text-xs text-gray-600">Bitumen heated to 170°C. OP added gradually. Mixed for 60 minutes.</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-4">
+                                    <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-sm">3</div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-900 text-sm">Aging Simulation</h4>
+                                        <p class="text-xs text-gray-600">RTFOT (Rolling Thin Film Oven Test) and PAV (Pressure Aging Vessel) applied for rheological tests.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-6 h-64 card p-4">
+                                <canvas id="dosageChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: TESTING -->
+            <div id="tab-testing" class="tab-content hidden">
+                <div class="space-y-6">
+                    <h3 class="text-lg font-bold text-gray-900">Experimental Design & Standards</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div class="card p-5">
+                            <h4 class="text-sm font-bold text-gray-700 mb-3">Specimens</h4>
+                            <div class="text-3xl mb-2">🧪</div>
+                            <p class="text-sm text-gray-900"><strong>Marshall Cylinders</strong></p>
+                            <p class="text-xs text-gray-500">101.6mm Ø x 63.5mm H</p>
+                            <p class="text-xs text-gray-500 mt-1">3 Replicates per test</p>
+                        </div>
+                        <div class="card p-5">
+                            <h4 class="text-sm font-bold text-gray-700 mb-3">Key Standards</h4>
+                            <ul class="space-y-1 text-xs text-gray-600">
+                                <li>• <strong>EN 1426</strong>: Penetration</li>
+                                <li>• <strong>EN 1427</strong>: Softening Point</li>
+                                <li>• <strong>AASHTO T84</strong>: Density</li>
+                                <li>• <strong>AASHTO 245-97</strong>: Marshall Design</li>
+                            </ul>
+                        </div>
+                        <div class="card p-5">
+                            <h4 class="text-sm font-bold text-gray-700 mb-3">Conditioning</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="badge badge-core">Water Bath (60°C)</span>
+                                <span class="badge badge-experimental">RTFOT Aged</span>
+                                <span class="badge badge-experimental">PAV Aged</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: RESULTS -->
+            <div id="tab-results" class="tab-content hidden">
+                <div class="space-y-8">
+                    <!-- Results Matrix -->
+                    <div class="card p-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-lg font-bold text-gray-900">Quantitative Results Matrix</h3>
+                            <span class="provenance-marker provenance-extracted">✓ Extracted from Table 11</span>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Variant</th>
+                                        <th>Penetration (0.1 mm)</th>
+                                        <th>Softening Point (°C)</th>
+                                        <th>Trend</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="bg-gray-100">
+                                        <td><strong>Pure Bitumen</strong></td>
+                                        <td class="font-mono font-bold">61.0</td>
+                                        <td class="font-mono font-bold">52.8</td>
+                                        <td>Baseline</td>
+                                    </tr>
+                                    <tr>
+                                        <td>OP 4%</td>
+                                        <td class="font-mono">57.0</td>
+                                        <td class="text-gray-400 italic">--</td>
+                                        <td class="text-xs text-red-600">Stiffening</td>
+                                    </tr>
+                                    <tr>
+                                        <td>OP 8%</td>
+                                        <td class="font-mono">55.3</td>
+                                        <td class="text-gray-400 italic">--</td>
+                                        <td class="text-xs text-red-600">Stiffening</td>
+                                    </tr>
+                                    <tr>
+                                        <td>OP 15%</td>
+                                        <td class="font-mono">53.3</td>
+                                        <td class="text-gray-400 italic">--</td>
+                                        <td class="text-xs text-red-600">Stiffening</td>
+                                    </tr>
+                                    <tr class="bg-green-50 border-l-4 border-green-500">
+                                        <td>OP 19% (Optimal)</td>
+                                        <td class="font-mono font-bold text-green-700">51.0</td>
+                                        <td class="text-gray-400 italic">--</td>
+                                        <td class="text-xs text-green-700 font-bold">~4% SBS Equivalent</td>
+                                    </tr>
+                                    <tr>
+                                        <td>OP 25%</td>
+                                        <td class="font-mono">50.0</td>
+                                        <td class="text-gray-400 italic">--</td>
+                                        <td class="text-xs text-red-600">Stiffening</td>
+                                    </tr>
+                                    <tr>
+                                        <td>OP 30%</td>
+                                        <td class="font-mono">52.9</td>
+                                        <td class="text-gray-400 italic">--</td>
+                                        <td class="text-xs text-gray-500">Plateau/Reversal</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-3">
+                            *Note: "Penetration" values extracted from schema `workability` field (mapped by extractor). Softening Point for variants not present in the extracted matrix, though trends indicate increase (up to 10.6%).
+                        </p>
+                    </div>
+
+                    <!-- Chart -->
+                    <div class="card p-6">
+                        <h3 class="text-lg font-bold text-gray-900 mb-4">Consistency Trend: Penetration vs. OP Content</h3>
+                        <div class="h-80">
+                            <canvas id="resultsChart"></canvas>
+                        </div>
+                        <p class="text-sm text-center text-gray-600 mt-4">
+                            Decreasing penetration indicates increased stiffness (hardening) of the binder with OP addition, desirable for rutting resistance.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: LIMITATIONS -->
+            <div id="tab-limitations" class="tab-content hidden">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="card p-6 border-t-4 border-yellow-500">
+                        <h3 class="text-lg font-bold text-gray-900 mb-3">Missing Parameters</h3>
+                        <ul class="list-disc list-inside text-sm text-gray-700 space-y-2">
+                            <li><strong>Chemical Composition:</strong> Oxide analysis of Olive Pomace is missing.</li>
+                            <li><strong>Energy Data:</strong> Specific energy consumption for processing not reported.</li>
+                            <li><strong>Long-term Durability:</strong> Mixture long-term tests absent.</li>
+                        </ul>
+                    </div>
+                    <div class="card p-6 border-t-4 border-orange-500">
+                        <h3 class="text-lg font-bold text-gray-900 mb-3">Risk Assessment</h3>
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="badge bg-orange-100 text-orange-800">Risk Level: Moderate</span>
+                        </div>
+                        <p class="text-sm text-gray-700">
+                            Lack of chemical analysis means the mechanism of modification (physical filler vs chemical interaction) is ambiguous. Uncritical use assumes consistent pomace chemistry, which may vary by season/region.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: PHD CONTEXT -->
+            <div id="tab-phd" class="tab-content hidden">
+                <div class="space-y-6">
+                    <div class="bg-purple-50 p-6 rounded-xl border border-purple-200">
+                        <h3 class="text-xl font-bold text-purple-900 mb-3">🎓 Actionable Takeaway</h3>
+                        <p class="text-lg text-gray-800 font-medium">
+                            "19% Olive Pomace addition is a viable, cost-effective substitute for 4% SBS in bitumen modification, achieving equivalent Performance Grade (PG) and Marshall stability."
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="card p-5">
+                            <div class="text-sm font-bold text-gray-500 uppercase mb-2">Value</div>
+                            <p class="text-sm">Provides specific mixing protocols (170°C, 60 min) and dosage benchmarks for biomass-bitumen systems.</p>
+                        </div>
+                        <div class="card p-5">
+                            <div class="text-sm font-bold text-gray-500 uppercase mb-2">Recommendation</div>
+                            <div class="flex items-center gap-2">
+                                <span class="w-3 h-3 rounded-full bg-green-500"></span>
+                                <span class="font-bold text-gray-900">Include in Core Dataset</span>
+                            </div>
+                            <p class="text-xs text-gray-600 mt-2">Passes eligibility score > 0.80. Useful for benchmarking.</p>
+                        </div>
+                        <div class="card p-5">
+                            <div class="text-sm font-bold text-gray-500 uppercase mb-2">Next Steps</div>
+                            <ul class="text-sm space-y-1">
+                                <li>✅ Replicate 19% dosage</li>
+                                <li>🔬 Perform missing chemical analysis</li>
+                                <li>⏳ Extend to long-term moisture tests</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-100 border-t border-gray-200 py-8 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-gray-700 text-sm">
+                <strong>Generated Research Dashboard</strong> • Extraction Version 2.0-hardened
+            </p>
+            <p class="text-xs text-gray-500 mt-2">
+                Data source: Özel et al. (2023). <em>Evaluation of olive pomace and SBS modified bitumen to the performance characteristics</em>.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Tab Switching Logic
+        function switchTab(tabId) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            // Show selected tab
+            document.getElementById('tab-' + tabId).classList.remove('hidden');
+            
+            // Update buttons
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            document.querySelector('.btn-' + tabId).classList.add('active');
+
+            // Scroll progress
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const progressFill = document.getElementById('progressFill');
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+            progressFill.style.width = `${Math.min(100, Math.max(0, progress))}%`;
+        }
+        
+        window.addEventListener('scroll', updateProgress);
+
+        // Chart Initialization
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // 1. Dosage Chart
+            const ctxDosage = document.getElementById('dosageChart');
+            if (ctxDosage) {
+                new Chart(ctxDosage, {
+                    type: 'bar',
+                    data: {
+                        labels: ['OP 4%', 'OP 8%', 'OP 15%', 'OP 19%', 'OP 25%', 'OP 30%'],
+                        datasets: [{
+                            label: 'Olive Pomace Content (%)',
+                            data: [4, 8, 15, 19, 25, 30],
+                            backgroundColor: [
+                                '#dbeafe', '#bfdbfe', '#93c5fd', '#16a34a', '#60a5fa', '#3b82f6'
+                            ],
+                            borderColor: '#2563eb',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            title: { display: true, text: 'Tested Dosage Levels' }
+                        },
+                        scales: {
+                            y: { title: { display: true, text: '% by Weight of Bitumen' } }
+                        }
+                    }
+                });
+            }
+
+            // 2. Results Chart (Penetration)
+            const ctxResults = document.getElementById('resultsChart');
+            if (ctxResults) {
+                new Chart(ctxResults, {
+                    type: 'line',
+                    data: {
+                        labels: ['0%', '4%', '8%', '15%', '19%', '25%', '30%'],
+                        datasets: [{
+                            label: 'Penetration (0.1 mm)',
+                            data: [61.0, 57.0, 55.3, 53.3, 51.0, 50.0, 52.9],
+                            borderColor: '#dc2626', // Red for "stiffness/heat"
+                            backgroundColor: 'rgba(220, 38, 38, 0.1)',
+                            borderWidth: 2,
+                            pointRadius: 5,
+                            pointBackgroundColor: ['#991b1b', '#dc2626', '#dc2626', '#dc2626', '#16a34a', '#dc2626', '#dc2626'], // Highlight 19%
+                            tension: 0.3,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            title: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    afterLabel: function(context) {
+                                        if (context.label === '19%') return 'Optimal Dosage';
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: { title: { display: true, text: 'Olive Pomace Content (%)' } },
+                            y: { 
+                                title: { display: true, text: 'Penetration (0.1 mm)' },
+                                reverse: true // Standard representation for Penetration (Lower = Stiffer = Up visually often, but here we keep standard axes)
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

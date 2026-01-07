@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Dashboard – El Boukhari et al. 2024 | OPA Structural Concrete</title>
+    <meta name="description" content="Academic research dashboard analyzing structural concrete lightened by olive pomace aggregates mixed with olive mill wastewater">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['Lora', 'Georgia', 'serif'],
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            300: '#86efac',
+                            400: '#4ade80',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* Base Typography */
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            font-size: 16px;
+            line-height: 1.75;
+            color: #1e293b;
+            background: #ffffff;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Lora', Georgia, serif;
+            font-weight: 600;
+            line-height: 1.3;
+            color: #0f172a;
+        }
+        
+        h1 { font-size: 2.25rem; margin-bottom: 1rem; }
+        h2 { font-size: 1.875rem; margin-bottom: 0.875rem; }
+        h3 { font-size: 1.5rem; margin-bottom: 0.75rem; }
+        h4 { font-size: 1.25rem; margin-bottom: 0.625rem; }
+        
+        /* Academic Card Style */
+        .card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            transition: box-shadow 0.2s ease;
+        }
+        
+        .card:hover {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        
+        .card-elevated {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Badge System */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.375rem 0.875rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border: 1.5px solid;
+        }
+        
+        .badge-core {
+            background: #dbeafe;
+            color: #1e40af;
+            border-color: #3b82f6;
+        }
+        
+        .badge-experimental {
+            background: #fef3c7;
+            color: #92400e;
+            border-color: #f59e0b;
+        }
+        
+        .badge-interpretive {
+            background: #fce7f3;
+            color: #9f1239;
+            border-color: #f472b6;
+        }
+        
+        .badge-extracted {
+            background: #dcfce7;
+            color: #166534;
+            border-color: #22c55e;
+        }
+        
+        /* Tab Navigation */
+        .tab-nav {
+            display: flex;
+            flex-wrap: nowrap;
+            justify-content: center;
+            align-items: center;
+            overflow-x: auto;
+            gap: 0.25rem;
+            border-bottom: 2px solid #e2e8f0;
+            padding: 0.75rem 0.25rem;
+            margin-bottom: 2rem;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        .tab-nav::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .tab-button {
+            flex: 0 0 auto;
+            padding: 0.35rem 0.6rem;
+            border-radius: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+            background: #f8fafc;
+            color: #64748b;
+            white-space: nowrap;
+        }
+        
+        .tab-button:hover {
+            background: #f1f5f9;
+            color: #334155;
+        }
+        
+        .tab-button.active {
+            color: #ffffff;
+        }
+
+        .tab-button.active.btn-info { background: #64748b; border-color: #475569; box-shadow: 0 2px 4px rgba(100, 116, 139, 0.3); }
+        .tab-button.active.btn-overview { background: #2563eb; border-color: #1d4ed8; box-shadow: 0 2px 4px rgba(37, 99, 235, 0.3); }
+        .tab-button.active.btn-materials { background: #16a34a; border-color: #15803d; box-shadow: 0 2px 4px rgba(22, 163, 74, 0.3); }
+        .tab-button.active.btn-formulation { background: #ea580c; border-color: #c2410c; box-shadow: 0 2px 4px rgba(234, 88, 12, 0.3); }
+        .tab-button.active.btn-testing { background: #4f46e5; border-color: #4338ca; box-shadow: 0 2px 4px rgba(79, 70, 229, 0.3); }
+        .tab-button.active.btn-results { background: #0891b2; border-color: #0e7490; box-shadow: 0 2px 4px rgba(8, 145, 178, 0.3); }
+        .tab-button.active.btn-limitations { background: #dc2626; border-color: #b91c1c; box-shadow: 0 2px 4px rgba(220, 38, 38, 0.3); }
+        .tab-button.active.btn-phd { background: #9333ea; border-color: #7e22ce; box-shadow: 0 2px 4px rgba(147, 51, 234, 0.3); }
+        .tab-button.active.btn-sustainability { background: #059669; border-color: #047857; box-shadow: 0 2px 4px rgba(5, 150, 105, 0.3); }
+        
+        /* Data Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+        }
+        
+        thead {
+            background: #f8fafc;
+            border-bottom: 2px solid #cbd5e1;
+        }
+        
+        th {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: #475569;
+            font-size: 0.8125rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        tbody tr:hover {
+            background: #f8fafc;
+        }
+        
+        /* Metric Cards */
+        .metric-card {
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            border: 1px solid #e2e8f0;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        
+        /* Progress Bar */
+        .progress-bar {
+            height: 3px;
+            background: #e2e8f0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 9999;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #0ea5e9 0%, #06b6d4 100%);
+            transition: width 0.15s ease-out;
+            box-shadow: 0 0 10px rgba(14, 165, 233, 0.5);
+        }
+        
+        /* Alert Boxes */
+        .alert {
+            padding: 1rem 1.25rem;
+            border-radius: 0.5rem;
+            border-left: 4px solid;
+            font-size: 0.875rem;
+            line-height: 1.6;
+        }
+        
+        .alert-info {
+            background: #dbeafe;
+            border-color: #3b82f6;
+            color: #1e3a8a;
+        }
+        
+        .alert-warning {
+            background: #fef3c7;
+            border-color: #f59e0b;
+            color: #78350f;
+        }
+        
+        .alert-success {
+            background: #dcfce7;
+            border-color: #22c55e;
+            color: #14532d;
+        }
+        
+        .alert-danger {
+            background: #fee2e2;
+            border-color: #ef4444;
+            color: #7f1d1d;
+        }
+        
+        /* Section Anchors */
+        .section-anchor {
+            scroll-margin-top: 100px;
+        }
+        
+        /* Print Styles */
+        @media print {
+            body {
+                font-size: 11pt;
+                line-height: 1.5;
+            }
+            
+            .no-print {
+                display: none !important;
+            }
+            
+            .card {
+                break-inside: avoid;
+                border: 1px solid #cbd5e1;
+                box-shadow: none;
+            }
+            
+            h2, h3, h4 {
+                break-after: avoid;
+            }
+            
+            .page-break {
+                page-break-before: always;
+            }
+            
+            .tab-content {
+                display: block !important;
+            }
+        }
+        
+        /* Code Blocks */
+        code {
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Courier New', monospace;
+            background: #f1f5f9;
+            padding: 0.125rem 0.375rem;
+            border-radius: 0.25rem;
+            font-size: 0.875em;
+            color: #0369a1;
+        }
+        
+        /* Tooltip */
+        [title] {
+            cursor: help;
+            text-decoration: underline;
+            text-decoration-style: dotted;
+            text-decoration-color: #94a3b8;
+        }
+        
+        /* Sticky Navigation */
+        .sticky-nav {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        /* Icon styling */
+        .icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            h1 { font-size: 1.75rem; }
+            h2 { font-size: 1.5rem; }
+            h3 { font-size: 1.25rem; }
+            
+            .tab-nav {
+                justify-content: center;
+            }
+        }
+        
+        /* Smooth transitions */
+        * {
+            transition: background-color 0.15s ease;
+        }
+        
+        /* Data provenance markers */
+        .provenance-marker {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.625rem;
+            padding: 0.125rem 0.375rem;
+            border-radius: 0.25rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .provenance-extracted {
+            background: #dcfce7;
+            color: #166534;
+        }
+        
+        .provenance-derived {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .provenance-interpretive {
+            background: #fce7f3;
+            color: #9f1239;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    
+    <!-- Progress Bar -->
+    <div class="progress-bar no-print">
+        <div id="progressFill" class="progress-fill" style="width: 0%"></div>
+    </div>
+    
+    <!-- Navigation Header -->
+    <nav class="sticky-nav no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-green-600 to-green-800 rounded-lg flex items-center justify-center shadow-md">
+                        <span class="text-white font-bold text-xl">🫒</span>
+                    </div>
+                    <div>
+                        <h1 class="text-base font-bold text-gray-900">Research Paper Dashboard</h1>
+                        <p class="text-xs text-gray-500">Olive Pomace Concrete</p>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="window.print()" class="px-3 py-2 rounded-lg bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 text-sm font-medium transition flex items-center gap-2">
+                        <span>🖨️</span> Print
+                    </button>
+                    <button onclick="copyCitation()" class="px-3 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium transition flex items-center gap-2">
+                        <span>📋</span> Citation
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- Hero Section -->
+        <div class="card card-elevated p-8 mb-8">
+            <div class="flex items-start gap-6 mb-6">
+                <div class="flex-shrink-0">
+                    <div class="w-20 h-20 bg-gradient-to-br from-green-500 to-yellow-600 rounded-2xl flex items-center justify-center shadow-lg">
+                        <span class="text-4xl">🏭</span>
+                    </div>
+                </div>
+                <div class="flex-1">
+                    <div class="flex flex-wrap gap-2 mb-3">
+                        <span class="badge badge-core">Core Dataset</span>
+                        <span class="badge badge-experimental">Experimental Study</span>
+                    </div>
+                    <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4 leading-tight">
+                        Comprehensive experimental study on mechanical properties of a structural concrete lightened by olive pomace aggregates mixed with olive mill wastewater
+                    </h1>
+                    <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-4">
+                        <span class="flex items-center gap-1">
+                            <span class="icon">👥</span>
+                            El Boukhari, Merroun, Maalouf, Bogard, Kissi
+                        </span>
+                        <span>•</span>
+                        <span>📅 2024</span>
+                        <span>•</span>
+                        <span>📖 World Journal of Engineering (Vol. 21/5)</span>
+                    </div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="text-sm text-gray-500 font-medium">DOI:</span>
+                        <code class="text-sm">10.1108/WJE-12-2022-0514</code>
+                        <a href="https://doi.org/10.1108/WJE-12-2022-0514" 
+                           target="_blank" 
+                           class="px-3 py-1 rounded bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium transition">
+                            🔗 Open Paper
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PhD Context Banner -->
+            <div class="bg-gradient-to-br from-green-50 to-yellow-50 rounded-xl p-6 border border-green-200">
+                <div class="flex flex-col md:flex-row items-start gap-6">
+                    <div class="flex-shrink-0">
+                        <div class="w-16 h-16 bg-green-100 rounded-xl flex items-center justify-center border-2 border-green-300 shadow-sm">
+                            <span class="text-3xl">💡</span>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-xl font-bold text-gray-900 mb-3 flex items-center gap-2">
+                            <span>🎓</span> Core Research Takeaway
+                            <span class="provenance-marker provenance-interpretive ml-auto">⚡ Interpretive</span>
+                        </h3>
+                        <p class="text-gray-700 leading-relaxed mb-4">
+                            Partial replacement of sand with <strong>5% dry olive pomace aggregates (OPA)</strong> mixed with olive mill wastewater yields a structural concrete with <strong>25 MPa compressive strength</strong>. While suitable for C25/30 applications, higher substitution levels (>5%) significantly degrade mechanical performance, illustrating a strict threshold for this agricultural waste stream in structural applications.
+                        </p>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="bg-white rounded-lg p-4 border border-green-200 hover:border-green-400 transition">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="w-1 h-10 bg-green-500 rounded-full"></div>
+                                    <div class="text-xs text-green-700 uppercase tracking-widest font-bold">🎯 Application</div>
+                                </div>
+                                <div class="text-lg font-bold text-gray-900 pl-4">Structural Concrete (C25)</div>
+                            </div>
+                            
+                            <div class="bg-white rounded-lg p-4 border border-yellow-200 hover:border-yellow-400 transition">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="w-1 h-10 bg-yellow-500 rounded-full"></div>
+                                    <div class="text-xs text-yellow-700 uppercase tracking-widest font-bold">🔬 Key Innovation</div>
+                                </div>
+                                <div class="text-lg font-bold text-gray-900 pl-4">OPA + OMW Combined Waste</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="metric-card">
+                <div class="text-center">
+                    <div class="text-4xl mb-3">🧱</div>
+                    <div class="text-3xl font-bold text-blue-600 mb-1">13</div>
+                    <div class="text-sm font-medium text-gray-600 mb-2">Variants Tested</div>
+                    <div class="text-xs text-gray-500">Control + 2 Types × 2 States × 3 Levels</div>
+                    <span class="provenance-marker provenance-extracted mt-2">✓ Extracted</span>
+                </div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="text-center">
+                    <div class="text-4xl mb-3">📊</div>
+                    <div class="text-3xl font-bold text-green-600 mb-1">0–15%</div>
+                    <div class="text-sm font-medium text-gray-600 mb-2">Replacement Range</div>
+                    <div class="text-xs text-gray-500">Fine Aggregate Volume Substitution</div>
+                    <span class="provenance-marker provenance-extracted mt-2">✓ Extracted</span>
+                </div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="text-center">
+                    <div class="text-4xl mb-3">🏆</div>
+                    <div class="text-3xl font-bold text-yellow-600 mb-1">25 MPa</div>
+                    <div class="text-sm font-medium text-gray-600 mb-2">Optimum Strength</div>
+                    <div class="text-xs text-gray-500">At 5% substitution (Dry OPA+OMW)</div>
+                    <span class="provenance-marker provenance-extracted mt-2">✓ Extracted</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="card p-6 mb-8">
+            <div class="tab-nav">
+                <button class="tab-button btn-info" onclick="switchTab('info')">ℹ️ Info</button>
+                <button class="tab-button active btn-overview" onclick="switchTab('overview')">📋 Overview</button>
+                <button class="tab-button btn-materials" onclick="switchTab('materials')">🫒 Materials</button>
+                <button class="tab-button btn-formulation" onclick="switchTab('formulation')">🧱 Formulation</button>
+                <button class="tab-button btn-testing" onclick="switchTab('testing')">⚙️ Testing</button>
+                <button class="tab-button btn-results" onclick="switchTab('results')">📊 Results</button>
+                <button class="tab-button btn-limitations" onclick="switchTab('limitations')">⚠️ Limitations</button>
+                <button class="tab-button btn-phd" onclick="switchTab('phd')">🎓 PhD Context</button>
+                <button class="tab-button btn-sustainability" onclick="switchTab('sustainability')">🌱 Sustainability</button>
+            </div>
+
+            <!-- Tab Content: Info -->
+            <div id="tab-info" class="tab-content hidden">
+                <div class="space-y-8">
+                    <div class="card card-elevated p-6 border-l-4 border-purple-500">
+                        <div class="flex items-start gap-4">
+                            <div class="flex-shrink-0">
+                                <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
+                                    <span class="text-2xl">ℹ️</span>
+                                </div>
+                            </div>
+                            <div class="flex-1">
+                                <h2 class="text-xl font-bold text-gray-900 mb-2">📊 Data Provenance & Interpretation Notice</h2>
+                                <p class="text-sm text-gray-700 leading-relaxed mb-4">
+                                    This dashboard extracts, synthesizes, and interprets data from the original research paper. All extracted values are traced to their source (page/table/figure). Interpretive statements are explicitly labeled.
+                                </p>
+                                <div class="flex flex-wrap gap-2 mb-2">
+                                    <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                                    <span class="provenance-marker provenance-derived">≈ Derived</span>
+                                    <span class="provenance-marker provenance-interpretive">⚡ Interpretive</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card p-6">
+                        <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2"><span>🔤</span> Acronym Legend</h2>
+                        <div class="overflow-x-auto">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Abbreviation</th>
+                                        <th>Meaning</th>
+                                        <th>Context</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="font-semibold">OPA</td>
+                                        <td>Olive Pomace Aggregates</td>
+                                        <td>Primary solid waste material</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-semibold">OMW</td>
+                                        <td>Olive Mill Wastewater</td>
+                                        <td>Liquid waste used for treatment</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-semibold">OPA_OMW</td>
+                                        <td>OPA mixed with OMW</td>
+                                        <td>Black aggregates variant</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-semibold">OPA_N_OMW</td>
+                                        <td>OPA not mixed with OMW</td>
+                                        <td>Yellow aggregates variant</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-semibold">OPCD_OMW</td>
+                                        <td>Dry state OPA (with OMW) Concrete</td>
+                                        <td>Specific mix ID format</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-semibold">ITZ</td>
+                                        <td>Interfacial Transition Zone</td>
+                                        <td>Microstructural boundary region</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-semibold">UPV</td>
+                                        <td>Ultrasonic Pulse Velocity</td>
+                                        <td>Non-destructive test method</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Overview -->
+            <div id="tab-overview" class="tab-content">
+                <div class="space-y-8">
+                    <div id="objective" class="section-anchor">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2"><span>🎯</span> Objective & Problem</h2>
+                        <div class="card p-6">
+                            <div class="space-y-6">
+                                <div>
+                                    <div class="flex items-center justify-between mb-3">
+                                        <h3 class="text-lg font-semibold text-gray-900">Primary Objective</h3>
+                                        <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                                    </div>
+                                    <p class="text-gray-700 leading-relaxed bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+                                        "Experimentally determine whether mechanical properties of concrete can be improved by using olive pomace aggregates (OPA) as a substitute for natural sand."
+                                    </p>
+                                </div>
+                                
+                                <div>
+                                    <div class="flex items-center justify-between mb-3">
+                                        <h3 class="text-lg font-semibold text-gray-900">Problem Definition</h3>
+                                        <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                                    </div>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div class="bg-orange-50 p-4 rounded-lg border-l-4 border-orange-500">
+                                            <h4 class="font-bold text-gray-900 mb-2">Industrial Problem</h4>
+                                            <p class="text-sm text-gray-700">Management of OPA and OMW generated from the olive processing industry, which has significant negative environmental impacts.</p>
+                                        </div>
+                                        <div class="bg-green-50 p-4 rounded-lg border-l-4 border-green-500">
+                                            <h4 class="font-bold text-gray-900 mb-2">Resource Problem</h4>
+                                            <p class="text-sm text-gray-700">Concrete production is resource-intensive; need for sustainable substitutes for natural sand.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="system" class="section-anchor">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2"><span>🧱</span> Material System Context</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="card p-6 border-t-4 border-blue-500">
+                                <div class="text-3xl mb-3">🏗️</div>
+                                <h3 class="text-base font-bold text-gray-900 mb-2">Primary System</h3>
+                                <p class="text-lg font-bold text-blue-600">Concrete</p>
+                                <span class="provenance-marker provenance-extracted mt-3">✓ Extracted</span>
+                            </div>
+                            <div class="card p-6 border-t-4 border-green-500">
+                                <div class="text-3xl mb-3">⚙️</div>
+                                <h3 class="text-base font-bold text-gray-900 mb-2">Function</h3>
+                                <p class="text-lg font-bold text-green-600">Structural (Load-bearing)</p>
+                                <span class="provenance-marker provenance-extracted mt-3">✓ Extracted</span>
+                            </div>
+                            <div class="card p-6 border-t-4 border-purple-500">
+                                <div class="text-3xl mb-3">⚖️</div>
+                                <h3 class="text-base font-bold text-gray-900 mb-2">Baseline</h3>
+                                <p class="text-lg font-bold text-purple-600">Reference Concrete (0% OPA)</p>
+                                <span class="provenance-marker provenance-extracted mt-3">✓ Extracted</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Materials -->
+            <div id="tab-materials" class="tab-content hidden">
+                <div class="space-y-8">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2"><span>🫒</span> Waste Material Identity</h2>
+                        <div class="card p-6 mb-6 border-l-4 border-green-500">
+                            <div class="flex items-start gap-4 mb-4">
+                                <div class="text-5xl">🫒</div>
+                                <div class="flex-1">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <h3 class="text-xl font-bold text-gray-900">Olive Pomace Aggregates (OPA)</h3>
+                                        <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                                    </div>
+                                    <p class="text-gray-700 leading-relaxed mb-4 bg-green-50 p-3 rounded">
+                                        "Grinded by a ball mill (Los Angeles machine) to obtain homogeneous mixtures and then sieved in a 5 mm sieve."
+                                    </p>
+                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                        <div class="bg-gray-50 p-3 rounded border border-gray-200">
+                                            <div class="text-xs text-gray-500 mb-1">Origin</div>
+                                            <div class="text-sm font-bold text-gray-900">Benimellal, Morocco</div>
+                                        </div>
+                                        <div class="bg-gray-50 p-3 rounded border border-gray-200">
+                                            <div class="text-xs text-gray-500 mb-1">Processing</div>
+                                            <div class="text-sm font-bold text-gray-900">Wash -> Dry -> Grind -> Sieve</div>
+                                        </div>
+                                        <div class="bg-gray-50 p-3 rounded border border-gray-200">
+                                            <div class="text-xs text-gray-500 mb-1">Variants</div>
+                                            <div class="text-sm font-bold text-gray-900">Mixed w/ OMW (Black) vs Not (Yellow)</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <div class="card p-6">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h3 class="text-lg font-bold text-gray-900">Physical Properties (OPA_OMW)</h3>
+                                    <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                                </div>
+                                <div class="space-y-3">
+                                    <div class="flex justify-between items-center p-3 bg-gray-50 rounded">
+                                        <span class="text-sm text-gray-700 font-medium">Bulk Density</span>
+                                        <span class="text-sm font-bold text-gray-900">549.32 kg/m³</span>
+                                    </div>
+                                    <div class="flex justify-between items-center p-3 bg-gray-50 rounded">
+                                        <span class="text-sm text-gray-700 font-medium">Water Content</span>
+                                        <span class="text-sm font-bold text-gray-900">12.87 %</span>
+                                    </div>
+                                    <div class="flex justify-between items-center p-3 bg-gray-50 rounded">
+                                        <span class="text-sm text-gray-700 font-medium">Max Size (Dmax)</span>
+                                        <span class="text-sm font-bold text-gray-900">5 mm</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card p-6">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h3 class="text-lg font-bold text-gray-900">Chemical Composition (EDS)</h3>
+                                    <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                                </div>
+                                <div class="h-64">
+                                    <canvas id="oxideChart"></canvas>
+                                </div>
+                                <div class="alert alert-info mt-2 text-xs">
+                                    Note: Elemental composition extracted from Table 3.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Formulation -->
+            <div id="tab-formulation" class="tab-content hidden">
+                <div class="space-y-8">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2"><span>🧱</span> Formulation & Mix Design</h2>
+                        
+                        <div class="card p-6 mb-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-lg font-bold text-gray-900">Mix Proportions (kg/m³)</h3>
+                                <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Mix ID</th>
+                                            <th>Cement</th>
+                                            <th>Water</th>
+                                            <th>Sand</th>
+                                            <th>Gravel 1</th>
+                                            <th>Gravel 2</th>
+                                            <th>OPA</th>
+                                            <th>W/C Ratio</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="bg-blue-50 font-bold">
+                                            <td>Control</td>
+                                            <td>350</td>
+                                            <td>212</td>
+                                            <td>776</td>
+                                            <td>521</td>
+                                            <td>560</td>
+                                            <td>0</td>
+                                            <td>0.60*</td>
+                                        </tr>
+                                        <tr class="bg-green-50 font-bold">
+                                            <td>OPCD_OMW (5%)</td>
+                                            <td>350</td>
+                                            <td>212</td>
+                                            <td>737</td>
+                                            <td>521</td>
+                                            <td>560</td>
+                                            <td>39</td>
+                                            <td>0.55</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="alert alert-warning mt-4 text-xs">
+                                *Note: W/C calculated as 212/350 = 0.60 for control vs 0.55 stated for variant. Values extracted directly from Table 5 snippet.
+                            </div>
+                        </div>
+
+                        <div class="card p-6">
+                            <h3 class="text-lg font-bold text-gray-900 mb-4">Substitution Strategy</h3>
+                            <div class="h-64">
+                                <canvas id="replacementChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Testing -->
+            <div id="tab-testing" class="tab-content hidden">
+                <div class="space-y-8">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2"><span>⚙️</span> Experimental Conditions</h2>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="card p-6">
+                                <h3 class="text-lg font-bold text-gray-900 mb-3">Specimens & Curing</h3>
+                                <ul class="space-y-3 text-sm">
+                                    <li class="flex justify-between border-b pb-2">
+                                        <span class="text-gray-600">Geometry</span>
+                                        <span class="font-bold">Cylinders 150x300 mm</span>
+                                    </li>
+                                    <li class="flex justify-between border-b pb-2">
+                                        <span class="text-gray-600">Curing</span>
+                                        <span class="font-bold">Wet-cured (Water)</span>
+                                    </li>
+                                    <li class="flex justify-between border-b pb-2">
+                                        <span class="text-gray-600">Duration</span>
+                                        <span class="font-bold">28 Days</span>
+                                    </li>
+                                    <li class="flex justify-between border-b pb-2">
+                                        <span class="text-gray-600">Test Ages</span>
+                                        <span class="font-bold">3, 7, 28 Days</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            
+                            <div class="card p-6">
+                                <h3 class="text-lg font-bold text-gray-900 mb-3">Standards & Protocols</h3>
+                                <ul class="space-y-2">
+                                    <li class="flex items-center gap-2">
+                                        <code class="text-xs bg-gray-100 p-1 rounded">NF EN 12390-3</code>
+                                        <span class="text-sm">Compressive Strength</span>
+                                    </li>
+                                    <li class="flex items-center gap-2">
+                                        <code class="text-xs bg-gray-100 p-1 rounded">NF EN 12390-6</code>
+                                        <span class="text-sm">Splitting Tensile Strength</span>
+                                    </li>
+                                    <li class="flex items-center gap-2">
+                                        <code class="text-xs bg-gray-100 p-1 rounded">NF EN 12504-4</code>
+                                        <span class="text-sm">Ultrasonic Pulse Velocity</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Results -->
+            <div id="tab-results" class="tab-content hidden">
+                <div class="space-y-8">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2"><span>📊</span> Quantitative Results (28 Days)</h2>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                            <!-- Comparison Chart -->
+                            <div class="card p-6">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h3 class="text-lg font-bold text-gray-900">Performance Comparison</h3>
+                                    <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                                </div>
+                                <div class="h-72">
+                                    <canvas id="resultsChart"></canvas>
+                                </div>
+                            </div>
+                            
+                            <!-- Detailed Metrics -->
+                            <div class="card p-6">
+                                <h3 class="text-lg font-bold text-gray-900 mb-4">Key Metrics Table</h3>
+                                <div class="overflow-x-auto">
+                                    <table class="w-full text-sm">
+                                        <thead>
+                                            <tr>
+                                                <th>Property</th>
+                                                <th>Control</th>
+                                                <th>5% OPA (Optimum)</th>
+                                                <th>Change</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr class="border-b">
+                                                <td class="py-2">Compressive Strength</td>
+                                                <td class="font-bold">33 MPa</td>
+                                                <td class="font-bold text-green-600">25 MPa</td>
+                                                <td class="text-red-500">-24.2%</td>
+                                            </tr>
+                                            <tr class="border-b">
+                                                <td class="py-2">Elastic Modulus</td>
+                                                <td class="font-bold">49.64 GPa</td>
+                                                <td class="font-bold">44.39 GPa</td>
+                                                <td class="text-red-500">-10.6%</td>
+                                            </tr>
+                                            <tr class="border-b">
+                                                <td class="py-2">Density</td>
+                                                <td class="font-bold">2675.6 kg/m³</td>
+                                                <td class="font-bold">~2523 kg/m³*</td>
+                                                <td class="text-blue-500">-5.7% (Lighter)</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-2">Tensile Strength</td>
+                                                <td class="text-gray-400">--</td>
+                                                <td class="font-bold">4.61 MPa</td>
+                                                <td>--</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="alert alert-info mt-4 text-xs">
+                                    *Density reduction of 5.69% mentioned in Abstract.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card p-5 border-l-4 border-green-500">
+                            <h3 class="text-lg font-bold text-gray-900 mb-2">Primary Conclusion</h3>
+                            <p class="text-gray-700">
+                                The <strong>OPCD_OPW (5)</strong> formulation is considered optimal. It meets structural requirements (C25/30) while utilizing waste materials. Higher substitution levels result in unacceptable strength loss.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Limitations -->
+            <div id="tab-limitations" class="tab-content hidden">
+                <div class="space-y-8">
+                    <div class="card p-6">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4">⚠️ Limitations & Missing Data</h2>
+                        <ul class="space-y-4">
+                            <li class="flex items-start gap-3">
+                                <span class="text-2xl">🧪</span>
+                                <div>
+                                    <h4 class="font-bold text-gray-900">Durability Testing Absent</h4>
+                                    <p class="text-sm text-gray-600">No data on long-term creep, shrinkage, or chemical attack resistance, which is critical for organic aggregate concrete.</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <span class="text-2xl">📉</span>
+                                <div>
+                                    <h4 class="font-bold text-gray-900">Limited Range</h4>
+                                    <p class="text-sm text-gray-600">Study limited to 15% substitution; failure envelope beyond this point is steep.</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: PhD Context -->
+            <div id="tab-phd" class="tab-content hidden">
+                <div class="space-y-8">
+                    <div class="card p-6 border-t-4 border-green-500">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4">🎓 PhD Relevance</h2>
+                        <div class="space-y-4">
+                            <div class="bg-green-50 p-4 rounded border border-green-200">
+                                <h3 class="font-bold text-green-900 mb-2">Why this matters</h3>
+                                <p class="text-sm text-gray-700">Provides a clear "upper bound" (5%) for untreated organic aggregate replacement in structural concrete. High relevance for benchmarking agricultural waste valorization.</p>
+                            </div>
+                            <div class="bg-blue-50 p-4 rounded border border-blue-200">
+                                <h3 class="font-bold text-blue-900 mb-2">Recommended Actions</h3>
+                                <ul class="list-disc list-inside text-sm text-gray-700">
+                                    <li>Replicate the 5% mix to verify the C25 threshold.</li>
+                                    <li>Extend parameter space to include chemical pre-treatment of OPA to potentially increase substitution limits.</li>
+                                    <li>Conduct durability tests (missing in this paper) to validate service life.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Sustainability -->
+            <div id="tab-sustainability" class="tab-content hidden">
+                <div class="space-y-8">
+                    <div class="card p-6">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4">🌱 Sustainability Impact</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="bg-green-50 p-4 rounded border border-green-200">
+                                <h3 class="font-bold text-green-900">Waste Valorisation</h3>
+                                <p class="text-sm text-gray-700 mt-2">Utilization of both solid (OPA) and liquid (OMW) waste from the olive industry, reducing landfill burden.</p>
+                            </div>
+                            <div class="bg-yellow-50 p-4 rounded border border-yellow-200">
+                                <h3 class="font-bold text-yellow-900">Resource Conservation</h3>
+                                <p class="text-sm text-gray-700 mt-2">Reduces demand for natural sand (5% volume replacement), conserving river/quarry resources.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-100 border-t border-gray-200 py-8 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-gray-700 text-sm"><strong>PhD Scholar Dashboard</strong> • 2024</p>
+        </div>
+    </footer>
+
+    <script>
+        // Paper Data
+        const paperData = {
+            title: "Comprehensive experimental study on mechanical properties of a structural concrete lightened by olive pomace aggregates mixed with olive mill wastewater",
+            doi: "10.1108/WJE-12-2022-0514",
+            authors: ["El Boukhari", "Merroun", "Maalouf", "Bogard", "Kissi"],
+            year: 2024,
+            journal: "World Journal of Engineering"
+        };
+
+        let currentTab = 'overview';
+
+        function switchTab(tabName) {
+            currentTab = tabName;
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+            document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.btn-${tabName}`).classList.add('active');
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const progressFill = document.getElementById('progressFill');
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = (scrollTop / docHeight) * 100;
+            progressFill.style.width = `${Math.min(100, Math.max(0, progress))}%`;
+        }
+
+        function copyCitation() {
+            const citation = `${paperData.authors.join(', ')} (${paperData.year}). ${paperData.title}. ${paperData.journal}. https://doi.org/${paperData.doi}`;
+            navigator.clipboard.writeText(citation).then(() => alert('Citation copied!'));
+        }
+
+        function initializeCharts() {
+            // Chart 1: Chemical Composition (Oxides from JSON)
+            // Note: JSON provided C and Ti. Visualizing explicitly what was extracted.
+            const oxideCtx = document.getElementById('oxideChart');
+            if (oxideCtx) {
+                new Chart(oxideCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Carbon (C)', 'Titanium (Ti)', 'Others'],
+                        datasets: [{
+                            data: [47.09, 31.68, 21.23],
+                            backgroundColor: ['#22c55e', '#3b82f6', '#e5e7eb']
+                        }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false }
+                });
+            }
+
+            // Chart 2: Replacement Levels
+            const replacementCtx = document.getElementById('replacementChart');
+            if (replacementCtx) {
+                new Chart(replacementCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Control', '5%', '10%', '15%'],
+                        datasets: [
+                            {
+                                label: 'Natural Sand',
+                                data: [100, 95, 90, 85],
+                                backgroundColor: '#94a3b8'
+                            },
+                            {
+                                label: 'OPA',
+                                data: [0, 5, 10, 15],
+                                backgroundColor: '#16a34a'
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: { x: { stacked: true }, y: { stacked: true, max: 100 } }
+                    }
+                });
+            }
+
+            // Chart 3: Results Comparison
+            const resultsCtx = document.getElementById('resultsChart');
+            if (resultsCtx) {
+                new Chart(resultsCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Compressive Strength (MPa)', 'Elastic Modulus (GPa)'],
+                        datasets: [
+                            {
+                                label: 'Control',
+                                data: [33, 49.64],
+                                backgroundColor: '#3b82f6'
+                            },
+                            {
+                                label: '5% OPA (Optimum)',
+                                data: [25, 44.39],
+                                backgroundColor: '#16a34a'
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: { y: { beginAtZero: true } }
+                    }
+                });
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeCharts();
+            window.addEventListener('scroll', updateProgress);
+        });
+    </script>
+</body>
+</html>

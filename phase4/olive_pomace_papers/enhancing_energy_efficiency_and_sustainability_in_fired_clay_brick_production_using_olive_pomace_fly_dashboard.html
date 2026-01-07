@@ -1,0 +1,1480 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Paper Dashboard – Labaied et al. 2025 | Olive Pomace Ash Bricks</title>
+    <meta name="description" content="Academic research dashboard analyzing fired clay bricks with olive pomace fly ash and reduced firing temperatures">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['Lora', 'Georgia', 'serif'],
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        },
+                        accent: {
+                            50: '#fef3c7',
+                            100: '#fde68a',
+                            200: '#fcd34d',
+                            300: '#fbbf24',
+                            400: '#f59e0b',
+                            500: '#d97706',
+                            600: '#b45309',
+                            700: '#92400e',
+                            800: '#78350f',
+                            900: '#451a03',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* Base Typography */
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            font-size: 16px;
+            line-height: 1.75;
+            color: #1e293b;
+            background: #ffffff;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Lora', Georgia, serif;
+            font-weight: 600;
+            line-height: 1.3;
+            color: #0f172a;
+        }
+        
+        h1 { font-size: 2.25rem; margin-bottom: 1rem; }
+        h2 { font-size: 1.875rem; margin-bottom: 0.875rem; }
+        h3 { font-size: 1.5rem; margin-bottom: 0.75rem; }
+        h4 { font-size: 1.25rem; margin-bottom: 0.625rem; }
+        
+        /* Academic Card Style */
+        .card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            transition: box-shadow 0.2s ease;
+        }
+        
+        .card:hover {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        
+        .card-elevated {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Badge System */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.375rem 0.875rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border: 1.5px solid;
+        }
+        
+        .badge-core {
+            background: #dbeafe;
+            color: #1e40af;
+            border-color: #3b82f6;
+        }
+        
+        .badge-experimental {
+            background: #fef3c7;
+            color: #92400e;
+            border-color: #f59e0b;
+        }
+        
+        .badge-interpretive {
+            background: #fce7f3;
+            color: #9f1239;
+            border-color: #f472b6;
+        }
+        
+        .badge-extracted {
+            background: #dcfce7;
+            color: #166534;
+            border-color: #22c55e;
+        }
+        
+        /* Tab Navigation */
+        .tab-nav {
+            display: flex;
+            flex-wrap: nowrap;
+            justify-content: center;
+            align-items: center;
+            overflow-x: auto;
+            gap: 0.25rem;
+            border-bottom: 2px solid #e2e8f0;
+            padding: 0.75rem 0.25rem;
+            margin-bottom: 2rem;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        .tab-nav::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .tab-button {
+            flex: 0 0 auto;
+            padding: 0.35rem 0.6rem;
+            border-radius: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+            background: #f8fafc;
+            color: #64748b;
+            white-space: nowrap;
+        }
+        
+        .tab-button:hover {
+            background: #f1f5f9;
+            color: #334155;
+        }
+        
+        .tab-button.active {
+            color: #ffffff;
+        }
+
+        .tab-button.active.btn-info { background: #64748b; border-color: #475569; box-shadow: 0 2px 4px rgba(100, 116, 139, 0.3); }
+        .tab-button.active.btn-overview { background: #2563eb; border-color: #1d4ed8; box-shadow: 0 2px 4px rgba(37, 99, 235, 0.3); }
+        .tab-button.active.btn-materials { background: #16a34a; border-color: #15803d; box-shadow: 0 2px 4px rgba(22, 163, 74, 0.3); }
+        .tab-button.active.btn-formulation { background: #ea580c; border-color: #c2410c; box-shadow: 0 2px 4px rgba(234, 88, 12, 0.3); }
+        .tab-button.active.btn-testing { background: #4f46e5; border-color: #4338ca; box-shadow: 0 2px 4px rgba(79, 70, 229, 0.3); }
+        .tab-button.active.btn-results { background: #0891b2; border-color: #0e7490; box-shadow: 0 2px 4px rgba(8, 145, 178, 0.3); }
+        .tab-button.active.btn-limitations { background: #dc2626; border-color: #b91c1c; box-shadow: 0 2px 4px rgba(220, 38, 38, 0.3); }
+        .tab-button.active.btn-phd { background: #9333ea; border-color: #7e22ce; box-shadow: 0 2px 4px rgba(147, 51, 234, 0.3); }
+        .tab-button.active.btn-sustainability { background: #059669; border-color: #047857; box-shadow: 0 2px 4px rgba(5, 150, 105, 0.3); }
+        
+        /* Data Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+        }
+        
+        thead {
+            background: #f8fafc;
+            border-bottom: 2px solid #cbd5e1;
+        }
+        
+        th {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: #475569;
+            font-size: 0.8125rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        tbody tr:hover {
+            background: #f8fafc;
+        }
+        
+        /* Metric Cards */
+        .metric-card {
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            border: 1px solid #e2e8f0;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        
+        /* Progress Bar */
+        .progress-bar {
+            height: 3px;
+            background: #e2e8f0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 9999;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #0ea5e9 0%, #06b6d4 100%);
+            transition: width 0.15s ease-out;
+            box-shadow: 0 0 10px rgba(14, 165, 233, 0.5);
+        }
+        
+        /* Alert Boxes */
+        .alert {
+            padding: 1rem 1.25rem;
+            border-radius: 0.5rem;
+            border-left: 4px solid;
+            font-size: 0.875rem;
+            line-height: 1.6;
+        }
+        
+        .alert-info {
+            background: #dbeafe;
+            border-color: #3b82f6;
+            color: #1e3a8a;
+        }
+        
+        .alert-warning {
+            background: #fef3c7;
+            border-color: #f59e0b;
+            color: #78350f;
+        }
+        
+        .alert-success {
+            background: #dcfce7;
+            border-color: #22c55e;
+            color: #14532d;
+        }
+        
+        .alert-danger {
+            background: #fee2e2;
+            border-color: #ef4444;
+            color: #7f1d1d;
+        }
+        
+        /* Section Anchors */
+        .section-anchor {
+            scroll-margin-top: 100px;
+        }
+        
+        /* Print Styles */
+        @media print {
+            body {
+                font-size: 11pt;
+                line-height: 1.5;
+            }
+            
+            .no-print {
+                display: none !important;
+            }
+            
+            .card {
+                break-inside: avoid;
+                border: 1px solid #cbd5e1;
+                box-shadow: none;
+            }
+            
+            h2, h3, h4 {
+                break-after: avoid;
+            }
+            
+            .page-break {
+                page-break-before: always;
+            }
+            
+            .tab-content {
+                display: block !important;
+            }
+        }
+        
+        /* Code Blocks */
+        code {
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Courier New', monospace;
+            background: #f1f5f9;
+            padding: 0.125rem 0.375rem;
+            border-radius: 0.25rem;
+            font-size: 0.875em;
+            color: #0369a1;
+        }
+        
+        /* Tooltip */
+        [title] {
+            cursor: help;
+            text-decoration: underline;
+            text-decoration-style: dotted;
+            text-decoration-color: #94a3b8;
+        }
+        
+        /* Sticky Navigation */
+        .sticky-nav {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        /* Icon styling */
+        .icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            h1 { font-size: 1.75rem; }
+            h2 { font-size: 1.5rem; }
+            h3 { font-size: 1.25rem; }
+            
+            .tab-nav {
+                justify-content: center;
+            }
+        }
+        
+        /* Smooth transitions */
+        * {
+            transition: background-color 0.15s ease;
+        }
+        
+        /* Data provenance markers */
+        .provenance-marker {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.625rem;
+            padding: 0.125rem 0.375rem;
+            border-radius: 0.25rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .provenance-extracted {
+            background: #dcfce7;
+            color: #166534;
+        }
+        
+        .provenance-derived {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .provenance-interpretive {
+            background: #fce7f3;
+            color: #9f1239;
+        }
+        
+        /* Enhanced accessibility */
+        a:focus, button:focus {
+            outline: 2px solid #0ea5e9;
+            outline-offset: 2px;
+        }
+        
+        /* Loading states */
+        .skeleton {
+            background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    
+    <!-- Progress Bar -->
+    <div class="progress-bar no-print">
+        <div id="progressFill" class="progress-fill" style="width: 0%"></div>
+    </div>
+    
+    <!-- Navigation Header -->
+    <nav class="sticky-nav no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center shadow-md">
+                        <span class="text-white font-bold text-xl">📄</span>
+                    </div>
+                    <div>
+                        <h1 class="text-base font-bold text-gray-900">Research Paper Dashboard</h1>
+                        <p class="text-xs text-gray-500">Olive Pomace Fly Ash Bricks</p>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="window.print()" class="px-3 py-2 rounded-lg bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 text-sm font-medium transition flex items-center gap-2">
+                        <span>🖨️</span> Print
+                    </button>
+                    <button onclick="copyCitation()" class="px-3 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium transition flex items-center gap-2">
+                        <span>📋</span> Citation
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+
+        <!-- Hero Section -->
+        <div class="card card-elevated p-8 mb-8">
+            <div class="flex items-start gap-6 mb-6">
+                <div class="flex-shrink-0">
+                    <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl flex items-center justify-center shadow-lg">
+                        <span class="text-4xl">🧱</span>
+                    </div>
+                </div>
+                <div class="flex-1">
+                    <div class="flex flex-wrap gap-2 mb-3">
+                        <span class="badge badge-experimental">🧪 Experimental Study</span>
+                        <span class="badge badge-core">Core Dataset</span>
+                        <span class="badge badge-extracted">Tier A Data</span>
+                    </div>
+                    <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4 leading-tight">
+                        Enhancing Energy Efficiency and Sustainability in Fired Clay Brick Production Using Olive Pomace Fly Ash
+                    </h1>
+                    <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-4">
+                        <span class="flex items-center gap-1">
+                            <span class="icon">👥</span>
+                            I. Labaied, O. Douzane, G. Promis
+                        </span>
+                        <span>•</span>
+                        <span>📅 2025</span>
+                        <span>•</span>
+                        <span>📖 RILEM Bookseries (Vol. 61)</span>
+                    </div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="text-sm text-gray-500 font-medium">DOI:</span>
+                        <code class="text-sm">10.1007/978-3-031-92874-1_38</code>
+                        <a href="https://doi.org/10.1007/978-3-031-92874-1_38" 
+                           target="_blank" 
+                           class="px-3 py-1 rounded bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium transition">
+                            🔗 Open Paper
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PhD Context Banner -->
+            <div class="bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl p-6 border border-purple-200">
+                <div class="flex flex-col md:flex-row items-start gap-6">
+                    <div class="flex-shrink-0">
+                        <div class="w-16 h-16 bg-purple-100 rounded-xl flex items-center justify-center border-2 border-purple-300 shadow-sm">
+                            <span class="text-3xl">💡</span>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-xl font-bold text-gray-900 mb-3 flex items-center gap-2">
+                            <span>🎓</span> Core Research Takeaway
+                            <span class="provenance-marker provenance-interpretive ml-auto">⚡ Synthesized</span>
+                        </h3>
+                        <p class="text-gray-700 leading-relaxed mb-4">
+                            Incorporating <strong>3% Olive Pomace Combustion Fly Ash (OPCFA)</strong> allowed reducing the firing temperature of clay bricks from 850°C to <strong>750°C</strong>, significantly saving energy while maintaining a compressive strength of <strong>17 MPa</strong> and reducing thermal conductivity by 20% compared to standard firing.
+                        </p>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="bg-white rounded-lg p-4 border border-green-200 hover:border-green-400 transition">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="w-1 h-10 bg-green-500 rounded-full"></div>
+                                    <div class="text-xs text-green-700 uppercase tracking-widest font-bold">🎯 Research Alignment</div>
+                                </div>
+                                <div class="text-lg font-bold text-gray-900 pl-4">Process Optimization + Waste Valorisation</div>
+                            </div>
+                            
+                            <div class="bg-white rounded-lg p-4 border border-purple-200 hover:border-purple-400 transition">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="w-1 h-10 bg-purple-500 rounded-full"></div>
+                                    <div class="text-xs text-purple-700 uppercase tracking-widest font-bold">🔬 Key Innovation</div>
+                                </div>
+                                <div class="text-lg font-bold text-gray-900 pl-4">Energy Reduction <span class="text-sm font-normal text-gray-600">(via Fluxing Agents)</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="metric-card">
+                <div class="text-center">
+                    <div class="text-4xl mb-3">🔥</div>
+                    <div class="text-3xl font-bold text-blue-600 mb-1">4</div>
+                    <div class="text-sm font-medium text-gray-600 mb-2">Process Variants</div>
+                    <div class="text-xs text-gray-500">Firing Temps: 750, 800, 850°C</div>
+                    <span class="provenance-marker provenance-extracted mt-2">✓ Extracted</span>
+                </div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="text-center">
+                    <div class="text-4xl mb-3">⚖️</div>
+                    <div class="text-3xl font-bold text-green-600 mb-1">3%</div>
+                    <div class="text-sm font-medium text-gray-600 mb-2">Ash Replacement</div>
+                    <div class="text-xs text-gray-500">Fixed dosage (by mass)</div>
+                    <span class="provenance-marker provenance-extracted mt-2">✓ Extracted</span>
+                </div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="text-center">
+                    <div class="text-4xl mb-3">📄</div>
+                    <div class="text-3xl font-bold text-purple-600 mb-1">16</div>
+                    <div class="text-sm font-medium text-gray-600 mb-2">Data Points</div>
+                    <div class="text-xs text-gray-500">Quantitative Results Extracted</div>
+                    <span class="provenance-marker provenance-extracted mt-2">✓ Extracted</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="card p-6 mb-8">
+            <div class="tab-nav">
+                <button class="tab-button btn-info" onclick="switchTab('info')">
+                    ℹ️ Info
+                </button>
+                <button class="tab-button active btn-overview" onclick="switchTab('overview')">
+                    📋 Overview
+                </button>
+                <button class="tab-button btn-materials" onclick="switchTab('materials')">
+                    🫒 Materials
+                </button>
+                <button class="tab-button btn-formulation" onclick="switchTab('formulation')">
+                    🧱 Formulation
+                </button>
+                <button class="tab-button btn-testing" onclick="switchTab('testing')">
+                    ⚙️ Testing
+                </button>
+                <button class="tab-button btn-results" onclick="switchTab('results')">
+                    📊 Results
+                </button>
+                <button class="tab-button btn-limitations" onclick="switchTab('limitations')">
+                    ⚠️ Limitations
+                </button>
+                <button class="tab-button btn-phd" onclick="switchTab('phd')">
+                    🎓 PhD Context
+                </button>
+                <button class="tab-button btn-sustainability" onclick="switchTab('sustainability')">
+                    🌱 Sustainability
+                </button>
+            </div>
+
+            <!-- Tab Content: Info -->
+            <div id="tab-info" class="tab-content hidden">
+                <div class="space-y-8">
+                    <div class="card card-elevated p-6 border-l-4 border-purple-500">
+                        <div class="flex items-start gap-4">
+                            <div class="flex-shrink-0">
+                                <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
+                                    <span class="text-2xl">ℹ️</span>
+                                </div>
+                            </div>
+                            <div class="flex-1">
+                                <h2 class="text-xl font-bold text-gray-900 mb-2">📊 Data Provenance &amp; Interpretation Notice</h2>
+                                <p class="text-sm text-gray-700 leading-relaxed mb-4">
+                                    This dashboard extracts, synthesizes, and interprets data from the original research paper. All extracted values are traced to their source (page/table/figure). Interpretive statements are explicitly labeled. This is a <strong>research intelligence artifact</strong> intended for academic review, not a substitute for the original publication.
+                                </p>
+                                <div class="flex flex-wrap gap-2 mb-2">
+                                    <span class="provenance-marker provenance-extracted">✓ Extracted: Verbatim from paper</span>
+                                    <span class="provenance-marker provenance-derived">≈ Derived: Calculated from reported data</span>
+                                    <span class="provenance-marker provenance-interpretive">⚡ Interpretive: Author-level synthesis</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card p-6">
+                        <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>🔤</span> Acronym &amp; Abbreviation Legend
+                        </h2>
+                        <div class="overflow-x-auto">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Abbreviation</th>
+                                        <th>Meaning</th>
+                                        <th>Context</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="font-semibold">OPCFA</td>
+                                        <td>Olive Pomace Combustion Fly Ash</td>
+                                        <td>Primary waste material</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-semibold">NC</td>
+                                        <td>Natural Clay</td>
+                                        <td>Matrix material (Control)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-semibold">LOI</td>
+                                        <td>Loss on Ignition</td>
+                                        <td>Thermal property indicator</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-semibold">XRF</td>
+                                        <td>X-ray Fluorescence</td>
+                                        <td>Chemical composition analysis</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-semibold">WA</td>
+                                        <td>Water Absorption</td>
+                                        <td>Durability/Porosity metric</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Overview -->
+            <div id="tab-overview" class="tab-content">
+                <div class="space-y-8">
+                    
+                    <!-- Mini Navigation -->
+                    <div class="flex flex-wrap gap-2 p-3 bg-gray-50 rounded-lg border border-gray-200">
+                        <span class="text-xs text-gray-600 font-medium">Quick Jump:</span>
+                        <button onclick="scrollToSection('objective')" class="text-xs px-2 py-1 rounded bg-white border border-gray-300 hover:bg-gray-100 transition">Objective</button>
+                        <button onclick="scrollToSection('system')" class="text-xs px-2 py-1 rounded bg-white border border-gray-300 hover:bg-gray-100 transition">System</button>
+                        <button onclick="scrollToSection('scope')" class="text-xs px-2 py-1 rounded bg-white border border-gray-300 hover:bg-gray-100 transition">Scope</button>
+                    </div>
+                    
+                    <!-- Research Objective -->
+                    <div id="objective" class="section-anchor">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>🎯</span> Research Objective & Problem Statement
+                        </h2>
+                        <div class="card p-6">
+                            <div class="space-y-6">
+                                <div>
+                                    <div class="flex items-center justify-between mb-3">
+                                        <h3 class="text-lg font-semibold text-gray-900">Primary Objective</h3>
+                                        <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                                    </div>
+                                    <p class="text-gray-700 leading-relaxed bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+                                        "Evaluate the impact of incorporating olive pomace ashes on reducing the firing temperature of bricks."
+                                    </p>
+                                </div>
+                                
+                                <div>
+                                    <div class="flex items-center justify-between mb-3">
+                                        <h3 class="text-lg font-semibold text-gray-900">Problem Definition</h3>
+                                        <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                                    </div>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div class="bg-orange-50 p-4 rounded-lg border-l-4 border-orange-500">
+                                            <h4 class="font-bold text-gray-900 mb-2">Technical Challenge</h4>
+                                            <p class="text-sm text-gray-700">High energy consumption and production costs due to elevated firing temperatures required for conventional clay bricks.</p>
+                                        </div>
+                                        <div class="bg-green-50 p-4 rounded-lg border-l-4 border-green-500">
+                                            <h4 class="font-bold text-gray-900 mb-2">Environmental Challenge</h4>
+                                            <p class="text-sm text-gray-700">Substantial carbon emissions associated with brick firing and management of olive industry waste.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Material System Context -->
+                    <div id="system" class="section-anchor">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>🧱</span> Material System Context
+                        </h2>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="card p-6 border-t-4 border-blue-500">
+                                <div class="text-3xl mb-3">🔥</div>
+                                <h3 class="text-base font-bold text-gray-900 mb-2">Primary System</h3>
+                                <p class="text-lg font-bold text-blue-600">Fired Clay Brick</p>
+                                <p class="text-xs text-gray-500 mt-2">Ceramic matrix</p>
+                                <span class="provenance-marker provenance-extracted mt-3">✓ Extracted</span>
+                            </div>
+                            
+                            <div class="card p-6 border-t-4 border-green-500">
+                                <div class="text-3xl mb-3">🏗️</div>
+                                <h3 class="text-base font-bold text-gray-900 mb-2">Functional Role</h3>
+                                <p class="text-lg font-bold text-green-600">Structural/Load Bearing</p>
+                                <p class="text-xs text-gray-500 mt-2">Construction standards applied</p>
+                                <span class="provenance-marker provenance-extracted mt-3">✓ Extracted</span>
+                            </div>
+                            
+                            <div class="card p-6 border-t-4 border-purple-500">
+                                <div class="text-3xl mb-3">📊</div>
+                                <h3 class="text-base font-bold text-gray-900 mb-2">Baseline Reference</h3>
+                                <p class="text-lg font-bold text-purple-600">Conventional Brick</p>
+                                <p class="text-xs text-gray-500 mt-2">100% NC fired at 850°C</p>
+                                <span class="provenance-marker provenance-extracted mt-3">✓ Extracted</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Research Scope -->
+                    <div id="scope" class="section-anchor">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>🔍</span> Research Scope & Context
+                        </h2>
+                        <div class="card p-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <div class="flex items-center justify-between mb-3">
+                                        <h3 class="text-lg font-semibold text-gray-900">What's in Scope</h3>
+                                        <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                                    </div>
+                                    <p class="text-gray-700 leading-relaxed">
+                                        Incorporation of 3% OPCFA, varying firing temperature (750-850°C), and physical/mechanical characterization.
+                                    </p>
+                                </div>
+                                <div>
+                                    <div class="flex items-center justify-between mb-3">
+                                        <h3 class="text-lg font-semibold text-gray-900">Geographical Context</h3>
+                                        <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                                    </div>
+                                    <p class="text-gray-700 leading-relaxed">
+                                        🇹🇳 <strong>Tunisia</strong> (Zouila factory source)
+                                    </p>
+                                    <p class="text-xs text-gray-500 mt-2">Utilization of local illitic clay and olive pomace waste.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Materials -->
+            <div id="tab-materials" class="tab-content hidden">
+                <div class="space-y-8">
+                    
+                    <!-- Primary Waste Materials -->
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>🫒</span> Primary Waste Materials
+                        </h2>
+                        
+                        <!-- Olive Pomace Fly Ash -->
+                        <div class="card p-6 mb-6 border-l-4 border-green-500">
+                            <div class="flex items-start gap-4 mb-4">
+                                <div class="text-5xl">🫒</div>
+                                <div class="flex-1">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <h3 class="text-xl font-bold text-gray-900">Olive Pomace Combustion Fly Ash (OPCFA)</h3>
+                                        <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                                    </div>
+                                    <p class="text-gray-700 leading-relaxed mb-4 bg-green-50 p-3 rounded">
+                                        "Collected from a multicyclone dust collector at the 'Zouila' olive oil factory in Tunisia."
+                                    </p>
+                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                        <div class="bg-gray-50 p-3 rounded border border-gray-200">
+                                            <div class="text-xs text-gray-500 mb-1">Material Category</div>
+                                            <div class="text-sm font-bold text-gray-900">Pomace Ash</div>
+                                        </div>
+                                        <div class="bg-gray-50 p-3 rounded border border-gray-200">
+                                            <div class="text-xs text-gray-500 mb-1">Physical Form</div>
+                                            <div class="text-sm font-bold text-gray-900">Coarse Fly Ash</div>
+                                        </div>
+                                        <div class="bg-gray-50 p-3 rounded border border-gray-200">
+                                            <div class="text-xs text-gray-500 mb-1">Origin</div>
+                                            <div class="text-sm font-bold text-gray-900">🇹🇳 Tunisia</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Material Characterization -->
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <h2 class="text-2xl font-bold text-gray-900 flex items-center gap-2">
+                                <span>🔬</span> Material Characterization
+                            </h2>
+                            <div class="text-xs px-3 py-1 rounded-full bg-green-100 border border-green-300 text-green-800 font-semibold">
+                                Evidence: High Quality • Method: XRF
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <!-- Chemical Composition -->
+                            <div class="card p-6">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h3 class="text-lg font-bold text-gray-900 flex items-center gap-2">
+                                        <span>🔬</span> Chemical Composition (OPCFA)
+                                    </h3>
+                                    <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                                </div>
+                                <div class="space-y-3">
+                                    <div class="flex justify-between items-center p-3 bg-gray-50 rounded">
+                                        <span class="text-sm text-gray-700 font-medium">SiO₂</span>
+                                        <span class="text-sm font-bold text-gray-900">32.27%</span>
+                                    </div>
+                                    <div class="flex justify-between items-center p-3 bg-gray-50 rounded">
+                                        <span class="text-sm text-gray-700 font-medium">CaO</span>
+                                        <span class="text-sm font-bold text-gray-900">19.91%</span>
+                                    </div>
+                                    <div class="flex justify-between items-center p-3 bg-gray-50 rounded">
+                                        <span class="text-sm text-gray-700 font-medium">K₂O</span>
+                                        <span class="text-sm font-bold text-gray-900">7.65%</span>
+                                    </div>
+                                    <div class="flex justify-between items-center p-3 bg-gray-50 rounded">
+                                        <span class="text-sm text-gray-700 font-medium">Na₂O</span>
+                                        <span class="text-sm font-bold text-gray-900">2.93%</span>
+                                    </div>
+                                    <div class="flex justify-between items-center p-3 bg-gray-50 rounded">
+                                        <span class="text-sm text-gray-700 font-medium">LOI (Loss on Ignition)</span>
+                                        <span class="text-sm font-bold text-orange-600">26.05%</span>
+                                    </div>
+                                    <div class="alert alert-info text-xs">
+                                        <strong>Fluxing Oxides:</strong> High alkali (K2O, Na2O) and CaO content acts as flux, promoting vitrification at lower temperatures.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Chart: Oxide Composition -->
+                            <div class="card p-6">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h3 class="text-lg font-bold text-gray-900">📊 Oxide Distribution</h3>
+                                    <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                                </div>
+                                <div class="h-64">
+                                    <canvas id="oxideChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Formulation -->
+            <div id="tab-formulation" class="tab-content hidden">
+                <div class="space-y-8">
+                    
+                    <!-- Mix Design Overview -->
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>🧱</span> Formulation & Experimental Conditions
+                        </h2>
+                        
+                        <div class="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-6 border border-blue-200 mb-6">
+                            <div class="grid grid-cols-3 gap-4 text-center">
+                                <div>
+                                    <div class="text-3xl mb-2">🔥</div>
+                                    <div class="text-2xl font-bold text-gray-900">3</div>
+                                    <div class="text-xs text-gray-600 mt-1">Firing Temps</div>
+                                </div>
+                                <div>
+                                    <div class="text-3xl mb-2">⚖️</div>
+                                    <div class="text-2xl font-bold text-green-600">3%</div>
+                                    <div class="text-xs text-gray-600 mt-1">OPCFA Addition</div>
+                                </div>
+                                <div>
+                                    <div class="text-3xl mb-2">🧱</div>
+                                    <div class="text-2xl font-bold text-blue-600">Clay</div>
+                                    <div class="text-xs text-gray-600 mt-1">Base Matrix</div>
+                                </div>
+                            </div>
+                            <div class="mt-4 text-center">
+                                <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                            </div>
+                        </div>
+
+                        <!-- Processing Steps -->
+                        <div class="card p-6 mb-6">
+                            <h3 class="text-lg font-bold text-gray-900 mb-4">Processing Sequence</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div class="bg-gray-50 p-4 rounded border border-gray-200">
+                                    <div class="font-bold text-blue-600 mb-1">1. Preparation</div>
+                                    <p class="text-sm text-gray-600">Grinding raw clay to ≤500 µm. Mixing with 3% OPCFA (by mass).</p>
+                                </div>
+                                <div class="bg-gray-50 p-4 rounded border border-gray-200">
+                                    <div class="font-bold text-blue-600 mb-1">2. Molding</div>
+                                    <p class="text-sm text-gray-600">Manual molding of 100×20×20 mm samples. Drying at 135°C.</p>
+                                </div>
+                                <div class="bg-gray-50 p-4 rounded border border-gray-200">
+                                    <div class="font-bold text-blue-600 mb-1">3. Firing</div>
+                                    <p class="text-sm text-gray-600">Heating rate 2°C/min. Holding for 2h at 750, 800, or 850°C.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Mix Variants Table -->
+                        <div class="card p-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-lg font-bold text-gray-900 flex items-center gap-2">
+                                    <span>📊</span> Experimental Matrix
+                                </h3>
+                                <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Variant ID</th>
+                                            <th>Clay Type</th>
+                                            <th>OPCFA Content</th>
+                                            <th>Firing Temperature</th>
+                                            <th>Condition</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="bg-blue-50 font-bold">
+                                            <td>Control (850°C)</td>
+                                            <td>Natural Clay (NC)</td>
+                                            <td>0%</td>
+                                            <td>850 °C</td>
+                                            <td>Reference</td>
+                                        </tr>
+                                        <tr>
+                                            <td>3% OPCFA (850°C)</td>
+                                            <td>NC</td>
+                                            <td>3%</td>
+                                            <td>850 °C</td>
+                                            <td>Standard Fire</td>
+                                        </tr>
+                                        <tr class="bg-green-50">
+                                            <td>3% OPCFA (800°C)</td>
+                                            <td>NC</td>
+                                            <td>3%</td>
+                                            <td>800 °C</td>
+                                            <td>Reduced Fire</td>
+                                        </tr>
+                                        <tr class="bg-green-100 font-bold">
+                                            <td class="text-green-800">3% OPCFA (750°C)</td>
+                                            <td>NC</td>
+                                            <td>3%</td>
+                                            <td>750 °C</td>
+                                            <td>Low Fire</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Testing -->
+            <div id="tab-testing" class="tab-content hidden">
+                <div class="space-y-8">
+                    
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>⚙️</span> Characterization & Testing Protocols
+                        </h2>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Specimen Details -->
+                            <div class="card p-6">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h3 class="text-lg font-bold text-gray-900">Specimen Details</h3>
+                                    <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                                </div>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div class="bg-gray-50 p-3 rounded">
+                                        <div class="text-xs text-gray-500">Geometry</div>
+                                        <div class="text-sm font-bold">Rectangular Bar</div>
+                                    </div>
+                                    <div class="bg-gray-50 p-3 rounded">
+                                        <div class="text-xs text-gray-500">Dimensions</div>
+                                        <div class="text-sm font-bold">100 × 20 × 20 mm</div>
+                                    </div>
+                                    <div class="bg-gray-50 p-3 rounded">
+                                        <div class="text-xs text-gray-500">Replicates</div>
+                                        <div class="text-sm font-bold">3 per test</div>
+                                    </div>
+                                    <div class="bg-gray-50 p-3 rounded">
+                                        <div class="text-xs text-gray-500">Standards</div>
+                                        <div class="text-sm font-bold">UNE 67-027 (WA)</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Testing Methods -->
+                            <div class="card p-6">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h3 class="text-lg font-bold text-gray-900">Methods Used</h3>
+                                    <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                                </div>
+                                <div class="space-y-2">
+                                    <div class="flex justify-between items-center bg-gray-50 p-2 rounded">
+                                        <span class="text-sm">Compressive Strength</span>
+                                        <code class="text-xs">Mechanical</code>
+                                    </div>
+                                    <div class="flex justify-between items-center bg-gray-50 p-2 rounded">
+                                        <span class="text-sm">Water Absorption</span>
+                                        <code class="text-xs">UNE 67-027</code>
+                                    </div>
+                                    <div class="flex justify-between items-center bg-gray-50 p-2 rounded">
+                                        <span class="text-sm">Thermal Conductivity</span>
+                                        <code class="text-xs">Measured</code>
+                                    </div>
+                                    <div class="flex justify-between items-center bg-gray-50 p-2 rounded">
+                                        <span class="text-sm">Microstructure</span>
+                                        <code class="text-xs">BET Porosimetry</code>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Results -->
+            <div id="tab-results" class="tab-content hidden">
+                <div class="space-y-8">
+                    
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-2xl font-bold text-gray-900 flex items-center gap-2">
+                            <span>📊</span> Quantitative Results
+                        </h2>
+                        <div class="text-xs px-3 py-1 rounded-full bg-green-100 border border-green-300 text-green-800 font-semibold">
+                            Source: Table 3 • Traceable
+                        </div>
+                    </div>
+
+                    <!-- Consolidated Results Table -->
+                    <div class="card p-6 mb-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-bold text-gray-900">Results Matrix</h3>
+                            <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Variant</th>
+                                        <th>Firing Temp (°C)</th>
+                                        <th>Density (kg/m³)</th>
+                                        <th>Water Abs. (%)</th>
+                                        <th>Comp. Strength (MPa)</th>
+                                        <th>Thermal Cond. (W/mK)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="bg-blue-50 font-bold">
+                                        <td>100% NC</td>
+                                        <td>850</td>
+                                        <td>1874 ± 40</td>
+                                        <td>11.20 ± 0.17</td>
+                                        <td>22.20 ± 2.11</td>
+                                        <td>0.68 ± 0.03</td>
+                                    </tr>
+                                    <tr>
+                                        <td>3% OPCFA</td>
+                                        <td>850</td>
+                                        <td>1840 ± 4</td>
+                                        <td>11.80 ± 0.26</td>
+                                        <td>22.63 ± 2.94</td>
+                                        <td>0.65 ± 0.007</td>
+                                    </tr>
+                                    <tr>
+                                        <td>3% OPCFA</td>
+                                        <td>800</td>
+                                        <td>1827 ± 3</td>
+                                        <td>13.34 ± 0.42</td>
+                                        <td>20.70 ± 2.94</td>
+                                        <td>0.60 ± 0.02</td>
+                                    </tr>
+                                    <tr class="bg-green-50 font-bold">
+                                        <td class="text-green-800">3% OPCFA</td>
+                                        <td class="text-green-800">750</td>
+                                        <td>1756 ± 16</td>
+                                        <td>15.70 ± 0.64</td>
+                                        <td>17.09 ± 2.94</td>
+                                        <td>0.52 ± 0.04</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Charts Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Strength Chart -->
+                        <div class="card p-6">
+                            <h3 class="text-lg font-bold text-gray-900 mb-4">Compressive Strength vs Temperature</h3>
+                            <div class="h-64">
+                                <canvas id="strengthChart"></canvas>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-2 text-center">
+                                Strength decreases with temperature but remains >17 MPa at 750°C.
+                            </p>
+                        </div>
+
+                        <!-- Thermal Conductivity Chart -->
+                        <div class="card p-6">
+                            <h3 class="text-lg font-bold text-gray-900 mb-4">Thermal Conductivity vs Temperature</h3>
+                            <div class="h-64">
+                                <canvas id="thermalChart"></canvas>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-2 text-center">
+                                Lower firing temperature yields better insulation (lower conductivity).
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Key Trends -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="card p-5 border-l-4 border-green-500">
+                            <h3 class="font-bold text-gray-900 mb-2">Energy & Insulation Trade-off</h3>
+                            <p class="text-sm text-gray-700">
+                                Reducing temperature to 750°C lowers thermal conductivity by <strong>~20%</strong> (0.65 to 0.52 W/mK), significantly improving insulation properties.
+                            </p>
+                        </div>
+                        <div class="card p-5 border-l-4 border-orange-500">
+                            <h3 class="font-bold text-gray-900 mb-2">Porosity Impact</h3>
+                            <p class="text-sm text-gray-700">
+                                Lower firing temperatures led to higher water absorption (11.8% to 15.7%), indicating increased porosity due to incomplete vitrification.
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Tab Content: Limitations -->
+            <div id="tab-limitations" class="tab-content hidden">
+                <div class="space-y-8">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>⚠️</span> Limitations & Risks
+                        </h2>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                            <div class="card p-5 border-l-4 border-red-500">
+                                <div class="flex items-start gap-3">
+                                    <span class="text-2xl">📉</span>
+                                    <div>
+                                        <h3 class="text-base font-bold text-gray-900 mb-2">Statistical Robustness</h3>
+                                        <p class="text-sm text-gray-700">Authors note limited statistical population (3 samples per test). Standard deviations are reported but sample size is small.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card p-5 border-l-4 border-orange-500">
+                                <div class="flex items-start gap-3">
+                                    <span class="text-2xl">⏳</span>
+                                    <div>
+                                        <h3 class="text-base font-bold text-gray-900 mb-2">Durability Concerns</h3>
+                                        <p class="text-sm text-gray-700">High carbonate content in ash could potentially lead to long-term transformations (cracks). No freeze-thaw testing reported.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card p-5 border-l-4 border-yellow-500">
+                                <div class="flex items-start gap-3">
+                                    <span class="text-2xl">🎯</span>
+                                    <div>
+                                        <h3 class="text-base font-bold text-gray-900 mb-2">Single Dosage</h3>
+                                        <p class="text-sm text-gray-700">Only 3% replacement level tested. Optimal dosage may be higher or lower.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: PhD Context -->
+            <div id="tab-phd" class="tab-content hidden">
+                <div class="space-y-8">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>🎓</span> PhD Context & Actionable Takeaways
+                        </h2>
+
+                        <!-- Alignment cards -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                            <div class="card p-5 border-t-4 border-green-500">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="w-1 h-10 bg-green-500 rounded-full"></div>
+                                    <div class="text-xs text-green-700 uppercase tracking-widest font-bold">🎯 Use in Thesis</div>
+                                </div>
+                                <div class="text-xl font-bold text-gray-900 pl-4 mb-2">Energy-Strength Tradeoff Data</div>
+                                <p class="text-sm text-gray-700 pl-4">
+                                    Use as a data point for modeling the relationship between firing temperature and compressive strength in ash-amended bricks.
+                                </p>
+                            </div>
+                            
+                            <div class="card p-5 border-t-4 border-purple-500">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="w-1 h-10 bg-purple-500 rounded-full"></div>
+                                    <div class="text-xs text-purple-700 uppercase tracking-widest font-bold">🧪 Experimental Design</div>
+                                </div>
+                                <div class="text-xl font-bold text-gray-900 pl-4 mb-2">Low-Temp Validation</div>
+                                <p class="text-sm text-gray-700 pl-4">
+                                    Validates the experimental strategy of lowering firing temperature when using high-alkali fluxing agents (olive ash).
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Recommended Actions -->
+                        <div class="card p-6 border-t-4 border-blue-500">
+                            <h3 class="text-lg font-bold text-gray-900 mb-3">Recommended Next Actions</h3>
+                            <ul class="space-y-2 text-sm text-gray-700">
+                                <li class="flex items-start gap-2">
+                                    <span class="text-blue-500 font-bold">1.</span>
+                                    <span><strong>Replicate:</strong> Replicate the 750°C firing condition to verify strength retention.</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span class="text-blue-500 font-bold">2.</span>
+                                    <span><strong>Extend:</strong> Test durability of the 750°C bricks (especially carbonate expansion) which is missing here.</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span class="text-blue-500 font-bold">3.</span>
+                                    <span><strong>Model:</strong> Include the 20% thermal conductivity reduction in building energy simulations.</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Sustainability -->
+            <div id="tab-sustainability" class="tab-content hidden">
+                <div class="space-y-8">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>🌱</span> Sustainability & Innovation
+                        </h2>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="card p-6 border-t-4 border-green-500">
+                                <h3 class="text-xl font-bold text-gray-900 mb-3">Waste Valorisation</h3>
+                                <p class="text-sm text-gray-700 mb-3">
+                                    Direct utilization of <strong>Olive Pomace Fly Ash</strong>, a byproduct of the olive oil industry in Tunisia, preventing landfilling and dust pollution.
+                                </p>
+                            </div>
+                            
+                            <div class="card p-6 border-t-4 border-blue-500">
+                                <h3 class="text-xl font-bold text-gray-900 mb-3">Process Optimization</h3>
+                                <p class="text-sm text-gray-700 mb-3">
+                                    Reduction of firing temperature from 850°C to <strong>750°C</strong>. This significantly lowers the embodied energy and carbon footprint of the brick manufacturing process.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="card p-6 mt-6 bg-green-50 border border-green-200">
+                            <h3 class="font-bold text-green-900 mb-2">Innovation Verdict</h3>
+                            <p class="text-sm text-green-800">
+                                Moderate Innovation. While ash in bricks is common, the explicit focus on <strong>temperature reduction capability</strong> (using the ash as a flux) rather than just material replacement is a valuable process optimization contribution.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-100 border-t border-gray-200 py-8 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col items-center justify-center text-center">
+                <p class="text-gray-700 text-sm">
+                    <strong>PhD Scholar Dashboard</strong> • Generated from Extraction JSON
+                </p>
+                <p class="text-gray-500 text-xs mt-2">
+                    Source: Labaied et al. 2025
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Paper Data
+        const paperData = {
+            title: "Enhancing Energy Efficiency and Sustainability in Fired Clay Brick Production Using Olive Pomace Fly Ash",
+            doi: "10.1007/978-3-031-92874-1_38",
+            authors: ["Ines Labaied", "Omar Douzane", "Geoffrey Promis"],
+            year: 2025,
+            journal: "RILEM Bookseries",
+            publisher: "Springer"
+        };
+
+        let currentTab = 'overview';
+
+        // Tab Switching Logic
+        function switchTab(tabName) {
+            currentTab = tabName;
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+            const targetTab = document.getElementById(`tab-${tabName}`);
+            if (targetTab) targetTab.classList.remove('hidden');
+            
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            const targetBtn = document.querySelector(`.btn-${tabName}`);
+            if (targetBtn) targetBtn.classList.add('active');
+            
+            updateProgress();
+        }
+
+        // Section Scrolling
+        function scrollToSection(id) {
+            const element = document.getElementById(id);
+            if (element) element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // Progress Bar
+        function updateProgress() {
+            const progressFill = document.getElementById('progressFill');
+            if (!progressFill) return;
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+            progressFill.style.width = `${Math.min(100, Math.max(0, progress))}%`;
+        }
+
+        // Copy Citation
+        function copyCitation() {
+            const citation = `${paperData.authors.join(', ')} (${paperData.year}). ${paperData.title}. ${paperData.journal}. https://doi.org/${paperData.doi}`;
+            navigator.clipboard.writeText(citation).then(() => {
+                alert('Citation copied!');
+            });
+        }
+
+        // Initialize Charts
+        function initializeCharts() {
+            // Oxide Chart (XRF)
+            const oxideCtx = document.getElementById('oxideChart');
+            if (oxideCtx) {
+                new Chart(oxideCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['SiO₂', 'CaO', 'K₂O', 'Na₂O', 'Other', 'LOI'],
+                        datasets: [{
+                            data: [32.27, 19.91, 7.65, 2.93, (100 - 32.27 - 19.91 - 7.65 - 2.93 - 26.05), 26.05],
+                            backgroundColor: [
+                                '#3b82f6', '#22c55e', '#a855f7', '#f97316', '#94a3b8', '#cbd5e1'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { position: 'right' },
+                            title: { display: true, text: 'OPCFA Chemical Composition (%)' }
+                        }
+                    }
+                });
+            }
+
+            // Strength Chart
+            const strengthCtx = document.getElementById('strengthChart');
+            if (strengthCtx) {
+                new Chart(strengthCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['850°C', '800°C', '750°C'],
+                        datasets: [{
+                            label: 'Compressive Strength (MPa) [3% OPCFA]',
+                            data: [22.63, 20.70, 17.09],
+                            backgroundColor: 'rgba(34, 197, 94, 0.7)',
+                            borderColor: 'rgba(34, 197, 94, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Reference (NC, 850°C)',
+                            data: [22.20, null, null],
+                            type: 'line',
+                            borderColor: 'rgba(59, 130, 246, 0.8)',
+                            pointStyle: 'circle',
+                            pointRadius: 6,
+                            borderDash: [5, 5]
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: { y: { beginAtZero: true, title: {display: true, text: 'MPa'} } }
+                    }
+                });
+            }
+
+            // Thermal Chart
+            const thermalCtx = document.getElementById('thermalChart');
+            if (thermalCtx) {
+                new Chart(thermalCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['850°C', '800°C', '750°C'],
+                        datasets: [{
+                            label: 'Thermal Conductivity (W/mK)',
+                            data: [0.65, 0.60, 0.52],
+                            borderColor: 'rgba(249, 115, 22, 1)',
+                            backgroundColor: 'rgba(249, 115, 22, 0.2)',
+                            tension: 0.3,
+                            fill: true
+                        },
+                        {
+                            label: 'Reference (NC, 850°C)',
+                            data: [0.68, 0.68, 0.68],
+                            borderColor: 'rgba(148, 163, 184, 1)',
+                            borderDash: [5, 5],
+                            pointRadius: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: { y: { beginAtZero: false, min: 0.4, title: {display: true, text: 'W/mK'} } }
+                    }
+                });
+            }
+        }
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeCharts();
+            updateProgress();
+            window.addEventListener('scroll', updateProgress, { passive: true });
+            
+            // Responsive Tables
+            document.querySelectorAll('table').forEach(table => {
+                if (!table.parentElement.classList.contains('overflow-x-auto')) {
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'overflow-x-auto';
+                    table.parentNode.insertBefore(wrapper, table);
+                    wrapper.appendChild(table);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

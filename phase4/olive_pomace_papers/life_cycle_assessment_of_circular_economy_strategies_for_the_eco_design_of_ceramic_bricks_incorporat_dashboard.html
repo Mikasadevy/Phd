@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Paper Dashboard – Silvestri et al. 2026 | LCA of Circular Bricks</title>
+    <meta name="description" content="Academic research dashboard analyzing LCA of ceramic bricks with olive mill wastewater and wine pomace">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['Lora', 'Georgia', 'serif'],
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        },
+                        // Custom palette for Olive/Wine theme
+                        olive: {
+                            50: '#f7fee7',
+                            100: '#ecfccb',
+                            500: '#84cc16',
+                            700: '#4d7c0f',
+                        },
+                        wine: {
+                            50: '#fff1f2',
+                            100: '#ffe4e6',
+                            500: '#f43f5e',
+                            700: '#be123c',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* Base Typography */
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            font-size: 16px;
+            line-height: 1.75;
+            color: #1e293b;
+            background: #ffffff;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Lora', Georgia, serif;
+            font-weight: 600;
+            line-height: 1.3;
+            color: #0f172a;
+        }
+        
+        h1 { font-size: 2.25rem; margin-bottom: 1rem; }
+        h2 { font-size: 1.875rem; margin-bottom: 0.875rem; }
+        h3 { font-size: 1.5rem; margin-bottom: 0.75rem; }
+        h4 { font-size: 1.25rem; margin-bottom: 0.625rem; }
+        
+        /* Academic Card Style */
+        .card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            transition: box-shadow 0.2s ease;
+        }
+        
+        .card:hover {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        
+        .card-elevated {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Badge System */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.375rem 0.875rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border: 1.5px solid;
+        }
+        
+        .badge-core { background: #dbeafe; color: #1e40af; border-color: #3b82f6; }
+        .badge-experimental { background: #fef3c7; color: #92400e; border-color: #f59e0b; }
+        .badge-modeling { background: #e0e7ff; color: #3730a3; border-color: #6366f1; }
+        .badge-secondary { background: #f3f4f6; color: #4b5563; border-color: #9ca3af; }
+        
+        /* Tab Navigation */
+        .tab-nav {
+            display: flex;
+            flex-wrap: nowrap;
+            justify-content: center;
+            align-items: center;
+            overflow-x: auto;
+            gap: 0.25rem;
+            border-bottom: 2px solid #e2e8f0;
+            padding: 0.75rem 0.25rem;
+            margin-bottom: 2rem;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        .tab-nav::-webkit-scrollbar { display: none; }
+        
+        .tab-button {
+            flex: 0 0 auto;
+            padding: 0.35rem 0.6rem;
+            border-radius: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+            background: #f8fafc;
+            color: #64748b;
+            white-space: nowrap;
+        }
+        
+        .tab-button:hover { background: #f1f5f9; color: #334155; }
+        .tab-button.active { color: #ffffff; }
+
+        .tab-button.active.btn-info { background: #64748b; border-color: #475569; }
+        .tab-button.active.btn-overview { background: #2563eb; border-color: #1d4ed8; }
+        .tab-button.active.btn-materials { background: #16a34a; border-color: #15803d; }
+        .tab-button.active.btn-formulation { background: #ea580c; border-color: #c2410c; }
+        .tab-button.active.btn-results { background: #0891b2; border-color: #0e7490; }
+        .tab-button.active.btn-sustainability { background: #059669; border-color: #047857; }
+        .tab-button.active.btn-phd { background: #9333ea; border-color: #7e22ce; }
+        
+        /* Data Table Styling */
+        table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+        thead { background: #f8fafc; border-bottom: 2px solid #cbd5e1; }
+        th { padding: 0.75rem 1rem; text-align: left; font-weight: 600; color: #475569; font-size: 0.8125rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        td { padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; }
+        tbody tr:hover { background: #f8fafc; }
+        
+        /* Metric Cards */
+        .metric-card {
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            border: 1px solid #e2e8f0;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .metric-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); }
+        
+        /* Progress Bar */
+        .progress-bar { height: 3px; background: #e2e8f0; position: fixed; top: 0; left: 0; right: 0; z-index: 9999; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #0ea5e9 0%, #06b6d4 100%); transition: width 0.15s ease-out; }
+        
+        /* Alert Boxes */
+        .alert { padding: 1rem 1.25rem; border-radius: 0.5rem; border-left: 4px solid; font-size: 0.875rem; line-height: 1.6; }
+        .alert-info { background: #dbeafe; border-color: #3b82f6; color: #1e3a8a; }
+        .alert-warning { background: #fef3c7; border-color: #f59e0b; color: #78350f; }
+        .alert-danger { background: #fee2e2; border-color: #ef4444; color: #7f1d1d; }
+        
+        /* Sticky Navigation */
+        .sticky-nav { position: sticky; top: 0; z-index: 50; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid #e2e8f0; }
+        
+        /* Data provenance markers */
+        .provenance-marker { display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.625rem; padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+        .provenance-measured { background: #dcfce7; color: #166534; }
+        .provenance-modeled { background: #e0e7ff; color: #3730a3; }
+        .provenance-cited { background: #f3f4f6; color: #4b5563; border: 1px solid #d1d5db; }
+        
+        @media print { .no-print { display: none !important; } .tab-content { display: block !important; } }
+    </style>
+</head>
+<body class="bg-gray-50">
+    
+    <!-- Progress Bar -->
+    <div class="progress-bar no-print">
+        <div id="progressFill" class="progress-fill" style="width: 0%"></div>
+    </div>
+    
+    <!-- Navigation Header -->
+    <nav class="sticky-nav no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-olive-500 to-green-600 rounded-lg flex items-center justify-center shadow-md">
+                        <span class="text-white font-bold text-xl">🧱</span>
+                    </div>
+                    <div>
+                        <h1 class="text-base font-bold text-gray-900">Research Paper Dashboard</h1>
+                        <p class="text-xs text-gray-500">Silvestri et al. 2026</p>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="window.print()" class="px-3 py-2 rounded-lg bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 text-sm font-medium transition flex items-center gap-2">
+                        <span>🖨️</span> Print
+                    </button>
+                    <button onclick="copyCitation()" class="px-3 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium transition flex items-center gap-2">
+                        <span>📋</span> Citation
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- Hero Section -->
+        <div class="card card-elevated p-8 mb-8">
+            <div class="flex items-start gap-6 mb-6">
+                <div class="flex-shrink-0">
+                    <div class="w-20 h-20 bg-gradient-to-br from-olive-500 to-green-700 rounded-2xl flex items-center justify-center shadow-lg">
+                        <span class="text-4xl">♻️</span>
+                    </div>
+                </div>
+                <div class="flex-1">
+                    <div class="flex flex-wrap gap-2 mb-3">
+                        <span class="badge badge-modeling">💻 LCA Modeling Study</span>
+                        <span class="badge badge-core">Tier A Extraction</span>
+                        <span class="badge badge-secondary">Contains Secondary Data</span>
+                    </div>
+                    <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4 leading-tight">
+                        Life Cycle Assessment of circular economy strategies for the eco-design of ceramic bricks incorporating olive and wine residues
+                    </h1>
+                    <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-4">
+                        <span class="flex items-center gap-1">
+                            <span class="icon">👥</span>
+                            L. Silvestri, A. Forcina, C. Silvestri, D. Falcone
+                        </span>
+                        <span>•</span>
+                        <span>📅 2026</span>
+                        <span>•</span>
+                        <span>📖 Science of the Total Environment (Vol. 1011)</span>
+                    </div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="text-sm text-gray-500 font-medium">DOI:</span>
+                        <code class="text-sm">10.1016/j.scitotenv.2025.181153</code>
+                        <a href="https://doi.org/10.1016/j.scitotenv.2025.181153" 
+                           target="_blank" 
+                           class="px-3 py-1 rounded bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium transition">
+                            🔗 Open Paper
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Core Contribution Banner -->
+            <div class="bg-gradient-to-br from-green-50 to-olive-50 rounded-xl p-6 border border-green-200">
+                <div class="flex flex-col md:flex-row items-start gap-6">
+                    <div class="flex-shrink-0">
+                        <div class="w-16 h-16 bg-green-100 rounded-xl flex items-center justify-center border-2 border-green-300 shadow-sm">
+                            <span class="text-3xl">📉</span>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-xl font-bold text-gray-900 mb-3 flex items-center gap-2">
+                            <span>🎓</span> Core Research Finding
+                            <span class="provenance-marker provenance-measured ml-auto">✓ Modeled</span>
+                        </h3>
+                        <p class="text-gray-700 leading-relaxed mb-4">
+                            The study models the environmental performance of incorporating 
+                            <strong>Olive Mill Wastewater (OMWW)</strong> (replacing 100% mixing water) and 
+                            <strong>Waste Pomace (WP)</strong> (5% mass addition) into ceramic bricks. 
+                            Results indicate a 
+                            <span class="px-2 py-0.5 bg-green-100 text-green-800 rounded font-semibold">
+                                37% GWP reduction for WP
+                            </span> and 
+                            <span class="px-2 py-0.5 bg-olive-100 text-olive-800 rounded font-semibold">
+                                8% reduction for OMWW
+                            </span> compared to conventional bricks. Transport distance sensitivity is identified as a critical constraint (Break-even: 641 km for OMWW).
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="metric-card">
+                <div class="text-center">
+                    <div class="text-4xl mb-3">🔢</div>
+                    <div class="text-3xl font-bold text-blue-600 mb-1">3</div>
+                    <div class="text-sm font-medium text-gray-600 mb-2">Modeled Scenarios</div>
+                    <div class="text-xs text-gray-500">S1 (Ctrl), S2 (OMWW), S3 (WP)</div>
+                    <span class="provenance-marker provenance-measured mt-2">✓ Extracted</span>
+                </div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="text-center">
+                    <div class="text-4xl mb-3">🌍</div>
+                    <div class="text-3xl font-bold text-green-600 mb-1">-37%</div>
+                    <div class="text-sm font-medium text-gray-600 mb-2">Max GWP Reduction</div>
+                    <div class="text-xs text-gray-500">Achieved by WP-based bricks</div>
+                    <span class="provenance-marker provenance-measured mt-2">✓ Extracted</span>
+                </div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="text-center">
+                    <div class="text-4xl mb-3">🚛</div>
+                    <div class="text-3xl font-bold text-orange-600 mb-1">641 km</div>
+                    <div class="text-sm font-medium text-gray-600 mb-2">Transport Break-Even</div>
+                    <div class="text-xs text-gray-500">Critical limit for OMWW viability</div>
+                    <span class="provenance-marker provenance-measured mt-2">✓ Extracted</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="card p-6 mb-8">
+            <div class="tab-nav">
+                <button class="tab-button btn-info" onclick="switchTab('info')">ℹ️ Info</button>
+                <button class="tab-button active btn-overview" onclick="switchTab('overview')">📋 Overview</button>
+                <button class="tab-button btn-materials" onclick="switchTab('materials')">🫒 Materials</button>
+                <button class="tab-button btn-formulation" onclick="switchTab('formulation')">🧱 Formulation</button>
+                <button class="tab-button btn-results" onclick="switchTab('results')">📊 Results (Phys + LCA)</button>
+                <button class="tab-button btn-sustainability" onclick="switchTab('sustainability')">🌱 Sustainability</button>
+                <button class="tab-button btn-phd" onclick="switchTab('phd')">🎓 PhD Context</button>
+            </div>
+
+            <!-- Tab Content: Info -->
+            <div id="tab-info" class="tab-content hidden">
+                <div class="space-y-8">
+                    <div class="card card-elevated p-6 border-l-4 border-purple-500">
+                        <div class="flex items-start gap-4">
+                            <div class="flex-shrink-0">
+                                <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
+                                    <span class="text-2xl">⚠️</span>
+                                </div>
+                            </div>
+                            <div class="flex-1">
+                                <h2 class="text-xl font-bold text-gray-900 mb-2">Data Origin Warning</h2>
+                                <p class="text-sm text-gray-700 leading-relaxed mb-4">
+                                    This paper is a <strong>Life Cycle Assessment (LCA) model</strong>. The material properties (density, strength, shrinkage) presented in the results are <strong>cited from literature</strong> (secondary data), not experimentally measured in this specific study. The LCA impacts (GWP, Acidification) are the primary contribution.
+                                </p>
+                                <div class="flex flex-wrap gap-2 mb-2">
+                                    <span class="provenance-marker provenance-measured">✓ Modeled: Primary Result</span>
+                                    <span class="provenance-marker provenance-cited">📖 Cited: Secondary Data</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card p-6">
+                        <h2 class="text-xl font-bold text-gray-900 mb-4">Acronym Legend</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <ul class="space-y-2 text-sm">
+                                <li><strong>OMWW:</strong> Olive Mill Wastewater</li>
+                                <li><strong>WP:</strong> Waste Pomace (Grape/Wine residue)</li>
+                                <li><strong>LCA:</strong> Life Cycle Assessment</li>
+                                <li><strong>GWP:</strong> Global Warming Potential</li>
+                            </ul>
+                            <ul class="space-y-2 text-sm">
+                                <li><strong>S1:</strong> Scenario 1 (Conventional Brick)</li>
+                                <li><strong>S2:</strong> Scenario 2 (OMWW Brick)</li>
+                                <li><strong>S3:</strong> Scenario 3 (WP Brick)</li>
+                                <li><strong>BAT:</strong> Best Available Techniques</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Overview -->
+            <div id="tab-overview" class="tab-content">
+                <div class="space-y-8">
+                    <!-- Research Objective -->
+                    <div id="objective" class="section-anchor">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>🎯</span> Research Objective & System
+                        </h2>
+                        <div class="card p-6">
+                            <div class="space-y-6">
+                                <div>
+                                    <div class="flex items-center justify-between mb-3">
+                                        <h3 class="text-lg font-semibold text-gray-900">Primary Objective</h3>
+                                        <span class="provenance-marker provenance-measured">✓ Extracted</span>
+                                    </div>
+                                    <p class="text-gray-700 leading-relaxed bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+                                        "Evaluate the environmental performance of ceramic facing bricks incorporating OMWW and WP through a cradle-to-gate Life Cycle Assessment (LCA), comparing them with conventional bricks."
+                                    </p>
+                                </div>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                                        <div class="text-xs text-gray-500 mb-1">Target Application</div>
+                                        <div class="text-base font-bold text-gray-900">Ceramic Facing Bricks</div>
+                                    </div>
+                                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                                        <div class="text-xs text-gray-500 mb-1">Geographical Context</div>
+                                        <div class="text-base font-bold text-gray-900">🇮🇹 Italy</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Scope -->
+                    <div class="card p-6 border-t-4 border-green-500">
+                        <h3 class="text-lg font-bold text-gray-900 mb-4">Scope & Boundaries</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <h4 class="text-sm font-bold text-green-700 uppercase mb-2">✅ In Scope (Cradle-to-Gate)</h4>
+                                <ul class="list-disc pl-5 text-sm text-gray-700 space-y-1">
+                                    <li>Raw material extraction & transport</li>
+                                    <li>Manufacturing (Mixing, Extrusion, Drying, Firing)</li>
+                                    <li>Storage & Packaging</li>
+                                    <li>Transport sensitivity analysis</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-bold text-red-700 uppercase mb-2">🚫 Out of Scope</h4>
+                                <ul class="list-disc pl-5 text-sm text-gray-700 space-y-1">
+                                    <li>Coating process (assumed identical)</li>
+                                    <li>Hazardous waste treatment</li>
+                                    <li>Use phase & End-of-life (except composting credits)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Materials -->
+            <div id="tab-materials" class="tab-content hidden">
+                <div class="space-y-8">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Waste Materials Characterization</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- OMWW Card -->
+                        <div class="card p-6 border-l-4 border-olive-500">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-xl font-bold text-gray-900 flex items-center gap-2">
+                                    <span>🫒</span> OMWW
+                                </h3>
+                                <span class="badge badge-secondary">Liquid</span>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-4">Olive Mill Wastewater from two-phase extraction process.</p>
+                            <div class="space-y-2 text-sm">
+                                <div class="flex justify-between p-2 bg-gray-50 rounded">
+                                    <span>Role</span>
+                                    <span class="font-bold">100% Water Replacement</span>
+                                </div>
+                                <div class="flex justify-between p-2 bg-gray-50 rounded">
+                                    <span>Density</span>
+                                    <span class="font-bold">1.012 kg/dm³</span>
+                                </div>
+                                <div class="flex justify-between p-2 bg-gray-50 rounded">
+                                    <span>Moisture</span>
+                                    <span class="font-bold">92.7% (Calculated)</span>
+                                </div>
+                            </div>
+                            <div class="mt-4 text-xs text-gray-500 italic">Data Source: Literature Cited (Table 2)</div>
+                        </div>
+
+                        <!-- WP Card -->
+                        <div class="card p-6 border-l-4 border-wine-500">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-xl font-bold text-gray-900 flex items-center gap-2">
+                                    <span>🍇</span> Waste Pomace (WP)
+                                </h3>
+                                <span class="badge badge-secondary">Solid</span>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-4">Grape seeds, skins, and stems from wine industry.</p>
+                            <div class="space-y-2 text-sm">
+                                <div class="flex justify-between p-2 bg-gray-50 rounded">
+                                    <span>Role</span>
+                                    <span class="font-bold">5% Mass Addition</span>
+                                </div>
+                                <div class="flex justify-between p-2 bg-gray-50 rounded">
+                                    <span>Carbon (C)</span>
+                                    <span class="font-bold">53.66%</span>
+                                </div>
+                                <div class="flex justify-between p-2 bg-gray-50 rounded">
+                                    <span>Ash Content</span>
+                                    <span class="font-bold">3.7%</span>
+                                </div>
+                                <div class="flex justify-between p-2 bg-gray-50 rounded">
+                                    <span>Moisture</span>
+                                    <span class="font-bold">0.3%</span>
+                                </div>
+                            </div>
+                            <div class="mt-4 text-xs text-gray-500 italic">Data Source: Literature Cited (Table 3)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Formulation -->
+            <div id="tab-formulation" class="tab-content hidden">
+                <div class="space-y-8">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Mix Design Scenarios</h2>
+                    
+                    <div class="card p-6">
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead>
+                                    <tr class="bg-gray-100 text-gray-700">
+                                        <th class="py-3 px-4 text-left">Scenario</th>
+                                        <th class="py-3 px-4 text-left">Description</th>
+                                        <th class="py-3 px-4 text-right">Clay (kg)</th>
+                                        <th class="py-3 px-4 text-right">Water (L)</th>
+                                        <th class="py-3 px-4 text-right">OMWW (L)</th>
+                                        <th class="py-3 px-4 text-right">WP (kg)</th>
+                                        <th class="py-3 px-4 text-right">Additives (kg)</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-sm">
+                                    <tr class="border-b">
+                                        <td class="py-3 px-4 font-bold text-gray-900">S1 (Control)</td>
+                                        <td class="py-3 px-4">Conventional Brick</td>
+                                        <td class="py-3 px-4 text-right">893</td>
+                                        <td class="py-3 px-4 text-right font-bold text-blue-600">200</td>
+                                        <td class="py-3 px-4 text-right text-gray-400">-</td>
+                                        <td class="py-3 px-4 text-right text-gray-400">-</td>
+                                        <td class="py-3 px-4 text-right">107 (Sand/Sawdust)</td>
+                                    </tr>
+                                    <tr class="border-b bg-olive-50">
+                                        <td class="py-3 px-4 font-bold text-olive-700">S2 (OMWW)</td>
+                                        <td class="py-3 px-4">100% Water Replacement</td>
+                                        <td class="py-3 px-4 text-right">893</td>
+                                        <td class="py-3 px-4 text-right text-gray-400">-</td>
+                                        <td class="py-3 px-4 text-right font-bold text-olive-600">200</td>
+                                        <td class="py-3 px-4 text-right text-gray-400">-</td>
+                                        <td class="py-3 px-4 text-right">107</td>
+                                    </tr>
+                                    <tr class="bg-wine-50">
+                                        <td class="py-3 px-4 font-bold text-wine-700">S3 (WP)</td>
+                                        <td class="py-3 px-4">5% Mass Addition</td>
+                                        <td class="py-3 px-4 text-right">1240</td>
+                                        <td class="py-3 px-4 text-right">536</td>
+                                        <td class="py-3 px-4 text-right text-gray-400">-</td>
+                                        <td class="py-3 px-4 text-right font-bold text-wine-600">65</td>
+                                        <td class="py-3 px-4 text-right">-</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="mt-4 text-xs text-gray-500">
+                            * Values per Functional Unit (1 ton fired bricks). Note: S3 formulation uses different base clay mass (1240 kg) compared to S1/S2 (893 kg), implying a different base mix design for the solid waste scenario.
+                        </div>
+                    </div>
+
+                    <!-- Formulation Chart -->
+                    <div class="card p-6">
+                        <h3 class="text-lg font-bold text-gray-900 mb-4">Material Input Distribution (kg/ton)</h3>
+                        <div class="h-80">
+                            <canvas id="mixChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Results -->
+            <div id="tab-results" class="tab-content hidden">
+                <div class="space-y-8">
+                    
+                    <!-- Physical Properties (Cited) -->
+                    <div class="card p-6 border-l-4 border-gray-400">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-xl font-bold text-gray-900">Physical Properties (Literature Cited)</h3>
+                            <span class="provenance-marker provenance-cited">📖 Secondary Data</span>
+                        </div>
+                        <p class="text-sm text-gray-600 mb-4">
+                            The following properties were used as input parameters for the model, sourced from previous studies (e.g., de la Casa et al.). These are <strong>not</strong> experimental results from this paper.
+                        </p>
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead>
+                                    <tr class="bg-gray-100">
+                                        <th class="py-3 px-4 text-left">Property</th>
+                                        <th class="py-3 px-4 text-center">S1 (Control)</th>
+                                        <th class="py-3 px-4 text-center bg-olive-50">S2 (OMWW)</th>
+                                        <th class="py-3 px-4 text-center bg-wine-50">S3 (WP)</th>
+                                        <th class="py-3 px-4 text-left">Unit</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-sm">
+                                    <tr class="border-b">
+                                        <td class="py-3 px-4 font-medium">Density</td>
+                                        <td class="py-3 px-4 text-center">1988</td>
+                                        <td class="py-3 px-4 text-center bg-olive-50">1880</td>
+                                        <td class="py-3 px-4 text-center bg-wine-50">1563</td>
+                                        <td class="py-3 px-4 text-gray-500">kg/m³</td>
+                                    </tr>
+                                    <tr class="border-b">
+                                        <td class="py-3 px-4 font-medium">Water Absorption</td>
+                                        <td class="py-3 px-4 text-center">7.8</td>
+                                        <td class="py-3 px-4 text-center bg-olive-50">10.5</td>
+                                        <td class="py-3 px-4 text-center bg-wine-50">16.5</td>
+                                        <td class="py-3 px-4 text-gray-500">%</td>
+                                    </tr>
+                                    <tr class="border-b">
+                                        <td class="py-3 px-4 font-medium">Tensile Strength</td>
+                                        <td class="py-3 px-4 text-center">10.2</td>
+                                        <td class="py-3 px-4 text-center bg-olive-50">10.6</td>
+                                        <td class="py-3 px-4 text-center bg-wine-50">-</td>
+                                        <td class="py-3 px-4 text-gray-500">MPa</td>
+                                    </tr>
+                                    <tr class="border-b">
+                                        <td class="py-3 px-4 font-medium">Comp. Strength</td>
+                                        <td class="py-3 px-4 text-center">-</td>
+                                        <td class="py-3 px-4 text-center bg-olive-50">-</td>
+                                        <td class="py-3 px-4 text-center bg-wine-50">11.7</td>
+                                        <td class="py-3 px-4 text-gray-500">MPa</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="py-3 px-4 font-medium">Thermal Cond.</td>
+                                        <td class="py-3 px-4 text-center">-</td>
+                                        <td class="py-3 px-4 text-center bg-olive-50">-</td>
+                                        <td class="py-3 px-4 text-center bg-wine-50">0.61</td>
+                                        <td class="py-3 px-4 text-gray-500">W/mK</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- LCA Results (Modeled) -->
+                    <div class="card p-6 border-l-4 border-green-500">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-xl font-bold text-gray-900">LCA Environmental Impact (Modeled)</h3>
+                            <span class="provenance-marker provenance-measured">✓ Primary Result</span>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <div class="bg-olive-50 p-4 rounded-lg border border-olive-200">
+                                <h4 class="font-bold text-olive-800 mb-2">S2 (OMWW) Performance</h4>
+                                <div class="text-3xl font-bold text-olive-600 mb-1">-8%</div>
+                                <div class="text-sm text-gray-600">GWP Reduction vs S1</div>
+                                <p class="text-xs text-gray-500 mt-2">Driven by avoided wastewater treatment credits.</p>
+                            </div>
+                            <div class="bg-wine-50 p-4 rounded-lg border border-wine-200">
+                                <h4 class="font-bold text-wine-800 mb-2">S3 (WP) Performance</h4>
+                                <div class="text-3xl font-bold text-wine-600 mb-1">-37%</div>
+                                <div class="text-sm text-gray-600">GWP Reduction vs S1</div>
+                                <p class="text-xs text-gray-500 mt-2">Significant reduction due to biomass fuel effect and composting credits.</p>
+                            </div>
+                        </div>
+
+                        <div class="h-80">
+                            <canvas id="lcaChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Sustainability (Deep Dive) -->
+            <div id="tab-sustainability" class="tab-content hidden">
+                <div class="space-y-8">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Transport Sensitivity Analysis</h2>
+                    <p class="text-gray-700 mb-6">
+                        A critical finding of this study is the "Break-Even Distance". If the waste material must be transported further than this distance, the environmental burden of transport outweighs the benefits of waste valorization.
+                    </p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="card p-6 border-t-4 border-orange-500">
+                            <h3 class="text-lg font-bold text-gray-900 mb-2">OMWW (Liquid)</h3>
+                            <div class="text-4xl font-bold text-orange-600 mb-2">641 km</div>
+                            <p class="text-sm text-gray-600">Maximum viable transport distance.</p>
+                            <div class="mt-4 p-3 bg-orange-50 rounded text-xs text-orange-800">
+                                ⚠️ Transporting liquid waste is highly inefficient due to water weight. Local sourcing is mandatory.
+                            </div>
+                        </div>
+
+                        <div class="card p-6 border-t-4 border-green-500">
+                            <h3 class="text-lg font-bold text-gray-900 mb-2">WP (Solid)</h3>
+                            <div class="text-4xl font-bold text-green-600 mb-2">9,015 km</div>
+                            <p class="text-sm text-gray-600">Maximum viable transport distance.</p>
+                            <div class="mt-4 p-3 bg-green-50 rounded text-xs text-green-800">
+                                ✅ Solid waste is much denser and more efficient to transport, allowing for regional or national sourcing.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: PhD Context -->
+            <div id="tab-phd" class="tab-content hidden">
+                <div class="space-y-8">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Actionable Takeaways for PhD</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="card p-6 border-l-4 border-blue-500">
+                            <h3 class="text-lg font-bold text-gray-900 mb-3">Use This Paper For:</h3>
+                            <ul class="list-disc pl-5 text-sm text-gray-700 space-y-2">
+                                <li><strong>Benchmarking GWP:</strong> Use the -8% and -37% figures as "best case" targets for your own environmental impact assessments.</li>
+                                <li><strong>Transport Constraints:</strong> Cite the 641 km limit for OMWW to justify why you might exclude liquid wastes from long-distance supply chains.</li>
+                                <li><strong>Sensitivity Methodology:</strong> Replicate their break-even distance calculation method.</li>
+                            </ul>
+                        </div>
+
+                        <div class="card p-6 border-l-4 border-red-500">
+                            <h3 class="text-lg font-bold text-gray-900 mb-3">DO NOT Use For:</h3>
+                            <ul class="list-disc pl-5 text-sm text-gray-700 space-y-2">
+                                <li><strong>Material Properties:</strong> Do not cite the density or strength values as primary experimental evidence. They are recycled from older papers (de la Casa et al., 2009).</li>
+                                <li><strong>Process Parameters:</strong> Firing temperatures and specific kiln schedules are modeled/generic, not experimentally optimized in this work.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-100 border-t border-gray-200 py-8 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col items-center justify-center text-center">
+                <p class="text-gray-700 text-sm">
+                    <strong>Research Intelligence Dashboard</strong> • Generated from Silvestri et al. 2026
+                </p>
+                <p class="text-gray-500 text-xs mt-2">
+                    LCA Modeling Extraction • Version 2.0-hardened
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Paper Data
+        const paperData = {
+            title: "Life Cycle Assessment of circular economy strategies for the eco-design of ceramic bricks incorporating olive and wine residues",
+            doi: "10.1016/j.scitotenv.2025.181153",
+            authors: ["Silvestri", "Forcina", "Silvestri", "Falcone"],
+            year: 2026,
+            journal: "Science of the Total Environment"
+        };
+
+        let currentTab = 'overview';
+
+        function switchTab(tabName) {
+            currentTab = tabName;
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+            const targetTab = document.getElementById(`tab-${tabName}`);
+            if (targetTab) targetTab.classList.remove('hidden');
+            
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            const targetBtn = document.querySelector(`.btn-${tabName}`);
+            if (targetBtn) targetBtn.classList.add('active');
+            
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const progressFill = document.getElementById('progressFill');
+            if (!progressFill) return;
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+            progressFill.style.width = `${Math.min(100, Math.max(0, progress))}%`;
+        }
+
+        function copyCitation() {
+            const citation = `${paperData.authors.join(', ')} (${paperData.year}). ${paperData.title}. ${paperData.journal}. https://doi.org/${paperData.doi}`;
+            navigator.clipboard.writeText(citation).then(() => alert('Citation copied!'));
+        }
+
+        function initializeCharts() {
+            // Mix Design Chart
+            const mixCtx = document.getElementById('mixChart');
+            if (mixCtx) {
+                new Chart(mixCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['S1 (Control)', 'S2 (OMWW)', 'S3 (WP)'],
+                        datasets: [
+                            {
+                                label: 'Clay',
+                                data: [893, 893, 1240],
+                                backgroundColor: '#94a3b8',
+                            },
+                            {
+                                label: 'Water',
+                                data: [200, 0, 536],
+                                backgroundColor: '#3b82f6',
+                            },
+                            {
+                                label: 'OMWW',
+                                data: [0, 200, 0],
+                                backgroundColor: '#84cc16', // Olive
+                            },
+                            {
+                                label: 'WP',
+                                data: [0, 0, 65],
+                                backgroundColor: '#e11d48', // Wine
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: { stacked: true },
+                            y: { 
+                                stacked: true,
+                                title: { display: true, text: 'Mass/Volume Input (kg or L per ton)' }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // LCA Impact Chart
+            const lcaCtx = document.getElementById('lcaChart');
+            if (lcaCtx) {
+                new Chart(lcaCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['S1 (Control)', 'S2 (OMWW)', 'S3 (WP)'],
+                        datasets: [{
+                            label: 'GWP Impact (%) Relative to Control',
+                            data: [100, 92, 63], // 100%, 100-8=92%, 100-37=63%
+                            backgroundColor: [
+                                '#94a3b8',
+                                '#84cc16',
+                                '#e11d48'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            title: { display: true, text: 'Global Warming Potential (Relative)' }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 110,
+                                title: { display: true, text: '% of Control Impact' }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeCharts();
+            updateProgress();
+            window.addEventListener('scroll', updateProgress, { passive: true });
+        });
+    </script>
+</body>
+</html>

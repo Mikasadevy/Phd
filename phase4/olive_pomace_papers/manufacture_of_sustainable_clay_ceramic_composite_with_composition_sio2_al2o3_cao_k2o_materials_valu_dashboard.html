@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Dashboard – Bonet-Martínez et al. 2018 | Olive Pomace Ash Ceramics</title>
+    <meta name="description" content="Academic dashboard analyzing sustainable clay ceramic composites with biomass ash from olive pomace">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['Lora', 'Georgia', 'serif'],
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body { font-family: 'Inter', system-ui, sans-serif; background: #f8fafc; color: #1e293b; }
+        h1, h2, h3 { font-family: 'Lora', serif; }
+        .card { background: white; border: 1px solid #e2e8f0; border-radius: 0.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .card:hover { box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .tab-button.active { background: #0f172a; color: white; border-color: #0f172a; }
+        .badge { display: inline-flex; align-items: center; padding: 0.125rem 0.5rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; border: 1px solid; }
+        .badge-core { background: #dbeafe; color: #1e40af; border-color: #93c5fd; }
+        .badge-extracted { background: #dcfce7; color: #166534; border-color: #86efac; }
+        .provenance-marker { font-size: 0.65rem; text-transform: uppercase; padding: 2px 6px; border-radius: 4px; font-weight: 700; margin-left: 8px; }
+        .provenance-measured { background: #d1fae5; color: #065f46; }
+        .provenance-calculated { background: #fff7ed; color: #9a3412; }
+        .progress-bar { height: 4px; background: linear-gradient(90deg, #0ea5e9, #6366f1); width: 0%; position: fixed; top: 0; z-index: 50; transition: width 0.2s; }
+        tr:nth-child(even) { background-color: #f8fafc; }
+        .section-anchor { scroll-margin-top: 100px; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    
+    <div id="progressBar" class="progress-bar"></div>
+
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-orange-500 to-amber-600 rounded-lg flex items-center justify-center text-white font-bold text-xl">🧱</div>
+                    <div>
+                        <h1 class="text-sm font-bold text-gray-900 leading-tight">Paper Dashboard</h1>
+                        <p class="text-xs text-gray-500">Bonet-Martínez et al. 2018</p>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="window.print()" class="px-3 py-1.5 rounded border border-gray-300 bg-white text-xs font-medium hover:bg-gray-50">🖨️ Print</button>
+                    <button onclick="copyCitation()" class="px-3 py-1.5 rounded bg-blue-600 text-white text-xs font-medium hover:bg-blue-700">📋 Citation</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- Hero -->
+        <div class="card p-8 mb-8 border-l-4 border-blue-600">
+            <div class="flex flex-col md:flex-row gap-6">
+                <div class="flex-1">
+                    <div class="flex gap-2 mb-3">
+                        <span class="badge badge-core">Tier A: Core Dataset</span>
+                        <span class="badge badge-extracted">Experimental</span>
+                    </div>
+                    <h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-4 leading-tight">
+                        Manufacture of sustainable clay ceramic composite with composition SiO₂-Al₂O₃-CaO-K₂O materials valuing biomass ash from olive pomace
+                    </h1>
+                    <div class="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-gray-600 mb-4">
+                        <span class="flex items-center gap-1">👥 E. Bonet-Martínez, L. Pérez-Villarejo, D. Eliche-Quesada et al.</span>
+                        <span>📅 2018</span>
+                        <span>📖 Materials Letters (Vol. 229)</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <code class="text-xs bg-gray-100 px-2 py-1 rounded">DOI: 10.1016/j.matlet.2018.06.105</code>
+                        <a href="https://doi.org/10.1016/j.matlet.2018.06.105" target="_blank" class="text-blue-600 text-sm hover:underline">↗ Open Paper</a>
+                    </div>
+                </div>
+                <div class="w-full md:w-1/3 bg-orange-50 rounded-xl p-5 border border-orange-100">
+                    <h3 class="text-sm font-bold text-orange-900 uppercase tracking-wide mb-2">Core Contribution</h3>
+                    <p class="text-sm text-orange-800 leading-relaxed">
+                        Demonstrates the feasibility of replacing up to <strong>25% of clay</strong> with <strong>olive pomace fly ash</strong> in fired bricks (950°C). 
+                        <br><br>
+                        <strong>Key Insight:</strong> 5% replacement improves compressive strength (50.1 MPa vs 38.8 MPa control), while higher replacements reduce density and strength but meet regulatory criteria.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Metrics Grid -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <div class="card p-4 text-center">
+                <div class="text-3xl mb-2">🏭</div>
+                <div class="text-2xl font-bold text-gray-900">950°C</div>
+                <div class="text-xs text-gray-500">Sintering Temp</div>
+            </div>
+            <div class="card p-4 text-center">
+                <div class="text-3xl mb-2">🫒</div>
+                <div class="text-2xl font-bold text-green-600">0–25%</div>
+                <div class="text-xs text-gray-500">Ash Replacement</div>
+            </div>
+            <div class="card p-4 text-center">
+                <div class="text-3xl mb-2">📈</div>
+                <div class="text-2xl font-bold text-blue-600">50.1 MPa</div>
+                <div class="text-xs text-gray-500">Peak Strength (5%)</div>
+            </div>
+            <div class="card p-4 text-center">
+                <div class="text-3xl mb-2">🧩</div>
+                <div class="text-2xl font-bold text-purple-600">6</div>
+                <div class="text-xs text-gray-500">Mix Variants</div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="card p-2 mb-6 overflow-x-auto">
+            <div class="flex space-x-2 min-w-max">
+                <button onclick="switchTab('overview')" id="btn-overview" class="tab-button active px-4 py-2 rounded-md text-sm font-medium transition-colors">📋 Overview</button>
+                <button onclick="switchTab('materials')" id="btn-materials" class="tab-button px-4 py-2 rounded-md text-sm font-medium transition-colors text-gray-600 hover:bg-gray-100">🫒 Materials</button>
+                <button onclick="switchTab('formulation')" id="btn-formulation" class="tab-button px-4 py-2 rounded-md text-sm font-medium transition-colors text-gray-600 hover:bg-gray-100">⚖️ Formulation</button>
+                <button onclick="switchTab('testing')" id="btn-testing" class="tab-button px-4 py-2 rounded-md text-sm font-medium transition-colors text-gray-600 hover:bg-gray-100">🧪 Testing</button>
+                <button onclick="switchTab('results')" id="btn-results" class="tab-button px-4 py-2 rounded-md text-sm font-medium transition-colors text-gray-600 hover:bg-gray-100">📊 Results</button>
+                <button onclick="switchTab('limitations')" id="btn-limitations" class="tab-button px-4 py-2 rounded-md text-sm font-medium transition-colors text-gray-600 hover:bg-gray-100">⚠️ Limitations</button>
+            </div>
+        </div>
+
+        <!-- Tab Content: Overview -->
+        <div id="tab-overview" class="tab-content block">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="card p-6">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
+                        🎯 Research Objective
+                        <span class="provenance-marker provenance-measured">Explicit</span>
+                    </h3>
+                    <p class="text-gray-700 mb-4">
+                        To investigate the influence of <strong>biomass fly ash from olive pomace</strong> as an additive in the manufacture of clay ceramic composite materials, specifically addressing the economic and environmental burden of ash disposal.
+                    </p>
+                    <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
+                        <h4 class="text-sm font-bold text-blue-900 mb-2">Application Intent</h4>
+                        <div class="flex items-center gap-3">
+                            <span class="text-2xl">🧱</span>
+                            <div>
+                                <div class="text-sm font-semibold text-gray-900">Fired Clay Brick</div>
+                                <div class="text-xs text-gray-600">Non-structural / Semi-structural blocks</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card p-6">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4">🔍 Scope & Context</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-start gap-3">
+                            <span class="text-2xl">🌍</span>
+                            <div>
+                                <div class="font-semibold text-gray-900">Geographical Context</div>
+                                <div class="text-sm text-gray-600">Jaén, Andalusia, Spain (Major olive oil production region)</div>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="text-2xl">🔥</span>
+                            <div>
+                                <div class="font-semibold text-gray-900">Material System</div>
+                                <div class="text-sm text-gray-600">Fired clay ceramic (Sintered at 950°C)</div>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="text-2xl">⚖️</span>
+                            <div>
+                                <div class="font-semibold text-gray-900">Replacement Strategy</div>
+                                <div class="text-sm text-gray-600">0, 5, 10, 15, 20, 25 wt% replacement of clay with ash</div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Content: Materials -->
+        <div id="tab-materials" class="tab-content hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Waste Material Info -->
+                <div class="card p-6 lg:col-span-1 border-l-4 border-green-500">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4">🫒 Olive Pomace Fly Ash</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <div class="text-xs text-gray-500 uppercase tracking-wide">Origin</div>
+                            <div class="font-medium">Biomass power plant "La Loma", Jaén, Spain</div>
+                        </div>
+                        <div>
+                            <div class="text-xs text-gray-500 uppercase tracking-wide">Physical Form</div>
+                            <div class="font-medium">Sieved Ash (< 150 µm)</div>
+                        </div>
+                        <div>
+                            <div class="text-xs text-gray-500 uppercase tracking-wide">Ash Content</div>
+                            <div class="font-medium">78.26%</div>
+                        </div>
+                        <div>
+                            <div class="text-xs text-gray-500 uppercase tracking-wide">Loss On Ignition (LOI)</div>
+                            <div class="font-medium text-red-600">18.54%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chemical Composition -->
+                <div class="card p-6 lg:col-span-2">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-bold text-gray-900">⚗️ Chemical Composition (Oxides)</h3>
+                        <span class="badge badge-extracted">Measured (XRF)</span>
+                    </div>
+                    <div class="flex flex-col md:flex-row gap-6 items-center">
+                        <div class="w-full md:w-1/2 h-64">
+                            <canvas id="oxideChart"></canvas>
+                        </div>
+                        <div class="w-full md:w-1/2">
+                            <table class="w-full text-sm">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="p-2 text-left">Component</th>
+                                        <th class="p-2 text-right">Value (%)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-b">
+                                        <td class="p-2 font-medium text-purple-700">K₂O</td>
+                                        <td class="p-2 text-right">42.66</td>
+                                    </tr>
+                                    <tr class="border-b">
+                                        <td class="p-2 font-medium text-blue-700">SiO₂</td>
+                                        <td class="p-2 text-right">11.70</td>
+                                    </tr>
+                                    <tr class="border-b">
+                                        <td class="p-2 font-medium text-green-700">CaO</td>
+                                        <td class="p-2 text-right">10.20</td>
+                                    </tr>
+                                    <tr class="border-b">
+                                        <td class="p-2 font-medium text-orange-700">Al₂O₃</td>
+                                        <td class="p-2 text-right">2.51</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p class="text-xs text-gray-500 mt-3">
+                                <strong>Note:</strong> Exceptionally high Potassium (K₂O) content is characteristic of olive biomass ash, acting as a fluxing agent during sintering.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Content: Formulation -->
+        <div id="tab-formulation" class="tab-content hidden">
+            <div class="card p-6">
+                <h3 class="text-lg font-bold text-gray-900 mb-4">⚖️ Mix Design & Proportions</h3>
+                <p class="text-sm text-gray-600 mb-4">The study employs a mass replacement strategy. Water content was fixed at 10 wt% for plasticity during forming.</p>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-left">
+                        <thead class="bg-gray-100 uppercase text-xs font-semibold text-gray-600">
+                            <tr>
+                                <th class="p-3">Variant ID</th>
+                                <th class="p-3">Description</th>
+                                <th class="p-3 text-right">Clay (wt%)</th>
+                                <th class="p-3 text-right">Fly Ash (wt%)</th>
+                                <th class="p-3 text-right">Water (wt%)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            <tr class="bg-blue-50">
+                                <td class="p-3 font-bold text-blue-900">0CVLL</td>
+                                <td class="p-3">Control (Pure Clay)</td>
+                                <td class="p-3 text-right">100</td>
+                                <td class="p-3 text-right">0</td>
+                                <td class="p-3 text-right">10</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 font-medium">5CVLL</td>
+                                <td class="p-3">Low Replacement</td>
+                                <td class="p-3 text-right">95</td>
+                                <td class="p-3 text-right">5</td>
+                                <td class="p-3 text-right">10</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 font-medium">10CVLL</td>
+                                <td class="p-3">Medium Replacement</td>
+                                <td class="p-3 text-right">90</td>
+                                <td class="p-3 text-right">10</td>
+                                <td class="p-3 text-right">10</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 font-medium">15CVLL</td>
+                                <td class="p-3">Medium Replacement</td>
+                                <td class="p-3 text-right">85</td>
+                                <td class="p-3 text-right">15</td>
+                                <td class="p-3 text-right">10</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 font-medium">20CVLL</td>
+                                <td class="p-3">High Replacement</td>
+                                <td class="p-3 text-right">80</td>
+                                <td class="p-3 text-right">20</td>
+                                <td class="p-3 text-right">10</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 font-medium">25CVLL</td>
+                                <td class="p-3">Max Replacement</td>
+                                <td class="p-3 text-right">75</td>
+                                <td class="p-3 text-right">25</td>
+                                <td class="p-3 text-right">10</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="mt-6 card p-6 bg-gray-50 border-gray-200">
+                <h4 class="text-sm font-bold text-gray-900 mb-2">Processing Conditions</h4>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                    <div class="bg-white p-3 rounded border">
+                        <div class="text-xs text-gray-500">Drying</div>
+                        <div class="font-medium">110°C for 24h</div>
+                    </div>
+                    <div class="bg-white p-3 rounded border">
+                        <div class="text-xs text-gray-500">Sieving</div>
+                        <div class="font-medium">< 150 µm</div>
+                    </div>
+                    <div class="bg-white p-3 rounded border">
+                        <div class="text-xs text-gray-500">Firing (Sintering)</div>
+                        <div class="font-medium text-red-600">950°C (1h hold)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Content: Testing -->
+        <div id="tab-testing" class="tab-content hidden">
+            <div class="card p-6">
+                <h3 class="text-lg font-bold text-gray-900 mb-6">🧪 Experimental Protocols</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <h4 class="font-bold text-gray-800 mb-3 border-b pb-2">Specimen Preparation</h4>
+                        <ul class="space-y-3 text-sm">
+                            <li class="flex justify-between">
+                                <span class="text-gray-600">Geometry</span>
+                                <span class="font-medium">Rectangular Prism</span>
+                            </li>
+                            <li class="flex justify-between">
+                                <span class="text-gray-600">Dimensions</span>
+                                <span class="font-medium">60 × 30 mm</span>
+                            </li>
+                            <li class="flex justify-between">
+                                <span class="text-gray-600">Replicates</span>
+                                <span class="font-medium">6 samples per series</span>
+                            </li>
+                            <li class="flex justify-between">
+                                <span class="text-gray-600">Heating Rate</span>
+                                <span class="font-medium">2°C/min</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-gray-800 mb-3 border-b pb-2">Standards & Methods</h4>
+                        <ul class="space-y-2 text-sm">
+                            <li class="bg-gray-50 p-2 rounded">
+                                <span class="font-mono text-xs text-blue-600 mr-2">EN 772-13</span>
+                                <span>Density Determination</span>
+                            </li>
+                            <li class="bg-gray-50 p-2 rounded">
+                                <span class="font-mono text-xs text-blue-600 mr-2">EN 772-1</span>
+                                <span>Compressive Strength</span>
+                            </li>
+                            <li class="bg-gray-50 p-2 rounded">
+                                <span class="font-mono text-xs text-blue-600 mr-2">ASTM C62-10</span>
+                                <span>Building Brick Specification</span>
+                            </li>
+                            <li class="bg-gray-50 p-2 rounded">
+                                <span class="font-mono text-xs text-purple-600 mr-2">Techniques</span>
+                                <span>XRF, XRD, SEM</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Content: Results -->
+        <div id="tab-results" class="tab-content hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                <!-- Chart 1: Density -->
+                <div class="card p-6">
+                    <h4 class="font-bold text-gray-900 mb-4 text-center">Density vs. Ash Content</h4>
+                    <div class="h-64">
+                        <canvas id="densityChart"></canvas>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2 text-center">Consistent decrease in density due to organic matter combustion (pore formation).</p>
+                </div>
+                
+                <!-- Chart 2: Shrinkage & LOI -->
+                <div class="card p-6">
+                    <h4 class="font-bold text-gray-900 mb-4 text-center">Thermal Properties (LOI & Shrinkage)</h4>
+                    <div class="h-64">
+                        <canvas id="thermalChart"></canvas>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2 text-center">LOI increases directly with biomass content.</p>
+                </div>
+            </div>
+
+            <!-- Quantitative Table -->
+            <div class="card p-6 overflow-x-auto">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-bold text-gray-900">📊 Quantitative Results Matrix</h3>
+                    <span class="badge badge-core">Extracted Data</span>
+                </div>
+                <table class="w-full text-sm text-left border-collapse">
+                    <thead>
+                        <tr class="bg-gray-100 border-b border-gray-300">
+                            <th class="p-3 font-semibold">Variant</th>
+                            <th class="p-3 font-semibold text-right">Density* (g/cm³)</th>
+                            <th class="p-3 font-semibold text-right">LOI (%)</th>
+                            <th class="p-3 font-semibold text-right">Shrinkage (%)</th>
+                            <th class="p-3 font-semibold text-right">Comp. Strength (MPa)</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        <tr class="bg-blue-50">
+                            <td class="p-3 font-bold">0CVLL (Control)</td>
+                            <td class="p-3 text-right">2.53 ± 0.07</td>
+                            <td class="p-3 text-right">12.89</td>
+                            <td class="p-3 text-right text-red-600">-2.24 (Exp)</td>
+                            <td class="p-3 text-right font-bold">38.8</td>
+                        </tr>
+                        <tr class="bg-green-50">
+                            <td class="p-3 font-bold text-green-800">5CVLL (Optimal)</td>
+                            <td class="p-3 text-right">1.71 ± 0.01</td>
+                            <td class="p-3 text-right">14.01</td>
+                            <td class="p-3 text-right">0.50</td>
+                            <td class="p-3 text-right font-bold text-green-700">50.1</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3">10CVLL</td>
+                            <td class="p-3 text-right">1.71 ± 0.02</td>
+                            <td class="p-3 text-right">15.77</td>
+                            <td class="p-3 text-right">0.72</td>
+                            <td class="p-3 text-right text-gray-400 font-style-italic">Not listed</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3">15CVLL</td>
+                            <td class="p-3 text-right">1.68 ± 0.68</td>
+                            <td class="p-3 text-right">17.93</td>
+                            <td class="p-3 text-right">1.01</td>
+                            <td class="p-3 text-right text-gray-400 font-style-italic">Not listed</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3">20CVLL</td>
+                            <td class="p-3 text-right">1.70 ± 0.02</td>
+                            <td class="p-3 text-right">21.20</td>
+                            <td class="p-3 text-right">1.02</td>
+                            <td class="p-3 text-right text-gray-400 font-style-italic">Not listed</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3">25CVLL</td>
+                            <td class="p-3 text-right">1.64 ± 0.04</td>
+                            <td class="p-3 text-right">21.99</td>
+                            <td class="p-3 text-right">0.94</td>
+                            <td class="p-3 text-right text-gray-400 font-style-italic">Not listed</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="mt-3 text-xs text-gray-500">
+                    <p>* Density units reported in source as kg/cm³ (likely OCR/typo error for g/cm³ given ceramic values). Shrinkage negative value indicates expansion.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Content: Limitations -->
+        <div id="tab-limitations" class="tab-content hidden">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="card p-6 border-l-4 border-yellow-400">
+                    <h3 class="text-lg font-bold text-gray-900 mb-3">⚠️ Missing Parameters</h3>
+                    <ul class="list-disc pl-5 space-y-2 text-sm text-gray-700">
+                        <li><strong>Durability Testing:</strong> No freeze-thaw cycles or long-term weathering data.</li>
+                        <li><strong>Cooling Regime:</strong> Specific cooling curve after sintering not detailed.</li>
+                        <li><strong>Cost Analysis:</strong> No economic feasibility study included.</li>
+                        <li><strong>Mechanical Data Completeness:</strong> Compressive strength explicitly reported in text only for 0 and 5% variants; trends for higher replacements discussed qualitatively or in graphs.</li>
+                    </ul>
+                </div>
+                <div class="card p-6 border-l-4 border-orange-400">
+                    <h3 class="text-lg font-bold text-gray-900 mb-3">🚧 Experimental Constraints</h3>
+                    <ul class="list-disc pl-5 space-y-2 text-sm text-gray-700">
+                        <li><strong>Specimen Size:</strong> Lab-scale coupons (60x30mm) used, not full-size bricks.</li>
+                        <li><strong>Context Specificity:</strong> Results highly dependent on the specific chemical composition (high Potassium) of the Andalusian olive pomace ash.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Data Configuration
+        const materials = {
+            labels: ['0CVLL', '5CVLL', '10CVLL', '15CVLL', '20CVLL', '25CVLL'],
+            density: [2.53, 1.71, 1.71, 1.68, 1.70, 1.64],
+            loi: [12.89, 14.01, 15.77, 17.93, 21.20, 21.99],
+            shrinkage: [-2.24, 0.50, 0.72, 1.01, 1.02, 0.94]
+        };
+
+        function switchTab(tabId) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-button').forEach(el => el.classList.remove('active', 'bg-gray-800', 'text-white'));
+            
+            // Show selected tab
+            document.getElementById('tab-' + tabId).classList.remove('hidden');
+            const btn = document.getElementById('btn-' + tabId);
+            btn.classList.add('active');
+        }
+
+        function updateProgressBar() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById("progressBar").style.width = scrolled + "%";
+        }
+
+        window.onscroll = function() { updateProgressBar() };
+
+        // Copy Citation
+        function copyCitation() {
+            const text = "Bonet-Martínez, E., Pérez-Villarejo, L., Eliche-Quesada, D., Sánchez-Soto, P.J., Carrasco-Hurtado, B., & Castro-Galiano, E. (2018). Manufacture of sustainable clay ceramic composite with composition SiO2-Al2O3-CaO-K2O materials valuing biomass ash from olive pomace. Materials Letters, 229, 21–25. doi:10.1016/j.matlet.2018.06.105";
+            navigator.clipboard.writeText(text).then(() => alert("Citation copied to clipboard!"));
+        }
+
+        // Initialize Charts
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // 1. Oxide Composition Chart
+            new Chart(document.getElementById('oxideChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['K₂O (Potassium)', 'SiO₂ (Silica)', 'CaO (Lime)', 'Al₂O₃ (Alumina)', 'Other'],
+                    datasets: [{
+                        data: [42.66, 11.70, 10.20, 2.51, 32.93],
+                        backgroundColor: ['#7e22ce', '#3b82f6', '#22c55e', '#f97316', '#cbd5e1'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'right' },
+                        title: { display: true, text: 'Ash Chemical Composition (wt%)' }
+                    }
+                }
+            });
+
+            // 2. Density Chart
+            new Chart(document.getElementById('densityChart'), {
+                type: 'line',
+                data: {
+                    labels: materials.labels,
+                    datasets: [{
+                        label: 'Density (g/cm³)',
+                        data: materials.density,
+                        borderColor: '#0ea5e9',
+                        backgroundColor: 'rgba(14, 165, 233, 0.1)',
+                        fill: true,
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: false, min: 1.0, title: { display: true, text: 'Density (g/cm³)' } }
+                    }
+                }
+            });
+
+            // 3. Thermal Properties Chart
+            new Chart(document.getElementById('thermalChart'), {
+                type: 'bar',
+                data: {
+                    labels: materials.labels,
+                    datasets: [
+                        {
+                            label: 'Loss on Ignition (%)',
+                            data: materials.loi,
+                            backgroundColor: '#f97316',
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: 'Shrinkage (%)',
+                            data: materials.shrinkage,
+                            backgroundColor: '#64748b',
+                            yAxisID: 'y1',
+                            type: 'line'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { 
+                            type: 'linear', 
+                            display: true, 
+                            position: 'left',
+                            title: { display: true, text: 'LOI (%)' }
+                        },
+                        y1: { 
+                            type: 'linear', 
+                            display: true, 
+                            position: 'right', 
+                            grid: { drawOnChartArea: false },
+                            title: { display: true, text: 'Shrinkage (%)' }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

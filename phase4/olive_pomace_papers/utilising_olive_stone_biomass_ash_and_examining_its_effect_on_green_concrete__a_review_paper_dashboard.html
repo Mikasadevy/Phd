@@ -1,0 +1,1548 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Paper Dashboard – Review Paper | Olive Stone Biomass Ash</title>
+    <meta name="description" content="Academic research dashboard analyzing review paper on olive stone biomass ash in green concrete">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['Lora', 'Georgia', 'serif'],
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        },
+                        accent: {
+                            50: '#fef3c7',
+                            100: '#fde68a',
+                            200: '#fcd34d',
+                            300: '#fbbf24',
+                            400: '#f59e0b',
+                            500: '#d97706',
+                            600: '#b45309',
+                            700: '#92400e',
+                            800: '#78350f',
+                            900: '#451a03',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* Base Typography */
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            font-size: 16px;
+            line-height: 1.75;
+            color: #1e293b;
+            background: #ffffff;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Lora', Georgia, serif;
+            font-weight: 600;
+            line-height: 1.3;
+            color: #0f172a;
+        }
+        
+        h1 { font-size: 2.25rem; margin-bottom: 1rem; }
+        h2 { font-size: 1.875rem; margin-bottom: 0.875rem; }
+        h3 { font-size: 1.5rem; margin-bottom: 0.75rem; }
+        h4 { font-size: 1.25rem; margin-bottom: 0.625rem; }
+        
+        /* Academic Card Style */
+        .card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            transition: box-shadow 0.2s ease;
+        }
+        
+        .card:hover {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        
+        .card-elevated {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Badge System */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.375rem 0.875rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border: 1.5px solid;
+        }
+        
+        .badge-core {
+            background: #dbeafe;
+            color: #1e40af;
+            border-color: #3b82f6;
+        }
+        
+        .badge-experimental {
+            background: #fef3c7;
+            color: #92400e;
+            border-color: #f59e0b;
+        }
+        
+        .badge-interpretive {
+            background: #fce7f3;
+            color: #9f1239;
+            border-color: #f472b6;
+        }
+        
+        .badge-extracted {
+            background: #dcfce7;
+            color: #166534;
+            border-color: #22c55e;
+        }
+
+        .badge-review {
+            background: #fce7f3;
+            color: #9f1239;
+            border-color: #f472b6;
+        }
+        
+        /* Tab Navigation */
+        .tab-nav {
+            display: flex;
+            flex-wrap: nowrap;
+            justify-content: center;
+            align-items: center;
+            overflow-x: auto;
+            gap: 0.25rem;
+            border-bottom: 2px solid #e2e8f0;
+            padding: 0.75rem 0.25rem;
+            margin-bottom: 2rem;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        .tab-nav::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .tab-button {
+            flex: 0 0 auto;
+            padding: 0.35rem 0.6rem;
+            border-radius: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+            background: #f8fafc;
+            color: #64748b;
+            white-space: nowrap;
+        }
+        
+        .tab-button:hover {
+            background: #f1f5f9;
+            color: #334155;
+        }
+        
+        .tab-button.active {
+            color: #ffffff;
+        }
+
+        .tab-button.active.btn-info { background: #64748b; border-color: #475569; box-shadow: 0 2px 4px rgba(100, 116, 139, 0.3); }
+        .tab-button.active.btn-overview { background: #2563eb; border-color: #1d4ed8; box-shadow: 0 2px 4px rgba(37, 99, 235, 0.3); }
+        .tab-button.active.btn-materials { background: #16a34a; border-color: #15803d; box-shadow: 0 2px 4px rgba(22, 163, 74, 0.3); }
+        .tab-button.active.btn-results { background: #0891b2; border-color: #0e7490; box-shadow: 0 2px 4px rgba(8, 145, 178, 0.3); }
+        .tab-button.active.btn-limitations { background: #dc2626; border-color: #b91c1c; box-shadow: 0 2px 4px rgba(220, 38, 38, 0.3); }
+        .tab-button.active.btn-phd { background: #9333ea; border-color: #7e22ce; box-shadow: 0 2px 4px rgba(147, 51, 234, 0.3); }
+        .tab-button.active.btn-sustainability { background: #059669; border-color: #047857; box-shadow: 0 2px 4px rgba(5, 150, 105, 0.3); }
+        
+        /* Data Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+        }
+        
+        thead {
+            background: #f8fafc;
+            border-bottom: 2px solid #cbd5e1;
+        }
+        
+        th {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: #475569;
+            font-size: 0.8125rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        tbody tr:hover {
+            background: #f8fafc;
+        }
+        
+        /* Metric Cards */
+        .metric-card {
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            border: 1px solid #e2e8f0;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        
+        /* Progress Bar */
+        .progress-bar {
+            height: 3px;
+            background: #e2e8f0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 9999;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #0ea5e9 0%, #06b6d4 100%);
+            transition: width 0.15s ease-out;
+            box-shadow: 0 0 10px rgba(14, 165, 233, 0.5);
+        }
+        
+        /* Alert Boxes */
+        .alert {
+            padding: 1rem 1.25rem;
+            border-radius: 0.5rem;
+            border-left: 4px solid;
+            font-size: 0.875rem;
+            line-height: 1.6;
+        }
+        
+        .alert-info {
+            background: #dbeafe;
+            border-color: #3b82f6;
+            color: #1e3a8a;
+        }
+        
+        .alert-warning {
+            background: #fef3c7;
+            border-color: #f59e0b;
+            color: #78350f;
+        }
+        
+        .alert-success {
+            background: #dcfce7;
+            border-color: #22c55e;
+            color: #14532d;
+        }
+        
+        .alert-danger {
+            background: #fee2e2;
+            border-color: #ef4444;
+            color: #7f1d1d;
+        }
+        
+        /* Section Anchors */
+        .section-anchor {
+            scroll-margin-top: 100px;
+        }
+        
+        /* Print Styles */
+        @media print {
+            body {
+                font-size: 11pt;
+                line-height: 1.5;
+            }
+            
+            .no-print {
+                display: none !important;
+            }
+            
+            .card {
+                break-inside: avoid;
+                border: 1px solid #cbd5e1;
+                box-shadow: none;
+            }
+            
+            h2, h3, h4 {
+                break-after: avoid;
+            }
+            
+            .page-break {
+                page-break-before: always;
+            }
+            
+            .tab-content {
+                display: block !important;
+            }
+        }
+        
+        /* Code Blocks */
+        code {
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Courier New', monospace;
+            background: #f1f5f9;
+            padding: 0.125rem 0.375rem;
+            border-radius: 0.25rem;
+            font-size: 0.875em;
+            color: #0369a1;
+        }
+        
+        /* Tooltip */
+        [title] {
+            cursor: help;
+            text-decoration: underline;
+            text-decoration-style: dotted;
+            text-decoration-color: #94a3b8;
+        }
+        
+        /* Sticky Navigation */
+        .sticky-nav {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        /* Icon styling */
+        .icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            h1 { font-size: 1.75rem; }
+            h2 { font-size: 1.5rem; }
+            h3 { font-size: 1.25rem; }
+            
+            .tab-nav {
+                justify-content: center;
+            }
+        }
+        
+        /* Smooth transitions */
+        * {
+            transition: background-color 0.15s ease;
+        }
+        
+        /* Data provenance markers */
+        .provenance-marker {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.625rem;
+            padding: 0.125rem 0.375rem;
+            border-radius: 0.25rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .provenance-extracted {
+            background: #dcfce7;
+            color: #166534;
+        }
+        
+        .provenance-derived {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .provenance-interpretive {
+            background: #fce7f3;
+            color: #9f1239;
+        }
+        
+        .provenance-literature {
+            background: #dbeafe;
+            color: #1e3a8a;
+        }
+        
+        /* Enhanced accessibility */
+        a:focus, button:focus {
+            outline: 2px solid #0ea5e9;
+            outline-offset: 2px;
+        }
+        
+        /* Loading states */
+        .skeleton {
+            background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+    </style>
+<base target="_blank">
+</head>
+<body class="bg-gray-50">
+    
+    <!-- Progress Bar -->
+    <div class="progress-bar no-print">
+        <div id="progressFill" class="progress-fill" style="width: 0%"></div>
+    </div>
+    
+    <!-- Navigation Header -->
+    <nav class="sticky-nav no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center shadow-md">
+                        <span class="text-white font-bold text-xl">📄</span>
+                    </div>
+                    <div>
+                        <h1 class="text-base font-bold text-gray-900">Research Paper Dashboard</h1>
+                        <p class="text-xs text-gray-500">Olive Stone Ash Review</p>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="window.print()" class="px-3 py-2 rounded-lg bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 text-sm font-medium transition flex items-center gap-2">
+                        <span>🖨️</span> Print
+                    </button>
+                    <button onclick="copyCitation()" class="px-3 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium transition flex items-center gap-2">
+                        <span>📋</span> Citation
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+
+        <!-- Hero Section -->
+        <div class="card card-elevated p-8 mb-8">
+            <div class="flex items-start gap-6 mb-6">
+                <div class="flex-shrink-0">
+                    <div class="w-20 h-20 bg-gradient-to-br from-orange-500 to-red-500 rounded-2xl flex items-center justify-center shadow-lg">
+                        <span class="text-4xl">🫒</span>
+                    </div>
+                </div>
+                <div class="flex-1">
+                    <div class="flex flex-wrap gap-2 mb-3">
+                        <span class="badge badge-review">📚 Review Paper</span>
+                        <span class="badge badge-interpretive">⚡ Synthesis</span>
+                    </div>
+                    <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4 leading-tight">
+                        Utilising olive-stone biomass ash and examining its effect on green concrete: A review paper
+                    </h1>
+                    <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-4">
+                        <span class="flex items-center gap-1">
+                            <span class="icon">👥</span>
+                            Abdeliazim Mustafa Mohamed, Bassam A. Tayeh, Yazan I. Abu Aisheh, Musab Nimir Ali Salih
+                        </span>
+                        <span>•</span>
+                        <span>📅 2023</span>
+                        <span>•</span>
+                        <span>📖 Journal of Materials Research and Technology</span>
+                    </div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="text-sm text-gray-500 font-medium">DOI:</span>
+                        <code class="text-sm">10.1016/j.jmrt.2023.05.039</code>
+                        <a href="https://doi.org/10.1016/j.jmrt.2023.05.039" 
+                           target="_blank" 
+                           class="px-3 py-1 rounded bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium transition">
+                            🔗 Open Paper
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Review Paper Warning Banner -->
+            <div class="bg-gradient-to-br from-orange-50 to-red-50 rounded-xl p-6 border border-orange-200 mb-6">
+                <div class="flex items-start gap-4">
+                    <div class="flex-shrink-0">
+                        <span class="text-4xl">⚠️</span>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-xl font-bold text-gray-900 mb-3 flex items-center gap-2">
+                            <span>📚</span> Review Paper Context
+                            <span class="provenance-marker provenance-literature ml-auto">📖 Literature-Cited</span>
+                        </h3>
+                        <p class="text-gray-700 leading-relaxed mb-4">
+                            This dashboard synthesizes a <strong>systematic review paper</strong> that aggregates findings from multiple primary studies. 
+                            All quantitative data presented is <strong>literature-cited</strong> from previous research, not measured in this study. 
+                            This provides valuable benchmarking context but should not be treated as ground-truth experimental data.
+                        </p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-white rounded-lg p-4 border border-orange-200 hover:border-orange-400 transition">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="w-1 h-10 bg-orange-500 rounded-full"></div>
+                                    <div class="text-xs text-orange-700 uppercase tracking-widest font-bold">🎯 Research Value</div>
+                                </div>
+                                <div class="text-lg font-bold text-gray-900 pl-4">Literature Synthesis & Benchmarking</div>
+                            </div>
+                            
+                            <div class="bg-white rounded-lg p-4 border border-purple-200 hover:border-purple-400 transition">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="w-1 h-10 bg-purple-500 rounded-full"></div>
+                                    <div class="text-xs text-purple-700 uppercase tracking-widest font-bold">🔬 Data Origin</div>
+                                </div>
+                                <div class="text-lg font-bold text-gray-900 pl-4">Secondary (Meta-Analysis)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PhD Context Banner -->
+            <div class="bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl p-6 border border-purple-200">
+                <div class="flex flex-col md:flex-row items-start gap-6">
+                    <div class="flex-shrink-0">
+                        <div class="w-16 h-16 bg-purple-100 rounded-xl flex items-center justify-center border-2 border-purple-300 shadow-sm">
+                            <span class="text-3xl">💡</span>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-xl font-bold text-gray-900 mb-3 flex items-center gap-2">
+                            <span>🎓</span> Core Research Contribution
+                            <span class="provenance-marker provenance-interpretive ml-auto">⚡ Interpretive</span>
+                        </h3>
+                        <p class="text-gray-700 leading-relaxed mb-4">
+                            This review establishes that <strong>olive-stone biomass ash (OWA)</strong> can serve as a sustainable 
+                            <span class="px-2 py-0.5 bg-green-100 text-green-800 rounded font-semibold">
+                                partial cement replacement (5-20%)
+                                <span class="provenance-marker provenance-literature ml-1">📖 Literature</span>
+                            </span> 
+                            in concrete applications. The compilation demonstrates consistent strength improvements at optimal replacement levels while maintaining workability, providing a consolidated evidence base for waste valorisation pathways in cementitious materials.
+                        </p>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="bg-white rounded-lg p-4 border border-green-200 hover:border-green-400 transition">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="w-1 h-10 bg-green-500 rounded-full"></div>
+                                    <div class="text-xs text-green-700 uppercase tracking-widest font-bold">🎯 Research Alignment</div>
+                                </div>
+                                <div class="text-lg font-bold text-gray-900 pl-4">Waste Valorisation Literature Mapping</div>
+                            </div>
+                            
+                            <div class="bg-white rounded-lg p-4 border border-purple-200 hover:border-purple-400 transition">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="w-1 h-10 bg-purple-500 rounded-full"></div>
+                                    <div class="text-xs text-purple-700 uppercase tracking-widest font-bold">📊 Key Value</div>
+                                </div>
+                                <div class="text-lg font-bold text-gray-900 pl-4">Benchmarking Data Aggregation</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="metric-card">
+                <div class="text-center">
+                    <div class="text-4xl mb-3">📄</div>
+                    <div class="text-3xl font-bold text-blue-600 mb-1">17</div>
+                    <div class="text-sm font-medium text-gray-600 mb-2">Pages Reviewed</div>
+                    <div class="text-xs text-gray-500">Meta-analysis scope</div>
+                    <span class="provenance-marker provenance-extracted mt-2">✓ Extracted</span>
+                </div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="text-center">
+                    <div class="text-4xl mb-3">🔬</div>
+                    <div class="text-3xl font-bold text-green-600 mb-1">5-20%</div>
+                    <div class="text-sm font-medium text-gray-600 mb-2">Optimal Replacement Range</div>
+                    <div class="text-xs text-gray-500">Literature consensus</div>
+                    <span class="provenance-marker provenance-literature mt-2">📖 Literature</span>
+                </div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="text-center">
+                    <div class="text-4xl mb-3">📊</div>
+                    <div class="text-3xl font-bold text-purple-600 mb-1">12+</div>
+                    <div class="text-sm font-medium text-gray-600 mb-2">Studies Aggregated</div>
+                    <div class="text-xs text-gray-500">Primary research</div>
+                    <span class="provenance-marker provenance-literature mt-2">📖 Literature</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="card p-6 mb-8">
+            <div class="tab-nav">
+                <button class="tab-button btn-info" onclick="switchTab('info')">
+                    ℹ️ Info
+                </button>
+                <button class="tab-button active btn-overview" onclick="switchTab('overview')">
+                    📋 Overview
+                </button>
+                <button class="tab-button btn-materials" onclick="switchTab('materials')">
+                    🫒 Materials
+                </button>
+                <button class="tab-button btn-results" onclick="switchTab('results')">
+                    📊 Results
+                </button>
+                <button class="tab-button btn-limitations" onclick="switchTab('limitations')">
+                    ⚠️ Limitations
+                </button>
+                <button class="tab-button btn-phd" onclick="switchTab('phd')">
+                    🎓 PhD Context
+                </button>
+                <button class="tab-button btn-sustainability" onclick="switchTab('sustainability')">
+                    🌱 Sustainability
+                </button>
+            </div>
+
+            <!-- Tab Content: Info -->
+            <div id="tab-info" class="tab-content hidden">
+                <div class="space-y-8">
+                    <div class="card card-elevated p-6 border-l-4 border-purple-500">
+                        <div class="flex items-start gap-4">
+                            <div class="flex-shrink-0">
+                                <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
+                                    <span class="text-2xl">ℹ️</span>
+                                </div>
+                            </div>
+                            <div class="flex-1">
+                                <h2 class="text-xl font-bold text-gray-900 mb-2">📊 Data Provenance & Interpretation Notice</h2>
+                                <p class="text-sm text-gray-700 leading-relaxed mb-4">
+                                    This dashboard extracts and synthesizes data from a <strong>review paper</strong> that aggregates findings from multiple primary studies. 
+                                    All quantitative values are <strong>literature-cited</strong> from previous research, not measured in the current study. 
+                                    This provides valuable benchmarking context but should not be treated as ground-truth experimental data for modeling.
+                                </p>
+                                <div class="flex flex-wrap gap-2 mb-2">
+                                    <span class="provenance-marker provenance-extracted">✓ Extracted: Verbatim from paper</span>
+                                    <span class="provenance-marker provenance-derived">≈ Derived: Calculated from reported data</span>
+                                    <span class="provenance-marker provenance-interpretive">⚡ Interpretive: Author-level synthesis</span>
+                                    <span class="provenance-marker provenance-literature">📖 Literature: Cited from other studies</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Review Paper Specific Warning -->
+                    <div class="alert alert-warning">
+                        <strong>⚠️ Review Paper Data Limitation:</strong> This paper compiles results from multiple sources. For precise experimental details (mix designs, curing conditions, full statistical data), consult the original primary studies referenced in this review.
+                    </div>
+
+                    <div class="card p-6">
+                        <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>📖</span> Paper Characteristics
+                        </h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="space-y-4">
+                                <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                                    <div class="text-xs text-gray-500 mb-2">Paper Type</div>
+                                    <div class="text-lg font-bold text-orange-600">Review / Meta-Analysis</div>
+                                </div>
+                                <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                                    <div class="text-xs text-gray-500 mb-2">Data Origin</div>
+                                    <div class="text-lg font-bold text-blue-600">Literature-Cited</div>
+                                </div>
+                            </div>
+                            <div class="space-y-4">
+                                <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                                    <div class="text-xs text-gray-500 mb-2">Primary Use</div>
+                                    <div class="text-lg font-bold text-green-600">Benchmarking & Context</div>
+                                </div>
+                                <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                                    <div class="text-xs text-gray-500 mb-2">Modeling Suitability</div>
+                                    <div class="text-lg font-bold text-purple-600">Not Recommended</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card p-6">
+                        <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>🔤</span> Abbreviation Legend
+                        </h2>
+                        <div class="overflow-x-auto">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Abbreviation</th>
+                                        <th>Meaning</th>
+                                        <th>Context</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="font-semibold">OWA</td>
+                                        <td>Olive Waste Ash</td>
+                                        <td>General term for olive biomass ash</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-semibold">OBA</td>
+                                        <td>Olive Biomass Ash</td>
+                                        <td>Alternative abbreviation</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-semibold">OS</td>
+                                        <td>Olive Stone</td>
+                                        <td>Raw solid residue</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-semibold">OPC</td>
+                                        <td>Ordinary Portland Cement</td>
+                                        <td>Baseline binder type</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Overview -->
+            <div id="tab-overview" class="tab-content">
+                <div class="space-y-8">
+                    
+                    <!-- Mini Navigation -->
+                    <div class="flex flex-wrap gap-2 p-3 bg-gray-50 rounded-lg border border-gray-200">
+                        <span class="text-xs text-gray-600 font-medium">Quick Jump:</span>
+                        <button onclick="scrollToSection('objective-review')" class="text-xs px-2 py-1 rounded bg-white border border-gray-300 hover:bg-gray-100 transition">Objective</button>
+                        <button onclick="scrollToSection('system-review')" class="text-xs px-2 py-1 rounded bg-white border border-gray-300 hover:bg-gray-100 transition">System</button>
+                        <button onclick="scrollToSection('scope-review')" class="text-xs px-2 py-1 rounded bg-white border border-gray-300 hover:bg-gray-100 transition">Scope</button>
+                    </div>
+
+                    <!-- Research Objective -->
+                    <div id="objective-review" class="section-anchor">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>🎯</span> Research Objective & Problem Statement
+                        </h2>
+                        <div class="card p-6">
+                            <div class="space-y-6">
+                                <div>
+                                    <div class="flex items-center justify-between mb-3">
+                                        <h3 class="text-lg font-semibold text-gray-900">Review Objective</h3>
+                                        <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                                    </div>
+                                    <p class="text-gray-700 leading-relaxed bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+                                        "This study aims to conduct a critical review of previous literature on the use of olive waste ash (OWA)"
+                                    </p>
+                                </div>
+                                
+                                <div>
+                                    <div class="flex items-center justify-between mb-3">
+                                        <h3 class="text-lg font-semibold text-gray-900">Problem Definition</h3>
+                                        <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                                    </div>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div class="bg-green-50 p-4 rounded-lg border-l-4 border-green-500">
+                                            <h4 class="font-bold text-gray-900 mb-2">Environmental Challenge</h4>
+                                            <p class="text-sm text-gray-700">Reduce carbon dioxide emissions, which cause environmental pollution and climate problems</p>
+                                        </div>
+                                        <div class="bg-orange-50 p-4 rounded-lg border-l-4 border-orange-500">
+                                            <h4 class="font-bold text-gray-900 mb-2">Waste Challenge</h4>
+                                            <p class="text-sm text-gray-700">Support the reuse and exploitation of the waste concept</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Material System Context -->
+                    <div id="system-review" class="section-anchor">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>🧱</span> Material System Context
+                        </h2>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="card p-6 border-t-4 border-blue-500">
+                                <div class="text-3xl mb-3">🧱</div>
+                                <h3 class="text-base font-bold text-gray-900 mb-2">Primary System</h3>
+                                <p class="text-lg font-bold text-blue-600">Concrete</p>
+                                <p class="text-xs text-gray-500 mt-2">Primary focus of review</p>
+                                <span class="provenance-marker provenance-extracted mt-3">✓ Extracted</span>
+                            </div>
+                            
+                            <div class="card p-6 border-t-4 border-green-500">
+                                <div class="text-3xl mb-3">🫒</div>
+                                <h3 class="text-base font-bold text-gray-900 mb-2">Secondary System</h3>
+                                <p class="text-lg font-bold text-green-600">Mortar</p>
+                                <p class="text-xs text-gray-500 mt-2">Also reviewed</p>
+                                <span class="provenance-marker provenance-extracted mt-3">✓ Extracted</span>
+                            </div>
+                            
+                            <div class="card p-6 border-t-4 border-purple-500">
+                                <div class="text-3xl mb-3">⚙️</div>
+                                <h3 class="text-base font-bold text-gray-900 mb-2">Functional Role</h3>
+                                <p class="text-lg font-bold text-purple-600">Binder Replacement</p>
+                                <p class="text-xs text-gray-500 mt-2">Pozzolanic activity</p>
+                                <span class="provenance-marker provenance-extracted mt-3">✓ Extracted</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Research Scope -->
+                    <div id="scope-review" class="section-anchor">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>🔍</span> Research Scope & Context
+                        </h2>
+                        <div class="card p-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <div class="flex items-center justify-between mb-3">
+                                        <h3 class="text-lg font-semibold text-gray-900">What's in Scope</h3>
+                                        <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                                    </div>
+                                    <p class="text-gray-700 leading-relaxed">
+                                        Critical review of previous literature on OWA use in concrete and mortar, including physical, chemical, mechanical and durability properties
+                                    </p>
+                                </div>
+                                <div>
+                                    <div class="flex items-center justify-between mb-3">
+                                        <h3 class="text-lg font-semibold text-gray-900">Application Intent</h3>
+                                        <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                                    </div>
+                                    <p class="text-gray-700 leading-relaxed">
+                                        Using olive biomass ash (OBA) as replacement for a small portion of natural fine aggregate as admixture or reinforcement in construction industry
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+
+            <!-- Tab Content: Materials -->
+            <div id="tab-materials" class="tab-content hidden">
+                <div class="space-y-8">
+                    
+                    <!-- Primary Waste Materials -->
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>🫒</span> Primary Waste Materials
+                        </h2>
+                        
+                        <div class="card p-6 mb-6 border-l-4 border-green-500">
+                            <div class="flex items-start gap-4 mb-4">
+                                <div class="text-5xl">🫒</div>
+                                <div class="flex-1">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <h3 class="text-xl font-bold text-gray-900">Olive-Stone Biomass Ash (OWA)</h3>
+                                        <span class="provenance-marker provenance-extracted">✓ Extracted</span>
+                                    </div>
+                                    <p class="text-gray-700 leading-relaxed mb-4 bg-green-50 p-3 rounded">
+                                        "Utilisation of olive-stone biomass ash... use of olive waste ash (OWA) as replacement for a small portion of natural fine aggregate"
+                                    </p>
+                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                        <div class="bg-gray-50 p-3 rounded border border-gray-200">
+                                            <div class="text-xs text-gray-500 mb-1">Material Category</div>
+                                            <div class="text-sm font-bold text-gray-900">Pomace Ash</div>
+                                        </div>
+                                        <div class="bg-gray-50 p-3 rounded border border-gray-200">
+                                            <div class="text-xs text-gray-500 mb-1">Physical Form</div>
+                                            <div class="text-sm font-bold text-gray-900">Ash → Powder</div>
+                                        </div>
+                                        <div class="bg-gray-50 p-3 rounded border border-gray-200">
+                                            <div class="text-xs text-gray-500 mb-1">Source Type</div>
+                                            <div class="text-sm font-bold text-gray-900">Olive Oil Mill</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Material Characterization -->
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <h2 class="text-2xl font-bold text-gray-900 flex items-center gap-2">
+                                <span>🔬</span> Material Characterization Data
+                            </h2>
+                            <div class="text-xs px-3 py-1 rounded-full bg-orange-100 border border-orange-300 text-orange-800 font-semibold">
+                                Evidence: Literature-Cited • Standards: Not Specified
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <!-- Physical Properties -->
+                            <div class="card p-6">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h3 class="text-lg font-bold text-gray-900">Physical Properties</h3>
+                                    <span class="provenance-marker provenance-literature">📖 Literature</span>
+                                </div>
+                                <div class="space-y-3">
+                                    <div class="flex justify-between items-center p-3 bg-gray-50 rounded">
+                                        <span class="text-sm text-gray-700 font-medium">Moisture Content</span>
+                                        <span class="text-sm font-bold text-gray-900">4.15%</span>
+                                    </div>
+                                    <div class="flex justify-between items-center p-3 bg-gray-50 rounded">
+                                        <span class="text-sm text-gray-700 font-medium">Particle Size (d90)</span>
+                                        <span class="text-sm font-bold text-gray-900">45.2 µm</span>
+                                    </div>
+                                    <div class="flex justify-between items-center p-3 bg-gray-50 rounded">
+                                        <span class="text-sm text-gray-700 font-medium">Mean Particle Diameter</span>
+                                        <span class="text-sm font-bold text-gray-900">20.1 µm</span>
+                                    </div>
+                                </div>
+                                <div class="alert alert-warning mt-4 text-xs">
+                                    <strong>Note:</strong> Values cited from primary literature, not measured in this review
+                                </div>
+                            </div>
+
+                            <!-- Chemical Composition -->
+                            <div class="card p-6">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h3 class="text-lg font-bold text-gray-900">Chemical Composition</h3>
+                                    <span class="provenance-marker provenance-literature">📖 Literature</span>
+                                </div>
+                                <div class="space-y-3">
+                                    <div class="flex justify-between items-center p-3 bg-gray-50 rounded">
+                                        <span class="text-sm text-gray-700 font-medium">SiO₂</span>
+                                        <span class="text-sm font-bold text-gray-900">25.3%</span>
+                                    </div>
+                                    <div class="flex justify-between items-center p-3 bg-gray-50 rounded">
+                                        <span class="text-sm text-gray-700 font-medium">CaO</span>
+                                        <span class="text-sm font-bold text-gray-900">42.4%</span>
+                                    </div>
+                                    <div class="alert alert-info text-xs">
+                                        <strong>Analysis Methods:</strong> XRF, XRD, SEM (from cited studies)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Results -->
+            <div id="tab-results" class="tab-content hidden">
+                <div class="space-y-8">
+                    
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-2xl font-bold text-gray-900 flex items-center gap-2">
+                            <span>📊</span> Consolidated Results Overview
+                        </h2>
+                        <div class="text-xs px-3 py-1 rounded-full bg-orange-100 border border-orange-300 text-orange-800 font-semibold">
+                            Evidence: Literature-Cited • Replicates: Vary • Standards: Vary by source
+                        </div>
+                    </div>
+
+                    <!-- Review Results Disclaimer -->
+                    <div class="alert alert-warning">
+                        <strong>⚠️ Review Data Context:</strong> Results shown are aggregated from multiple primary studies. Values represent trends across literature, not single experimental outcomes. Refer to original sources for detailed experimental conditions and statistical data.
+                    </div>
+
+                    <!-- Sample Results -->
+                    <div class="card p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-bold text-gray-900 flex items-center gap-2">
+                                <span>💪</span> Sample Mechanical Performance Data
+                            </h3>
+                            <span class="provenance-marker provenance-literature">📖 Literature</span>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Study Ref</th>
+                                        <th>Variant</th>
+                                        <th>Age</th>
+                                        <th>Compressive Strength</th>
+                                        <th>% of Control</th>
+                                        <th>Source</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="font-bold">Ref 76</td>
+                                        <td>Control</td>
+                                        <td>3 days</td>
+                                        <td class="font-bold">18 MPa</td>
+                                        <td class="text-gray-600">Baseline</td>
+                                        <td><span class="provenance-marker provenance-literature">📖 Lit.</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-bold">Ref 76</td>
+                                        <td>5% OWA</td>
+                                        <td>3 days</td>
+                                        <td class="font-bold text-orange-600">13 MPa</td>
+                                        <td class="text-orange-600 font-bold">72%</td>
+                                        <td><span class="provenance-marker provenance-literature">📖 Lit.</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-bold">Ref 76</td>
+                                        <td>Control</td>
+                                        <td>28 days</td>
+                                        <td class="font-bold">27 MPa</td>
+                                        <td class="text-gray-600">Baseline</td>
+                                        <td><span class="provenance-marker provenance-literature">📖 Lit.</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-bold">Ref 76</td>
+                                        <td>5% OWA</td>
+                                        <td>28 days</td>
+                                        <td class="font-bold text-orange-600">18 MPa</td>
+                                        <td class="text-orange-600 font-bold">67%</td>
+                                        <td><span class="provenance-marker provenance-literature">📖 Lit.</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="alert alert-info mt-4 text-sm">
+                            <strong>ℹ️ Table Context:</strong> Data extracted from Table 6 of review paper. Only sample rows shown to demonstrate performance trends. Full dataset includes multiple studies with varying replacement levels (5-40%).
+                        </div>
+                    </div>
+
+                    <!-- Key Findings Summary -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                        <div class="card p-5 border-l-4 border-blue-500">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-1 h-10 bg-blue-500 rounded-full"></div>
+                                    <div class="text-xs text-blue-700 uppercase tracking-widest font-bold">📊 Literature Consensus</div>
+                                </div>
+                                <span class="provenance-marker provenance-literature">📖 Lit.</span>
+                            </div>
+                            <div class="text-xl font-bold text-gray-900 pl-4 mb-2">5-20% Optimal Replacement</div>
+                            <p class="text-sm text-gray-700 pl-4">
+                                Review finds that 5-20% OWA replacement maintains or improves compressive strength while enhancing sustainability.
+                            </p>
+                        </div>
+                        
+                        <div class="card p-5 border-l-4 border-orange-500">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-1 h-10 bg-orange-500 rounded-full"></div>
+                                    <div class="text-xs text-orange-700 uppercase tracking-widest font-bold">⚠️ Performance Trend</div>
+                                </div>
+                                <span class="provenance-marker provenance-literature">📖 Lit.</span>
+                            </div>
+                            <div class="text-xl font-bold text-gray-900 pl-4 mb-2">Strength Decline at High %</div>
+                            <p class="text-sm text-gray-700 pl-4">
+                                Higher replacement levels (>20%) typically show reduced compressive strength compared to control mixtures.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Limitations -->
+            <div id="tab-limitations" class="tab-content hidden">
+                <div class="space-y-8">
+                    
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>⚠️</span> Review Paper Limitations & Boundaries
+                        </h2>
+                        <p class="text-gray-600 mb-6">Critical considerations when using review paper data for PhD research and modeling.</p>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                            <div class="card p-5 border-l-4 border-red-500">
+                                <div class="flex items-start gap-3">
+                                    <span class="text-2xl">🚫</span>
+                                    <div>
+                                        <h3 class="text-base font-bold text-gray-900 mb-2">No Primary Experimental Data</h3>
+                                        <p class="text-sm text-gray-700">All results are cited from other studies. Original experimental details may be incomplete or inconsistent across sources.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card p-5 border-l-4 border-red-500">
+                                <div class="flex items-start gap-3">
+                                    <span class="text-2xl">🚫</span>
+                                    <div>
+                                        <h3 class="text-base font-bold text-gray-900 mb-2">Cannot Use for Ground Truth Modeling</h3>
+                                        <p class="text-sm text-gray-700">Data origin is literature-cited, not measured. Epistemic gate blocks MCDA, modeling, and benchmarking use.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card p-5 border-l-4 border-orange-500">
+                                <div class="flex items-start gap-3">
+                                    <span class="text-2xl">⚠️</span>
+                                    <div>
+                                        <h3 class="text-base font-bold text-gray-900 mb-2">Variable Data Quality</h3>
+                                        <p class="text-sm text-gray-700">Aggregated studies likely used different standards, curing conditions, and material sources.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card p-5 border-l-4 border-orange-500">
+                                <div class="flex items-start gap-3">
+                                    <span class="text-2xl">⚠️</span>
+                                    <div>
+                                        <h3 class="text-base font-bold text-gray-900 mb-2">Incomplete Statistical Data</h3>
+                                        <p class="text-sm text-gray-700">Standard deviations, confidence intervals, and replicate numbers may not be reported for all cited studies.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-danger">
+                            <strong>🚩 Critical Limitation:</strong> This review paper provides excellent context and direction for research, but cannot replace primary experimental data for rigorous modeling or MCDA. PhD researchers should consult original sources for ground-truth data.
+                        </div>
+                    </div>
+
+                    <!-- Data Gaps -->
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>🔍</span> Missing Parameters in Review
+                        </h2>
+                        
+                        <div class="card p-6">
+                            <div class="space-y-4">
+                                <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                                    <h4 class="text-sm font-bold text-gray-900 mb-2">Critical Parameters Missing</h4>
+                                    <ul class="space-y-1 text-sm text-gray-700">
+                                        <li>• <strong>Batch-specific material identity:</strong> No single batch characterized</li>
+                                        <li>• <strong>Primary experimental data:</strong> All data is literature-cited</li>
+                                        <li>• <strong>Detailed mix designs:</strong> Not provided for all cited studies</li>
+                                        <li>• <strong>Standardized curing conditions:</strong> Vary across reviewed studies</li>
+                                    </ul>
+                                </div>
+                                <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
+                                    <h4 class="text-sm font-bold text-yellow-700 mb-2">Impact on Reusability</h4>
+                                    <p class="text-sm text-gray-700">
+                                        <strong>Limited:</strong> While the review provides valuable benchmarking ranges and chemical composition data, 
+                                        the lack of primary experimental data prevents direct use in modeling or MCDA.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: PhD Context -->
+            <div id="tab-phd" class="tab-content hidden">
+                <div class="space-y-8">
+                    
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>🎓</span> PhD Context & Research Alignment
+                        </h2>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                            <div class="card p-5 border-t-4 border-green-500 hover:shadow-lg transition">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="w-1 h-10 bg-green-500 rounded-full"></div>
+                                    <div class="text-xs text-green-700 uppercase tracking-widest font-bold">🎯 Research Alignment</div>
+                                </div>
+                                <div class="text-xl font-bold text-gray-900 pl-4 mb-2">Strong Supporting Evidence</div>
+                                <p class="text-sm text-gray-700 pl-4">
+                                    Material and application domains align perfectly, providing excellent literature context for olive biomass ash research.
+                                </p>
+                            </div>
+                            
+                            <div class="card p-5 border-t-4 border-purple-500 hover:shadow-lg transition">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="w-1 h-10 bg-purple-500 rounded-full"></div>
+                                    <div class="text-xs text-purple-700 uppercase tracking-widest font-bold">📊 Key Value</div>
+                                </div>
+                                <div class="text-xl font-bold text-gray-900 pl-4 mb-2">Benchmarking & Gap Identification</div>
+                                <p class="text-sm text-gray-700 pl-4">
+                                    Aggregates chemical composition and performance ranges from multiple studies to guide your experimental design.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                            <div class="card p-6 border-t-4 border-green-500 hover:shadow-lg transition">
+                                <div class="text-3xl mb-3">1️⃣</div>
+                                <h3 class="text-lg font-bold text-gray-900 mb-3">Research Synergy</h3>
+                                <p class="text-sm text-gray-700 leading-relaxed">
+                                    Provides comprehensive chemical composition data and performance benchmarks to contextualize your experimental results.
+                                </p>
+                            </div>
+                            
+                            <div class="card p-6 border-t-4 border-blue-500 hover:shadow-lg transition">
+                                <div class="text-3xl mb-3">2️⃣</div>
+                                <h3 class="text-lg font-bold text-gray-900 mb-3">Recommended Actions</h3>
+                                <ul class="space-y-2 text-sm text-gray-700">
+                                    <li>• Use for literature positioning</li>
+                                    <li>• Extract primary sources for modeling</li>
+                                    <li>• Compare your results to aggregated trends</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="card p-6 border-t-4 border-orange-500 hover:shadow-lg transition">
+                                <div class="text-3xl mb-3">3️⃣</div>
+                                <h3 class="text-lg font-bold text-gray-900 mb-3">Your Contribution Space</h3>
+                                <p class="text-sm text-gray-700 leading-relaxed">
+                                    Conduct primary experimental work to fill gaps identified in review, particularly around durability and long-term performance.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-danger">
+                            <strong>🚩 Key Theme:</strong> This review reveals that most studies focus on mechanical properties but lack comprehensive durability data beyond compressive strength. This represents a clear gap for your PhD to address.
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+
+            <!-- Tab Content: Sustainability -->
+            <div id="tab-sustainability" class="tab-content hidden">
+                <div class="space-y-8">
+                    
+                    <!-- Sustainability Overview -->
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>🌱</span> Sustainability & Circular Economy
+                        </h2>
+                        
+                        <div class="bg-gradient-to-br from-green-50 to-blue-50 rounded-xl p-6 border border-green-200 mb-6">
+                            <div class="flex items-start gap-4">
+                                <span class="text-5xl">♻️</span>
+                                <div>
+                                    <h3 class="text-2xl font-bold text-gray-900 mb-3">Circular Economy Impact</h3>
+                                    <p class="text-gray-700 leading-relaxed text-lg">
+                                        This review demonstrates that <strong>olive-stone biomass ash (OWA)</strong> valorisation in concrete 
+                                        achieves dual sustainability goals: diverting agricultural waste from landfills while reducing 
+                                        cement consumption and associated carbon emissions.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Benefits Grid -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Waste Valorisation -->
+                            <div class="card p-6 border-t-4 border-green-500">
+                                <div class="flex items-center gap-3 mb-4">
+                                    <span class="text-3xl">🫒</span>
+                                    <h3 class="text-xl font-bold text-gray-900">Waste Valorisation</h3>
+                                </div>
+                                <div class="space-y-3">
+                                    <div class="bg-green-50 p-4 rounded border border-green-200">
+                                        <div class="flex items-center gap-2 mb-2">
+                                            <span>🫒</span>
+                                            <h4 class="text-sm font-bold text-green-700">Agricultural Waste</h4>
+                                        </div>
+                                        <p class="text-sm text-gray-700">
+                                            Olive-stone biomass ash from olive oil production - converted from disposal liability to construction resource.
+                                        </p>
+                                    </div>
+                                    <div class="bg-blue-50 p-4 rounded border border-blue-200">
+                                        <div class="flex items-center gap-2 mb-2">
+                                            <span>🌍</span>
+                                            <h4 class="text-sm font-bold text-blue-700">Regional Advantage</h4>
+                                        </div>
+                                        <p class="text-sm text-gray-700">
+                                            Mediterranean regions produce abundant olive waste, creating local supply chains for green concrete production.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Environmental Benefits -->
+                            <div class="card p-6 border-t-4 border-blue-500">
+                                <div class="flex items-center gap-3 mb-4">
+                                    <span class="text-3xl">🌍</span>
+                                    <h3 class="text-xl font-bold text-gray-900">Environmental Benefits</h3>
+                                </div>
+                                <div class="space-y-3">
+                                    <div class="bg-teal-50 p-4 rounded border border-teal-200">
+                                        <div class="flex items-center gap-2 mb-2">
+                                            <span>⬇️</span>
+                                            <h4 class="text-sm font-bold text-teal-700">Reduced Cement Consumption</h4>
+                                        </div>
+                                        <p class="text-sm text-gray-700">
+                                            Up to <strong>20% cement replacement</strong> maintains mechanical performance while reducing embodied carbon.
+                                        </p>
+                                    </div>
+                                    <div class="bg-emerald-50 p-4 rounded border border-emerald-200">
+                                        <div class="flex items-center gap-2 mb-2">
+                                            <span>🗑️</span>
+                                            <h4 class="text-sm font-bold text-emerald-700">Landfill Diversion</h4>
+                                        </div>
+                                        <p class="text-sm text-gray-700">
+                                            Converts agricultural residue (moisture content 4.15%) from landfilled waste to valuable supplementary cementitious material.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Research Gaps & Opportunities -->
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>🔍</span> Identified Research Gaps & Your Contribution Space
+                        </h2>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="card p-5 border-t-4 border-yellow-500">
+                                <div class="text-2xl mb-3">⚠️</div>
+                                <h4 class="text-sm font-bold text-yellow-700 mb-2">Durability Data Gaps</h4>
+                                <p class="text-xs text-gray-700 leading-relaxed">
+                                    Most reviewed studies focus on mechanical properties. Limited data on long-term durability (chloride, sulfate, freeze-thaw).
+                                </p>
+                            </div>
+                            <div class="card p-5 border-t-4 border-orange-500">
+                                <div class="text-2xl mb-3">🧪</div>
+                                <h4 class="text-sm font-bold text-orange-700 mb-2">Standardization Needed</h4>
+                                <p class="text-xs text-gray-700 leading-relaxed">
+                                    Inconsistent testing methods and curing conditions across studies make direct comparison challenging.
+                                </p>
+                            </div>
+                            <div class="card p-5 border-t-4 border-red-500">
+                                <div class="text-2xl mb-3">🔬</div>
+                                <h4 class="text-sm font-bold text-red-700 mb-2">Scale-Up Studies</h4>
+                                <p class="text-xs text-gray-700 leading-relaxed">
+                                    Most studies are laboratory-scale. Industrial-scale validation and field performance data are lacking.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-100 border-t border-gray-200 py-8 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col items-center justify-center text-center">
+                <p class="text-gray-700 text-sm">
+                    <strong>PhD Scholar Dashboard</strong> • University of Bath • Literature Review System
+                </p>
+                <p class="text-gray-500 text-xs mt-2">
+                    Waste Valorisation & Sustainable Construction Materials Research
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Paper Data
+        const paperData = {
+            title: "Utilising olive-stone biomass ash and examining its effect on green concrete: A review paper",
+            doi: "10.1016/j.jmrt.2023.05.039",
+            authors: ["Abdeliazim Mustafa Mohamed", "Bassam A. Tayeh", "Yazan I. Abu Aisheh", "Musab Nimir Ali Salih"],
+            year: "2023",
+            journal: "Journal of Materials Research and Technology"
+        };
+
+        let currentTab = 'overview';
+
+        // Tab Switching
+        function switchTab(tabName) {
+            currentTab = tabName;
+            
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.add('hidden');
+            });
+            
+            // Show selected tab
+            const targetTab = document.getElementById(`tab-${tabName}`);
+            if (targetTab) {
+                targetTab.classList.remove('hidden');
+            }
+            
+            // Update button states
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Activate target button
+            const targetBtn = document.querySelector(`.btn-${tabName}`);
+            if (targetBtn) {
+                targetBtn.classList.add('active');
+            }
+            
+            updateProgress();
+        }
+
+        // Section Scrolling
+        function scrollToSection(id) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        // Progress Bar Update
+        function updateProgress() {
+            const progressFill = document.getElementById('progressFill');
+            if (!progressFill) return;
+            
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+            
+            progressFill.style.width = `${Math.min(100, Math.max(0, progress))}%`;
+        }
+
+        // Copy Citation
+        function copyCitation() {
+            const citation = `${paperData.authors.join(', ')} (${paperData.year}). ${paperData.title}. ${paperData.journal}. https://doi.org/${paperData.doi}`;
+            
+            navigator.clipboard.writeText(citation).then(() => {
+                const btn = event.target.closest('button');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<span>✓</span> Copied!';
+                btn.classList.add('bg-green-600');
+                btn.classList.remove('bg-blue-600');
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.classList.remove('bg-green-600');
+                    btn.classList.add('bg-blue-600');
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy citation:', err);
+                alert('Failed to copy citation. Please try again.');
+            });
+        }
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Update progress bar on scroll
+            updateProgress();
+            window.addEventListener('scroll', updateProgress, { passive: true });
+            
+            // Smooth scroll for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+
+            // Add keyboard navigation for tabs
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+                    const tabs = ['info', 'overview', 'materials', 'results', 'limitations', 'phd', 'sustainability'];
+                    const currentIndex = tabs.indexOf(currentTab);
+                    let newIndex;
+                    
+                    if (e.key === 'ArrowRight') {
+                        newIndex = (currentIndex + 1) % tabs.length;
+                    } else {
+                        newIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+                    }
+                    
+                    const newTab = tabs[newIndex];
+                    const btn = document.querySelector(`[onclick="switchTab('${newTab}')"]`);
+                    if (btn) {
+                        btn.click();
+                    }
+                }
+            });
+
+            // Add print optimization
+            window.addEventListener('beforeprint', function() {
+                // Show all tabs for printing
+                document.querySelectorAll('.tab-content').forEach(tab => {
+                    tab.classList.remove('hidden');
+                });
+            });
+
+            window.addEventListener('afterprint', function() {
+                // Restore original tab visibility
+                document.querySelectorAll('.tab-content').forEach(tab => {
+                    if (tab.id !== `tab-${currentTab}`) {
+                        tab.classList.add('hidden');
+                    }
+                });
+            });
+
+            // Add intersection observer for section highlights
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+
+            // Observe all cards
+            document.querySelectorAll('.card').forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                observer.observe(card);
+            });
+        });
+
+        // Utility function for responsive table scrolling
+        function makeTablesResponsive() {
+            const tables = document.querySelectorAll('table');
+            tables.forEach(table => {
+                if (!table.parentElement.classList.contains('overflow-x-auto')) {
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'overflow-x-auto';
+                    table.parentNode.insertBefore(wrapper, table);
+                    wrapper.appendChild(table);
+                }
+            });
+        }
+
+        // Call on load
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', makeTablesResponsive);
+        } else {
+            makeTablesResponsive();
+        }
+    </script>
+
+
+</body>
+</html>

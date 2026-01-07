@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Paper Dashboard – Kerrai et al. 2020 | Olive Waste in Cement</title>
+    <meta name="description" content="Academic research dashboard analyzing the valorisation of olive kernels and pomace for cement manufacture">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['Lora', 'Georgia', 'serif'],
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        },
+                        olive: {
+                            50: '#f7fee7',
+                            100: '#ecfccb',
+                            200: '#d9f99d',
+                            300: '#bef264',
+                            400: '#a3e635',
+                            500: '#84cc16',
+                            600: '#65a30d',
+                            700: '#4d7c0f',
+                            800: '#3f6212',
+                            900: '#365314',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* Base Typography */
+        body { font-family: 'Inter', system-ui, -apple-system, sans-serif; color: #1e293b; background: #ffffff; }
+        h1, h2, h3, h4, h5, h6 { font-family: 'Lora', Georgia, serif; font-weight: 600; color: #0f172a; }
+        h1 { font-size: 2.25rem; margin-bottom: 1rem; }
+        h2 { font-size: 1.875rem; margin-bottom: 0.875rem; }
+        
+        /* Card Style */
+        .card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 0.75rem; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1); transition: box-shadow 0.2s ease; }
+        .card:hover { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .card-elevated { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        
+        /* Badges */
+        .badge { display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.375rem 0.875rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; border: 1.5px solid; }
+        .badge-core { background: #dbeafe; color: #1e40af; border-color: #3b82f6; }
+        .badge-experimental { background: #fef3c7; color: #92400e; border-color: #f59e0b; }
+        
+        /* Tab Navigation */
+        .tab-nav { display: flex; flex-wrap: nowrap; overflow-x: auto; gap: 0.25rem; border-bottom: 2px solid #e2e8f0; padding: 0.75rem 0.25rem; margin-bottom: 2rem; scrollbar-width: none; }
+        .tab-nav::-webkit-scrollbar { display: none; }
+        .tab-button { flex: 0 0 auto; padding: 0.35rem 0.6rem; border-radius: 0.5rem; font-size: 0.75rem; font-weight: 600; transition: all 0.2s ease; border: 1px solid transparent; background: #f8fafc; color: #64748b; }
+        .tab-button:hover { background: #f1f5f9; color: #334155; }
+        .tab-button.active { color: #ffffff; }
+        .tab-button.active.btn-overview { background: #2563eb; border-color: #1d4ed8; }
+        .tab-button.active.btn-materials { background: #65a30d; border-color: #4d7c0f; }
+        .tab-button.active.btn-formulation { background: #ea580c; border-color: #c2410c; }
+        .tab-button.active.btn-testing { background: #4f46e5; border-color: #4338ca; }
+        .tab-button.active.btn-results { background: #0891b2; border-color: #0e7490; }
+        .tab-button.active.btn-limitations { background: #dc2626; border-color: #b91c1c; }
+        .tab-button.active.btn-phd { background: #9333ea; border-color: #7e22ce; }
+        .tab-button.active.btn-sustainability { background: #059669; border-color: #047857; }
+        
+        /* Metric Cards */
+        .metric-card { padding: 1.5rem; border-radius: 0.75rem; border: 1px solid #e2e8f0; background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); transition: transform 0.2s ease; }
+        .metric-card:hover { transform: translateY(-2px); }
+        
+        /* Tables */
+        table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+        thead { background: #f8fafc; border-bottom: 2px solid #cbd5e1; }
+        th { padding: 0.75rem 1rem; text-align: left; font-weight: 600; color: #475569; font-size: 0.8125rem; text-transform: uppercase; }
+        td { padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; }
+        
+        /* Provenance Markers */
+        .provenance-marker { display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.625rem; padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-weight: 600; text-transform: uppercase; }
+        .provenance-measured { background: #dcfce7; color: #166534; }
+        .provenance-explicit { background: #e0f2fe; color: #075985; }
+
+        /* Progress Bar */
+        .progress-bar { height: 3px; background: #e2e8f0; position: fixed; top: 0; left: 0; right: 0; z-index: 9999; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #0ea5e9 0%, #06b6d4 100%); transition: width 0.15s ease-out; }
+        
+        /* Print */
+        @media print { .no-print { display: none !important; } .tab-content { display: block !important; } }
+    </style>
+</head>
+<body class="bg-gray-50">
+    
+    <!-- Progress Bar -->
+    <div class="progress-bar no-print">
+        <div id="progressFill" class="progress-fill" style="width: 0%"></div>
+    </div>
+    
+    <!-- Navigation Header -->
+    <nav class="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-gray-200 no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-olive-500 to-green-600 rounded-lg flex items-center justify-center shadow-md">
+                        <span class="text-white font-bold text-xl">🫒</span>
+                    </div>
+                    <div>
+                        <h1 class="text-base font-bold text-gray-900 leading-none mt-1">Research Dashboard</h1>
+                        <p class="text-xs text-gray-500">Kerrai et al. (2020)</p>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="window.print()" class="px-3 py-2 rounded-lg bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 text-sm font-medium transition flex items-center gap-2">
+                        <span>🖨️</span> Print
+                    </button>
+                    <button onclick="copyCitation()" class="px-3 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium transition flex items-center gap-2">
+                        <span>📋</span> Citation
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- Hero Section -->
+        <div class="card card-elevated p-8 mb-8">
+            <div class="flex items-start gap-6 mb-6">
+                <div class="flex-shrink-0">
+                    <div class="w-20 h-20 bg-gradient-to-br from-olive-500 to-green-600 rounded-2xl flex items-center justify-center shadow-lg">
+                        <span class="text-4xl">🏗️</span>
+                    </div>
+                </div>
+                <div class="flex-1">
+                    <div class="flex flex-wrap gap-2 mb-3">
+                        <span class="badge badge-core">Core Dataset</span>
+                        <span class="badge badge-experimental">Experimental + Modeling</span>
+                    </div>
+                    <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4 leading-tight">
+                        Valorisation of organic waste: Use of olive kernels and pomace for cement manufacture
+                    </h1>
+                    <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-4">
+                        <span class="flex items-center gap-1">
+                            <span>👥</span> Kerrai Lila, Salah Belaadi, Roland Solimando, Fetiha Ralida Zirour
+                        </span>
+                        <span>•</span>
+                        <span>📅 2020</span>
+                        <span>•</span>
+                        <span>📖 Journal of Cleaner Production</span>
+                    </div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="text-sm text-gray-500 font-medium">DOI:</span>
+                        <code class="text-sm bg-gray-100 px-2 py-1 rounded">10.1016/j.jclepro.2020.123703</code>
+                        <a href="https://doi.org/10.1016/j.jclepro.2020.123703" target="_blank" class="px-3 py-1 rounded bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium transition">
+                            🔗 Open Paper
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Context Banner -->
+            <div class="bg-gradient-to-br from-green-50 to-olive-50 rounded-xl p-6 border border-olive-200">
+                <div class="flex flex-col md:flex-row items-start gap-6">
+                    <div class="flex-shrink-0">
+                        <div class="w-16 h-16 bg-olive-100 rounded-xl flex items-center justify-center border-2 border-olive-300 shadow-sm">
+                            <span class="text-3xl">💡</span>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-xl font-bold text-gray-900 mb-3 flex items-center gap-2">
+                            <span>🎓</span> Core Takeaway
+                            <span class="provenance-marker provenance-explicit ml-auto">Explicit</span>
+                        </h3>
+                        <p class="text-gray-700 leading-relaxed mb-4">
+                            10% substitution of clinker with <strong>calcined olive pomace</strong> or <strong>dried olive kernels</strong> maintains 365-day compressive strength comparable to OPC (approx. 50-51 MPa) while improving grindability and reducing the heat of hydration.
+                        </p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="bg-white rounded-lg p-4 border border-green-200">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="w-1 h-10 bg-green-500 rounded-full"></div>
+                                    <div class="text-xs text-green-700 uppercase tracking-widest font-bold">Recommended Use</div>
+                                </div>
+                                <div class="text-lg font-bold text-gray-900 pl-4">Core Dataset</div>
+                            </div>
+                            <div class="bg-white rounded-lg p-4 border border-blue-200">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="w-1 h-10 bg-blue-500 rounded-full"></div>
+                                    <div class="text-xs text-blue-700 uppercase tracking-widest font-bold">Innovation</div>
+                                </div>
+                                <div class="text-lg font-bold text-gray-900 pl-4">Delphi 6 Kinetic Modeling</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="metric-card">
+                <div class="text-center">
+                    <div class="text-4xl mb-3">⚗️</div>
+                    <div class="text-3xl font-bold text-blue-600 mb-1">5</div>
+                    <div class="text-sm font-medium text-gray-600 mb-2">Variants Tested</div>
+                    <div class="text-xs text-gray-500">Including OPC Control</div>
+                </div>
+            </div>
+            <div class="metric-card">
+                <div class="text-center">
+                    <div class="text-4xl mb-3">📅</div>
+                    <div class="text-3xl font-bold text-green-600 mb-1">365</div>
+                    <div class="text-sm font-medium text-gray-600 mb-2">Days Duration</div>
+                    <div class="text-xs text-gray-500">Long-term strength tested</div>
+                </div>
+            </div>
+            <div class="metric-card">
+                <div class="text-center">
+                    <div class="text-4xl mb-3">⚖️</div>
+                    <div class="text-3xl font-bold text-olive-600 mb-1">10-30%</div>
+                    <div class="text-sm font-medium text-gray-600 mb-2">Replacement Range</div>
+                    <div class="text-xs text-gray-500">By mass of clinker</div>
+                </div>
+            </div>
+            <div class="metric-card">
+                <div class="text-center">
+                    <div class="text-4xl mb-3">📄</div>
+                    <div class="text-3xl font-bold text-purple-600 mb-1">100%</div>
+                    <div class="text-sm font-medium text-gray-600 mb-2">Traceability</div>
+                    <div class="text-xs text-gray-500">55 Extractable Fields</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="card p-6 mb-8">
+            <div class="tab-nav">
+                <button class="tab-button active btn-overview" onclick="switchTab('overview')">📋 Overview</button>
+                <button class="tab-button btn-materials" onclick="switchTab('materials')">🫒 Materials</button>
+                <button class="tab-button btn-formulation" onclick="switchTab('formulation')">🧱 Formulation</button>
+                <button class="tab-button btn-testing" onclick="switchTab('testing')">⚙️ Testing</button>
+                <button class="tab-button btn-results" onclick="switchTab('results')">📊 Results</button>
+                <button class="tab-button btn-limitations" onclick="switchTab('limitations')">⚠️ Limitations</button>
+                <button class="tab-button btn-phd" onclick="switchTab('phd')">🎓 PhD Context</button>
+                <button class="tab-button btn-sustainability" onclick="switchTab('sustainability')">🌱 Sustainability</button>
+            </div>
+
+            <!-- Tab: Overview -->
+            <div id="tab-overview" class="tab-content">
+                <div class="space-y-8">
+                    <!-- Research Objective -->
+                    <div class="card p-6">
+                        <div class="space-y-6">
+                            <div>
+                                <div class="flex items-center justify-between mb-3">
+                                    <h3 class="text-lg font-semibold text-gray-900">Primary Objective</h3>
+                                    <span class="provenance-marker provenance-explicit">Explicit</span>
+                                </div>
+                                <p class="text-gray-700 leading-relaxed bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+                                    "Investigate the effect of replacing clinker with pomace and olive kernel on cement mechanical strength, heat evolution, setting time and particle size."
+                                </p>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="bg-orange-50 p-4 rounded-lg border-l-4 border-orange-500">
+                                    <h4 class="font-bold text-gray-900 mb-2">Technical Problem</h4>
+                                    <p class="text-sm text-gray-700">High carbon dioxide emissions from cement industry and waste management issues.</p>
+                                </div>
+                                <div class="bg-green-50 p-4 rounded-lg border-l-4 border-green-500">
+                                    <h4 class="font-bold text-gray-900 mb-2">Environmental Context</h4>
+                                    <p class="text-sm text-gray-700">Olive oil industry generates huge amounts of solid olive mill waste (SOMW), which have a dangerous impact on the environment.</p>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900 mb-3">System Context</h3>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                                        <div class="text-xs text-gray-500 mb-1">Application</div>
+                                        <div class="text-base font-bold text-gray-900">Construction materials (cement/mortar)</div>
+                                    </div>
+                                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                                        <div class="text-xs text-gray-500 mb-1">Function</div>
+                                        <div class="text-base font-bold text-gray-900">Binder Replacement</div>
+                                    </div>
+                                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                                        <div class="text-xs text-gray-500 mb-1">Baseline</div>
+                                        <div class="text-base font-bold text-gray-900">OPC Mortar (CEMI)</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Materials -->
+            <div id="tab-materials" class="tab-content hidden">
+                <div class="space-y-8">
+                    
+                    <!-- Primary Waste Materials -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="card p-6 border-l-4 border-olive-500">
+                            <div class="flex items-center gap-3 mb-4">
+                                <span class="text-3xl">🌰</span>
+                                <h3 class="text-xl font-bold text-gray-900">Olive Kernels (N)</h3>
+                            </div>
+                            <div class="space-y-3">
+                                <div class="bg-gray-50 p-3 rounded">
+                                    <div class="text-xs text-gray-500">Preparation</div>
+                                    <div class="font-bold text-gray-900">Dehydrated at 105°C for 24h</div>
+                                </div>
+                                <div class="bg-gray-50 p-3 rounded">
+                                    <div class="text-xs text-gray-500">Step 1</div>
+                                    <div class="text-sm">Depleted by surfactants to remove fat</div>
+                                </div>
+                                <div class="bg-gray-50 p-3 rounded">
+                                    <div class="text-xs text-gray-500">State</div>
+                                    <div class="text-sm">Ground powder</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card p-6 border-l-4 border-gray-600">
+                            <div class="flex items-center gap-3 mb-4">
+                                <span class="text-3xl">🔥</span>
+                                <h3 class="text-xl font-bold text-gray-900">Olive Pomace (G)</h3>
+                            </div>
+                            <div class="space-y-3">
+                                <div class="bg-gray-50 p-3 rounded">
+                                    <div class="text-xs text-gray-500">Preparation</div>
+                                    <div class="font-bold text-red-700">Calcined (Shock-burned) at 900°C for 1h</div>
+                                </div>
+                                <div class="bg-gray-50 p-3 rounded">
+                                    <div class="text-xs text-gray-500">Origin</div>
+                                    <div class="text-sm">Larabaa olive mill (Eastern Algiers)</div>
+                                </div>
+                                <div class="bg-gray-50 p-3 rounded">
+                                    <div class="text-xs text-gray-500">State</div>
+                                    <div class="text-sm">Ground powder</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chemical Composition -->
+                    <div class="card p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-bold text-gray-900">Chemical Composition (XRF)</h3>
+                            <span class="provenance-marker provenance-measured">Measured</span>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div class="overflow-x-auto">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Oxide</th>
+                                            <th>Value (%)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td class="font-bold">CaO</td><td>65.84</td></tr>
+                                        <tr><td class="font-bold">SiO2</td><td>21.75</td></tr>
+                                        <tr><td class="font-bold">Al2O3</td><td>5.78</td></tr>
+                                        <tr><td class="font-bold">Fe2O3</td><td>3.47</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="h-64">
+                                <canvas id="oxideChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Formulation -->
+            <div id="tab-formulation" class="tab-content hidden">
+                <div class="space-y-8">
+                    <!-- Mix Design Strategy -->
+                    <div class="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-6 border border-blue-200">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                            <div>
+                                <div class="text-3xl mb-2">⚖️</div>
+                                <div class="text-xl font-bold text-gray-900">Mass %</div>
+                                <div class="text-xs text-gray-600">Replacement Basis</div>
+                            </div>
+                            <div>
+                                <div class="text-3xl mb-2">🧱</div>
+                                <div class="text-xl font-bold text-blue-600">Clinker</div>
+                                <div class="text-xs text-gray-600">Material Replaced</div>
+                            </div>
+                            <div>
+                                <div class="text-3xl mb-2">💧</div>
+                                <div class="text-xl font-bold text-purple-600">Water Curing</div>
+                                <div class="text-xs text-gray-600">Curing Method</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Variants Table -->
+                    <div class="card p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-bold text-gray-900">Tested Variants & Mix Proportions</h3>
+                            <span class="provenance-marker provenance-explicit">Table 2</span>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Variant ID</th>
+                                        <th>Description</th>
+                                        <th>Cement %</th>
+                                        <th>Waste Material %</th>
+                                        <th>Gypsum %</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="bg-gray-100 font-bold">
+                                        <td>OPC</td>
+                                        <td>Control Reference</td>
+                                        <td>95</td>
+                                        <td>0</td>
+                                        <td>5</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-bold text-olive-700">N10</td>
+                                        <td>10% Olive Kernels</td>
+                                        <td>85</td>
+                                        <td>10</td>
+                                        <td>5</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-bold text-olive-700">N30</td>
+                                        <td>30% Olive Kernels</td>
+                                        <td>65</td>
+                                        <td>30</td>
+                                        <td>5</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-bold text-gray-700">G10</td>
+                                        <td>10% Calcined Pomace</td>
+                                        <td>85</td>
+                                        <td>10</td>
+                                        <td>5</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-bold text-gray-700">G30</td>
+                                        <td>30% Calcined Pomace</td>
+                                        <td>65</td>
+                                        <td>30</td>
+                                        <td>5</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div class="h-64 card p-6">
+                        <h4 class="text-sm font-bold text-gray-600 mb-4">Replacement Levels Visualized</h4>
+                        <canvas id="replacementChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Testing -->
+            <div id="tab-testing" class="tab-content hidden">
+                <div class="space-y-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Experimental Conditions -->
+                        <div class="card p-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-lg font-bold text-gray-900">Experimental Design</h3>
+                                <span class="provenance-marker provenance-explicit">Explicit</span>
+                            </div>
+                            <div class="space-y-3">
+                                <div class="flex justify-between p-2 bg-gray-50 rounded">
+                                    <span class="text-gray-600">Specimen</span>
+                                    <span class="font-bold">40x40x160 mm prisms</span>
+                                </div>
+                                <div class="flex justify-between p-2 bg-gray-50 rounded">
+                                    <span class="text-gray-600">Curing</span>
+                                    <span class="font-bold">Immersed in water at 20°C</span>
+                                </div>
+                                <div class="flex justify-between p-2 bg-gray-50 rounded">
+                                    <span class="text-gray-600">Test Ages (Days)</span>
+                                    <span class="font-bold text-blue-600">2, 7, 28, 72, 150, 365</span>
+                                </div>
+                                <div class="flex justify-between p-2 bg-gray-50 rounded">
+                                    <span class="text-gray-600">Standard</span>
+                                    <span class="font-bold">NF EN 196-3 / 196-4</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Methods Used -->
+                        <div class="card p-6">
+                            <h3 class="text-lg font-bold text-gray-900 mb-4">Characterization Methods</h3>
+                            <div class="space-y-2">
+                                <div class="flex items-center gap-3 p-2 border-b border-gray-100">
+                                    <span class="text-xl">🔬</span>
+                                    <div>
+                                        <span class="font-bold block">XRF (Cubix Panalytical)</span>
+                                        <span class="text-xs text-gray-500">Chemical composition</span>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-3 p-2 border-b border-gray-100">
+                                    <span class="text-xl">📊</span>
+                                    <div>
+                                        <span class="font-bold block">XRD (Siemens/Bruker D5000)</span>
+                                        <span class="text-xs text-gray-500">Mineralogical composition</span>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-3 p-2 border-b border-gray-100">
+                                    <span class="text-xl">🔥</span>
+                                    <div>
+                                        <span class="font-bold block">DSC (Differential Scanning Calorimetry)</span>
+                                        <span class="text-xs text-gray-500">Heat of hydration and enthalpy</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Results -->
+            <div id="tab-results" class="tab-content hidden">
+                <div class="space-y-8">
+                    
+                    <!-- Key Result Banner -->
+                    <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded-r-lg">
+                        <div class="flex items-center gap-3">
+                            <span class="text-2xl">✅</span>
+                            <div>
+                                <h3 class="font-bold text-green-800">Long-Term Strength Parity</h3>
+                                <p class="text-green-700 text-sm">At 365 days, 10% replacement variants (N10, G10) achieve compressive strength (50-51 MPa) effectively equal to OPC (51.35 MPa).</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Compressive Strength Table -->
+                    <div class="card p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-bold text-gray-900">Mechanical Performance (365 Days)</h3>
+                            <span class="provenance-marker provenance-measured">Measured</span>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Variant</th>
+                                        <th>Compressive Strength (MPa)</th>
+                                        <th>Performance vs Control</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="bg-gray-100">
+                                        <td class="font-bold">OPC (Reference)</td>
+                                        <td class="font-bold">51.35</td>
+                                        <td>-</td>
+                                    </tr>
+                                    <tr>
+                                        <td>G10 (10% Pomace)</td>
+                                        <td>51.00</td>
+                                        <td class="text-green-600 font-bold">~99.3%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>N10 (10% Kernels)</td>
+                                        <td>50.00</td>
+                                        <td class="text-green-600 font-bold">~97.4%</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Density & Heat Capacity -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="card p-6">
+                            <h3 class="text-lg font-bold text-gray-900 mb-4">Density (g/cm³)</h3>
+                            <canvas id="densityChart"></canvas>
+                        </div>
+                        <div class="card p-6">
+                            <h3 class="text-lg font-bold text-gray-900 mb-4">Heat Capacity (Enthalpy J/g)</h3>
+                            <div class="overflow-x-auto">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Variant</th>
+                                            <th>Enthalpy (J/g)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td class="font-bold">OPC</td><td>8164.75</td></tr>
+                                        <tr><td>G10</td><td>7801.18</td></tr>
+                                        <tr><td>N10</td><td>5852.94</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-2">N10 shows significantly reduced heat of hydration.</p>
+                        </div>
+                    </div>
+
+                    <!-- Author Claim -->
+                    <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                        <h4 class="font-bold text-blue-900 text-sm mb-2"> Modeling Contribution</h4>
+                        <p class="text-sm text-blue-800">
+                            "Proportionality (Pp) modelling by Delphi 6 allowed to obtain the key parameter: enthalpy... as the OPC cement which had the highest DH, it developed the best mechanical and rheological parameters."
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Tab: Limitations -->
+            <div id="tab-limitations" class="tab-content hidden">
+                <div class="space-y-6">
+                    <div class="card p-6 border-l-4 border-yellow-500">
+                        <h3 class="text-lg font-bold text-gray-900 mb-3">Missing Data Points</h3>
+                        <p class="text-gray-700 mb-4">The extraction identified specific parameters not reported in the text:</p>
+                        <ul class="list-disc pl-5 space-y-2 text-sm text-gray-700">
+                            <li><strong>Durability Properties:</strong> Tests other than strength (e.g., chloride, sulfate resistance) were not reported.</li>
+                            <li><strong>Cost Analysis:</strong> No economic feasibility study included.</li>
+                            <li><strong>Leaching Tests:</strong> Environmental safety regarding leaching was not tested.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: PhD Context -->
+            <div id="tab-phd" class="tab-content hidden">
+                <div class="space-y-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="card p-6 border-t-4 border-purple-600">
+                            <h3 class="text-xl font-bold text-gray-900 mb-3">Actionable Takeaway</h3>
+                            <p class="text-gray-700 leading-relaxed">
+                                Use this paper as a <strong>benchmark for 10% substitution</strong>. It confirms that at low substitution levels (10%), olive waste (whether dried kernels or calcined pomace) does not compromise the 365-day mechanical integrity of the mortar.
+                            </p>
+                        </div>
+                        <div class="card p-6 border-t-4 border-blue-600">
+                            <h3 class="text-xl font-bold text-gray-900 mb-3">Recommended Next Actions</h3>
+                            <ul class="space-y-2 text-sm text-gray-700">
+                                <li class="flex items-center gap-2">✅ <strong>Replicate:</strong> 10% mix design as a baseline.</li>
+                                <li class="flex items-center gap-2">🔍 <strong>Extend:</strong> Focus on durability metrics which are missing here.</li>
+                                <li class="flex items-center gap-2">📊 <strong>Analyze:</strong> Conduct LCA to compare the calcination (900°C) vs drying (105°C) energy costs.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Sustainability -->
+            <div id="tab-sustainability" class="tab-content hidden">
+                <div class="space-y-8">
+                    <div class="card p-6">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <span>🌱</span> Sustainability & Processing
+                        </h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="bg-green-50 p-4 rounded-lg border border-green-200">
+                                <h4 class="font-bold text-green-900 mb-2">Waste Valorisation</h4>
+                                <p class="text-sm text-green-800">
+                                    Utilizes "huge amounts of solid olive mill waste (SOMW)" from the olive oil industry, addressing a significant environmental hazard in regions like Algeria.
+                                </p>
+                            </div>
+                            <div class="bg-orange-50 p-4 rounded-lg border border-orange-200">
+                                <h4 class="font-bold text-orange-900 mb-2">Energy Intensity Note</h4>
+                                <p class="text-sm text-orange-800">
+                                    <strong>Pomace:</strong> Requires calcination at 900°C (High Energy).<br>
+                                    <strong>Kernels:</strong> Requires drying at 105°C (Lower Energy).<br>
+                                    Both routes require washing with surfactants.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-100 border-t border-gray-200 py-8 mt-12 no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-gray-700 text-sm"><strong>PhD Scholar Dashboard</strong> • Kerrai et al. (2020) Extraction</p>
+            <p class="text-gray-500 text-xs mt-2">Data extracted via rigorous automated analysis.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Paper Data
+        const paperData = {
+            title: "Valorisation of organic waste: Use of olive kernels and pomace for cement manufacture",
+            doi: "10.1016/j.jclepro.2020.123703",
+            authors: ["Kerrai Lila", "Salah Belaadi", "Roland Solimando", "Fetiha Ralida Zirour"],
+            year: 2020,
+            journal: "Journal of Cleaner Production"
+        };
+
+        // Tab Switching Logic
+        let currentTab = 'overview';
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+            const targetTab = document.getElementById(`tab-${tabName}`);
+            if (targetTab) targetTab.classList.remove('hidden');
+            
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            const targetBtn = document.querySelector(`.btn-${tabName}`);
+            if (targetBtn) targetBtn.classList.add('active');
+            
+            currentTab = tabName;
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const progressFill = document.getElementById('progressFill');
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+            progressFill.style.width = `${Math.min(100, Math.max(0, progress))}%`;
+        }
+
+        function copyCitation() {
+            const citation = `${paperData.authors[0]} et al. (${paperData.year}). ${paperData.title}. ${paperData.journal}. https://doi.org/${paperData.doi}`;
+            navigator.clipboard.writeText(citation).then(() => alert('Citation copied!'));
+        }
+
+        // Charts Initialization
+        function initializeCharts() {
+            // Oxide Composition (from JSON Table 1)
+            const oxideCtx = document.getElementById('oxideChart');
+            if (oxideCtx) {
+                new Chart(oxideCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['CaO', 'SiO2', 'Al2O3', 'Fe2O3', 'Other'],
+                        datasets: [{
+                            data: [65.84, 21.75, 5.78, 3.47, 3.16], // Sum is approx 100
+                            backgroundColor: ['#d9f99d', '#bae6fd', '#fed7aa', '#fca5a5', '#cbd5e1']
+                        }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false }
+                });
+            }
+
+            // Replacement Levels
+            const replacementCtx = document.getElementById('replacementChart');
+            if (replacementCtx) {
+                new Chart(replacementCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['OPC', 'N10', 'N30', 'G10', 'G30'],
+                        datasets: [{
+                            label: 'Waste Replacement %',
+                            data: [0, 10, 30, 10, 30],
+                            backgroundColor: ['#94a3b8', '#65a30d', '#65a30d', '#ea580c', '#ea580c']
+                        }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false }
+                });
+            }
+
+            // Density Chart (Table 3)
+            const densityCtx = document.getElementById('densityChart');
+            if (densityCtx) {
+                new Chart(densityCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['OPC', 'N10', 'N30', 'G10', 'G30'],
+                        datasets: [{
+                            label: 'Density (g/cm³)',
+                            data: [3.12, 2.42, 1.66, 2.60, 1.95],
+                            backgroundColor: '#0ea5e9'
+                        }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false }
+                });
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeCharts();
+            window.addEventListener('scroll', updateProgress);
+        });
+    </script>
+</body>
+</html>
