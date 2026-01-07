@@ -1,0 +1,1466 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Olive Pomace Data Extraction Framework – PhD Research Dashboard</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['Lora', 'serif'],
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        olive: {
+                            50: '#f7fee7',
+                            100: '#ecfccb',
+                            200: '#d9f99d',
+                            300: '#bef264',
+                            400: '#a3e635',
+                            500: '#84cc16',
+                            600: '#65a30d',
+                            700: '#4d7c0f',
+                            800: '#3f6212',
+                            900: '#365314',
+                        },
+                        clay: {
+                            50: '#fff7ed',
+                            100: '#ffedd5',
+                            200: '#fed7aa',
+                            500: '#f97316',
+                            600: '#ea580c',
+                            700: '#c2410c',
+                            800: '#9a3412',
+                            900: '#7c2d12',
+                        },
+                        cement: {
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            200: '#e2e8f0',
+                            300: '#cbd5e1',
+                            400: '#94a3b8',
+                            500: '#64748b',
+                            600: '#475569',
+                            700: '#334155',
+                            800: '#1e293b',
+                            900: '#0f172a',
+                        }
+                    },
+                    animation: {
+                        'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e0; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        .glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+        
+        .sci-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .sci-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #3f6212 0%, #4d7c0f 100%);
+            color: white;
+            border-color: #3f6212;
+            box-shadow: 0 10px 15px -3px rgba(63, 98, 18, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .metric-badge {
+            transition: all 0.3s ease;
+        }
+        .metric-badge:hover {
+            transform: scale(1.05);
+        }
+
+        .schema-line {
+            position: relative;
+            padding-left: 2rem;
+        }
+        .schema-line::before {
+            content: '';
+            position: absolute;
+            left: 0.5rem;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, #84cc16, transparent);
+        }
+
+        .badge-tier-a { 
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.3);
+        }
+        .badge-tier-b { 
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);
+        }
+        .badge-tier-c { 
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(245, 158, 11, 0.3);
+        }
+
+        .data-flow-arrow {
+            position: relative;
+        }
+        .data-flow-arrow::after {
+            content: '→';
+            position: absolute;
+            right: -1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+            color: #84cc16;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans selection:bg-olive-200 relative">
+
+    <!-- HERO HEADER -->
+    <header class="relative bg-gradient-to-br from-olive-900 via-olive-800 to-cement-900 text-white pt-24 pb-32 px-6 overflow-hidden shadow-2xl">
+        <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 30px 30px;"></div>
+        <div class="absolute top-0 right-0 w-96 h-96 bg-olive-400 rounded-full mix-blend-overlay filter blur-3xl opacity-20 animate-pulse-slow"></div>
+        <div class="absolute bottom-0 left-0 w-96 h-96 bg-emerald-400 rounded-full mix-blend-overlay filter blur-3xl opacity-15 animate-pulse-slow"></div>
+        
+        <div class="relative container mx-auto max-w-7xl text-center z-10 animate-fade-in-up">
+            <div class="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-bold tracking-wide mb-8 uppercase shadow-lg">
+                <span class="w-2 h-2 bg-olive-400 rounded-full animate-pulse shadow-[0_0_10px_#a3e635]"></span>
+                Design Schema
+                <span class="text-white/60">|</span>
+                <span class="text-olive-200">Waste Valorisation Framework</span>
+            </div>
+            
+            <h1 class="text-5xl md:text-7xl font-serif font-bold mb-6 leading-tight drop-shadow-2xl tracking-tight">
+                Olive Pomace<br/><span class="text-olive-200">Data Extraction Schema</span>
+            </h1>
+            <p class="text-xl md:text-2xl text-slate-200 font-serif italic max-w-4xl mx-auto mb-12 leading-relaxed font-light">
+                A deterministic, non-subjective, and auditable methodology to systematically extract material properties, processing parameters, and performance metrics from waste valorisation research.
+            </p>
+
+            <!-- Key Metrics Row -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+                <div class="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-4 hover:bg-white/15 transition">
+                    <div class="text-3xl font-bold text-olive-200 mb-1">5</div>
+                    <div class="text-xs text-slate-300 uppercase tracking-wide">Core Modules</div>
+                </div>
+                <div class="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-4 hover:bg-white/15 transition">
+                    <div class="text-3xl font-bold text-olive-200 mb-1">150+</div>
+                    <div class="text-xs text-slate-300 uppercase tracking-wide">Data Fields</div>
+                </div>
+                <div class="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-4 hover:bg-white/15 transition">
+                    <div class="text-3xl font-bold text-olive-200 mb-1">3</div>
+                    <div class="text-xs text-slate-300 uppercase tracking-wide">Data Tiers</div>
+                </div>
+                <div class="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-4 hover:bg-white/15 transition">
+                    <div class="text-3xl font-bold text-olive-200 mb-1">100%</div>
+                    <div class="text-xs text-slate-300 uppercase tracking-wide">Traceable</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="absolute bottom-0 left-0 w-full h-20 bg-slate-50 rounded-t-[50%] transform scale-x-150 translate-y-10 shadow-[0_-15px_50px_rgba(0,0,0,0.15)]"></div>
+    </header>
+
+    <main class="container mx-auto px-4 md:px-6 py-16 max-w-7xl space-y-24">
+
+        <!-- SCHEMA DESIGN PRINCIPLES -->
+        <section class="animate-fade-in-up">
+            <div class="text-center max-w-4xl mx-auto mb-12">
+                <h2 class="text-4xl font-serif font-bold text-slate-900 mb-6">Design Principles</h2>
+                <p class="text-slate-600 text-lg leading-relaxed">
+                   This schema filters information based on evidence quality and removes subjectivity, ensuring all extracted data is verifiable, auditable, and ML-ready.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Principle 1 -->
+                <div class="bg-white border-2 border-emerald-100 rounded-2xl p-8 shadow-lg hover:shadow-xl transition sci-card">
+                    <div class="w-14 h-14 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl flex items-center justify-center text-white text-2xl mb-6 shadow-lg">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">Deterministic Extraction</h3>
+                    <p class="text-slate-600 leading-relaxed text-sm">
+                        No guessing, no assumptions. Every value is either <span class="font-mono text-xs bg-emerald-50 px-2 py-0.5 rounded">measured</span>, <span class="font-mono text-xs bg-blue-50 px-2 py-0.5 rounded">calculated</span>, or marked <span class="font-mono text-xs bg-amber-50 px-2 py-0.5 rounded">unclear</span>. Subjective interpretations are explicitly forbidden.
+                    </p>
+                </div>
+
+                <!-- Principle 2 -->
+                <div class="bg-white border-2 border-blue-100 rounded-2xl p-8 shadow-lg hover:shadow-xl transition sci-card">
+                    <div class="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center text-white text-2xl mb-6 shadow-lg">
+                        <i class="fa-solid fa-link"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">Full Traceability</h3>
+                    <p class="text-slate-600 leading-relaxed text-sm">
+                        Every numerical value includes its source: <strong>page number</strong>, <strong>table/figure ID</strong>, and <strong>text snippet</strong>. Enables cross-verification and audit trails for every data point.
+                    </p>
+                </div>
+
+                <!-- Principle 3 -->
+                <div class="bg-white border-2 border-purple-100 rounded-2xl p-8 shadow-lg hover:shadow-xl transition sci-card">
+                    <div class="w-14 h-14 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center text-white text-2xl mb-6 shadow-lg">
+                        <i class="fa-solid fa-database"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">ML-Ready Structure</h3>
+                    <p class="text-slate-600 leading-relaxed text-sm">
+                        Flat, queryable JSON structure with controlled vocabularies. Designed for direct ingestion into machine learning pipelines and cross-paper meta-analysis without manual reformatting.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- DATA TIER SYSTEM -->
+        <section class="bg-gradient-to-br from-slate-100 to-white rounded-3xl p-10 border-2 border-slate-200 shadow-xl">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-serif font-bold text-slate-900 mb-4">Three-Tier Data Classification</h2>
+                <p class="text-slate-600 max-w-3xl mx-auto text-lg">
+                    The schema categorizes every field into <strong>Tier A (Core)</strong>, <strong>Tier B (Valuable)</strong>, or <strong>Tier C (Context)</strong> to prioritize extraction effort and assess paper completeness.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- Tier A -->
+                <div class="bg-white border-2 border-emerald-200 rounded-2xl p-6 shadow-md hover:shadow-lg transition">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="badge-tier-a px-4 py-2 rounded-lg text-sm font-bold uppercase tracking-wide">Tier A</span>
+                        <span class="text-emerald-600 text-xl"><i class="fa-solid fa-star"></i></span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">Core / Critical</h3>
+                    <p class="text-sm text-slate-600 mb-4 leading-relaxed">
+                        <strong>Essential for any analysis.</strong> Includes material identity, replacement levels, control reference, at least one performance metric, and test conditions.
+                    </p>
+                    <div class="text-xs text-slate-500 space-y-1">
+                        <div class="flex items-start gap-2">
+                            <i class="fa-solid fa-check text-emerald-600 mt-0.5"></i>
+                            <span>Material type & form</span>
+                        </div>
+                        <div class="flex items-start gap-2">
+                            <i class="fa-solid fa-check text-emerald-600 mt-0.5"></i>
+                            <span>Substitution dosages</span>
+                        </div>
+                        <div class="flex items-start gap-2">
+                            <i class="fa-solid fa-check text-emerald-600 mt-0.5"></i>
+                            <span>Performance results</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tier B -->
+                <div class="bg-white border-2 border-blue-200 rounded-2xl p-6 shadow-md hover:shadow-lg transition">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="badge-tier-b px-4 py-2 rounded-lg text-sm font-bold uppercase tracking-wide">Tier B</span>
+                        <span class="text-blue-600 text-xl"><i class="fa-solid fa-award"></i></span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">Valuable / Enhancing</h3>
+                    <p class="text-sm text-slate-600 mb-4 leading-relaxed">
+                        <strong>Improves analysis depth.</strong> Chemical composition, particle size, processing details, microstructural analysis, and durability tests.
+                    </p>
+                    <div class="text-xs text-slate-500 space-y-1">
+                        <div class="flex items-start gap-2">
+                            <i class="fa-solid fa-check text-blue-600 mt-0.5"></i>
+                            <span>Chemical composition</span>
+                        </div>
+                        <div class="flex items-start gap-2">
+                            <i class="fa-solid fa-check text-blue-600 mt-0.5"></i>
+                            <span>Particle size distribution</span>
+                        </div>
+                        <div class="flex items-start gap-2">
+                            <i class="fa-solid fa-check text-blue-600 mt-0.5"></i>
+                            <span>Processing parameters</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tier C -->
+                <div class="bg-white border-2 border-amber-200 rounded-2xl p-6 shadow-md hover:shadow-lg transition">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="badge-tier-c px-4 py-2 rounded-lg text-sm font-bold uppercase tracking-wide">Tier C</span>
+                        <span class="text-amber-600 text-xl"><i class="fa-solid fa-circle-info"></i></span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">Contextual / Supporting</h3>
+                    <p class="text-sm text-slate-600 mb-4 leading-relaxed">
+                        <strong>Adds context but not critical.</strong> Geographic origin, novelty claims, author interpretations, and scalability discussions.
+                    </p>
+                    <div class="text-xs text-slate-500 space-y-1">
+                        <div class="flex items-start gap-2">
+                            <i class="fa-solid fa-check text-amber-600 mt-0.5"></i>
+                            <span>Material origin location</span>
+                        </div>
+                        <div class="flex items-start gap-2">
+                            <i class="fa-solid fa-check text-amber-600 mt-0.5"></i>
+                            <span>Innovation claims</span>
+                        </div>
+                        <div class="flex items-start gap-2">
+                            <i class="fa-solid fa-check text-amber-600 mt-0.5"></i>
+                            <span>Economic discussion</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FRAMEWORK OVERVIEW -->
+        <section class="animate-fade-in-up text-center max-w-5xl mx-auto">
+            <h2 class="text-4xl font-serif font-bold text-slate-900 mb-6">Five-Module Extraction Framework</h2>
+            <p class="text-slate-600 text-lg leading-relaxed mb-12">
+                The schema is organized into <strong>five interconnected modules</strong> that systematically capture the entire research lifecycle—from waste characterization to scalability assessment. Each module contains structured fields with controlled vocabularies and evidence tracing.
+            </p>
+
+            <!-- Visual Framework Flow -->
+            <div class="bg-white rounded-3xl p-8 border-2 border-slate-200 shadow-xl">
+                <div class="flex flex-wrap justify-center items-center gap-4">
+                    <div class="flex items-center">
+                        <div class="bg-gradient-to-br from-olive-500 to-olive-600 text-white px-6 py-3 rounded-xl font-bold shadow-lg">
+                            1. Waste Identity
+                        </div>
+                        <div class="text-olive-500 text-2xl mx-3"><i class="fa-solid fa-arrow-right"></i></div>
+                    </div>
+                    
+                    <div class="flex items-center">
+                        <div class="bg-gradient-to-br from-cement-600 to-cement-700 text-white px-6 py-3 rounded-xl font-bold shadow-lg">
+                            2. Matrix Design
+                        </div>
+                        <div class="text-cement-600 text-2xl mx-3"><i class="fa-solid fa-arrow-right"></i></div>
+                    </div>
+                    
+                    <div class="flex items-center">
+                        <div class="bg-gradient-to-br from-clay-600 to-clay-700 text-white px-6 py-3 rounded-xl font-bold shadow-lg">
+                            3. Processing
+                        </div>
+                        <div class="text-clay-600 text-2xl mx-3"><i class="fa-solid fa-arrow-right"></i></div>
+                    </div>
+                    
+                    <div class="flex items-center">
+                        <div class="bg-gradient-to-br from-emerald-500 to-emerald-600 text-white px-6 py-3 rounded-xl font-bold shadow-lg">
+                            4. Results
+                        </div>
+                        <div class="text-emerald-500 text-2xl mx-3"><i class="fa-solid fa-arrow-right"></i></div>
+                    </div>
+                    
+                    <div class="bg-gradient-to-br from-purple-600 to-purple-700 text-white px-6 py-3 rounded-xl font-bold shadow-lg">
+                        5. Feasibility
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- INTERACTIVE MODULE TABS -->
+        <section>
+            <!-- TABS -->
+            <div class="flex flex-wrap justify-center gap-4 mb-12" role="tablist">
+                <button onclick="switchTab('tab-waste')" id="btn-waste" class="tab-btn active px-8 py-4 rounded-xl bg-white text-cement-800 border-2 border-cement-200 font-bold shadow-md hover:bg-cement-50 transition transform hover:-translate-y-1">
+                    <i class="fa-solid fa-leaf mr-2"></i> Module 1: Waste Identity
+                </button>
+                <button onclick="switchTab('tab-matrix')" id="btn-matrix" class="tab-btn px-8 py-4 rounded-xl bg-white text-cement-800 border-2 border-cement-200 font-bold shadow-md hover:bg-cement-50 transition transform hover:-translate-y-1">
+                    <i class="fa-solid fa-layer-group mr-2"></i> Module 2: Matrix Design
+                </button>
+                <button onclick="switchTab('tab-process')" id="btn-process" class="tab-btn px-8 py-4 rounded-xl bg-white text-cement-800 border-2 border-cement-200 font-bold shadow-md hover:bg-cement-50 transition transform hover:-translate-y-1">
+                    <i class="fa-solid fa-fire-burner mr-2"></i> Module 3: Processing
+                </button>
+                <button onclick="switchTab('tab-output')" id="btn-output" class="tab-btn px-8 py-4 rounded-xl bg-white text-cement-800 border-2 border-cement-200 font-bold shadow-md hover:bg-cement-50 transition transform hover:-translate-y-1">
+                    <i class="fa-solid fa-chart-line mr-2"></i> Module 4: Results
+                </button>
+                <button onclick="switchTab('tab-scale')" id="btn-scale" class="tab-btn px-8 py-4 rounded-xl bg-white text-cement-800 border-2 border-cement-200 font-bold shadow-md hover:bg-cement-50 transition transform hover:-translate-y-1">
+                    <i class="fa-solid fa-industry mr-2"></i> Module 5: Feasibility
+                </button>
+            </div>
+
+            <!-- TAB CONTENT AREA -->
+            <div class="relative min-h-[600px]">
+                
+                <!-- MODULE 1: WASTE IDENTITY -->
+                <div id="tab-waste" class="tab-content active">
+                    <div class="bg-gradient-to-br from-olive-50 to-white rounded-3xl p-10 border-2 border-olive-200 shadow-xl">
+                        <div class="flex items-center gap-4 mb-8">
+                            <div class="w-16 h-16 bg-gradient-to-br from-olive-600 to-olive-700 text-white rounded-2xl flex items-center justify-center text-2xl shadow-lg">
+                                <i class="fa-solid fa-leaf"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-3xl font-serif font-bold text-olive-900">Waste Material Identity</h3>
+                                <p class="text-olive-700 text-sm mt-1">Tier A (Core) • 35+ structured fields</p>
+                            </div>
+                        </div>
+
+                        <p class="text-slate-700 text-lg leading-relaxed mb-8">
+                            Captures the <strong>precise identity</strong> of the waste material, including its origin, physical form, chemical composition, and batch-specific characteristics. This module ensures materials are uniquely identifiable and comparable across studies.
+                        </p>
+
+                        <div class="grid md:grid-cols-2 gap-8">
+                            <!-- Core Fields -->
+                            <div>
+                                <h4 class="text-lg font-bold text-slate-900 mb-4 flex items-center">
+                                    <span class="w-2 h-2 bg-olive-600 rounded-full mr-2"></span>
+                                    Core Extraction Fields
+                                </h4>
+                                <div class="space-y-3">
+                                    <div class="bg-white rounded-xl p-4 border border-olive-100 shadow-sm sci-card">
+                                        <div class="flex items-start gap-3">
+                                            <div class="text-olive-600 text-xl mt-0.5"><i class="fa-solid fa-tag"></i></div>
+                                            <div class="flex-1">
+                                                <h5 class="font-bold text-slate-900 text-sm">Primary Waste Material</h5>
+                                                <p class="text-xs text-slate-600 mt-1">Common name, author-used name, material category (e.g., <code class="bg-olive-50 px-2 py-0.5 rounded text-xs">olive_pomace</code>, <code class="bg-olive-50 px-2 py-0.5 rounded text-xs">pomace_ash</code>)</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="bg-white rounded-xl p-4 border border-olive-100 shadow-sm sci-card">
+                                        <div class="flex items-start gap-3">
+                                            <div class="text-olive-600 text-xl mt-0.5"><i class="fa-solid fa-cube"></i></div>
+                                            <div class="flex-1">
+                                                <h5 class="font-bold text-slate-900 text-sm">Material Form</h5>
+                                                <p class="text-xs text-slate-600 mt-1">Physical form: raw, dried, ground, powder, ash, biochar. State at use: as-received, pre-treated.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="bg-white rounded-xl p-4 border border-olive-100 shadow-sm sci-card">
+                                        <div class="flex items-start gap-3">
+                                            <div class="text-olive-600 text-xl mt-0.5"><i class="fa-solid fa-location-dot"></i></div>
+                                            <div class="flex-1">
+                                                <h5 class="font-bold text-slate-900 text-sm">Origin & Source</h5>
+                                                <p class="text-xs text-slate-600 mt-1">Geographic origin (country, region), source facility type (olive mill, lab-prepared), extraction method (two-phase, three-phase).</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="bg-white rounded-xl p-4 border border-olive-100 shadow-sm sci-card">
+                                        <div class="flex items-start gap-3">
+                                            <div class="text-olive-600 text-xl mt-0.5"><i class="fa-solid fa-flask"></i></div>
+                                            <div class="flex-1">
+                                                <h5 class="font-bold text-slate-900 text-sm">Chemical Composition</h5>
+                                                <p class="text-xs text-slate-600 mt-1">Elemental analysis (C, H, N, O), proximate analysis (moisture, ash, volatiles), oxide composition (SiO₂, Al₂O₃, CaO).</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="bg-white rounded-xl p-4 border border-olive-100 shadow-sm sci-card">
+                                        <div class="flex items-start gap-3">
+                                            <div class="text-olive-600 text-xl mt-0.5"><i class="fa-solid fa-ruler-combined"></i></div>
+                                            <div class="flex-1">
+                                                <h5 class="font-bold text-slate-900 text-sm">Physical Properties</h5>
+                                                <p class="text-xs text-slate-600 mt-1">Particle size distribution (d10, d50, d90), bulk density, specific gravity, specific surface area.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Evidence Structure -->
+                            <div>
+                                <h4 class="text-lg font-bold text-slate-900 mb-4 flex items-center">
+                                    <span class="w-2 h-2 bg-blue-600 rounded-full mr-2"></span>
+                                    Evidence & Traceability
+                                </h4>
+                                
+                                <div class="bg-slate-900 rounded-xl p-6 text-slate-100 font-mono text-xs leading-relaxed shadow-lg mb-6">
+                                    <div class="text-emerald-400 mb-2">// Every field includes evidence:</div>
+                                    <div class="schema-line">
+                                        <div><span class="text-blue-300">"evidence"</span>: {</div>
+                                        <div class="pl-4"><span class="text-yellow-300">"snippet"</span>: <span class="text-green-300">"Two-phase olive pomace..."</span>,</div>
+                                        <div class="pl-4"><span class="text-yellow-300">"location"</span>: {</div>
+                                        <div class="pl-8"><span class="text-yellow-300">"page"</span>: 3,</div>
+                                        <div class="pl-8"><span class="text-yellow-300">"section"</span>: <span class="text-green-300">"Materials"</span>,</div>
+                                        <div class="pl-8"><span class="text-yellow-300">"table_id"</span>: <span class="text-green-300">"Table 1"</span></div>
+                                        <div class="pl-4">},</div>
+                                        <div class="pl-4"><span class="text-yellow-300">"data_origin"</span>: <span class="text-green-300">"measured"</span></div>
+                                        <div>}</div>
+                                    </div>
+                                </div>
+
+                                <div class="bg-blue-50 border-2 border-blue-200 rounded-xl p-5">
+                                    <h5 class="font-bold text-blue-900 text-sm mb-3 flex items-center">
+                                        <i class="fa-solid fa-lightbulb mr-2"></i>
+                                        PhD Integration Point
+                                    </h5>
+                                    <p class="text-xs text-slate-700 leading-relaxed">
+                                        This module directly supports  <strong>MCDA waste prioritization</strong> by providing structured data on material properties that influence:
+                                    </p>
+                                    <ul class="text-xs text-slate-700 mt-2 space-y-1 pl-4">
+                                        <li>• <strong>Physicochemical suitability</strong> (cellulose, lignin, ash chemistry)</li>
+                                        <li>• <strong>Compatibility with construction matrices</strong></li>
+                                        <li>• <strong>Supply stability indicators</strong> (origin, processing method)</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MODULE 2: FORMULATION & MIX DESIGN -->
+                <div id="tab-matrix" class="tab-content">
+                    <div class="bg-gradient-to-br from-cement-50 to-white rounded-3xl p-10 border-2 border-cement-200 shadow-xl">
+                        <div class="flex items-center gap-4 mb-8">
+                            <div class="w-16 h-16 bg-gradient-to-br from-cement-600 to-cement-700 text-white rounded-2xl flex items-center justify-center text-2xl shadow-lg">
+                                <i class="fa-solid fa-layer-group"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-3xl font-serif font-bold text-cement-900">Formulation & Mix Design</h3>
+                                <p class="text-cement-700 text-sm mt-1">Tier A (Core) • 40+ structured fields</p>
+                            </div>
+                        </div>
+
+                        <p class="text-slate-700 text-lg leading-relaxed mb-8">
+                            Documents <strong>how the waste is integrated</strong> into the host material system, including the matrix type, substitution strategy, dosage levels, and mix proportions. Essential for understanding performance trends vs. waste loading.
+                        </p>
+
+                        <div class="grid md:grid-cols-2 gap-8">
+                            <!-- Left Column -->
+                            <div class="space-y-6">
+                                <div class="bg-white rounded-xl p-6 border border-cement-100 shadow-md">
+                                    <h4 class="font-bold text-slate-900 mb-4 flex items-center">
+                                        <span class="w-8 h-8 rounded-lg bg-cement-100 text-cement-700 flex items-center justify-center text-sm mr-3">
+                                            <i class="fa-solid fa-shapes"></i>
+                                        </span>
+                                        Host Matrix System
+                                    </h4>
+                                    <div class="space-y-3 text-sm">
+                                        <div class="flex items-center gap-2">
+                                            <i class="fa-solid fa-check text-cement-600"></i>
+                                            <span><strong>Matrix category:</strong> Cement-based, Clay-based, Geopolymer, Composite</span>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <i class="fa-solid fa-check text-cement-600"></i>
+                                            <span><strong>Specific system:</strong> Mortar, Concrete, Fired brick, Unfired brick, etc.</span>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <i class="fa-solid fa-check text-cement-600"></i>
+                                            <span><strong>Application type:</strong> Structural, Non-structural, Insulation, Masonry</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="bg-white rounded-xl p-6 border border-cement-100 shadow-md">
+                                    <h4 class="font-bold text-slate-900 mb-4 flex items-center">
+                                        <span class="w-8 h-8 rounded-lg bg-cement-100 text-cement-700 flex items-center justify-center text-sm mr-3">
+                                            <i class="fa-solid fa-rotate"></i>
+                                        </span>
+                                        Role of Waste Material
+                                    </h4>
+                                    <div class="grid grid-cols-2 gap-3 text-xs">
+                                        <div class="bg-cement-50 rounded-lg p-3 border border-cement-200">
+                                            <div class="font-bold text-cement-900 mb-1">Replacement</div>
+                                            <div class="text-slate-600">Substitutes cement, clay, sand, or aggregate</div>
+                                        </div>
+                                        <div class="bg-cement-50 rounded-lg p-3 border border-cement-200">
+                                            <div class="font-bold text-cement-900 mb-1">Addition</div>
+                                            <div class="text-slate-600">Added as filler or functional additive</div>
+                                        </div>
+                                        <div class="bg-cement-50 rounded-lg p-3 border border-cement-200">
+                                            <div class="font-bold text-cement-900 mb-1">Pore-former</div>
+                                            <div class="text-slate-600">Burns out during firing</div>
+                                        </div>
+                                        <div class="bg-cement-50 rounded-lg p-3 border border-cement-200">
+                                            <div class="font-bold text-cement-900 mb-1">Reinforcement</div>
+                                            <div class="text-slate-600">Fiber-based reinforcement</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Right Column -->
+                            <div class="space-y-6">
+                                <div class="bg-white rounded-xl p-6 border border-cement-100 shadow-md">
+                                    <h4 class="font-bold text-slate-900 mb-4 flex items-center">
+                                        <span class="w-8 h-8 rounded-lg bg-cement-100 text-cement-700 flex items-center justify-center text-sm mr-3">
+                                            <i class="fa-solid fa-percent"></i>
+                                        </span>
+                                        Substitution Levels
+                                    </h4>
+                                    <div class="space-y-3">
+                                        <div class="bg-emerald-50 border border-emerald-200 rounded-lg p-3">
+                                            <div class="text-xs font-bold text-emerald-900 mb-1">Control Reference (MANDATORY)</div>
+                                            <p class="text-xs text-slate-700">The baseline formulation (typically 0% waste) against which all variants are compared.</p>
+                                        </div>
+                                        <div class="bg-slate-50 border border-slate-200 rounded-lg p-3">
+                                            <div class="text-xs font-bold text-slate-900 mb-1">Variant Levels</div>
+                                            <p class="text-xs text-slate-700 mb-2">All tested substitution percentages (e.g., 5%, 10%, 15%, 20%)</p>
+                                            <div class="font-mono text-xs bg-white p-2 rounded border border-slate-200">
+                                                "variants": [<br/>
+                                                &nbsp;&nbsp;{ "level": 0, "unit": "mass_%" },<br/>
+                                                &nbsp;&nbsp;{ "level": 10, "unit": "mass_%" },<br/>
+                                                &nbsp;&nbsp;{ "level": 20, "unit": "mass_%" }<br/>
+                                                ]
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="bg-blue-50 border-2 border-blue-200 rounded-xl p-5">
+                                    <h5 class="font-bold text-blue-900 text-sm mb-3 flex items-center">
+                                        <i class="fa-solid fa-graduation-cap mr-2"></i>
+                                        Research Relevance
+                                    </h5>
+                                    <p class="text-xs text-slate-700 leading-relaxed">
+                                        This module enables <strong>cross-paper performance comparison</strong>. By standardizing how substitution levels are recorded, we can:
+                                    </p>
+                                    <ul class="text-xs text-slate-700 mt-2 space-y-1 pl-4">
+                                        <li>• Build <strong>dose-response curves</strong> (% waste vs. compressive strength)</li>
+                                        <li>• Identify <strong>optimal substitution ranges</strong> across different matrices</li>
+                                        <li>• Compare <strong>replacement vs. addition strategies</strong></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MODULE 3: PRE-TREATMENT & PROCESSING -->
+                <div id="tab-process" class="tab-content">
+                    <div class="bg-gradient-to-br from-clay-50 to-white rounded-3xl p-10 border-2 border-clay-200 shadow-xl">
+                        <div class="flex items-center gap-4 mb-8">
+                            <div class="w-16 h-16 bg-gradient-to-br from-clay-600 to-clay-700 text-white rounded-2xl flex items-center justify-center text-2xl shadow-lg">
+                                <i class="fa-solid fa-fire-burner"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-3xl font-serif font-bold text-clay-900">Pre-Treatment & Processing</h3>
+                                <p class="text-clay-700 text-sm mt-1">Tier B (Valuable) • 45+ structured fields</p>
+                            </div>
+                        </div>
+
+                        <p class="text-slate-700 text-lg leading-relaxed mb-8">
+                            Captures all <strong>energy-intensive processing steps</strong> applied to the waste before or during material production. Critical for assessing environmental impact, cost, and scalability.
+                        </p>
+
+                        <div class="grid md:grid-cols-3 gap-6 mb-8">
+                            <!-- Thermal Processing -->
+                            <div class="bg-white rounded-xl p-6 border-2 border-clay-100 shadow-md hover:shadow-lg transition">
+                                <div class="w-12 h-12 bg-gradient-to-br from-clay-500 to-clay-600 rounded-xl flex items-center justify-center text-white text-xl mb-4 shadow-md">
+                                    <i class="fa-solid fa-temperature-high"></i>
+                                </div>
+                                <h4 class="font-bold text-slate-900 mb-3">Thermal Processing</h4>
+                                <div class="space-y-2 text-xs text-slate-700">
+                                    <div class="flex items-start gap-2">
+                                        <i class="fa-solid fa-angle-right text-clay-600 mt-0.5"></i>
+                                        <span><strong>Drying:</strong> Temperature, duration, method</span>
+                                    </div>
+                                    <div class="flex items-start gap-2">
+                                        <i class="fa-solid fa-angle-right text-clay-600 mt-0.5"></i>
+                                        <span><strong>Calcination:</strong> Peak temp (°C), holding time, heating rate</span>
+                                    </div>
+                                    <div class="flex items-start gap-2">
+                                        <i class="fa-solid fa-angle-right text-clay-600 mt-0.5"></i>
+                                        <span><strong>Pyrolysis/Torrefaction:</strong> Temperature, atmosphere</span>
+                                    </div>
+                                    <div class="flex items-start gap-2">
+                                        <i class="fa-solid fa-angle-right text-clay-600 mt-0.5"></i>
+                                        <span><strong>Firing (for clay bricks):</strong> Kiln type, peak temp, firing curve</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Mechanical Processing -->
+                            <div class="bg-white rounded-xl p-6 border-2 border-slate-100 shadow-md hover:shadow-lg transition">
+                                <div class="w-12 h-12 bg-gradient-to-br from-slate-500 to-slate-600 rounded-xl flex items-center justify-center text-white text-xl mb-4 shadow-md">
+                                    <i class="fa-solid fa-gears"></i>
+                                </div>
+                                <h4 class="font-bold text-slate-900 mb-3">Mechanical Processing</h4>
+                                <div class="space-y-2 text-xs text-slate-700">
+                                    <div class="flex items-start gap-2">
+                                        <i class="fa-solid fa-angle-right text-slate-600 mt-0.5"></i>
+                                        <span><strong>Grinding:</strong> Mill type, duration, energy input</span>
+                                    </div>
+                                    <div class="flex items-start gap-2">
+                                        <i class="fa-solid fa-angle-right text-slate-600 mt-0.5"></i>
+                                        <span><strong>Sieving:</strong> Target particle size, sieve size</span>
+                                    </div>
+                                    <div class="flex items-start gap-2">
+                                        <i class="fa-solid fa-angle-right text-slate-600 mt-0.5"></i>
+                                        <span><strong>Crushing:</strong> Jaw crusher, ball mill, etc.</span>
+                                    </div>
+                                    <div class="flex items-start gap-2">
+                                        <i class="fa-solid fa-angle-right text-slate-600 mt-0.5"></i>
+                                        <span><strong>Mixing:</strong> Mixer type, mixing time</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Chemical Processing -->
+                            <div class="bg-white rounded-xl p-6 border-2 border-purple-100 shadow-md hover:shadow-lg transition">
+                                <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center text-white text-xl mb-4 shadow-md">
+                                    <i class="fa-solid fa-flask"></i>
+                                </div>
+                                <h4 class="font-bold text-slate-900 mb-3">Chemical Processing</h4>
+                                <div class="space-y-2 text-xs text-slate-700">
+                                    <div class="flex items-start gap-2">
+                                        <i class="fa-solid fa-angle-right text-purple-600 mt-0.5"></i>
+                                        <span><strong>Acid washing:</strong> Chemical used, concentration, duration</span>
+                                    </div>
+                                    <div class="flex items-start gap-2">
+                                        <i class="fa-solid fa-angle-right text-purple-600 mt-0.5"></i>
+                                        <span><strong>Alkali activation:</strong> NaOH/KOH molarity, curing conditions</span>
+                                    </div>
+                                    <div class="flex items-start gap-2">
+                                        <i class="fa-solid fa-angle-right text-purple-600 mt-0.5"></i>
+                                        <span><strong>Surface modification:</strong> Silane treatment, surfactant use</span>
+                                    </div>
+                                    <div class="flex items-start gap-2">
+                                        <i class="fa-solid fa-angle-right text-purple-600 mt-0.5"></i>
+                                        <span><strong>Extraction:</strong> Solvent type, temperature, extraction time</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Energy Intensity Indicators -->
+                        <div class="bg-amber-50 border-2 border-amber-200 rounded-2xl p-6">
+                            <h4 class="font-bold text-amber-900 text-lg mb-4 flex items-center">
+                                <i class="fa-solid fa-bolt mr-3 text-amber-600"></i>
+                                Energy Intensity Indicators
+                            </h4>
+                            <p class="text-sm text-slate-700 mb-4">
+                                The schema automatically flags <strong>high-energy processing steps</strong> to support environmental and economic assessment:
+                            </p>
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div class="bg-white rounded-lg p-4 border border-amber-200">
+                                    <div class="font-mono text-xs text-slate-600 mb-2">"high_temperature_step_present"</div>
+                                    <p class="text-xs text-slate-700">Condition marker: TRUE if any step exceeds 500°C (e.g., calcination at 700°C)</p>
+                                </div>
+                                <div class="bg-white rounded-lg p-4 border border-amber-200">
+                                    <div class="font-mono text-xs text-slate-600 mb-2">"mechanical_grinding_present"</div>
+                                    <p class="text-xs text-slate-700">Condition marker: TRUE if ball milling or fine grinding applied</p>
+                                </div>
+                                <div class="bg-white rounded-lg p-4 border border-amber-200">
+                                    <div class="font-mono text-xs text-slate-600 mb-2">"chemical_treatment_present"</div>
+                                    <p class="text-xs text-slate-700">Condition marker: TRUE if acid/alkali treatment used</p>
+                                </div>
+                                <div class="bg-white rounded-lg p-4 border border-amber-200">
+                                    <div class="font-mono text-xs text-slate-600 mb-2">"multi_step_processing"</div>
+                                    <p class="text-xs text-slate-700">Condition marker: TRUE if ≥2 processing types combined</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- PhD Integration -->
+                        <div class="mt-6 bg-blue-50 border-2 border-blue-200 rounded-xl p-5">
+                            <h5 class="font-bold text-blue-900 text-sm mb-3 flex items-center">
+                                <i class="fa-solid fa-microscope mr-2"></i>
+                                Alignment with PhD Objectives
+                            </h5>
+                            <p class="text-xs text-slate-700 leading-relaxed">
+                                This module is essential for <strong>sustainable biocomposite development</strong>. It enables systematic comparison of:
+                            </p>
+                            <ul class="text-xs text-slate-700 mt-2 space-y-1 pl-4">
+                                <li>• <strong>Low-energy pathways</strong> (ambient curing vs. high-temperature firing)</li>
+                                <li>• <strong>Scalability constraints</strong> (complex lab procedures vs. industrial-ready methods)</li>
+                                <li>• <strong>Trade-offs</strong> between processing intensity and material performance</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MODULE 4: QUANTITATIVE RESULTS -->
+                <div id="tab-output" class="tab-content">
+                    <div class="bg-gradient-to-br from-emerald-50 to-white rounded-3xl p-10 border-2 border-emerald-200 shadow-xl">
+                        <div class="flex items-center gap-4 mb-8">
+                            <div class="w-16 h-16 bg-gradient-to-br from-emerald-600 to-emerald-700 text-white rounded-2xl flex items-center justify-center text-2xl shadow-lg">
+                                <i class="fa-solid fa-chart-line"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-3xl font-serif font-bold text-emerald-900">Quantitative Results</h3>
+                                <p class="text-emerald-700 text-sm mt-1">Tier A (Core) • 60+ performance metrics</p>
+                            </div>
+                        </div>
+
+                        <p class="text-slate-700 text-lg leading-relaxed mb-8">
+                            The <strong>results matrix</strong> is the core output module, capturing all measured or calculated performance metrics. Every value includes test age, standard reference, and data origin traceability.
+                        </p>
+
+                        <!-- Performance Categories -->
+                        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                            <!-- Mechanical Properties -->
+                            <div class="bg-white rounded-xl p-6 border-2 border-emerald-100 shadow-md hover:border-emerald-400 transition group">
+                                <div class="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center text-emerald-600 text-xl mb-4 group-hover:bg-emerald-600 group-hover:text-white transition">
+                                    <i class="fa-solid fa-weight-hanging"></i>
+                                </div>
+                                <h4 class="font-bold text-slate-900 mb-3">Mechanical</h4>
+                                <ul class="text-xs text-slate-700 space-y-2">
+                                    <li class="flex items-center gap-2">
+                                        <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span>
+                                        Compressive Strength (MPa)
+                                    </li>
+                                    <li class="flex items-center gap-2">
+                                        <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span>
+                                        Flexural Strength (MPa)
+                                    </li>
+                                    <li class="flex items-center gap-2">
+                                        <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span>
+                                        Tensile Strength (MPa)
+                                    </li>
+                                    <li class="flex items-center gap-2">
+                                        <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span>
+                                        Modulus of Elasticity (GPa)
+                                    </li>
+                                    <li class="flex items-center gap-2">
+                                        <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span>
+                                        Hardness (Shore D, Vickers)
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <!-- Physical Properties -->
+                            <div class="bg-white rounded-xl p-6 border-2 border-blue-100 shadow-md hover:border-blue-400 transition group">
+                                <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center text-blue-600 text-xl mb-4 group-hover:bg-blue-600 group-hover:text-white transition">
+                                    <i class="fa-solid fa-droplet"></i>
+                                </div>
+                                <h4 class="font-bold text-slate-900 mb-3">Physical</h4>
+                                <ul class="text-xs text-slate-700 space-y-2">
+                                    <li class="flex items-center gap-2">
+                                        <span class="w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
+                                        Bulk Density (kg/m³)
+                                    </li>
+                                    <li class="flex items-center gap-2">
+                                        <span class="w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
+                                        Water Absorption (%)
+                                    </li>
+                                    <li class="flex items-center gap-2">
+                                        <span class="w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
+                                        Porosity (open/total, %)
+                                    </li>
+                                    <li class="flex items-center gap-2">
+                                        <span class="w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
+                                        Shrinkage (drying/firing, %)
+                                    </li>
+                                    <li class="flex items-center gap-2">
+                                        <span class="w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
+                                        Specific Gravity
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <!-- Thermal Properties -->
+                            <div class="bg-white rounded-xl p-6 border-2 border-amber-100 shadow-md hover:border-amber-400 transition group">
+                                <div class="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center text-amber-600 text-xl mb-4 group-hover:bg-amber-600 group-hover:text-white transition">
+                                    <i class="fa-solid fa-temperature-arrow-up"></i>
+                                </div>
+                                <h4 class="font-bold text-slate-900 mb-3">Thermal</h4>
+                                <ul class="text-xs text-slate-700 space-y-2">
+                                    <li class="flex items-center gap-2">
+                                        <span class="w-1.5 h-1.5 bg-amber-500 rounded-full"></span>
+                                        Thermal Conductivity (W/mK)
+                                    </li>
+                                    <li class="flex items-center gap-2">
+                                        <span class="w-1.5 h-1.5 bg-amber-500 rounded-full"></span>
+                                        Specific Heat Capacity (J/kgK)
+                                    </li>
+                                    <li class="flex items-center gap-2">
+                                        <span class="w-1.5 h-1.5 bg-amber-500 rounded-full"></span>
+                                        Thermal Diffusivity (m²/s)
+                                    </li>
+                                    <li class="flex items-center gap-2">
+                                        <span class="w-1.5 h-1.5 bg-amber-500 rounded-full"></span>
+                                        Fire Resistance (classification)
+                                    </li>
+                                    <li class="flex items-center gap-2">
+                                        <span class="w-1.5 h-1.5 bg-amber-500 rounded-full"></span>
+                                        Thermal Expansion Coefficient
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <!-- Durability Properties -->
+                            <div class="bg-white rounded-xl p-6 border-2 border-purple-100 shadow-md hover:border-purple-400 transition group">
+                                <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center text-purple-600 text-xl mb-4 group-hover:bg-purple-600 group-hover:text-white transition">
+                                    <i class="fa-solid fa-shield-halved"></i>
+                                </div>
+                                <h4 class="font-bold text-slate-900 mb-3">Durability</h4>
+                                <ul class="text-xs text-slate-700 space-y-2">
+                                    <li class="flex items-center gap-2">
+                                        <span class="w-1.5 h-1.5 bg-purple-500 rounded-full"></span>
+                                        Freeze-Thaw Resistance
+                                    </li>
+                                    <li class="flex items-center gap-2">
+                                        <span class="w-1.5 h-1.5 bg-purple-500 rounded-full"></span>
+                                        Acid/Sulfate Resistance
+                                    </li>
+                                    <li class="flex items-center gap-2">
+                                        <span class="w-1.5 h-1.5 bg-purple-500 rounded-full"></span>
+                                        Chloride Penetration
+                                    </li>
+                                    <li class="flex items-center gap-2">
+                                        <span class="w-1.5 h-1.5 bg-purple-500 rounded-full"></span>
+                                        Carbonation Depth (mm)
+                                    </li>
+                                    <li class="flex items-center gap-2">
+                                        <span class="w-1.5 h-1.5 bg-purple-500 rounded-full"></span>
+                                        Weathering Resistance
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Data Structure Example -->
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <h4 class="font-bold text-slate-900 mb-4 flex items-center">
+                                    <span class="w-2 h-2 bg-emerald-600 rounded-full mr-2"></span>
+                                    Structured Data Format
+                                </h4>
+                                <div class="bg-slate-900 rounded-xl p-6 font-mono text-xs text-slate-100 leading-relaxed shadow-lg">
+                                    <div class="text-emerald-400 mb-2">// Example: Compressive Strength Entry</div>
+                                    <div class="schema-line">
+                                        <div><span class="text-blue-300">"compressive_strength"</span>: {</div>
+                                        <div class="pl-4"><span class="text-yellow-300">"value"</span>: 25.3,</div>
+                                        <div class="pl-4"><span class="text-yellow-300">"unit"</span>: <span class="text-green-300">"MPa"</span>,</div>
+                                        <div class="pl-4"><span class="text-yellow-300">"test_age_days"</span>: 28,</div>
+                                        <div class="pl-4"><span class="text-yellow-300">"standard_reference"</span>: <span class="text-green-300">"ASTM C109"</span>,</div>
+                                        <div class="pl-4"><span class="text-yellow-300">"specimen_type"</span>: <span class="text-green-300">"cube_50mm"</span>,</div>
+                                        <div class="pl-4"><span class="text-yellow-300">"sample_size"</span>: 3,</div>
+                                        <div class="pl-4"><span class="text-yellow-300">"standard_deviation"</span>: 1.2,</div>
+                                        <div class="pl-4"><span class="text-yellow-300">"data_origin"</span>: <span class="text-green-300">"measured"</span>,</div>
+                                        <div class="pl-4"><span class="text-yellow-300">"evidence"</span>: {</div>
+                                        <div class="pl-8"><span class="text-yellow-300">"table_id"</span>: <span class="text-green-300">"Table 3"</span>,</div>
+                                        <div class="pl-8"><span class="text-yellow-300">"page"</span>: 7</div>
+                                        <div class="pl-4">}</div>
+                                        <div>}</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h4 class="font-bold text-slate-900 mb-4 flex items-center">
+                                    <span class="w-2 h-2 bg-blue-600 rounded-full mr-2"></span>
+                                    Data Quality Assurance
+                                </h4>
+                                <div class="space-y-3">
+                                    <div class="bg-white rounded-lg p-4 border border-slate-200 shadow-sm">
+                                        <div class="font-bold text-sm text-slate-900 mb-2 flex items-center">
+                                            <i class="fa-solid fa-check-circle text-green-600 mr-2"></i>
+                                            Evidence Check
+                                        </div>
+                                        <p class="text-xs text-slate-700">
+                                            Condition marker: <code class="bg-slate-100 px-2 py-0.5 rounded text-xs">"allowed_for_modeling"</code>. Only TRUE if control + ≥2 variants with measured data present.
+                                        </p>
+                                    </div>
+
+                                    <div class="bg-white rounded-lg p-4 border border-slate-200 shadow-sm">
+                                        <div class="font-bold text-sm text-slate-900 mb-2 flex items-center">
+                                            <i class="fa-solid fa-tag text-blue-600 mr-2"></i>
+                                            Data Origin Tagging
+                                        </div>
+                                        <p class="text-xs text-slate-700">
+                                            Every value tagged as: <code class="bg-emerald-50 px-2 py-0.5 rounded text-xs">measured</code>, <code class="bg-blue-50 px-2 py-0.5 rounded text-xs">calculated</code>, <code class="bg-amber-50 px-2 py-0.5 rounded text-xs">inferred</code>, or <code class="bg-red-50 px-2 py-0.5 rounded text-xs">unclear</code>.
+                                        </p>
+                                    </div>
+
+                                    <div class="bg-white rounded-lg p-4 border border-slate-200 shadow-sm">
+                                        <div class="font-bold text-sm text-slate-900 mb-2 flex items-center">
+                                            <i class="fa-solid fa-chart-simple text-purple-600 mr-2"></i>
+                                            Statistical Metadata
+                                        </div>
+                                        <p class="text-xs text-slate-700">
+                                            Sample size, standard deviation, coefficient of variation captured when available for uncertainty quantification.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- PhD Integration -->
+                        <div class="mt-8 bg-blue-50 border-2 border-blue-200 rounded-xl p-6">
+                            <h5 class="font-bold text-blue-900 text-lg mb-3 flex items-center">
+                                <i class="fa-solid fa-flask-vial mr-2"></i>
+                                Direct PhD Application
+                            </h5>
+                            <p class="text-sm text-slate-700 leading-relaxed mb-3">
+                                This results module enables <strong>systematic meta-analysis</strong> across multiple papers to identify:
+                            </p>
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div class="bg-white rounded-lg p-4 border border-blue-200">
+                                    <div class="font-bold text-sm text-slate-900 mb-2">Performance Benchmarks</div>
+                                    <p class="text-xs text-slate-700">What strength/thermal performance is achievable with X% olive pomace in Y matrix?</p>
+                                </div>
+                                <div class="bg-white rounded-lg p-4 border border-blue-200">
+                                    <div class="font-bold text-sm text-slate-900 mb-2">Optimal Dosages</div>
+                                    <p class="text-xs text-slate-700">At what % replacement does performance drop below standard thresholds?</p>
+                                </div>
+                                <div class="bg-white rounded-lg p-4 border border-blue-200">
+                                    <div class="font-bold text-sm text-slate-900 mb-2">Multi-Criteria Trade-offs</div>
+                                    <p class="text-xs text-slate-700">Balance mechanical strength vs. thermal insulation vs. embodied carbon</p>
+                                </div>
+                                <div class="bg-white rounded-lg p-4 border border-blue-200">
+                                    <div class="font-bold text-sm text-slate-900 mb-2">ML Training Data</div>
+                                    <p class="text-xs text-slate-700">Build predictive models: f(composition, processing) → performance</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MODULE 5: TECHNOLOGY READINESS -->
+                <div id="tab-scale" class="tab-content">
+                    <div class="bg-gradient-to-br from-purple-50 to-white rounded-3xl p-10 border-2 border-purple-200 shadow-xl">
+                        <div class="flex items-center gap-4 mb-8">
+                            <div class="w-16 h-16 bg-gradient-to-br from-purple-600 to-purple-700 text-white rounded-2xl flex items-center justify-center text-2xl shadow-lg">
+                                <i class="fa-solid fa-industry"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-3xl font-serif font-bold text-purple-900">Technology Readiness & Feasibility</h3>
+                                <p class="text-purple-700 text-sm mt-1">Tier C (Context) • Scalability assessment</p>
+                            </div>
+                        </div>
+
+                        <p class="text-slate-700 text-lg leading-relaxed mb-8">
+                            Evaluates whether the proposed solution is ready for <strong>real-world deployment</strong>. Captures Technology Readiness Level (TRL), scalability barriers, and commercialization constraints.
+                        </p>
+
+                        <!-- TRL Scale -->
+                        <div class="bg-white rounded-2xl p-8 border-2 border-purple-100 shadow-lg mb-8">
+                            <h4 class="font-bold text-slate-900 text-xl mb-6 text-center">Technology Readiness Level (TRL) Scale</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <!-- TRL 1-3: Basic Research -->
+                                <div class="space-y-3">
+                                    <div class="text-center font-bold text-sm text-slate-700 mb-3 uppercase tracking-wide">Basic Research</div>
+                                    <div class="bg-red-50 border-2 border-red-200 rounded-lg p-3">
+                                        <div class="font-bold text-red-900 text-sm mb-1">TRL 1-2</div>
+                                        <p class="text-xs text-slate-700">Basic principles observed, concept formulated</p>
+                                    </div>
+                                    <div class="bg-orange-50 border-2 border-orange-200 rounded-lg p-3">
+                                        <div class="font-bold text-orange-900 text-sm mb-1">TRL 3</div>
+                                        <p class="text-xs text-slate-700">Proof of concept demonstrated in lab</p>
+                                    </div>
+                                </div>
+
+                                <!-- TRL 4-6: Development -->
+                                <div class="space-y-3">
+                                    <div class="text-center font-bold text-sm text-slate-700 mb-3 uppercase tracking-wide">Development Phase</div>
+                                    <div class="bg-amber-50 border-2 border-amber-200 rounded-lg p-3">
+                                        <div class="font-bold text-amber-900 text-sm mb-1">TRL 4</div>
+                                        <p class="text-xs text-slate-700">Lab-scale validation, component testing</p>
+                                    </div>
+                                    <div class="bg-yellow-50 border-2 border-yellow-200 rounded-lg p-3">
+                                        <div class="font-bold text-yellow-900 text-sm mb-1">TRL 5-6</div>
+                                        <p class="text-xs text-slate-700">Pilot-scale demonstration, prototype testing</p>
+                                    </div>
+                                </div>
+
+                                <!-- TRL 7-9: Deployment -->
+                                <div class="space-y-3">
+                                    <div class="text-center font-bold text-sm text-slate-700 mb-3 uppercase tracking-wide">Deployment Ready</div>
+                                    <div class="bg-emerald-50 border-2 border-emerald-200 rounded-lg p-3">
+                                        <div class="font-bold text-emerald-900 text-sm mb-1">TRL 7-8</div>
+                                        <p class="text-xs text-slate-700">Demonstration in operational environment</p>
+                                    </div>
+                                    <div class="bg-green-50 border-2 border-green-200 rounded-lg p-3">
+                                        <div class="font-bold text-green-900 text-sm mb-1">TRL 9</div>
+                                        <p class="text-xs text-slate-700">Full commercial deployment proven</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Scalability Barriers -->
+                        <div class="grid md:grid-cols-2 gap-6 mb-8">
+                            <div>
+                                <h4 class="font-bold text-slate-900 mb-4 flex items-center">
+                                    <span class="w-8 h-8 rounded-lg bg-red-100 text-red-700 flex items-center justify-center text-sm mr-3">
+                                        <i class="fa-solid fa-triangle-exclamation"></i>
+                                    </span>
+                                    Identified Barriers
+                                </h4>
+                                <div class="space-y-3">
+                                    <div class="bg-white rounded-lg p-4 border-l-4 border-red-500 shadow-sm">
+                                        <div class="font-bold text-sm text-slate-900 mb-1">Energy Intensity</div>
+                                        <p class="text-xs text-slate-700">High-temperature processing (>800°C), long calcination times</p>
+                                    </div>
+                                    <div class="bg-white rounded-lg p-4 border-l-4 border-orange-500 shadow-sm">
+                                        <div class="font-bold text-sm text-slate-900 mb-1">Complex Processing</div>
+                                        <p class="text-xs text-slate-700">Multi-step treatments, specialized equipment requirements</p>
+                                    </div>
+                                    <div class="bg-white rounded-lg p-4 border-l-4 border-amber-500 shadow-sm">
+                                        <div class="font-bold text-sm text-slate-900 mb-1">Material Availability</div>
+                                        <p class="text-xs text-slate-700">Seasonal supply, geographic concentration, quality variability</p>
+                                    </div>
+                                    <div class="bg-white rounded-lg p-4 border-l-4 border-yellow-500 shadow-sm">
+                                        <div class="font-bold text-sm text-slate-900 mb-1">Performance Gaps</div>
+                                        <p class="text-xs text-slate-700">Strength reduction at higher substitution levels, durability concerns</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h4 class="font-bold text-slate-900 mb-4 flex items-center">
+                                    <span class="w-8 h-8 rounded-lg bg-green-100 text-green-700 flex items-center justify-center text-sm mr-3">
+                                        <i class="fa-solid fa-rocket"></i>
+                                    </span>
+                                    Readiness Enablers
+                                </h4>
+                                <div class="space-y-3">
+                                    <div class="bg-white rounded-lg p-4 border-l-4 border-emerald-500 shadow-sm">
+                                        <div class="font-bold text-sm text-slate-900 mb-1">Ambient Curing</div>
+                                        <p class="text-xs text-slate-700">No thermal treatment required, room temperature processing</p>
+                                    </div>
+                                    <div class="bg-white rounded-lg p-4 border-l-4 border-emerald-500 shadow-sm">
+                                        <div class="font-bold text-sm text-slate-900 mb-1">Standard Equipment</div>
+                                        <p class="text-xs text-slate-700">Uses conventional concrete/brick production machinery</p>
+                                    </div>
+                                    <div class="bg-white rounded-lg p-4 border-l-4 border-emerald-500 shadow-sm">
+                                        <div class="font-bold text-sm text-slate-900 mb-1">Drop-in Replacement</div>
+                                        <p class="text-xs text-slate-700">Direct substitution without formulation redesign</p>
+                                    </div>
+                                    <div class="bg-white rounded-lg p-4 border-l-4 border-emerald-500 shadow-sm">
+                                        <div class="font-bold text-sm text-slate-900 mb-1">Proven at Pilot Scale</div>
+                                        <p class="text-xs text-slate-700">Industrial demonstrations conducted, field testing completed</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Schema Fields -->
+                        <div class="bg-slate-900 rounded-2xl p-6 text-slate-100 font-mono text-xs leading-relaxed shadow-lg mb-8">
+                            <div class="text-purple-400 mb-3 font-bold">// Technology Readiness Schema Fields</div>
+                            <div class="space-y-2">
+                                <div><span class="text-blue-300">"trl_estimate"</span>: <span class="text-yellow-300">4</span>, <span class="text-slate-400">// Integer 1-9</span></div>
+                                <div><span class="text-blue-300">"demonstration_level"</span>: <span class="text-green-300">"lab_scale"</span>, <span class="text-slate-400">// lab_scale | pilot_scale | industrial_demonstration</span></div>
+                                <div><span class="text-blue-300">"scalability_barriers"</span>: [<span class="text-green-300">"high_energy_demand"</span>, <span class="text-green-300">"complex_processing"</span>],</div>
+                                <div><span class="text-blue-300">"commercial_readiness_constraints"</span>: [</div>
+                                <div class="pl-4"><span class="text-green-300">"seasonal_supply_variability"</span>,</div>
+                                <div class="pl-4"><span class="text-green-300">"regulatory_approval_pending"</span></div>
+                                <div>],</div>
+                                <div><span class="text-blue-300">"author_stated_limitations"</span>: <span class="text-green-300">"Further durability testing needed..."</span></div>
+                            </div>
+                        </div>
+
+                        <!-- PhD Alignment -->
+                        <div class="bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-2xl p-8">
+                            <h5 class="font-bold text-blue-900 text-lg mb-4 flex items-center">
+                                <i class="fa-solid fa-graduation-cap mr-3 text-blue-700"></i>
+                                Critical for PhD Sustainable Biocomposites Framework
+                            </h5>
+                            <p class="text-sm text-slate-700 leading-relaxed mb-4">
+                                This module directly addresses the <strong>"commercially viable pathways"</strong> objective of the current PhD research by enabling systematic identification of:
+                            </p>
+                            <div class="grid md:grid-cols-3 gap-4">
+                                <div class="bg-white rounded-lg p-4 border border-blue-200">
+                                    <div class="font-bold text-sm text-slate-900 mb-2 flex items-center">
+                                        <i class="fa-solid fa-filter text-blue-600 mr-2"></i>
+                                        Low-Energy Routes
+                                    </div>
+                                    <p class="text-xs text-slate-700">Filter papers by <code class="bg-slate-100 px-2 py-0.5 rounded text-xs">high_temperature_step_present = false</code> to find ambient-cured solutions</p>
+                                </div>
+                                <div class="bg-white rounded-lg p-4 border border-blue-200">
+                                    <div class="font-bold text-sm text-slate-900 mb-2 flex items-center">
+                                        <i class="fa-solid fa-chart-bar text-blue-600 mr-2"></i>
+                                        Readiness Ranking
+                                    </div>
+                                    <p class="text-xs text-slate-700">Prioritize materials with <code class="bg-slate-100 px-2 py-0.5 rounded text-xs">TRL ≥ 5</code> and proven pilot-scale demonstrations</p>
+                                </div>
+                                <div class="bg-white rounded-lg p-4 border border-blue-200">
+                                    <div class="font-bold text-sm text-slate-900 mb-2 flex items-center">
+                                        <i class="fa-solid fa-triangle-exclamation text-blue-600 mr-2"></i>
+                                        Risk Assessment
+                                    </div>
+                                    <p class="text-xs text-slate-700">Quantify barriers: How many papers cite equipment complexity as a scalability constraint?</p>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-6 bg-indigo-50 border-l-4 border-indigo-500 rounded-lg p-4">
+                                <p class="text-xs text-slate-700 leading-relaxed">
+                                    <strong>Integration Example:</strong> MCDA framework can weight TRL scores alongside performance metrics to identify waste streams that are <strong>both high-performing AND industrially viable</strong>—ensuring the current PhD targets solutions with real implementation potential.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Evidence Check -->
+        <section class="bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl p-10 text-white shadow-2xl">
+            <div class="text-center mb-10">
+                <h2 class="text-4xl font-serif font-bold mb-4">Evidence-Based Quality Checks</h2>
+                <p class="text-slate-300 max-w-3xl mx-auto text-lg">
+                    The schema includes <strong>built-in quality filters</strong> to prevent low-quality data from contaminating the dataset. Every paper is automatically scored for completeness and reliability.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- Gate 1 -->
+                <div class="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-6 hover:bg-white/15 transition">
+                    <div class="w-12 h-12 bg-emerald-500 rounded-xl flex items-center justify-center text-white text-xl mb-4 shadow-lg">
+                        <i class="fa-solid fa-filter"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">Minimum Viability Check</h3>
+                    <p class="text-slate-300 text-sm leading-relaxed mb-3">
+                        Papers must have: material identity, ≥1 substitution level, control reference, and ≥1 performance metric.
+                    </p>
+                    <div class="font-mono text-xs bg-black/30 rounded-lg p-3 border border-white/10">
+                        <span class="text-emerald-400">"tier_a_viable"</span>: <span class="text-yellow-300">true</span>
+                    </div>
+                </div>
+
+                <!-- Gate 2 -->
+                <div class="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-6 hover:bg-white/15 transition">
+                    <div class="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center text-white text-xl mb-4 shadow-lg">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">Modeling Eligibility</h3>
+                    <p class="text-slate-300 text-sm leading-relaxed mb-3">
+                        For ML training: control + ≥2 variants, all with measured (not estimated) data.
+                    </p>
+                    <div class="font-mono text-xs bg-black/30 rounded-lg p-3 border border-white/10">
+                        <span class="text-blue-400">"allowed_for_modeling"</span>: <span class="text-yellow-300">true</span>
+                    </div>
+                </div>
+
+                <!-- Gate 3 -->
+                <div class="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-6 hover:bg-white/15 transition">
+                    <div class="w-12 h-12 bg-purple-500 rounded-xl flex items-center justify-center text-white text-xl mb-4 shadow-lg">
+                        <i class="fa-solid fa-ban"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">Zero-Subjectivity Rule</h3>
+                    <p class="text-slate-300 text-sm leading-relaxed mb-3">
+                        No guessed values. Unclear data must be marked as <code class="bg-black/30 px-2 py-0.5 rounded text-xs">unclear</code> or omitted.
+                    </p>
+                    <div class="font-mono text-xs bg-black/30 rounded-lg p-3 border border-white/10">
+                        <span class="text-purple-400">"no_guessed_values"</span>: <span class="text-yellow-300">true</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SCHEMA DOWNLOAD -->
+        <section id="extraction-code">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6 bg-gradient-to-br from-olive-600 to-olive-700 p-8 rounded-3xl border-2 border-olive-500 shadow-2xl">
+                <div class="flex items-center gap-5 text-white">
+                    <div class="w-16 h-16 bg-white/20 backdrop-blur-sm text-white rounded-2xl flex items-center justify-center text-2xl border border-white/30">
+                        <i class="fa-solid fa-file-code"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold mb-2">Download Complete Schema</h2>
+                        <p class="text-olive-100 text-sm">
+                            JSON schema v2.0-hardened • 150+ fields • Full documentation included
+                        </p>
+                    </div>
+                </div>
+                <a href="https://drive.google.com/uc?export=download&id=12xX7bx7xn4QbIsq9tuE1Movs9FfRB2eD" 
+                   class="inline-flex items-center px-8 py-4 bg-white text-olive-800 rounded-xl hover:bg-olive-50 transition font-bold shadow-xl hover:shadow-2xl transform hover:-translate-y-1 hover:scale-105">
+                    <i class="fa-solid fa-download mr-3 text-xl"></i> 
+                    Download Schema
+                </a>
+            </div>
+        </section>
+
+        <!-- USE CASES -->
+        <section class="bg-white rounded-3xl p-10 border-2 border-slate-200 shadow-xl">
+            <div class="text-center mb-10">
+                <h2 class="text-4xl font-serif font-bold text-slate-900 mb-4">Research Applications</h2>
+                <p class="text-slate-600 text-lg max-w-3xl mx-auto">
+                    This schema enables <strong>five critical research workflows</strong> for the current PhD and beyond.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="bg-slate-50 rounded-xl p-6 border border-slate-200 hover:border-olive-400 transition sci-card">
+                    <div class="text-3xl mb-3">📊</div>
+                    <h4 class="font-bold text-slate-900 mb-2">Cross-Paper Meta-Analysis</h4>
+                    <p class="text-sm text-slate-700">
+                        Aggregate 50+ papers into a unified dataset. Plot performance trends vs. waste loading across different studies.
+                    </p>
+                </div>
+
+                <div class="bg-slate-50 rounded-xl p-6 border border-slate-200 hover:border-olive-400 transition sci-card">
+                    <div class="text-3xl mb-3">🤖</div>
+                    <h4 class="font-bold text-slate-900 mb-2">ML Model Training</h4>
+                    <p class="text-sm text-slate-700">
+                        Build predictive models: <code class="text-xs bg-slate-200 px-2 py-0.5 rounded">f(material, dosage, processing) → strength</code>
+                    </p>
+                </div>
+
+                <div class="bg-slate-50 rounded-xl p-6 border border-slate-200 hover:border-olive-400 transition sci-card">
+                    <div class="text-3xl mb-3">🔍</div>
+                    <h4 class="font-bold text-slate-900 mb-2">Gap Analysis</h4>
+                    <p class="text-sm text-slate-700">
+                        Identify understudied material combinations, missing test conditions, or unreported parameters.
+                    </p>
+                </div>
+
+                <div class="bg-slate-50 rounded-xl p-6 border border-slate-200 hover:border-olive-400 transition sci-card">
+                    <div class="text-3xl mb-3">⚖️</div>
+                    <h4 class="font-bold text-slate-900 mb-2">MCDA Integration</h4>
+                    <p class="text-sm text-slate-700">
+                        Feed extracted data into Multi-Criteria Decision Analysis for waste stream prioritization.
+                    </p>
+                </div>
+
+                <div class="bg-slate-50 rounded-xl p-6 border border-slate-200 hover:border-olive-400 transition sci-card">
+                    <div class="text-3xl mb-3">🌍</div>
+                    <h4 class="font-bold text-slate-900 mb-2">LCA Data Collection</h4>
+                    <p class="text-sm text-slate-700">
+                        Extract energy intensity flags and processing steps to estimate embodied carbon footprints.
+                    </p>
+                </div>
+
+                <div class="bg-slate-50 rounded-xl p-6 border border-slate-200 hover:border-olive-400 transition sci-card">
+                    <div class="text-3xl mb-3">📈</div>
+                    <h4 class="font-bold text-slate-900 mb-2">Benchmarking</h4>
+                    <p class="text-sm text-slate-700">
+                        Compare the experimental results against extracted literature baselines to validate novelty.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 text-slate-400 py-16 border-t-4 border-olive-600">
+        <div class="container mx-auto max-w-7xl px-6">
+            <div class="grid md:grid-cols-3 gap-12 mb-12">
+                <!-- Column 1: About -->
+                <div>
+                    <h3 class="text-white font-bold text-lg mb-4 font-serif">About This Framework</h3>
+                    <p class="text-sm leading-relaxed text-slate-400">
+                        Developed as part of PhD research on <strong>Valorisation of Agricultural and Industrial Wastes for Sustainable Construction Materials</strong> at the University of Bath.
+                    </p>
+                </div>
+
+                <!-- Column 2: Research Focus -->
+                <div>
+                    <h3 class="text-white font-bold text-lg mb-4 font-serif">Research Domains</h3>
+                    <ul class="text-sm space-y-2">
+                        <li class="flex items-center gap-2">
+                            <i class="fa-solid fa-leaf text-olive-500"></i>
+                            <span>Agricultural Waste Valorisation</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i class="fa-solid fa-building text-olive-500"></i>
+                            <span>Sustainable Construction Materials</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i class="fa-solid fa-recycle text-olive-500"></i>
+                            <span>Circular Economy Integration</span>
+                        </li>
+                       
+                    </ul>
+                </div>
+
+                <!-- Column 3: Key Stats -->
+                <div>
+                    <h3 class="text-white font-bold text-lg mb-4 font-serif">Framework Stats</h3>
+                    <div class="grid grid-cols-2 gap-4 text-sm">
+                        <div class="bg-white/5 rounded-lg p-3 border border-white/10">
+                            <div class="text-olive-400 font-bold text-xl">150+</div>
+                            <div class="text-slate-500 text-xs">Data Fields</div>
+                        </div>
+                        <div class="bg-white/5 rounded-lg p-3 border border-white/10">
+                            <div class="text-olive-400 font-bold text-xl">5</div>
+                            <div class="text-slate-500 text-xs">Core Modules</div>
+                        </div>
+                        <div class="bg-white/5 rounded-lg p-3 border border-white/10">
+                            <div class="text-olive-400 font-bold text-xl">3</div>
+                            <div class="text-slate-500 text-xs">Data Tiers</div>
+                        </div>
+                        <div class="bg-white/5 rounded-lg p-3 border border-white/10">
+                            <div class="text-olive-400 font-bold text-xl">100%</div>
+                            <div class="text-slate-500 text-xs">Traceable</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Bar -->
+            <div class="border-t border-slate-800 pt-8 text-center">
+               
+                <p class="text-xs text-slate-600">
+                    Dr. Mika • University of Bath • PhD Candidate • Sustainable Construction Materials
+                </p>
+              
+            </div>
+        </div>
+    </footer>
+
+    <!-- INTERACTIVE TAB SCRIPT -->
+    <script>
+        function switchTab(tabId) {
+            // Hide all tab contents
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Show the selected tab content
+            document.getElementById(tabId).classList.add('active');
+            
+            // Deactivate all tab buttons
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Activate the clicked button
+            const activeBtn = document.querySelector(`button[onclick="switchTab('${tabId}')"]`);
+            activeBtn.classList.add('active');
+        }
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LLM Extraction Methodology – PhD Research</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['Lora', 'serif'],
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            primary: '#059669',   /* Emerald 600 */
+                            secondary: '#0891b2', /* Cyan 600 */
+                            dark: '#0f172a',      /* Slate 900 */
+                            accent: '#f59e0b',    /* Amber 500 */
+                            light: '#f0fdf4',     /* Emerald 50 */
+                        }
+                    },
+                    animation: {
+                        'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e0; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        .glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+        
+        /* JSON Syntax Highlighting */
+        .json-key { color: #7dd3fc; } /* Light Blue */
+        .json-string { color: #a5f3fc; } /* Cyan 200 */
+        .json-number { color: #fcd34d; } /* Amber 300 */
+        .json-bool { color: #f472b6; } /* Pink 400 */
+        .json-null { color: #ef4444; font-style: italic; }
+        .json-bracket { color: #94a3b8; }
+        
+        .tier-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans selection:bg-emerald-200 relative">
+
+    <!-- HERO HEADER -->
+    <header class="relative bg-gradient-to-br from-emerald-900 via-teal-800 to-slate-900 text-white pt-20 pb-28 px-6 overflow-hidden shadow-2xl">
+        <!-- Abstract Background Pattern -->
+        <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 30px 30px;"></div>
+        <div class="absolute top-0 right-0 w-96 h-96 bg-emerald-400 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-pulse"></div>
+        
+        <div class="relative container mx-auto max-w-7xl text-center z-10 animate-fade-in-up">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-semibold tracking-wide mb-6 uppercase shadow-sm">
+                <span class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse shadow-[0_0_10px_#34d399]"></span>
+                PhD Data Methodology
+            </div>
+            
+            <h1 class="text-4xl md:text-6xl font-serif font-bold mb-6 leading-tight drop-shadow-lg tracking-tight">
+                Quantitative Evaluation:<br/><span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-200 to-cyan-200">LLMs for Scientific Extraction</span>
+            </h1>
+            <p class="text-lg md:text-xl text-emerald-50 font-serif italic max-w-3xl mx-auto mb-10 leading-relaxed font-light">
+                An objective assessment of Large Language Models for transforming unstructured scientific literature into database-ready schema.
+            </p>
+        </div>
+        
+        <!-- Curved Bottom Edge -->
+        <div class="absolute bottom-0 left-0 w-full h-16 bg-slate-50 rounded-t-[50%] transform scale-x-150 translate-y-8 shadow-[0_-10px_40px_rgba(0,0,0,0.1)]"></div>
+    </header>
+
+    <main class="container mx-auto px-4 md:px-6 py-12 max-w-7xl space-y-20">
+
+        <!-- 1. SDES METHODOLOGY SECTION -->
+        <section class="animate-fade-in-up">
+            <div class="flex items-center gap-4 mb-6">
+                <div class="w-10 h-10 bg-brand-primary text-white rounded-xl flex items-center justify-center text-lg shadow-lg">
+                    <i class="fa-solid fa-calculator"></i>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-serif font-bold text-slate-800">The SDES Methodology</h2>
+                    <p class="text-slate-500 text-sm">Scientific Data Extraction Score: Measuring "PhD-Readiness"</p>
+                </div>
+            </div>
+
+            <div class="glass rounded-3xl p-8 shadow-xl border border-white/50">
+                <!-- Formula Bar -->
+                <div class="bg-slate-900 text-white p-6 rounded-2xl shadow-inner mb-8 font-mono text-sm md:text-base text-center border border-slate-700 overflow-x-auto whitespace-nowrap">
+                    <span class="text-emerald-400 font-bold">SDES</span> = 
+                    <span class="text-cyan-300" title="Data Quantity">DQ (40%)</span> + 
+                    <span class="text-purple-300" title="Schema Adherence">SA (25%)</span> + 
+                    <span class="text-amber-300" title="Contextual Understanding">CU (20%)</span> + 
+                    <span class="text-pink-300" title="Process Fidelity">PF (15%)</span> − 
+                    <span class="text-red-400" title="Hallucination Penalty">PH (Penalty)</span>
+                </div>
+
+                <!-- Detailed Grid Breakdown -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+                    
+                    <!-- DQ -->
+                    <div class="p-5 bg-gradient-to-b from-slate-50 to-slate-100 rounded-xl border border-slate-200 hover:border-cyan-300 transition group">
+                        <div class="flex justify-between items-start mb-2">
+                            <strong class="text-cyan-700 text-lg">DQ</strong>
+                            <span class="bg-cyan-100 text-cyan-800 text-xs font-bold px-2 py-1 rounded">40%</span>
+                        </div>
+                        <p class="text-xs font-bold text-slate-800 uppercase mb-2">Data Quantity</p>
+                        <p class="text-slate-600 text-xs leading-relaxed mb-3">Recall of explicit numerical values (e.g., 30 MPa).</p>
+                        <div class="border-t border-slate-200 pt-2">
+                            <p class="text-[10px] text-slate-500 italic"><span class="font-semibold text-slate-700">Why?</span> The number is the fundamental unit of information. Missed numbers = useless extraction.</p>
+                        </div>
+                    </div>
+
+                    <!-- SA -->
+                    <div class="p-5 bg-gradient-to-b from-slate-50 to-slate-100 rounded-xl border border-slate-200 hover:border-purple-300 transition group">
+                        <div class="flex justify-between items-start mb-2">
+                            <strong class="text-purple-700 text-lg">SA</strong>
+                            <span class="bg-purple-100 text-purple-800 text-xs font-bold px-2 py-1 rounded">25%</span>
+                        </div>
+                        <p class="text-xs font-bold text-slate-800 uppercase mb-2">Schema Adherence</p>
+                        <p class="text-slate-600 text-xs leading-relaxed mb-3">Machine readability for Python/R scripts.</p>
+                        <div class="border-t border-slate-200 pt-2">
+                            <p class="text-[10px] text-slate-500 italic"><span class="font-semibold text-slate-700">Why?</span> Structure allows automation. Data in "comments" fields requires manual cleanup.</p>
+                        </div>
+                    </div>
+
+                    <!-- CU -->
+                    <div class="p-5 bg-gradient-to-b from-slate-50 to-slate-100 rounded-xl border border-slate-200 hover:border-amber-300 transition group">
+                        <div class="flex justify-between items-start mb-2">
+                            <strong class="text-amber-700 text-lg">CU</strong>
+                            <span class="bg-amber-100 text-amber-800 text-xs font-bold px-2 py-1 rounded">20%</span>
+                        </div>
+                        <p class="text-xs font-bold text-slate-800 uppercase mb-2">Contextual Logic</p>
+                        <p class="text-slate-600 text-xs leading-relaxed mb-3">Semantic disambiguation (e.g., test type).</p>
+                        <div class="border-t border-slate-200 pt-2">
+                            <p class="text-[10px] text-slate-500 italic"><span class="font-semibold text-slate-700">Why?</span> Scientific terms are context-dependent. Mis-categorization ruins statistical models.</p>
+                        </div>
+                    </div>
+
+                    <!-- PF -->
+                    <div class="p-5 bg-gradient-to-b from-slate-50 to-slate-100 rounded-xl border border-slate-200 hover:border-pink-300 transition group">
+                        <div class="flex justify-between items-start mb-2">
+                            <strong class="text-pink-700 text-lg">PF</strong>
+                            <span class="bg-pink-100 text-pink-800 text-xs font-bold px-2 py-1 rounded">15%</span>
+                        </div>
+                        <p class="text-xs font-bold text-slate-800 uppercase mb-2">Process Fidelity</p>
+                        <p class="text-slate-600 text-xs leading-relaxed mb-3">Metadata capture (e.g., @ 28 days, 20°C).</p>
+                        <div class="border-t border-slate-200 pt-2">
+                            <p class="text-[10px] text-slate-500 italic"><span class="font-semibold text-slate-700">Why?</span> A value without conditions (metadata) is scientifically meaningless.</p>
+                        </div>
+                    </div>
+
+                    <!-- PH -->
+                    <div class="p-5 bg-red-50 rounded-xl border border-red-100 hover:border-red-300 transition group">
+                        <div class="flex justify-between items-start mb-2">
+                            <strong class="text-red-700 text-lg">PH</strong>
+                            <span class="bg-red-100 text-red-800 text-xs font-bold px-2 py-1 rounded">Penalty</span>
+                        </div>
+                        <p class="text-xs font-bold text-slate-800 uppercase mb-2">Hallucination</p>
+                        <p class="text-red-600 text-xs leading-relaxed mb-3">Deduction for false positives.</p>
+                        <div class="border-t border-red-200 pt-2">
+                            <p class="text-[10px] text-red-700 italic"><span class="font-semibold">Why?</span> Null data is better than fake data. Inventions contaminate the dataset.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. LEADERBOARD & LEGEND -->
+        <section>
+            <h2 class="text-3xl font-serif font-bold text-slate-800 mb-8 text-center">Model Performance Landscape</h2>
+            
+            <!-- Tier Legend Strip -->
+            <div class="mb-8 overflow-x-auto pb-4">
+                <div class="flex gap-4 min-w-max px-1">
+                    <!-- S Tier -->
+                    <div class="w-64 p-4 rounded-xl bg-white border-l-4 border-emerald-500 shadow-sm border border-slate-100">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="font-bold text-slate-800">S-Tier</span>
+                            <span class="text-[10px] font-bold uppercase text-emerald-600 tracking-wider">Gold Standard</span>
+                        </div>
+                        <p class="text-xs text-slate-600 mb-2"><strong>Criteria:</strong> Flawless structure. Zero hallucinations.</p>
+                        <p class="text-[10px] text-slate-400 bg-slate-50 p-1.5 rounded"><strong>Use:</strong> Automated Database Ingestion.</p>
+                    </div>
+
+                    <!-- A Tier -->
+                    <div class="w-64 p-4 rounded-xl bg-white border-l-4 border-cyan-500 shadow-sm border border-slate-100">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="font-bold text-slate-800">A-Tier</span>
+                            <span class="text-[10px] font-bold uppercase text-cyan-600 tracking-wider">Research Assistant</span>
+                        </div>
+                        <p class="text-xs text-slate-600 mb-2"><strong>Criteria:</strong> High accuracy, minor formatting quirks.</p>
+                        <p class="text-[10px] text-slate-400 bg-slate-50 p-1.5 rounded"><strong>Use:</strong> High-quality extraction + cleanup script.</p>
+                    </div>
+
+                    <!-- B Tier -->
+                    <div class="w-64 p-4 rounded-xl bg-white border-l-4 border-amber-500 shadow-sm border border-slate-100">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="font-bold text-slate-800">B-Tier</span>
+                            <span class="text-[10px] font-bold uppercase text-amber-600 tracking-wider">Reviewer</span>
+                        </div>
+                        <p class="text-xs text-slate-600 mb-2"><strong>Criteria:</strong> Good summary/context, poor JSON/Schema.</p>
+                        <p class="text-[10px] text-slate-400 bg-slate-50 p-1.5 rounded"><strong>Use:</strong> Literature screening/filtering.</p>
+                    </div>
+
+                    <!-- C Tier -->
+                    <div class="w-64 p-4 rounded-xl bg-white border-l-4 border-orange-400 shadow-sm border border-slate-100">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="font-bold text-slate-800">C-Tier</span>
+                            <span class="text-[10px] font-bold uppercase text-orange-600 tracking-wider">Apprentice</span>
+                        </div>
+                        <p class="text-xs text-slate-600 mb-2"><strong>Criteria:</strong> Basic metadata only. Fails complex tables.</p>
+                        <p class="text-[10px] text-slate-400 bg-slate-50 p-1.5 rounded"><strong>Use:</strong> Simple indexing.</p>
+                    </div>
+
+                    <!-- F Tier -->
+                    <div class="w-64 p-4 rounded-xl bg-white border-l-4 border-red-500 shadow-sm border border-slate-100">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="font-bold text-slate-800">F-Tier</span>
+                            <span class="text-[10px] font-bold uppercase text-red-600 tracking-wider">Failure</span>
+                        </div>
+                        <p class="text-xs text-slate-600 mb-2"><strong>Criteria:</strong> Hallucinations (invented data).</p>
+                        <p class="text-[10px] text-slate-400 bg-slate-50 p-1.5 rounded"><strong>Use:</strong> Unusable for science.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto glass rounded-2xl shadow-lg border border-slate-100">
+                <table class="w-full text-sm text-left text-slate-600">
+                    <thead class="text-xs text-slate-700 uppercase bg-slate-50 border-b border-slate-200">
+                        <tr>
+                            <th scope="col" class="px-6 py-4">Rank</th>
+                            <th scope="col" class="px-6 py-4">Model</th>
+                            <th scope="col" class="px-6 py-4">Ref</th>
+                            <th scope="col" class="px-6 py-4">Tier</th>
+                            <th scope="col" class="px-6 py-4">Verdict</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        <!-- Rank 1 -->
+                        <tr class="bg-emerald-50/50 hover:bg-emerald-50 transition">
+                            <td class="px-6 py-4 font-bold text-emerald-900">1</td>
+                            <td class="px-6 py-4 font-bold text-slate-900 flex items-center gap-2">
+                                <i class="fa-solid fa-star text-yellow-400"></i> Gemini 3 Pro Preview
+                            </td>
+                            <td class="px-6 py-4 font-mono text-xs">Code 2</td>
+                            <td class="px-6 py-4"><span class="tier-badge bg-emerald-100 text-emerald-800 border border-emerald-200">S</span></td>
+                            <td class="px-6 py-4 text-emerald-800 font-medium">Flawless structure & schema adherence.</td>
+                        </tr>
+                        <!-- Rank 2 -->
+                        <tr class="hover:bg-slate-50 transition">
+                            <td class="px-6 py-4 font-bold">2</td>
+                            <td class="px-6 py-4 font-medium text-slate-900">DeepSeek v2</td>
+                            <td class="px-6 py-4 font-mono text-xs">Code 1</td>
+                            <td class="px-6 py-4"><span class="tier-badge bg-cyan-100 text-cyan-800 border border-cyan-200">A+</span></td>
+                            <td class="px-6 py-4">Exceptional recall (DQ), needs schema cleanup.</td>
+                        </tr>
+                        <!-- Rank 3 -->
+                        <tr class="hover:bg-slate-50 transition">
+                            <td class="px-6 py-4 font-bold">3</td>
+                            <td class="px-6 py-4 font-medium text-slate-900">ChatGPT (GPT-5.2)</td>
+                            <td class="px-6 py-4 font-mono text-xs">Code 6</td>
+                            <td class="px-6 py-4"><span class="tier-badge bg-cyan-100 text-cyan-800 border border-cyan-200">A</span></td>
+                            <td class="px-6 py-4">Reliable but rigid; excess null values.</td>
+                        </tr>
+                        <!-- Rank 4 -->
+                        <tr class="hover:bg-slate-50 transition">
+                            <td class="px-6 py-4 font-bold">4</td>
+                            <td class="px-6 py-4 font-medium text-slate-900">Qwen</td>
+                            <td class="px-6 py-4 font-mono text-xs">Code 10</td>
+                            <td class="px-6 py-4"><span class="tier-badge bg-cyan-100 text-cyan-800 border border-cyan-200">A</span></td>
+                            <td class="px-6 py-4">Strong data hidden in notes fields.</td>
+                        </tr>
+                        <!-- Rank 5 -->
+                        <tr class="hover:bg-slate-50 transition">
+                            <td class="px-6 py-4 font-bold">5</td>
+                            <td class="px-6 py-4 font-medium text-slate-900">Xiaomi Mimo V2</td>
+                            <td class="px-6 py-4 font-mono text-xs">Code 3</td>
+                            <td class="px-6 py-4"><span class="tier-badge bg-amber-100 text-amber-800 border border-amber-200">B</span></td>
+                            <td class="px-6 py-4">Summarizer style; sparse tabular data.</td>
+                        </tr>
+                        <!-- Rank 6 -->
+                        <tr class="hover:bg-slate-50 transition">
+                            <td class="px-6 py-4 font-bold">6</td>
+                            <td class="px-6 py-4 font-medium text-slate-900">Kimi AI</td>
+                            <td class="px-6 py-4 font-mono text-xs">Code 9</td>
+                            <td class="px-6 py-4"><span class="tier-badge bg-amber-100 text-amber-800 border border-amber-200">B-</span></td>
+                            <td class="px-6 py-4">Refused tabular extraction (Reviewer style).</td>
+                        </tr>
+                        <!-- Rank 7 -->
+                        <tr class="hover:bg-slate-50 transition">
+                            <td class="px-6 py-4 font-bold">7</td>
+                            <td class="px-6 py-4 font-medium text-slate-900">Gemini 3 Flash</td>
+                            <td class="px-6 py-4 font-mono text-xs">Code 7</td>
+                            <td class="px-6 py-4"><span class="tier-badge bg-orange-100 text-orange-800 border border-orange-200">C</span></td>
+                            <td class="px-6 py-4">Metadata only; weak on complex nested logic.</td>
+                        </tr>
+                        <!-- Rank 8 -->
+                        <tr class="hover:bg-slate-50 transition">
+                            <td class="px-6 py-4 font-bold">8</td>
+                            <td class="px-6 py-4 font-medium text-slate-900">KwaiPilot Kat</td>
+                            <td class="px-6 py-4 font-mono text-xs">Code 5</td>
+                            <td class="px-6 py-4"><span class="tier-badge bg-red-100 text-red-800 border border-red-200">D</span></td>
+                            <td class="px-6 py-4">Valid JSON structure but empty content.</td>
+                        </tr>
+                         <!-- Rank 9 -->
+                         <tr class="bg-red-50/30 hover:bg-red-50 transition">
+                            <td class="px-6 py-4 font-bold text-red-900">9</td>
+                            <td class="px-6 py-4 font-medium text-slate-900">DeepSeek v1</td>
+                            <td class="px-6 py-4 font-mono text-xs">Code 8</td>
+                            <td class="px-6 py-4"><span class="tier-badge bg-red-100 text-red-800 border border-red-200">F</span></td>
+                            <td class="px-6 py-4 text-red-800">Incomplete and unstable.</td>
+                        </tr>
+                         <!-- Rank 10 -->
+                         <tr class="bg-red-50/30 hover:bg-red-50 transition">
+                            <td class="px-6 py-4 font-bold text-red-900">10</td>
+                            <td class="px-6 py-4 font-medium text-slate-900">Mistral Devstral</td>
+                            <td class="px-6 py-4 font-mono text-xs">Code 4</td>
+                            <td class="px-6 py-4"><span class="tier-badge bg-red-100 text-red-800 border border-red-200">F</span></td>
+                            <td class="px-6 py-4 text-red-800">High PH penalty (Hallucinated testing schemas).</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 3. DETAILED INSIGHTS -->
+        <section>
+            <h2 class="text-2xl font-serif font-bold text-slate-800 mb-6">Detailed Insights & Feedback</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Tier 1 -->
+                <div class="bg-white rounded-2xl shadow-lg border border-slate-100 p-6 border-t-4 border-t-emerald-500">
+                    <h3 class="text-lg font-bold text-emerald-800 mb-4">S/A-Tier: The Assistants</h3>
+                    <div class="space-y-6">
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <h4 class="font-bold text-slate-900">Gemini 3 Pro Preview</h4>
+                                <span class="text-xs font-bold bg-emerald-100 text-emerald-800 px-2 py-1 rounded">S-Tier</span>
+                            </div>
+                            <p class="text-sm text-slate-600 mb-2"><strong>Insight:</strong> Demonstrated genuine scientific literacy. Zero post-processing required.</p>
+                            <p class="text-xs text-slate-500 italic">"Correctly mapped numerical values directly to schema keys."</p>
+                        </div>
+                        <div class="pt-4 border-t border-slate-100">
+                            <div class="flex justify-between items-center mb-2">
+                                <h4 class="font-bold text-slate-900">DeepSeek v2</h4>
+                                <span class="text-xs font-bold bg-cyan-100 text-cyan-800 px-2 py-1 rounded">A-Tier</span>
+                            </div>
+                            <p class="text-sm text-slate-600"><strong>Insight:</strong> Highest recall (DQ) but poor schema adherence (SA); values often placed in prose notes.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tier 2 -->
+                <div class="bg-white rounded-2xl shadow-lg border border-slate-100 p-6 border-t-4 border-t-amber-400">
+                    <h3 class="text-lg font-bold text-amber-800 mb-4">B-Tier: The Reviewers</h3>
+                    <div class="space-y-6">
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <h4 class="font-bold text-slate-900">Xiaomi Mimo V2</h4>
+                                <span class="text-xs font-bold bg-amber-100 text-amber-800 px-2 py-1 rounded">B-Tier</span>
+                            </div>
+                            <p class="text-sm text-slate-600"><strong>Insight:</strong> Conservative and non-hallucinatory, but partial extraction. Low SA score.</p>
+                        </div>
+                        <div class="pt-4 border-t border-slate-100">
+                            <div class="flex justify-between items-center mb-2">
+                                <h4 class="font-bold text-slate-900">Kimi AI</h4>
+                                <span class="text-xs font-bold bg-amber-100 text-amber-800 px-2 py-1 rounded">B-Tier</span>
+                            </div>
+                            <p class="text-sm text-slate-600"><strong>Insight:</strong> Strong analysis (peer reviewer style) but refused data extraction steps.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tier 3 -->
+                <div class="bg-white rounded-2xl shadow-lg border border-slate-100 p-6 border-t-4 border-t-red-400">
+                    <h3 class="text-lg font-bold text-red-800 mb-4">C/F-Tier: Failures</h3>
+                    <div class="space-y-6">
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <h4 class="font-bold text-slate-900">Gemini 3 Flash</h4>
+                                <span class="text-xs font-bold bg-orange-100 text-orange-800 px-2 py-1 rounded">C-Tier</span>
+                            </div>
+                            <p class="text-sm text-slate-600">Returned syntactically valid but semantically empty outputs. Good metadata (C-Tier behavior).</p>
+                        </div>
+                        <div class="pt-4 border-t border-slate-100">
+                            <div class="flex justify-between items-center mb-2">
+                                <h4 class="font-bold text-slate-900">Mistral & DeepSeek v1</h4>
+                                <span class="text-xs font-bold bg-red-100 text-red-800 px-2 py-1 rounded">F-Tier</span>
+                            </div>
+                            <p class="text-sm text-slate-600">Hallucination by association—misinterpreted keywords and invented data. Severe PH penalty applied.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. FINAL RECOMMENDATION -->
+        <section>
+            <div class="bg-gradient-to-r from-emerald-800 to-teal-900 rounded-[2rem] p-10 md:p-12 text-white shadow-2xl relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-emerald-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
+                
+                <div class="relative z-10 flex flex-col md:flex-row gap-8 items-start">
+                    <div class="flex-1">
+                        <h2 class="text-3xl font-serif font-bold mb-4">Final Recommendation</h2>
+                        <p class="text-emerald-100 text-lg leading-relaxed mb-6">
+                            For experimental rigor and data integrity, <strong class="text-white border-b-2 border-emerald-400">Gemini 3 Pro Preview</strong> is selected as the primary extraction engine (S-Tier).
+                        </p>
+                        <ul class="space-y-3 mb-8">
+                            <li class="flex items-start"><i class="fa-solid fa-check-circle text-emerald-400 mt-1 mr-3"></i> <span><strong>Schema Adherence (SA):</strong> Dynamically aligns schemas with scientific domains for Python parsing.</span></li>
+                            <li class="flex items-start"><i class="fa-solid fa-check-circle text-emerald-400 mt-1 mr-3"></i> <span><strong>Data Quantity (DQ):</strong> Highest ratio of structured numerical pairs.</span></li>
+                            <li class="flex items-start"><i class="fa-solid fa-check-circle text-emerald-400 mt-1 mr-3"></i> <span><strong>Process Fidelity (PF):</strong> Precise capture of operational parameters (metadata).</span></li>
+                        </ul>
+                        
+                        <div class="bg-white/10 rounded-xl p-4 border border-white/20">
+                            <p class="text-xs font-bold uppercase text-emerald-300 mb-2">Suggested Citation Note</p>
+                            <p class="font-serif italic text-emerald-50 text-sm">
+                                "While models such as ChatGPT (GPT-5.2) and DeepSeek v2 exhibited high data recall, they lacked the schema flexibility required for automated database construction, frequently relegating critical numerical data to unstructured text fields."
+                            </p>
+                        </div>
+                    </div>
+                    <div class="w-full md:w-1/3 bg-white/5 rounded-xl p-6 backdrop-blur-sm border border-white/10">
+                        <h3 class="text-emerald-300 font-bold uppercase text-sm mb-4">Extraction Pipeline</h3>
+                        <div class="space-y-4 text-sm">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full bg-emerald-600 flex items-center justify-center font-bold">1</div>
+                                <span>PDF Ingestion</span>
+                            </div>
+                            <div class="h-4 border-l border-white/20 ml-4"></div>
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center font-bold">2</div>
+                                <span>Gemini 3 Pro Processing</span>
+                            </div>
+                            <div class="h-4 border-l border-white/20 ml-4"></div>
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full bg-teal-500 flex items-center justify-center font-bold">3</div>
+                                <span>JSON Schema Validation</span>
+                            </div>
+                            <div class="h-4 border-l border-white/20 ml-4"></div>
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full bg-cyan-500 flex items-center justify-center font-bold">4</div>
+                                <span>Database Entry</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. CODE GLIMPSE -->
+        <section id="extraction-code">
+            <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 bg-slate-800 text-white rounded-lg flex items-center justify-center shadow-md">
+                        <i class="fa-solid fa-code"></i>
+                    </div>
+                    <h2 class="text-2xl font-serif font-bold text-slate-800">Extraction Schema Snapshot</h2>
+                </div>
+                <a href="https://drive.google.com/uc?export=download&id=12xX7bx7xn4QbIsq9tuE1Movs9FfRB2eD" class="inline-flex items-center px-4 py-2 bg-brand-primary text-white rounded-lg hover:bg-emerald-700 transition font-medium text-sm shadow-md">
+                    <i class="fa-solid fa-download mr-2"></i> Download Full Schema
+                </a>
+            </div>
+            
+            <div class="bg-slate-900 rounded-xl shadow-2xl overflow-hidden border border-slate-800 font-mono text-sm leading-relaxed">
+                <!-- Mac-like Window Header -->
+                <div class="flex items-center px-4 py-3 bg-slate-800 border-b border-slate-700">
+                    <div class="flex gap-2 mr-4">
+                        <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                    </div>
+                    <div class="flex-1 text-center pr-12">
+                        <span class="text-xs text-slate-400 font-medium">olive_pomace_extraction_v2.json</span>
+                    </div>
+                </div>
+                
+                <!-- Code Area -->
+                <div class="p-6 overflow-x-auto text-slate-300">
+<pre><code><span class="json-bracket">{</span>
+  <span class="json-key">"bibliographic_meta"</span>: <span class="json-bracket">{</span>
+    <span class="json-key">"source_id"</span>: <span class="json-string">"DOI:10.1016/j.jclepro.2023.136721"</span>,
+    <span class="json-key">"year"</span>: <span class="json-number">2024</span>,
+    <span class="json-key">"material_class"</span>: <span class="json-string">"Olea europaea L. pomace"</span>
+  <span class="json-bracket">}</span>,
+  <span class="json-key">"experimental_conditions"</span>: <span class="json-bracket">{</span>
+    <span class="json-key">"extraction_method"</span>: <span class="json-string">"Supercritical Fluid Extraction (SFE)"</span>,
+    <span class="json-key">"solvent"</span>: <span class="json-string">"CO2"</span>,
+    <span class="json-key">"parameters"</span>: <span class="json-bracket">[</span>
+      <span class="json-bracket">{</span> <span class="json-key">"variable"</span>: <span class="json-string">"Pressure"</span>, <span class="json-key">"value"</span>: <span class="json-number">30.0</span>, <span class="json-key">"unit"</span>: <span class="json-string">"MPa"</span> <span class="json-bracket">}</span>,
+      <span class="json-bracket">{</span> <span class="json-key">"variable"</span>: <span class="json-string">"Temperature"</span>, <span class="json-key">"value"</span>: <span class="json-number">40.0</span>, <span class="json-key">"unit"</span>: <span class="json-string">"C"</span> <span class="json-bracket">}</span>,
+      <span class="json-bracket">{</span> <span class="json-key">"variable"</span>: <span class="json-string">"Flow Rate"</span>, <span class="json-key">"value"</span>: <span class="json-number">2.5</span>, <span class="json-key">"unit"</span>: <span class="json-string">"kg/h"</span> <span class="json-bracket">}</span>
+    <span class="json-bracket">]</span>
+  <span class="json-bracket">}</span>,
+  <span class="json-key">"quantitative_results"</span>: <span class="json-bracket">{</span>
+    <span class="json-key">"global_yield"</span>: <span class="json-bracket">{</span>
+      <span class="json-key">"value"</span>: <span class="json-number">5.82</span>,
+      <span class="json-key">"unit"</span>: <span class="json-string">"g/100g dry matter"</span>,
+      <span class="json-key">"uncertainty"</span>: <span class="json-number">0.15</span>
+    <span class="json-bracket">}</span>,
+    <span class="json-key">"bioactive_compounds"</span>: <span class="json-bracket">[</span>
+      <span class="json-bracket">{</span>
+        <span class="json-key">"compound"</span>: <span class="json-string">"Hydroxytyrosol"</span>,
+        <span class="json-key">"concentration"</span>: <span class="json-number">12.4</span>,
+        <span class="json-key">"unit"</span>: <span class="json-string">"mg/kg"</span>
+      <span class="json-bracket">}</span>
+    <span class="json-bracket">]</span>
+  <span class="json-bracket">}</span>,
+  <span class="json-key">"data_quality_flags"</span>: <span class="json-bracket">{</span>
+    <span class="json-key">"missing_data_imputed"</span>: <span class="json-bool">false</span>,
+    <span class="json-key">"unit_conversion_applied"</span>: <span class="json-bool">true</span>,
+    <span class="json-key">"confidence_score"</span>: <span class="json-string">"High"</span>
+  <span class="json-bracket">}</span>
+<span class="json-bracket">}</span></code></pre>
+                </div>
+            </div>
+            <p class="text-center text-slate-500 text-xs mt-4 italic font-medium">
+                Figure 1: Validated JSON output showing nested extraction of Supercritical Fluid Extraction parameters from unstructured text.
+            </p>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 text-slate-400 py-16 border-t border-slate-800">
+        <div class="container mx-auto max-w-6xl text-center px-4">
+            <div class="mb-8">
+                <span class="text-2xl font-serif text-slate-200 font-bold tracking-tight">PhD Research Dashboard</span>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8 max-w-3xl mx-auto mb-10 text-sm">
+                 <div>
+                    <h4 class="text-slate-300 font-bold mb-2">Phase</h4>
+                    <p>Literature Review (Phase 4)</p>
+                 </div>
+                 <div>
+                    <h4 class="text-slate-300 font-bold mb-2">Focus</h4>
+                    <p>Structured Data Extraction</p>
+                 </div>
+                 <div>
+                    <h4 class="text-slate-300 font-bold mb-2">Outcome</h4>
+                    <p>Validated JSON Corpus</p>
+                 </div>
+            </div>
+            
+            <div class="text-xs text-slate-600 space-y-2 border-t border-slate-800 pt-8">
+                <p>Dr. Mika - University of Bath - PhD Research Project.</p>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
