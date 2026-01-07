@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhD Fieldwork Dashboard – Lebanon</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['Lora', 'serif'],
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            primary: '#059669',   /* Emerald 600 */
+                            secondary: '#0891b2', /* Cyan 600 */
+                            dark: '#0f172a',      /* Slate 900 */
+                            accent: '#f59e0b',    /* Amber 500 */
+                            light: '#f0fdf4',     /* Emerald 50 */
+                        }
+                    },
+                    animation: {
+                        'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e0; border-radius: 5px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        .glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+        
+        .glass-dark {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Carousel Styles */
+        .carousel-track {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+            height: 100%;
+        }
+        .carousel-slide {
+            min-width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #0f172a; /* Dark background for uncropped images */
+        }
+        .carousel-slide img {
+            max-height: 100%;
+            max-width: 100%;
+            object-fit: contain; /* Ensures full image is visible */
+        }
+
+        /* Tab Styles */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .active-tab {
+            color: #059669; /* brand-primary */
+            background-color: #f0fdf4; /* brand-light */
+            border-bottom: 2px solid #059669;
+        }
+        .inactive-tab {
+            color: #64748b;
+            border-bottom: 2px solid transparent;
+        }
+        .inactive-tab:hover {
+            color: #059669;
+            background-color: #f8fafc;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans selection:bg-emerald-200 relative">
+
+    <!-- Back to Top Button -->
+    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="fixed bottom-8 right-8 z-50 p-3 bg-brand-primary text-white rounded-full shadow-lg hover:bg-emerald-700 transition-all hover:scale-110 opacity-90 hover:opacity-100">
+        <i class="fa-solid fa-arrow-up"></i>
+    </button>
+
+    <!-- HERO HEADER -->
+    <header class="relative bg-gradient-to-br from-emerald-800 via-teal-700 to-slate-900 text-white pt-24 pb-32 px-6 overflow-hidden shadow-2xl">
+        <!-- Abstract Background Pattern -->
+        <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 30px 30px;"></div>
+        <div class="absolute top-0 right-0 w-96 h-96 bg-emerald-400 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-float"></div>
+        <div class="absolute bottom-0 left-0 w-96 h-96 bg-cyan-400 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-float" style="animation-delay: 2s;"></div>
+        
+        <div class="relative container mx-auto max-w-7xl text-center z-10 animate-fade-in-up">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-semibold tracking-wide mb-6 uppercase shadow-sm">
+                <span class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse shadow-[0_0_10px_#34d399]"></span>
+                PhD Fieldwork Phase
+            </div>
+            
+            <h1 class="text-4xl md:text-6xl font-serif font-bold mb-6 leading-tight drop-shadow-lg tracking-tight">
+                PhD Fieldwork Dashboard<br/><span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-200 to-cyan-200">Lebanon</span>
+            </h1>
+            <p class="text-lg md:text-xl text-emerald-50 font-serif italic max-w-3xl mx-auto mb-10 leading-relaxed font-light">
+                Documenting the sourcing, pre-treatment, and characterization preparation of bio-based construction materials derived from agricultural waste streams.
+            </p>
+            <p class="text-sm font-semibold tracking-wider text-emerald-200 uppercase">Fieldwork Period: Dec 2025 – Jan 2026</p>
+        </div>
+        
+        <!-- Curved Bottom Edge -->
+        <div class="absolute bottom-0 left-0 w-full h-16 bg-slate-50 rounded-t-[50%] transform scale-x-150 translate-y-8 shadow-[0_-10px_40px_rgba(0,0,0,0.1)]"></div>
+    </header>
+
+    <!-- WORKFLOW VISUALIZATION (MOVED ABOVE TABS) -->
+    <section class="bg-slate-50 py-12 border-b border-slate-200">
+        <div class="container mx-auto px-4 md:px-6 max-w-7xl">
+            <div class="glass rounded-3xl p-8 shadow-xl border border-white/50 relative overflow-hidden">
+                <div class="flex items-center gap-6 mb-8 border-b border-slate-100 pb-6 relative z-10">
+                    <div class="w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center text-xl shadow-lg text-white">
+                        <i class="fa-solid fa-timeline"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-serif font-bold text-slate-800">Fieldwork Methodology Workflow</h2>
+                        <p class="text-slate-500 text-sm">Chain of custody: Source to Shipment</p>
+                    </div>
+                </div>
+
+                <div class="relative grid grid-cols-2 md:grid-cols-5 gap-4">
+                    <!-- Connector Line -->
+                    <div class="hidden md:block absolute top-1/2 left-0 w-full h-1 bg-gradient-to-r from-emerald-100 via-teal-100 to-slate-200 -z-10 transform -translate-y-1/2 rounded-full"></div>
+
+                    <!-- Steps -->
+                    <div class="bg-white p-4 rounded-2xl shadow-md border border-slate-100 relative text-center group hover:-translate-y-1 transition-all">
+                        <div class="w-10 h-10 bg-brand-primary text-white rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg ring-4 ring-white">
+                            <i class="fa-solid fa-location-dot"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-800 text-xs uppercase tracking-wide">Sourcing</h3>
+                    </div>
+
+                    <div class="bg-white p-4 rounded-2xl shadow-md border border-slate-100 relative text-center group hover:-translate-y-1 transition-all">
+                        <div class="w-10 h-10 bg-brand-primary text-white rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg ring-4 ring-white">
+                            <i class="fa-solid fa-hand-holding-hand"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-800 text-xs uppercase tracking-wide">Acquisition</h3>
+                    </div>
+
+                    <div class="bg-white p-4 rounded-2xl shadow-md border border-slate-100 relative text-center group hover:-translate-y-1 transition-all">
+                        <div class="w-10 h-10 bg-brand-primary text-white rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg ring-4 ring-white">
+                            <i class="fa-solid fa-sun"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-800 text-xs uppercase tracking-wide">Pre-Treatment</h3>
+                    </div>
+
+                    <div class="bg-white p-4 rounded-2xl shadow-md border border-slate-100 relative text-center group hover:-translate-y-1 transition-all">
+                        <div class="w-10 h-10 bg-brand-primary text-white rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg ring-4 ring-white">
+                            <i class="fa-solid fa-flask"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-800 text-xs uppercase tracking-wide">Pre-Screening</h3>
+                    </div>
+
+                    <div class="bg-white p-4 rounded-2xl shadow-md border border-slate-100 relative text-center group hover:-translate-y-1 transition-all">
+                        <div class="w-10 h-10 bg-brand-primary text-white rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg ring-4 ring-white">
+                            <i class="fa-solid fa-box-open"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-800 text-xs uppercase tracking-wide">Shipment</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- STICKY NAVIGATION (Tabs) -->
+    <div class="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-200/60 shadow-sm supports-[backdrop-filter]:bg-white/60">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <nav class="flex justify-center space-x-1 md:space-x-4 overflow-x-auto no-scrollbar py-3" aria-label="Tabs">
+                <button onclick="switchTab('olive')" id="btn-olive" class="active-tab px-4 py-2 rounded-lg text-sm font-bold transition-all duration-300 flex items-center whitespace-nowrap gap-2">
+                    <span class="text-lg">🫒</span> Olive Pomace
+                </button>
+                <button onclick="switchTab('banana')" id="btn-banana" class="inactive-tab px-4 py-2 rounded-lg text-sm font-bold transition-all duration-300 flex items-center whitespace-nowrap gap-2">
+                    <span class="text-lg">🍌</span> Banana Biomass
+                </button>
+                <button onclick="switchTab('wheat')" id="btn-wheat" class="inactive-tab px-4 py-2 rounded-lg text-sm font-bold transition-all duration-300 flex items-center whitespace-nowrap gap-2">
+                    <span class="text-lg">🌾</span> Wheat Straw
+                </button>
+                <button onclick="switchTab('barley')" id="btn-barley" class="inactive-tab px-4 py-2 rounded-lg text-sm font-bold transition-all duration-300 flex items-center whitespace-nowrap gap-2">
+                    <span class="text-lg">🌾</span> Barley Straw
+                </button>
+                <button onclick="switchTab('feathers')" id="btn-feathers" class="inactive-tab px-4 py-2 rounded-lg text-sm font-bold transition-all duration-300 flex items-center whitespace-nowrap gap-2">
+                    <span class="text-lg">🪶</span> Chicken Feathers
+                </button>
+            </nav>
+        </div>
+    </div>
+
+    <main class="container mx-auto px-4 md:px-6 py-12 max-w-7xl space-y-12">
+
+        <!-- MATERIAL CONTENT AREA -->
+        
+        <!-- ==================== TAB: OLIVE POMACE ==================== -->
+        <div id="tab-olive" class="tab-content block animate-fade-in-up">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Left Column -->
+                <div class="lg:col-span-2 space-y-6">
+                    <!-- Overview Card -->
+                    <div class="glass rounded-2xl shadow-lg border border-slate-100 p-8">
+                        <div>
+                            <h3 class="text-2xl font-serif font-bold text-slate-900">Olive Pomace</h3>
+                            <p class="text-sm text-slate-500 mt-1">Category: Agricultural By-product (Solid Waste)</p>
+                        </div>
+                    </div>
+
+                    <!-- Location Card -->
+                    <div class="glass rounded-2xl shadow-lg border border-slate-100 p-8">
+                        <h4 class="text-lg font-bold text-slate-800 mb-6 flex items-center">
+                            <i class="fa-solid fa-map-location-dot text-brand-primary mr-3"></i>Locations & Sourcing
+                        </h4>
+                        <div class="space-y-4">
+                            <div class="bg-slate-50 p-4 rounded-xl border-l-4 border-brand-primary">
+                                <strong class="text-slate-900 block mb-1">Qalamoun (North)</strong>
+                                <span class="text-sm text-slate-600">Traditional/Old Mill. Photography allowed.</span>
+                            </div>
+                            <div class="bg-slate-50 p-4 rounded-xl border-l-4 border-brand-primary">
+                                <strong class="text-slate-900 block mb-1">Alwazir</strong>
+                                <span class="text-sm text-slate-600">Semi-automated mill. Sourcing successful, photography restricted.</span>
+                            </div>
+                            <div class="bg-slate-50 p-4 rounded-xl border-l-4 border-brand-primary">
+                                <strong class="text-slate-900 block mb-1">Jezzine (South)</strong>
+                                <span class="text-sm text-slate-600">Traditional/Semi-automated mill mix.</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pre-Treatment & Testing Split -->
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <!-- Pre-Treatment -->
+                        <div class="glass rounded-2xl shadow-lg border border-slate-100 p-6">
+                            <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center">
+                                <i class="fa-solid fa-fire-burner text-brand-primary mr-3"></i>Pre-Treatment
+                            </h4>
+                            <p class="text-sm text-slate-600 leading-relaxed">
+                                Samples were rapidly dehydrated using a commercial dehydrator at <strong>60°C</strong> to arrest biological activity and prevent fungal growth  after collection.
+                            </p>
+                        </div>
+
+                        <!-- Lab Testing -->
+                        <div class="glass rounded-2xl shadow-lg border border-slate-100 p-6">
+                            <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center">
+                                <i class="fa-solid fa-flask text-brand-primary mr-3"></i>Lab Testing
+                            </h4>
+                            <ul class="text-sm space-y-2 text-slate-700">
+                                <li class="flex items-center"><i class="fa-solid fa-check text-brand-primary mr-2 text-xs"></i>Moisture Content</li>
+                                <li class="flex items-center"><i class="fa-solid fa-check text-brand-primary mr-2 text-xs"></i>Water Activity (aw)</li>
+                                <li class="flex items-center"><i class="fa-solid fa-check text-brand-primary mr-2 text-xs"></i>pH (Aqueous Extract)</li>
+                                <li class="flex items-center"><i class="fa-solid fa-check text-brand-primary mr-2 text-xs"></i>Particle Size/Length</li>
+                                <li class="flex items-center"><i class="fa-solid fa-check text-brand-primary mr-2 text-xs"></i>Density</li>
+                                <li class="flex items-center"><i class="fa-solid fa-check text-brand-primary mr-2 text-xs"></i>Microbiological Screening</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                     <!-- Shipping & Compliance -->
+                     <div class="glass rounded-2xl shadow-lg border border-slate-100 p-6">
+                        <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center">
+                            <i class="fa-solid fa-passport text-brand-primary mr-3"></i>Shipping & Compliance
+                        </h4>
+                        <p class="text-sm text-slate-600 leading-relaxed">
+                            All samples have been prepared in strict accordance with <strong>DEFRA</strong> import regulations for research materials and <strong>University of Bath</strong> laboratory safety requirements. The <strong>ACE non-uniform procedure</strong> document has been filed to ensure compliant international transport and safe handling upon arrival at the university facilities.
+                        </p>
+                    </div>
+
+                    <!-- VIDEO SECTION -->
+                    <div class="glass rounded-2xl shadow-lg border border-slate-100 p-6">
+                        <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center">
+                            <i class="fa-solid fa-video text-brand-primary mr-3"></i>Field Footage: Olive Mill - South
+                        </h4>
+                        <div class="relative w-full overflow-hidden rounded-xl shadow-md bg-slate-900 aspect-video">
+                            <iframe src="https://drive.google.com/file/d/1dBCbrkpmf6lESW5bJ_fDhRewHX0Qu1kJ/preview" width="100%" height="100%" frameborder="0" allow="autoplay"></iframe>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column (Map & Carousel) -->
+                <div class="lg:col-span-1">
+                    <div class="sticky top-32 space-y-6">
+                        <!-- Location Map -->
+                        <div class="bg-white rounded-2xl shadow-lg border border-slate-100 overflow-hidden">
+                            <div class="bg-slate-900 p-4 text-white">
+                                <h4 class="text-xs font-bold uppercase tracking-widest">Geographic Sourcing Context</h4>
+                            </div>
+                            <div class="relative h-64 bg-slate-100">
+                                <img src="https://i.ibb.co/rRF7qSyN/Olive-Pomace-Waste-Map.png" class="w-full h-full object-contain bg-slate-100" alt="Olive Pomace Waste Map">
+                            </div>
+                        </div>
+
+                        <!-- Carousel -->
+                        <div class="bg-white rounded-2xl shadow-lg border border-slate-100 overflow-hidden">
+                            <div class="bg-slate-900 p-4 text-white">
+                                <h4 class="text-xs font-bold uppercase tracking-widest">Field Images - Olive Mill - North </h4>
+                            </div>
+                            <div class="relative group" id="carousel-olive">
+                                <div class="overflow-hidden relative h-80 bg-slate-900">
+                                    <div class="carousel-track h-full">
+                                        <div class="carousel-slide relative"><img src="https://i.ibb.co/RTNf95k5/North-Olive-Mill-5.jpg" alt="North Olive Mill 5"></div>
+                                        <div class="carousel-slide relative"><img src="https://i.ibb.co/QFxymdNJ/North-Olive-Mill.jpg" alt="North Olive Mill"></div>
+                                        <div class="carousel-slide relative"><img src="https://i.ibb.co/W4JGNz0z/North-Olive-Mill-2.jpg" alt="North Olive Mill 2"></div>
+                                        <div class="carousel-slide relative"><img src="https://i.ibb.co/HTtpGTCv/North-Olive-Mill-3.jpg" alt="North Olive Mill 3"></div>
+                                        <div class="carousel-slide relative"><img src="https://i.ibb.co/Q7PzgyM8/North-Olive-Mill-4.jpg" alt="North Olive Mill 4"></div>
+                                        <div class="carousel-slide relative"><img src="https://i.ibb.co/Y4JDK2W0/Pomace-Waste.jpg" alt="Pomace Waste"></div>
+                                    </div>
+                                </div>
+                                <button class="absolute top-1/2 left-2 transform -translate-y-1/2 bg-white/20 backdrop-blur text-white p-3 rounded-full hover:bg-brand-primary transition carousel-prev"><i class="fa-solid fa-chevron-left"></i></button>
+                                <button class="absolute top-1/2 right-2 transform -translate-y-1/2 bg-white/20 backdrop-blur text-white p-3 rounded-full hover:bg-brand-primary transition carousel-next"><i class="fa-solid fa-chevron-right"></i></button>
+                            </div>
+                            <div class="p-4 bg-slate-50 text-xs text-slate-500 italic border-t border-slate-100">
+                                Sourcing, processing, and material collection at olive mills.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== TAB: BANANA BIOMASS ==================== -->
+        <div id="tab-banana" class="tab-content hidden animate-fade-in-up">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-2 space-y-6">
+                    <div class="glass rounded-2xl shadow-lg border border-slate-100 p-8">
+                        <div>
+                            <h3 class="text-2xl font-serif font-bold text-slate-900">Banana Biomass</h3>
+                            <p class="text-sm text-slate-500 mt-1">Pseudostems & Leaves</p>
+                        </div>
+                    </div>
+
+                    <div class="glass rounded-2xl shadow-lg border border-slate-100 p-8">
+                        <h4 class="text-lg font-bold text-slate-800 mb-6 flex items-center">
+                            <i class="fa-solid fa-map-location-dot text-brand-primary mr-3"></i>Field Visit: South Lebanon
+                        </h4>
+                        <div class="bg-amber-50 rounded-xl p-5 border border-amber-100">
+                            <strong class="text-amber-900 block mb-2">Sidon (Private Farm)</strong>
+                            <p class="text-sm text-amber-800">Significant waste generation observed. Standard practice involves leaving pseudostems to decay in situ or burning. Farmers were cooperative regarding sample collection.</p>
+                        </div>
+                    </div>
+
+                    <div class="glass rounded-2xl shadow-lg border border-slate-100 p-8">
+                        <h4 class="text-lg font-bold text-slate-800 mb-6 flex items-center">
+                            <i class="fa-solid fa-gears text-brand-primary mr-3"></i>Pre-Treatment Pathways
+                        </h4>
+                        <div class="space-y-4">
+                            <div class="flex items-start p-4 bg-emerald-50 rounded-xl border border-emerald-100">
+                                <span class="bg-emerald-200 text-emerald-800 font-bold text-xs px-2 py-1 rounded mr-3">Path A</span>
+                                <div>
+                                    <strong class="text-emerald-900 text-sm">Fibre Extraction</strong>
+                                    <p class="text-xs text-emerald-700 mt-1">Mechanical extraction from green pseudostem → Fibres washed → Dried at 60 °C.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start p-4 bg-amber-50 rounded-xl border border-amber-100">
+                                <span class="bg-amber-200 text-amber-800 font-bold text-xs px-2 py-1 rounded mr-3">Path B</span>
+                                <div>
+                                    <strong class="text-amber-900 text-sm">Bulk Aggregate</strong>
+                                    <p class="text-xs text-amber-700 mt-1">Non-extracted pseudostem wall cut into chips → Dried at 60 °C.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start p-4 bg-orange-50 rounded-xl border border-orange-100">
+                                <span class="bg-orange-200 text-orange-800 font-bold text-xs px-2 py-1 rounded mr-3">Path C</span>
+                                <div>
+                                    <strong class="text-orange-900 text-sm">Leaves</strong>
+                                    <p class="text-xs text-orange-700 mt-1">Collected already dried (sun-dried on tree) → Bagged.</p>
+                                </div>
+                            </div>
+                             <div class="flex items-start p-4 bg-yellow-50 rounded-xl border border-yellow-100">
+                                <span class="bg-yellow-200 text-yellow-800 font-bold text-xs px-2 py-1 rounded mr-3">Path D</span>
+                                <div>
+                                    <strong class="text-yellow-900 text-sm">In-situ Extraction</strong>
+                                    <p class="text-xs text-yellow-700 mt-1">Some pseudostems were found already sun-dried in the field with fibers naturally separating. These were collected directly.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <!-- Lab Testing -->
+                        <div class="glass rounded-2xl shadow-lg border border-slate-100 p-6">
+                            <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center">
+                                <i class="fa-solid fa-flask text-brand-primary mr-3"></i>Lab Testing
+                            </h4>
+                             <ul class="text-sm space-y-2 text-slate-700">
+                                <li class="flex items-center"><i class="fa-solid fa-check text-brand-primary mr-2 text-xs"></i>Moisture Content</li>
+                                <li class="flex items-center"><i class="fa-solid fa-check text-brand-primary mr-2 text-xs"></i>Water Activity (aw)</li>
+                                <li class="flex items-center"><i class="fa-solid fa-check text-brand-primary mr-2 text-xs"></i>pH (Aqueous Extract)</li>
+                                <li class="flex items-center"><i class="fa-solid fa-check text-brand-primary mr-2 text-xs"></i>Particle Size/Length</li>
+                                <li class="flex items-center"><i class="fa-solid fa-check text-brand-primary mr-2 text-xs"></i>Density</li>
+                                <li class="flex items-center"><i class="fa-solid fa-check text-brand-primary mr-2 text-xs"></i>Microbiological Screening</li>
+                            </ul>
+                        </div>
+                         <!-- Shipping & Compliance -->
+                        <div class="glass rounded-2xl shadow-lg border border-slate-100 p-6">
+                            <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center">
+                                <i class="fa-solid fa-passport text-brand-primary mr-3"></i>Shipping
+                            </h4>
+                            <p class="text-sm text-slate-600 leading-relaxed">
+                                Adhering to <strong>DEFRA</strong> guidelines and <strong>University of Bath</strong> protocols. The <strong>ACE non-uniform document</strong> has been fully completed to authorize international transport.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- VIDEO SECTION -->
+                     <div class="glass rounded-2xl shadow-lg border border-slate-100 p-6">
+                        <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center">
+                            <i class="fa-solid fa-video text-brand-primary mr-3"></i>Field Footage: Banana Farm
+                        </h4>
+                        <div class="relative w-full overflow-hidden rounded-xl shadow-md bg-slate-900 aspect-video">
+                            <iframe src="https://drive.google.com/file/d/1pkL40FdXi5QsT2DEXB1u9bLD_rElF_4n/preview" width="100%" height="100%" frameborder="0" allow="autoplay"></iframe>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column (Map & Carousel) -->
+                <div class="lg:col-span-1">
+                    <div class="sticky top-32 space-y-6">
+                        <!-- Location Map -->
+                        <div class="bg-white rounded-2xl shadow-lg border border-slate-100 overflow-hidden">
+                            <div class="bg-slate-900 p-4 text-white">
+                                <h4 class="text-xs font-bold uppercase tracking-widest">Geographic Sourcing Context</h4>
+                            </div>
+                            <div class="relative h-64 bg-slate-100">
+                                <img src="https://i.ibb.co/0jFgVdbM/Banana-Biomass-Map.png" class="w-full h-full object-contain bg-slate-100" alt="Banana Biomass Map">
+                            </div>
+                        </div>
+
+                        <!-- Carousel -->
+                        <div class="bg-white rounded-2xl shadow-lg border border-slate-100 overflow-hidden">
+                            <div class="bg-slate-900 p-4 text-white">
+                                <h4 class="text-xs font-bold uppercase tracking-widest">Field Images</h4>
+                            </div>
+                            <div class="relative group" id="carousel-banana">
+                                <div class="overflow-hidden relative h-80 bg-slate-900">
+                                    <div class="carousel-track h-full">
+                                        <div class="carousel-slide relative"><img src="https://i.ibb.co/VcWRN2Vd/Banana-Biomass-4.jpg" alt="Banana Biomass 4"></div>
+                                        <div class="carousel-slide relative"><img src="https://i.ibb.co/XkV6mN9H/Banana-Biomass.jpg" alt="Banana Biomass"></div>
+                                        <div class="carousel-slide relative"><img src="https://i.ibb.co/hFHsD8wY/Banana-Biomass-2.jpg" alt="Banana Biomass 2"></div>
+                                        <div class="carousel-slide relative"><img src="https://i.ibb.co/bMZ9cXNn/Banana-Biomass-3.jpg" alt="Banana Biomass 3"></div>
+                                        <div class="carousel-slide relative"><img src="https://i.ibb.co/VWskL8MH/Banana-Biomass-5.jpg" alt="Banana Biomass 5"></div>
+                                        <div class="carousel-slide relative"><img src="https://i.ibb.co/F4mpHr7H/Banana-Biomass-Dehydration.jpg" alt="Banana Biomass Dehydration"></div>
+                                        <div class="carousel-slide relative"><img src="https://i.ibb.co/v4sptMS9/Banana-Biomass-Samples-Dried-2.jpg" alt="Banana Biomass Samples Dried (2)"></div>
+                                        <div class="carousel-slide relative"><img src="https://i.ibb.co/MjnR8SC/Banana-Biomass-Samples.jpg" alt="Banana Biomass Samples"></div>
+                                        <div class="carousel-slide relative"><img src="https://i.ibb.co/k2nG4RZC/Banana-Biomass-Samples-Dried.jpg" alt="Banana Biomass Samples Dried"></div>
+                                    </div>
+                                </div>
+                                <button class="absolute top-1/2 left-2 transform -translate-y-1/2 bg-white/20 backdrop-blur text-white p-3 rounded-full hover:bg-brand-primary transition carousel-prev"><i class="fa-solid fa-chevron-left"></i></button>
+                                <button class="absolute top-1/2 right-2 transform -translate-y-1/2 bg-white/20 backdrop-blur text-white p-3 rounded-full hover:bg-brand-primary transition carousel-next"><i class="fa-solid fa-chevron-right"></i></button>
+                            </div>
+                            <div class="p-4 bg-slate-50 text-xs text-slate-500 italic border-t border-slate-100">
+                                Sourcing, fiber extraction, and drying processes near Sidon.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== TAB: WHEAT STRAW ==================== -->
+        <div id="tab-wheat" class="tab-content hidden animate-fade-in-up">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-2 space-y-6">
+                    <div class="glass rounded-2xl shadow-lg border border-slate-100 p-8">
+                        <div>
+                            <h3 class="text-2xl font-serif font-bold text-slate-900">Wheat Straw</h3>
+                            <p class="text-sm text-slate-500 mt-1">Cereal Crop Residue</p>
+                        </div>
+                    </div>
+
+                    <div class="glass rounded-2xl shadow-lg border border-slate-100 p-8">
+                        <div class="grid md:grid-cols-2 gap-8">
+                            <div class="bg-slate-50 p-5 rounded-xl border border-slate-200">
+                                <h5 class="text-xs font-bold uppercase text-slate-400 mb-2">Source</h5>
+                                <p class="text-slate-800 font-bold">Bekaa Valley (Farm)</p>
+                                <p class="text-xs text-slate-500 mt-1">Material commonly baled for animal feed. Abundant availability.</p>
+                            </div>
+                             <div class="bg-green-50 p-5 rounded-xl border border-green-100">
+                                <h5 class="text-xs font-bold uppercase text-green-700 mb-2">Condition</h5>
+                                <p class="text-sm text-green-900">Field dried, clean, dry storage.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                     <!-- Pre-Treatment, Testing & Shipping -->
+                     <div class="grid md:grid-cols-2 gap-6">
+                         <div class="space-y-6">
+                            <div class="glass rounded-2xl shadow-lg border border-slate-100 p-6">
+                                <h4 class="text-sm font-bold text-slate-800 mb-4 flex items-center">
+                                    <i class="fa-solid fa-fire-burner text-brand-primary mr-2"></i>Pre-Treatment
+                                </h4>
+                                <p class="text-sm text-slate-600">None required. Material sourced already dried.</p>
+                            </div>
+                             <div class="glass rounded-2xl shadow-lg border border-slate-100 p-6">
+                                <h4 class="text-sm font-bold text-slate-800 mb-4 flex items-center">
+                                    <i class="fa-solid fa-passport text-brand-primary mr-2"></i>Shipping
+                                </h4>
+                                <p class="text-sm text-slate-600">Compliant with DEFRA/Bath University rules. ACE documentation filed.</p>
+                            </div>
+                         </div>
+                        
+                        <div class="glass rounded-2xl shadow-lg border border-slate-100 p-6">
+                            <h4 class="text-sm font-bold text-slate-800 mb-4 flex items-center">
+                                <i class="fa-solid fa-flask text-brand-primary mr-2"></i>Lab Testing
+                            </h4>
+                            <ul class="text-sm space-y-2 text-slate-700">
+                                <li class="flex items-center"><i class="fa-solid fa-check text-brand-primary mr-2 text-xs"></i>Moisture Content</li>
+                                <li class="flex items-center"><i class="fa-solid fa-check text-brand-primary mr-2 text-xs"></i>Water Activity (aw)</li>
+                                <li class="flex items-center"><i class="fa-solid fa-check text-brand-primary mr-2 text-xs"></i>pH (Aqueous Extract)</li>
+                                <li class="flex items-center"><i class="fa-solid fa-check text-brand-primary mr-2 text-xs"></i>Particle Size/Length</li>
+                                <li class="flex items-center"><i class="fa-solid fa-check text-brand-primary mr-2 text-xs"></i>Density</li>
+                                <li class="flex items-center"><i class="fa-solid fa-check text-brand-primary mr-2 text-xs"></i>Microbiological Screening</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column (Map & Carousel) -->
+                <div class="lg:col-span-1">
+                    <div class="sticky top-32 space-y-6">
+                         <!-- Location Map -->
+                         <div class="bg-white rounded-2xl shadow-lg border border-slate-100 overflow-hidden">
+                            <div class="bg-slate-900 p-4 text-white">
+                                <h4 class="text-xs font-bold uppercase tracking-widest">Geographic Sourcing Context</h4>
+                            </div>
+                            <div class="relative h-64 bg-slate-100">
+                                <img src="https://i.ibb.co/fzwrdRV6/Wheat-Straw-Map.png" class="w-full h-full object-contain bg-slate-100" alt="Wheat Straw Map">
+                            </div>
+                        </div>
+
+                        <!-- Carousel -->
+                        <div class="bg-white rounded-2xl shadow-lg border border-slate-100 overflow-hidden">
+                            <div class="bg-slate-900 p-4 text-white">
+                                <h4 class="text-xs font-bold uppercase tracking-widest">Field Images</h4>
+                            </div>
+                            <div class="relative group" id="carousel-wheat">
+                                <div class="overflow-hidden relative h-80 bg-slate-900">
+                                    <div class="carousel-track h-full">
+                                        <div class="carousel-slide relative"><img src="https://i.ibb.co/pvd1r2v0/Wheat-Straw-Field.jpg" alt="Wheat Straw Field"></div>
+                                        <div class="carousel-slide relative"><img src="https://i.ibb.co/B2pXb4wZ/Wheat-Straw-Field-2.jpg" alt="Wheat Straw Field 2"></div>
+                                        <div class="carousel-slide relative"><img src="https://i.ibb.co/FkVj0CJC/Wheat-Straw-Sample.jpg" alt="Wheat Straw Sample"></div>
+                                    </div>
+                                </div>
+                                <button class="absolute top-1/2 left-2 transform -translate-y-1/2 bg-white/20 backdrop-blur text-white p-3 rounded-full hover:bg-brand-primary transition carousel-prev"><i class="fa-solid fa-chevron-left"></i></button>
+                                <button class="absolute top-1/2 right-2 transform -translate-y-1/2 bg-white/20 backdrop-blur text-white p-3 rounded-full hover:bg-brand-primary transition carousel-next"><i class="fa-solid fa-chevron-right"></i></button>
+                            </div>
+                             <div class="p-4 bg-slate-50 text-xs text-slate-500 italic border-t border-slate-100">
+                                Field conditions and sample collection in the Bekaa Valley.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== TAB: BARLEY STRAW ==================== -->
+        <div id="tab-barley" class="tab-content hidden animate-fade-in-up">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-2 space-y-6">
+                    <div class="glass rounded-2xl shadow-lg border border-slate-100 p-8">
+                        <div>
+                            <h3 class="text-2xl font-serif font-bold text-slate-900">Barley Straw</h3>
+                            <p class="text-sm text-slate-500 mt-1">Cereal Crop Residue</p>
+                        </div>
+                    </div>
+                    
+                    <div class="glass rounded-2xl shadow-lg border border-slate-100 p-8">
+                        <div class="grid md:grid-cols-2 gap-8">
+                            <div class="bg-slate-50 p-5 rounded-xl border border-slate-200">
+                                <h5 class="text-xs font-bold uppercase text-slate-400 mb-2">Source</h5>
+                                <p class="text-slate-800 font-bold">Baalbek–Hermel Region</p>
+                                <p class="text-xs text-slate-500 mt-1">Primary use as animal feed. High silica content expected.</p>
+                            </div>
+                            <div class="bg-green-50 p-5 rounded-xl border border-green-100">
+                                <h5 class="text-xs font-bold uppercase text-green-700 mb-2">Condition</h5>
+                                <p class="text-sm text-green-900">Field dried, packaged for transport.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pre-Treatment, Testing & Shipping -->
+                     <div class="grid md:grid-cols-2 gap-6">
+                         <div class="space-y-6">
+                            <div class="glass rounded-2xl shadow-lg border border-slate-100 p-6">
+                                <h4 class="text-sm font-bold text-slate-800 mb-4 flex items-center">
+                                    <i class="fa-solid fa-fire-burner text-brand-primary mr-2"></i>Pre-Treatment
+                                </h4>
+                                <p class="text-sm text-slate-600">None required. Material sourced already dried.</p>
+                            </div>
+                             <div class="glass rounded-2xl shadow-lg border border-slate-100 p-6">
+                                <h4 class="text-sm font-bold text-slate-800 mb-4 flex items-center">
+                                    <i class="fa-solid fa-passport text-brand-primary mr-2"></i>Shipping
+                                </h4>
+                                <p class="text-sm text-slate-600">Compliant with DEFRA/Bath University rules. ACE documentation filed.</p>
+                            </div>
+                         </div>
+                        <div class="glass rounded-2xl shadow-lg border border-slate-100 p-6">
+                            <h4 class="text-sm font-bold text-slate-800 mb-4 flex items-center">
+                                <i class="fa-solid fa-flask text-brand-primary mr-2"></i>Lab Testing
+                            </h4>
+                            <ul class="text-sm space-y-2 text-slate-700">
+                                <li class="flex items-center"><i class="fa-solid fa-check text-brand-primary mr-2 text-xs"></i>Moisture Content</li>
+                                <li class="flex items-center"><i class="fa-solid fa-check text-brand-primary mr-2 text-xs"></i>Water Activity (aw)</li>
+                                <li class="flex items-center"><i class="fa-solid fa-check text-brand-primary mr-2 text-xs"></i>pH (Aqueous Extract)</li>
+                                <li class="flex items-center"><i class="fa-solid fa-check text-brand-primary mr-2 text-xs"></i>Particle Size/Length</li>
+                                <li class="flex items-center"><i class="fa-solid fa-check text-brand-primary mr-2 text-xs"></i>Density</li>
+                                <li class="flex items-center"><i class="fa-solid fa-check text-brand-primary mr-2 text-xs"></i>Microbiological Screening</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column (Map & Carousel) -->
+                <div class="lg:col-span-1">
+                    <div class="sticky top-32 space-y-6">
+                        <!-- Location Map -->
+                        <div class="bg-white rounded-2xl shadow-lg border border-slate-100 overflow-hidden">
+                            <div class="bg-slate-900 p-4 text-white">
+                                <h4 class="text-xs font-bold uppercase tracking-widest">Geographic Sourcing Context</h4>
+                            </div>
+                            <div class="relative h-64 bg-slate-100">
+                                <img src="https://i.ibb.co/tTSnbVTx/Barley-Straw-Map.png" class="w-full h-full object-contain bg-slate-100" alt="Barley Straw Map">
+                            </div>
+                        </div>
+
+                        <!-- Carousel -->
+                        <div class="bg-white rounded-2xl shadow-lg border border-slate-100 overflow-hidden">
+                            <div class="bg-slate-900 p-4 text-white">
+                                <h4 class="text-xs font-bold uppercase tracking-widest">Field Images</h4>
+                            </div>
+                            <div class="relative group" id="carousel-barley">
+                                <div class="overflow-hidden relative h-80 bg-slate-900">
+                                    <div class="carousel-track h-full">
+                                        <div class="carousel-slide relative"><img src="https://i.ibb.co/84XRV9kb/Barley-Straw-Field.jpg" alt="Barley Straw Field"></div>
+                                        <div class="carousel-slide relative"><img src="https://i.ibb.co/kg83Tbvy/Barley-Straw-Field-2.jpg" alt="Barley Straw Field 2"></div>
+                                        <div class="carousel-slide relative"><img src="https://i.ibb.co/9kM6qZD9/Barley-Straw-Sample.jpg" alt="Barley Straw Sample"></div>
+                                    </div>
+                                </div>
+                                <button class="absolute top-1/2 left-2 transform -translate-y-1/2 bg-white/20 backdrop-blur text-white p-3 rounded-full hover:bg-brand-primary transition carousel-prev"><i class="fa-solid fa-chevron-left"></i></button>
+                                <button class="absolute top-1/2 right-2 transform -translate-y-1/2 bg-white/20 backdrop-blur text-white p-3 rounded-full hover:bg-brand-primary transition carousel-next"><i class="fa-solid fa-chevron-right"></i></button>
+                            </div>
+                            <div class="p-4 bg-slate-50 text-xs text-slate-500 italic border-t border-slate-100">
+                                Sourcing locations and material conditions in the Baalbek-Hermel region.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== TAB: FEATHERS ==================== -->
+        <div id="tab-feathers" class="tab-content hidden animate-fade-in-up">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Left Column -->
+                <div class="lg:col-span-2 space-y-6">
+                    <div class="bg-red-50 border border-red-200 rounded-3xl p-8">
+                        <div class="flex items-start">
+                            <div class="bg-red-100 p-3 rounded-full mr-4 text-red-600">
+                                <i class="fa-solid fa-triangle-exclamation text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-red-800">Excluded from Current Shipment</h3>
+                                <p class="text-sm text-red-700 mt-2">
+                                    This material stream has been excluded from the Lebanon-to-UK shipment due to biohazard risks and lack of immediate pre-treatment facilities.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="glass rounded-2xl shadow-lg border border-slate-100 p-8">
+                        <h4 class="text-lg font-bold text-slate-800 mb-4">Field Exploration Details</h4>
+                        <ul class="space-y-4 text-sm text-slate-700">
+                            <li class="flex justify-between border-b border-slate-100 pb-2"><strong>Material:</strong> <span>Chicken Feathers 🪶</span></li>
+                            <li class="flex justify-between border-b border-slate-100 pb-2"><strong>Location:</strong> <span>Bekaa Valley</span></li>
+                            <li class="flex justify-between border-b border-slate-100 pb-2"><strong>Facility:</strong> <span>Tanmia (Industrial Poultry)</span></li>
+                        </ul>
+                        <div class="mt-4 bg-slate-50 p-4 rounded-xl text-sm italic text-slate-600">
+                            "Advanced industrial handling where feathers are mixed into secondary by-products immediately. Samples obtained were wet, untreated, and highly organic."
+                        </div>
+                    </div>
+
+                    <div class="glass rounded-2xl shadow-lg border border-slate-100 p-8">
+                        <h4 class="text-lg font-bold text-slate-800 mb-4">Risk Assessment & Mitigation</h4>
+                        <div class="space-y-6">
+                            <div>
+                                <h5 class="font-bold text-slate-900 text-sm uppercase tracking-wide mb-1">The Issue</h5>
+                                <p class="text-slate-600 text-sm">Rapid degradation of wet samples creates significant biohazard risk during international transport. Lack of immediate autoclave/washing facilities on site.</p>
+                            </div>
+                            <div class="pt-4 border-t border-slate-100">
+                                <h5 class="font-bold text-slate-900 text-sm uppercase tracking-wide mb-1">Strategy</h5>
+                                <p class="text-slate-600 text-sm">Research will proceed using commercially treated feathers sourced within the UK, ensuring safety compliance and standardized quality.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column (Map & Carousel) -->
+                <div class="lg:col-span-1">
+                    <div class="sticky top-32 space-y-6">
+                        <!-- Location Map -->
+                        <div class="bg-white rounded-2xl shadow-lg border border-slate-100 overflow-hidden">
+                            <div class="bg-slate-900 p-4 text-white">
+                                <h4 class="text-xs font-bold uppercase tracking-widest">Geographic Sourcing Context</h4>
+                            </div>
+                            <div class="relative h-64 bg-slate-100">
+                                <img src="https://i.ibb.co/fm83j14/Poultry-Waste-Map.png" class="w-full h-full object-contain bg-slate-100" alt="Poultry Waste Map">
+                            </div>
+                        </div>
+
+                        <!-- Carousel -->
+                        <div class="bg-white rounded-2xl shadow-lg border border-slate-100 overflow-hidden">
+                            <div class="bg-slate-900 p-4 text-white">
+                                <h4 class="text-xs font-bold uppercase tracking-widest">Field Images</h4>
+                            </div>
+                            <div class="relative group" id="carousel-feathers">
+                                <div class="overflow-hidden relative h-80 bg-slate-900">
+                                    <div class="carousel-track h-full">
+                                        <div class="carousel-slide relative"><img src="https://i.ibb.co/QjM7dbtY/Tanmia-Slaughterhouse.jpg" alt="Tanmia Slaughterhouse"></div>
+                                        <div class="carousel-slide relative"><img src="https://i.ibb.co/7JZnZCV7/Tanmia-Slaughterhouse-2.jpg" alt="Tanmia Slaughterhouse 2"></div>
+                                        <div class="carousel-slide relative"><img src="https://i.ibb.co/C57zgDhr/Poultry-Feathers-Samples.jpg" alt="Poultry Feathers Samples"></div>
+                                    </div>
+                                </div>
+                                <button class="absolute top-1/2 left-2 transform -translate-y-1/2 bg-white/20 backdrop-blur text-white p-3 rounded-full hover:bg-brand-primary transition carousel-prev"><i class="fa-solid fa-chevron-left"></i></button>
+                                <button class="absolute top-1/2 right-2 transform -translate-y-1/2 bg-white/20 backdrop-blur text-white p-3 rounded-full hover:bg-brand-primary transition carousel-next"><i class="fa-solid fa-chevron-right"></i></button>
+                            </div>
+                            <div class="p-4 bg-slate-50 text-xs text-slate-500 italic border-t border-slate-100">
+                            Industrial poultry facility conditions and sampling.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 text-slate-400 py-16 border-t border-slate-800">
+        <div class="container mx-auto max-w-6xl text-center px-4">
+            <div class="mb-8">
+                <span class="text-2xl font-serif text-slate-200 font-bold tracking-tight">PhD Research Dashboard</span>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8 max-w-3xl mx-auto mb-10 text-sm">
+                 <div>
+                    <h4 class="text-slate-300 font-bold mb-2">Phase</h4>
+                    <p>Fieldwork & Sourcing (Phase 3)</p>
+                 </div>
+                 <div>
+                    <h4 class="text-slate-300 font-bold mb-2">Focus</h4>
+                    <p>Sourcing & Preparation</p>
+                 </div>
+                 <div>
+                    <h4 class="text-slate-300 font-bold mb-2">Outcome</h4>
+                    <p>Lab-Ready Samples</p>
+                 </div>
+            </div>
+            
+            <div class="text-xs text-slate-600 space-y-2 border-t border-slate-800 pt-8">
+                <p> Dr. Mika - University of Bath - PhD Research Project.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // Tab Switching Logic
+        function switchTab(materialName) {
+            // Hide all tab contents
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => {
+                content.classList.add('hidden');
+                content.classList.remove('block');
+            });
+
+            // Remove active style from all buttons
+            const buttons = document.querySelectorAll('nav button');
+            buttons.forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('inactive-tab');
+            });
+
+            // Show selected content
+            const activeContent = document.getElementById(`tab-${materialName}`);
+            activeContent.classList.remove('hidden');
+            activeContent.classList.add('block');
+            
+            // Re-trigger animation
+            activeContent.classList.remove('animate-fade-in-up');
+            void activeContent.offsetWidth; // trigger reflow
+            activeContent.classList.add('animate-fade-in-up');
+
+            // Activate selected button
+            const activeBtn = document.getElementById(`btn-${materialName}`);
+            activeBtn.classList.remove('inactive-tab');
+            activeBtn.classList.add('active-tab');
+        }
+
+        // Carousel Logic
+        class Carousel {
+            constructor(elementId) {
+                this.container = document.getElementById(elementId);
+                if (!this.container) return;
+                
+                this.track = this.container.querySelector('.carousel-track');
+                this.slides = Array.from(this.track.children);
+                this.nextButton = this.container.querySelector('.carousel-next');
+                this.prevButton = this.container.querySelector('.carousel-prev');
+                this.currentIndex = 0;
+
+                this.nextButton.addEventListener('click', () => this.moveSlide(1));
+                this.prevButton.addEventListener('click', () => this.moveSlide(-1));
+
+                this.updateUI();
+            }
+
+            moveSlide(direction) {
+                const newIndex = this.currentIndex + direction;
+                if (newIndex >= 0 && newIndex < this.slides.length) {
+                    this.currentIndex = newIndex;
+                    this.updateUI();
+                }
+            }
+
+            updateUI() {
+                const amountToMove = -(this.currentIndex * 100) + '%';
+                this.track.style.transform = `translateX(${amountToMove})`;
+                
+                this.prevButton.style.opacity = this.currentIndex === 0 ? '0.3' : '1';
+                this.prevButton.style.pointerEvents = this.currentIndex === 0 ? 'none' : 'auto';
+                
+                this.nextButton.style.opacity = this.currentIndex === this.slides.length - 1 ? '0.3' : '1';
+                this.nextButton.style.pointerEvents = this.currentIndex === this.slides.length - 1 ? 'none' : 'auto';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            new Carousel('carousel-olive');
+            new Carousel('carousel-banana');
+            new Carousel('carousel-wheat');
+            new Carousel('carousel-barley');
+            new Carousel('carousel-feathers');
+        });
+    </script>
+</body>
+</html>
