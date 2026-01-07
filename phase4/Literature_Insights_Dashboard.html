@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhD Phase 4: Literature Intelligence Dashboard</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['Lora', 'serif'],
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            primary: '#059669',   /* Emerald 600 - Keeping consistent with Fieldwork */
+                            secondary: '#0891b2', /* Cyan 600 */
+                            dark: '#0f172a',      /* Slate 900 */
+                            accent: '#f59e0b',    /* Amber 500 */
+                            light: '#f0fdf4',     /* Emerald 50 */
+                            analytical: '#4f46e5', /* Indigo 600 - New for "Data/Analysis" context */
+                        }
+                    },
+                    animation: {
+                        'fade-in-up': 'fadeInUp 0.5s ease-out forwards',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e0; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        .glass {
+            background: rgba(255, 255, 255, 0.90);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+        
+        .glass-dark {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Nav Styles */
+        .nav-link.active {
+            color: #059669;
+            background-color: #ecfdf5;
+            border-bottom: 2px solid #059669;
+        }
+        .nav-link {
+            border-bottom: 2px solid transparent;
+        }
+        
+        /* Sub-Nav Styles */
+        .sub-nav-btn.active {
+            background-color: #0f172a;
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        
+        /* Code Block Styling */
+        .code-block {
+            font-family: 'JetBrains Mono', monospace;
+            background-color: #1e293b;
+            color: #e2e8f0;
+        }
+
+        /* Funnel Snapshot Styles */
+        .funnel-step-snapshot {
+            clip-path: polygon(0% 0%, 100% 0%, 95% 100%, 5% 100%);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans selection:bg-emerald-200">
+
+    <!-- HERO HEADER -->
+    <header class="relative bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900 text-white pt-20 pb-28 px-6 overflow-hidden shadow-2xl">
+        <!-- Abstract Background -->
+        <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 24px 24px;"></div>
+        <div class="absolute top-0 right-0 w-96 h-96 bg-emerald-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-pulse-slow"></div>
+        <div class="absolute bottom-0 left-0 w-96 h-96 bg-indigo-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-pulse-slow" style="animation-delay: 2s;"></div>
+        
+        <div class="relative container mx-auto max-w-7xl text-center z-10 animate-fade-in-up">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-semibold tracking-wide mb-6 uppercase shadow-sm">
+                <span class="w-2 h-2 bg-indigo-400 rounded-full animate-pulse shadow-[0_0_10px_#818cf8]"></span>
+                PhD Phase 4
+            </div>
+            
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-serif font-extrabold mb-6 leading-snug tracking-tight">
+  Literature Insights &<br/>
+  <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 via-teal-200 to-indigo-300">
+    Experimental Strategy
+  </span>
+</h1>
+
+            <p class="text-lg text-slate-300 font-serif italic max-w-3xl mx-auto mb-2 font-light">
+                Deep structured extraction, cross-paper analysis, and data-driven experimental design.
+            </p>
+        </div>
+        
+        <!-- Curved Edge -->
+        <div class="absolute bottom-0 left-0 w-full h-12 bg-slate-50 rounded-t-[50%] transform scale-x-150 translate-y-6"></div>
+    </header>
+
+    <!-- MAIN NAVIGATION (WASTE STREAMS) -->
+    <div class="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-200/60 shadow-sm supports-[backdrop-filter]:bg-white/60">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <nav class="flex justify-center space-x-1 md:space-x-6 overflow-x-auto no-scrollbar py-3" aria-label="Tabs">
+                <button onclick="switchStream('olive')" id="tab-olive" class="nav-link active px-4 py-2 rounded-lg text-sm font-bold transition-all duration-300 flex items-center whitespace-nowrap gap-2">
+                    <span class="text-lg">🫒</span> Olive Pomace
+                </button>
+                <button onclick="switchStream('wheat')" id="tab-wheat" class="nav-link px-4 py-2 rounded-lg text-sm font-bold transition-all duration-300 flex items-center whitespace-nowrap gap-2 text-slate-500 hover:text-brand-primary">
+                    <span class="text-lg">🌾</span> Wheat Straw
+                </button>
+                <button onclick="switchStream('barley')" id="tab-barley" class="nav-link px-4 py-2 rounded-lg text-sm font-bold transition-all duration-300 flex items-center whitespace-nowrap gap-2 text-slate-500 hover:text-brand-primary">
+                    <span class="text-lg">🌾</span> Barley Straw
+                </button>
+                <button onclick="switchStream('banana')" id="tab-banana" class="nav-link px-4 py-2 rounded-lg text-sm font-bold transition-all duration-300 flex items-center whitespace-nowrap gap-2 text-slate-500 hover:text-brand-primary">
+                    <span class="text-lg">🍌</span> Banana Biomass
+                </button>
+                <button onclick="switchStream('feathers')" id="tab-feathers" class="nav-link px-4 py-2 rounded-lg text-sm font-bold transition-all duration-300 flex items-center whitespace-nowrap gap-2 text-slate-500 hover:text-brand-primary">
+                    <span class="text-lg">🪶</span> Chicken Feathers
+                </button>
+            </nav>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="container mx-auto px-4 md:px-6 py-8 max-w-7xl min-h-screen">
+        
+        <!-- DYNAMIC HEADER FOR SELECTED WASTE -->
+        <div id="stream-header" class="mb-8 flex items-center justify-between animate-fade-in-up">
+            <!-- Content injected by JS -->
+        </div>
+
+        <!-- SUB-NAVIGATION (SECTIONS) -->
+        <div class="glass rounded-xl p-2 mb-8 flex flex-wrap gap-2 justify-center md:justify-start border border-slate-200 shadow-sm">
+            <button onclick="switchSection('overview')" id="sub-overview" class="sub-nav-btn active px-4 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-2">
+                <i class="fa-solid fa-compass"></i> Deep Research
+            </button>
+            <button onclick="switchSection('schema')" id="sub-schema" class="sub-nav-btn bg-transparent text-slate-600 hover:bg-slate-100 px-4 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-2">
+                <i class="fa-solid fa-file-code"></i> Data Schema
+            </button>
+            <button onclick="switchSection('analysis')" id="sub-analysis" class="sub-nav-btn bg-transparent text-slate-600 hover:bg-slate-100 px-4 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-2">
+                <i class="fa-solid fa-chart-line"></i> Analysis
+            </button>
+            <button onclick="switchSection('strategy')" id="sub-strategy" class="sub-nav-btn bg-transparent text-slate-600 hover:bg-slate-100 px-4 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-2">
+                <i class="fa-solid fa-flask"></i> Exp. Strategy
+            </button>
+            <div class="hidden md:block w-px h-8 bg-slate-300 mx-2"></div>
+            <button onclick="switchSection('json')" id="sub-json" class="sub-nav-btn bg-transparent text-slate-600 hover:bg-slate-100 px-4 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-2">
+                <i class="fa-solid fa-database"></i> JSON Repo
+            </button>
+            <button onclick="switchSection('docs')" id="sub-docs" class="sub-nav-btn bg-transparent text-slate-600 hover:bg-slate-100 px-4 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-2">
+                <i class="fa-solid fa-book-bookmark"></i> Research Papers
+            </button>
+        </div>
+
+        <!-- CONTENT CONTAINERS -->
+        <div id="content-area" class="animate-fade-in-up">
+            <!-- Content injected by JS -->
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 text-slate-400 py-12 border-t border-slate-800 mt-20">
+        <div class="container mx-auto max-w-6xl text-center px-4">
+            <p class="text-slate-500 text-xs mb-4 uppercase tracking-widest">Internal Research Tool</p>
+            <span class="text-xl font-serif text-slate-200 font-bold tracking-tight">Mika Research Dashboard</span>
+            <div class="mt-8 text-xs text-slate-600">
+                <p>PhD Sustainable Bio-Based Construction Materials • University of Bath</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // --- DATA STORE ---
+        const wasteData = {
+            olive: {
+                name: "Olive Pomace",
+                icon: "🫒",
+                maturity: "Active",
+                maturityColor: "bg-emerald-100 text-emerald-800",
+                description: "A major byproduct of the olive oil industry. High lignocellulosic content but potential issues with residual oil and polyphenols affecting cement hydration.",
+                links: {
+                    json: "https://drive.google.com/drive/folders/1fIC4FAvL1oKEUDOVLrgy8hy5hy0y9l9R?usp=sharing",
+                    papers: "https://drive.google.com/drive/folders/1r7W1_ZhlF1EzCgk_c1SvzYdsZ8BbCFuP?usp=sharing"
+                },
+                // Snapshot from the dedicated HTML
+                overviewHTML: `
+                    <div class="space-y-8">
+                        <!-- Key Stats Snapshot -->
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <div class="glass p-4 rounded-xl border border-emerald-100 text-center">
+                                <div class="text-2xl font-bold text-emerald-600">~4,990</div>
+                                <div class="text-xs text-slate-500 uppercase tracking-widest mt-1">Total Records</div>
+                            </div>
+                            <div class="glass p-4 rounded-xl border border-emerald-100 text-center">
+                                <div class="text-2xl font-bold text-emerald-600">1886–2026</div>
+                                <div class="text-xs text-slate-500 uppercase tracking-widest mt-1">Year Range</div>
+                            </div>
+                            <div class="glass p-4 rounded-xl border border-emerald-100 text-center">
+                                <div class="text-2xl font-bold text-emerald-600">225</div>
+                                <div class="text-xs text-slate-500 uppercase tracking-widest mt-1">Final Shortlist</div>
+                            </div>
+                            <div class="glass p-4 rounded-xl border border-emerald-100 text-center">
+                                <div class="text-2xl font-bold text-emerald-600">2026</div>
+                                <div class="text-xs text-slate-500 uppercase tracking-widest mt-1">Most Recent</div>
+                            </div>
+                        </div>
+
+                        <!-- Funnel Snapshot -->
+                        <div class="glass rounded-3xl p-8 border border-slate-200">
+                            <h3 class="text-xl font-serif font-bold text-slate-800 mb-6 text-center">Methodology Snapshot: Filtration Funnel</h3>
+                            <div class="flex flex-col items-center justify-center space-y-2 max-w-2xl mx-auto">
+                                
+                                <!-- Level 1 -->
+                                <div class="w-full bg-slate-100 border border-slate-200 p-3 text-center rounded-t-xl rounded-b-md shadow-sm funnel-step-snapshot relative">
+                                    <div class="font-bold text-slate-700">Raw Search Query</div>
+                                    <div class="text-xs text-slate-500">Multi-database retrieval</div>
+                                    <span class="absolute top-1/2 right-4 transform -translate-y-1/2 bg-white px-2 py-0.5 rounded text-xs font-bold text-slate-600 shadow-sm border border-slate-100">~4,990</span>
+                                </div>
+                                <div class="text-emerald-300 text-xs">↓</div>
+
+                                <!-- Level 2 -->
+                                <div class="w-11/12 bg-emerald-50 border border-emerald-100 p-3 text-center rounded-md shadow-sm funnel-step-snapshot relative">
+                                    <div class="font-bold text-emerald-800">Deduplication</div>
+                                    <div class="text-xs text-emerald-600">Removing overlaps</div>
+                                    <span class="absolute top-1/2 right-4 transform -translate-y-1/2 bg-white px-2 py-0.5 rounded text-xs font-bold text-emerald-700 shadow-sm border border-emerald-100">~3,000</span>
+                                </div>
+                                <div class="text-emerald-400 text-xs">↓</div>
+
+                                <!-- Level 3 -->
+                                <div class="w-9/12 bg-emerald-100 border border-emerald-200 p-3 text-center rounded-md shadow-sm funnel-step-snapshot relative">
+                                    <div class="font-bold text-emerald-900">Topic Filtering</div>
+                                    <div class="text-xs text-emerald-700">Topic relevance check</div>
+                                    <span class="absolute top-1/2 right-4 transform -translate-y-1/2 bg-white px-2 py-0.5 rounded text-xs font-bold text-emerald-800 shadow-sm border border-emerald-100">~1,000</span>
+                                </div>
+                                <div class="text-emerald-500 text-xs">↓</div>
+
+                                <!-- Level 4 -->
+                                <div class="w-7/12 bg-emerald-600 border border-emerald-600 p-3 text-center rounded-md shadow-lg funnel-step-snapshot relative">
+                                    <div class="font-bold text-white">Deep Screening</div>
+                                    <div class="text-xs text-emerald-100">Abstract review</div>
+                                    <span class="absolute top-1/2 right-4 transform -translate-y-1/2 bg-emerald-800 px-2 py-0.5 rounded text-xs font-bold text-white shadow-inner">Review</span>
+                                </div>
+                                <div class="text-emerald-600 text-xs">↓</div>
+
+                                <!-- Final -->
+                                <div class="w-5/12 bg-gradient-to-r from-emerald-600 to-teal-600 p-4 text-center rounded-b-xl rounded-t-md shadow-xl relative transform hover:scale-105 transition duration-300">
+                                    <div class="font-serif font-bold text-white">Final Dataset</div>
+                                    <div class="mt-1 inline-block bg-white text-emerald-800 font-bold px-3 py-0.5 rounded-full text-sm shadow-lg">225 Papers</div>
+                                </div>
+                            </div>
+                            <div class="mt-6 text-center">
+                                <p class="text-sm text-slate-500 italic">For full interactive charts and filtering, refer to the dedicated <strong>Olive Pomace Research Dashboard</strong>.</p>
+                            </div>
+                        </div>
+                    </div>
+                `,
+                schemaHTML: `
+                    <div class="grid lg:grid-cols-2 gap-8">
+                        <div>
+                            <div class="glass p-6 rounded-2xl border border-slate-200 mb-6">
+                                <h3 class="font-bold text-slate-800 mb-2"><i class="fa-solid fa-filter mr-2 text-indigo-600"></i>Extraction Methodology</h3>
+                                <p class="text-sm text-slate-600 mb-4">
+                                    We do not summarize papers. We extract raw data points into a strict JSON schema to allow for algorithmic comparison.
+                                </p>
+                                <ul class="space-y-2 text-sm text-slate-700">
+                                    <li class="flex items-center"><i class="fa-solid fa-check text-green-500 mr-2"></i> <strong>Material Identity:</strong> Origin, chemical comp, density.</li>
+                                    <li class="flex items-center"><i class="fa-solid fa-check text-green-500 mr-2"></i> <strong>Processing:</strong> Washing cycles, thermal treatment, grinding.</li>
+                                    <li class="flex items-center"><i class="fa-solid fa-check text-green-500 mr-2"></i> <strong>Mix Design:</strong> Binder type, w/c ratio, replacement %.</li>
+                                    <li class="flex items-center"><i class="fa-solid fa-check text-green-500 mr-2"></i> <strong>Results:</strong> Compressive strength (MPa), Thermal cond. (W/mK).</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="rounded-xl overflow-hidden shadow-lg border border-slate-700">
+                            <div class="bg-slate-800 px-4 py-2 text-xs text-slate-400 font-mono border-b border-slate-700 flex justify-between">
+                                <span>sample_extraction.json</span>
+                                <span>JSON</span>
+                            </div>
+                            <div class="code-block p-4 text-xs overflow-x-auto">
+<pre><code>{
+  "paper_id": "OP-2024-03",
+  "material": {
+    "type": "Olive Pomace",
+    "form": "Ash",
+    "pre_treatment": ["Calcination at 600C", "Sieving < 150μm"]
+  },
+  "mix_design": {
+    "matrix": "Cement Paste",
+    "replacement_levels": [0, 5, 10, 15, 20]
+  },
+  "results": [
+    {
+      "metric": "Compressive Strength (28d)",
+      "unit": "MPa",
+      "values": {
+        "0%": 45.2,
+        "10%": 42.1,
+        "20%": 35.8
+      }
+    }
+  ]
+}</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            wheat: {
+                name: "Wheat Straw",
+                icon: "🌾",
+                maturity: "Not Started",
+                maturityColor: "bg-slate-100 text-slate-600",
+                description: "Abundant agricultural residue. High silica content makes it promising, but variability in harvesting methods complicates standardization.",
+                links: { json: "#", papers: "#" }
+            },
+            barley: {
+                name: "Barley Straw",
+                icon: "🌾",
+                maturity: "Not Started",
+                maturityColor: "bg-slate-100 text-slate-600",
+                description: "Structurally similar to wheat straw but with different hemicellulose composition. Less studied in cementitious matrices.",
+                links: { json: "#", papers: "#" }
+            },
+            banana: {
+                name: "Banana Biomass",
+                icon: "🍌",
+                maturity: "Not Started",
+                maturityColor: "bg-slate-100 text-slate-600",
+                description: "Pseudostem fibers have high tensile strength. Investigation focused on fiber reinforcement rather than aggregate replacement.",
+                links: { json: "#", papers: "#" }
+            },
+            feathers: {
+                name: "Chicken Feathers",
+                icon: "🪶",
+                maturity: "Not Started",
+                maturityColor: "bg-slate-100 text-slate-600",
+                description: "Keratin-based fiber. Unique hydrophobic properties but challenging biological stability.",
+                links: { json: "#", papers: "#" }
+            }
+        };
+
+        // --- STATE MANAGEMENT ---
+        let currentStream = 'olive';
+        let currentSection = 'overview';
+
+        // --- RENDER FUNCTIONS ---
+        function renderHeader() {
+            const data = wasteData[currentStream];
+            const html = `
+                <div>
+                    <h2 class="text-3xl font-serif font-bold text-slate-900 flex items-center gap-3">
+                        <span class="text-4xl shadow-sm bg-white p-2 rounded-xl">${data.icon}</span> ${data.name}
+                    </h2>
+                    <p class="text-slate-500 mt-2 max-w-2xl">${data.description}</p>
+                </div>
+                <div class="hidden md:block text-right">
+                    <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide ${data.maturityColor}">
+                        Status: ${data.maturity}
+                    </span>
+                </div>
+            `;
+            document.getElementById('stream-header').innerHTML = html;
+        }
+
+        function renderContent() {
+            const container = document.getElementById('content-area');
+            const data = wasteData[currentStream];
+            
+            // Re-trigger animation
+            container.classList.remove('animate-fade-in-up');
+            void container.offsetWidth; 
+            container.classList.add('animate-fade-in-up');
+
+            // Generic "Under Development" Message
+            const constructionMsg = `
+                <div class="p-12 text-center border border-slate-200 bg-slate-50 rounded-3xl">
+                    <div class="inline-block p-4 rounded-full bg-white shadow-md mb-4">
+                        <i class="fa-solid fa-person-digging text-3xl text-amber-500"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-800 mb-2">Section Under Development</h3>
+                    <p class="text-slate-500 max-w-md mx-auto">
+                        Detailed analysis for ${data.name} will be generated once full literature extraction and analysis is complete.
+                    </p>
+                </div>
+            `;
+
+            // External Link Logic - JSON
+            if (currentSection === 'json') {
+                const link = data.links?.json || "#";
+                container.innerHTML = `
+                    <div class="glass p-8 rounded-2xl border border-slate-200 text-center">
+                        <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-600 text-2xl">
+                            <i class="fa-solid fa-folder-tree"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-800 mb-2">Raw JSON Repository</h3>
+                        <p class="text-slate-500 mb-6 max-w-lg mx-auto">
+                            Access the raw structured data files for auditability. One JSON file per paper.
+                        </p>
+                        <a href="${link}" target="_blank" class="inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 text-white font-bold rounded-lg hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-200">
+                            <i class="fa-brands fa-google-drive"></i> Open Drive Folder
+                        </a>
+                        <p class="text-xs text-slate-400 mt-4">Direct External Link</p>
+                    </div>
+                `;
+                return;
+            }
+            // External Link Logic - Papers (Docs)
+            if (currentSection === 'docs') {
+                const link = data.links?.papers || "#";
+                container.innerHTML = `
+                    <div class="glass p-8 rounded-2xl border border-slate-200 text-center">
+                        <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-600 text-2xl">
+                            <i class="fa-solid fa-book"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-800 mb-2">Research Papers Library</h3>
+                        <p class="text-slate-500 mb-6 max-w-lg mx-auto">
+                            Access the original PDF papers and supplementary reports for this waste stream.
+                        </p>
+                        <a href="${link}" target="_blank" class="inline-flex items-center gap-2 px-6 py-3 bg-slate-800 text-white font-bold rounded-lg hover:bg-slate-900 transition-colors shadow-lg">
+                            <i class="fa-brands fa-google-drive"></i> Open PDF Repository
+                        </a>
+                    </div>
+                `;
+                return;
+            }
+
+            // Normal Sections
+            switch(currentSection) {
+                case 'overview': // Now "Deep Research"
+                    if (currentStream === 'olive') {
+                        container.innerHTML = data.overviewHTML;
+                    } else {
+                        container.innerHTML = constructionMsg; // All others are under development
+                    }
+                    break;
+                case 'schema':
+                    // Olive has schema, others under development (implied by "all overview... under development", assumes sections too)
+                    if (currentStream === 'olive') {
+                        container.innerHTML = data.schemaHTML;
+                    } else {
+                        container.innerHTML = constructionMsg;
+                    }
+                    break;
+                case 'analysis':
+                    container.innerHTML = constructionMsg; // Olive & Others under development
+                    break;
+                case 'strategy':
+                    container.innerHTML = constructionMsg; // Olive & Others under development
+                    break;
+                default:
+                    container.innerHTML = constructionMsg;
+            }
+        }
+
+        // --- CONTROLLERS ---
+        function switchStream(streamKey) {
+            currentStream = streamKey;
+            
+            // Update Tab UI
+            document.querySelectorAll('.nav-link').forEach(el => {
+                el.classList.remove('active', 'text-slate-800');
+                el.classList.add('text-slate-500');
+            });
+            const activeBtn = document.getElementById(`tab-${streamKey}`);
+            activeBtn.classList.add('active', 'text-slate-800');
+            activeBtn.classList.remove('text-slate-500');
+
+            // Reset Sub-nav to Overview
+            switchSection('overview');
+            renderHeader();
+        }
+
+        function switchSection(sectionKey) {
+            currentSection = sectionKey;
+
+            // Update Sub-Nav UI
+            document.querySelectorAll('.sub-nav-btn').forEach(el => {
+                el.classList.remove('active', 'bg-slate-900', 'text-white', 'shadow-md');
+                el.classList.add('bg-transparent', 'text-slate-600');
+            });
+            const activeSub = document.getElementById(`sub-${sectionKey}`);
+            activeSub.classList.add('active'); // CSS handles bg/text color via class
+            activeSub.classList.remove('bg-transparent', 'text-slate-600');
+
+            renderContent();
+        }
+
+        // --- INIT ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderHeader();
+            renderContent();
+        });
+
+    </script>
+</body>
+</html>
