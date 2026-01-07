@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
@@ -2839,6 +2840,80 @@
     }
   ] ;
 
+
+
+// --- LINK MAPPING CONFIG ---
+const dashboardBasePath = "https://mikaresearch.info/phase4/olive_pomace_papers/";
+
+// Maps the Paper ID (from your dataset) to your specific HTML filenames
+const paperLinks = {
+    "ex001": "enhancing_thermal_insulation_and_humidity_control_in_composite_plaster_mortars_with_olive_pomace_was_dashboard.html",
+    "ex002": "a_sustainable_cement_based_composite_with_self_cleaning_and_enhanced_technical_properties__role_of_o_dashboard.html",
+    "ex003": "enhancing_energy_efficiency_and_sustainability_in_fired_clay_brick_production_using_olive_pomace_fly_dashboard.html",
+    "ex004": "evaluation_of_the_influence_of_chemical_treatment_of_olive_pomace_waste_on_the_thermophysical_proper_dashboard.html",
+    "ex005": "life_cycle_assessment_of_circular_economy_strategies_for_the_eco_design_of_ceramic_bricks_incorporat_dashboard.html",
+    "ex006": "olive_pomace_lignin_as_a_sustainable_bio_based_modifier_for_asphalt__performance__economic__and_envi_dashboard.html",
+    "ex007": "physical__mechanical__and_durability_performance_of_olive_pomace_ash_in_eco_friendly_mortars_dashboard.html",
+    "ex008": "sustainable_asphalt_modification__innovative_use_of_olive_pomace_lignin_in_asphalt_binder_and_concre_dashboard.html",
+    "ex009": "comprehensive_experimental_study_on_mechanical_properties_of_a_structural_concrete_lightened_by_oliv_dashboard.html",
+    "ex010": "recovery_of_mining_and_agri_food_wastes_in_fired_materials__a_case_study_of_the_moroccan_industry_dashboard.html",
+    "ex011": "utilizing_olive_pomace_oil_and_the_extrusion_of_sbs_and_pvc_to_enhance_the_physical_and_rheological__dashboard.html",
+    "ex012": "olive_stone_biomass_ash__oba___an_alternative_alkaline_source_for_the_blast_furnace_slag_activation_dashboard.html",
+    "ex013": "mechanical_performance_of_cement_mortar_with_olive_pomace_aggregates_and_olive_mill_wastewater__an_e_dashboard.html",
+    "ex014": "resource_deposit__characterization_and_energy_saving_potential_of_olive_pomace_as_a_promising_aggreg_dashboard.html",
+    "ex015": "recycling_of_olive_pomace_bottom_ash__by_product_of_the_clay_brick_industry__for_manufacturing_susta_dashboard.html",
+    "ex016": "characterization_of_bioactivities_of_olive_pomace_as_bio_renewable_antioxidant_for_asphalt_binder_dashboard.html",
+    "ex017": "application_of_life_cycle_assessment_in_the_environmental_study_of_sustainable_ceramic_bricks_made_w_dashboard.html",
+    "ex018": "recycling_of__alperujo___olive_pomace__as_a_key_component_in_the_sintering_of_lightweight_aggregates_dashboard.html",
+    "ex019": "development_and_characterization_of_environmentally_friendly_insulation_materials_for_the_building_i_dashboard.html",
+    "ex020": "potential_use_of_olive_stone_residues_in_particleboard_production_dashboard.html",
+    "ex021": "characterization_and_thermal_conductivity_of_cellulose_based_composite_xerogels_dashboard.html",
+    "ex022": "valorization_of_olive_mill_wastewater_by_its_incorporation_in_building_bricks_dashboard.html",
+    "ex023": "manufacture_of_sustainable_clay_ceramic_composite_with_composition_sio2_al2o3_cao_k2o_materials_valu_dashboard.html",
+    "ex024": "olive_pomace_based_lightweight_concrete__an_experimental_approach_and_contribution_dashboard.html",
+    "ex025": "valorization_of_dried_olive_pomace_as_an_alternative_fuel_resource_in_cement_clinkerization_dashboard.html",
+    "ex026": "utilisation_of_olive_waste_ash_in_mortar_mixes_dashboard.html",
+    "ex027": "assessment_of_olive_mill_solid_residue__pomace__as_an_additive_in_lightweight_brick_production_dashboard.html",
+    "ex028": "elaboration_and_characterization_of_composite_clays_based_on__coal_waste_olive_pomace__mixtures_dashboard.html",
+    "ex029": "recycling_of_washed_olive_pomace_ash_for_fired_clay_brick_manufacturing_dashboard.html",
+    "ex030": "valorisation_of_organic_waste__use_of_olive_kernels_and_pomace_for_cement_manufacture_dashboard.html",
+    "ex031": "effect_of_olive_waste__husk__on_behavior_of_cement_paste_dashboard.html",
+    "ex032": "performance_of_olive_waste_ash_concrete_exposed_to_alkali_silica_reaction_dashboard.html",
+    "ex033": "performance_of_olive_waste_ash_concrete_exposed_to_elevated_temperatures_dashboard.html",
+    "ex034": "effect_of_olive_waste_ash_as_a_partial_replacement_of_cement_on_the_volume_stability_of_cement_paste_dashboard.html",
+    "ex035": "energetic_valorisation_of_olive_biomass__olive_tree_pruning__olive_stones_and_pomaces_dashboard.html",
+    "ex036": "utilising_olive_stone_biomass_ash_and_examining_its_effect_on_green_concrete__a_review_paper_dashboard.html",
+    "ex037": "effect_of_incorporating_cement_and_olive_waste_ash_on_the_mechanical_properties_of_rammed_earth_bloc_dashboard.html",
+    "ex038": "effect_of_using_a_combination_of_rice_husk_and_olive_waste_ashes_on_high_strength_concrete_propertie_dashboard.html",
+    "ex039": "optimization_of_self_compacting_mortars_with_olive_pomace_bottom_ash_using_central_composite_design__dashboard.html",
+    "ex040": "experimental_study_of_using_organic_waste_ash__owa__instead_of_cement_in_concrete_dashboard.html",
+    "ex041": "properties_of_self_compacting_concrete_containing_olive_waste_ash_dashboard.html",
+    "ex042": "enhancing_compressive_strength_prediction_in_self_compacting_concrete_using_machine_learning_and_dee_dashboard.html",
+    // "ex043": Link not found in provided list - kept default
+    "ex044": "use_of_olive_stone_as_an_additive_in_cement_lime_mortar_to_improve_thermal_insulation_dashboard.html",
+    "ex045": "hygrothermal_and_mechanical_performance_of_gypsum_composites_incorporating_olive_pomace__straw__and__dashboard.html",
+    "ex046": "study_of_olive_pomace_bottom_ashes_as_a_sustainable_alkaline_activator_in_the_syntesis_of_geopolymer_dashboard.html",
+    "ex047": "synthesis_of_clay_geopolymers_using_olive_pomace_fly_ash_as_an_alternative_activator__influence_of_t_dashboard.html",
+    "ex048": "use_of_bottom_ash_from_olive_pomace_combustion_in_the_production_of_eco_friendly_fired_clay_bricks_dashboard.html",
+    "ex049": "evaluation_of_olive_pomace_and_sbs_modified_bitumen_to_the_performance_characteristics_dashboard.html",
+    "ex050": "exploring_the_impact_of_partial_sand_replacement_with_olive_waste_on_mechanical_and_thermal_properti_dashboard.html",
+    "ex051": "investigation_on_the_use_of_co_products_from_olive_oil_industry_in_earth_bricks_dashboard.html",
+    "ex052": "experimental_investigation_on_the_mechanical_strength_and_thermal_conductivity_of_concrete_lightened_dashboard.html",
+    "ex053": "study_of_the_wet_pomace_as_an_additive_in_ceramic_material_dashboard.html",
+    "ex054": "the_effect_of_using_ash_residues_of_olive_fruits_on_the_properties_of_cement_mortar_dashboard.html",
+    "ex055": "production_of_particleboard_using_olive_stone_waste_for_interior_design_dashboard.html",
+    "ex056": "dry_fractionation_of_olive_pomace_as_a_sustainable_process_to_produce_fillers_for_biocomposites_dashboard.html",
+    "ex057": "the_use_of_powdered_olive_stone_in_lime_based_mortars_for_the_conservation_of_cultural_heritage__a_p_dashboard.html",
+    "ex058": "evaluation_of_the_environmental_benefits_associated_with_the_addition_of_olive_pomace_in_the_manufac_dashboard.html"
+};
+
+
+
+
+
+
+
+
         
 
         // State Variables
@@ -2932,107 +3007,121 @@
 
         // --- 4. RENDER TABLE ---
         
-       function renderTable() {
-    const searchTerm = document.getElementById('paperSearch').value.toLowerCase();
-    const tbody = document.getElementById('tableBody');
-    const noResults = document.getElementById('noResults');
-    const exploreHeader = document.getElementById('exploreHeader');
-    
-    // 1. Toggle Explore Header
-    if (currentTab === 'exact') {
-        exploreHeader.classList.remove('hidden');
-    } else {
-        exploreHeader.classList.add('hidden');
-    }
-    
-    // 2. Filter Data
-    const filtered = papers.filter(p => {
-        const matchesTab = p.tier === currentTab;
-        const matchesSearch = p.title.toLowerCase().includes(searchTerm) || 
-                              p.authors.toLowerCase().includes(searchTerm) || 
-                              p.year.toString().includes(searchTerm);
-        
-        // --- UPDATED CATEGORY LOGIC START ---
-        let matchesCategory = true;
-        if (selectedCategories.length > 0) {
-             // Check if the paper's category string contains ANY of the selected checkboxes
-             matchesCategory = selectedCategories.some(selected => p.category.includes(selected));
-        }
-        // --- UPDATED CATEGORY LOGIC END ---
-
-        return matchesTab && matchesSearch && matchesCategory;
-    });
-
-    // 3. Sort by Year (Newest First)
-    filtered.sort((a, b) => b.year - a.year);
-
-    // 4. Pagination Slicing
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    const paginatedData = filtered.slice(startIndex, endIndex);
-
-    // 5. Update UI
-    updatePaginationControls(filtered.length);
-    updateCounts(); 
-
-    tbody.innerHTML = '';
-    
-    if (filtered.length === 0) {
-        noResults.classList.remove('hidden');
-    } else {
-        noResults.classList.add('hidden');
-        paginatedData.forEach(p => {
-            const row = document.createElement('tr');
-            row.className = 'paper-row group border-b border-slate-100 last:border-0';
+      function renderTable() {
+            const searchTerm = document.getElementById('paperSearch').value.toLowerCase();
+            const tbody = document.getElementById('tableBody');
+            const noResults = document.getElementById('noResults');
+            const exploreHeader = document.getElementById('exploreHeader');
             
-            const badgeClass = p.tier === 'exact' ? 'badge-exact' : 'badge-potential';
-            
-            const linkHtml = p.doi !== '#' 
-                ? `<a href="https://doi.org/${p.doi}" target="_blank" class="group flex items-center gap-1 w-fit text-emerald-600 font-medium hover:text-emerald-800 transition-all bg-emerald-50 hover:bg-emerald-100 px-3 py-1 rounded-lg border border-emerald-100">
-                     <span>Open</span>
-                     <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
-                   </a>` 
-                : '<span class="text-slate-400 text-xs italic">Unavailable</span>';
-            
-            let exploreCell = '';
+            // 1. Toggle Explore Header
             if (currentTab === 'exact') {
-                exploreCell = `
-                    <td class="px-6 py-4 text-right">
-                        <a href="paper_details.html?id=${p.id}" class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md shadow-sm text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-colors">
-                            Explore
-                        </a>
-                    </td>
-                `;
+                exploreHeader.classList.remove('hidden');
             } else {
-                exploreCell = '<td class="hidden"></td>'; 
+                exploreHeader.classList.add('hidden');
             }
-
-            let htmlContent = `
-                <td class="px-6 py-4 font-mono text-xs text-slate-500">${p.year}</td>
-                <td class="px-6 py-4">
-                    <div class="font-bold text-slate-800 group-hover:text-emerald-700 transition leading-snug">${p.title}</div>
-                    <div class="text-xs text-slate-500 mt-1">${p.authors}</div>
-                </td>
-                <td class="px-6 py-4">
-                    <span class="badge badge-source" title="${p.source}">${p.source}</span>
-                </td>
-                <td class="px-6 py-4">
-                    <span class="badge ${badgeClass}">${p.category}</span>
-                </td>
-                <td class="px-6 py-4 text-xs">
-                    ${linkHtml}
-                </td>
-            `;
             
-            if (currentTab === 'exact') {
-                htmlContent += exploreCell;
+            // 2. Filter Data
+            const filtered = papers.filter(p => {
+                const matchesTab = p.tier === currentTab;
+                const matchesSearch = p.title.toLowerCase().includes(searchTerm) || 
+                                      p.authors.toLowerCase().includes(searchTerm) || 
+                                      p.year.toString().includes(searchTerm);
+                
+                let matchesCategory = true;
+                if (selectedCategories.length > 0) {
+                     matchesCategory = selectedCategories.some(selected => p.category.includes(selected));
+                }
+        
+                return matchesTab && matchesSearch && matchesCategory;
+            });
+        
+            // 3. Sort by Year (Newest First)
+            filtered.sort((a, b) => b.year - a.year);
+        
+            // 4. Pagination Slicing
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const paginatedData = filtered.slice(startIndex, endIndex);
+        
+            // 5. Update UI
+            updatePaginationControls(filtered.length);
+            updateCounts(); 
+        
+            tbody.innerHTML = '';
+            
+            if (filtered.length === 0) {
+                noResults.classList.remove('hidden');
+            } else {
+                noResults.classList.add('hidden');
+                paginatedData.forEach(p => {
+                    const row = document.createElement('tr');
+                    row.className = 'paper-row group border-b border-slate-100 last:border-0';
+                    
+                    const badgeClass = p.tier === 'exact' ? 'badge-exact' : 'badge-potential';
+                    
+                    const linkHtml = p.doi !== '#' 
+                        ? `<a href="https://doi.org/${p.doi}" target="_blank" class="group flex items-center gap-1 w-fit text-emerald-600 font-medium hover:text-emerald-800 transition-all bg-emerald-50 hover:bg-emerald-100 px-3 py-1 rounded-lg border border-emerald-100">
+                             <span>Open</span>
+                             <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+                           </a>` 
+                        : '<span class="text-slate-400 text-xs italic">Unavailable</span>';
+                    
+                    // --- SMART LINK LOGIC ---
+                    let exploreCell = '';
+                    if (currentTab === 'exact') {
+                        // Check if we have a mapping for this ID
+                        const specificFile = paperLinks[p.id];
+                        
+                        if (specificFile) {
+                            // Active Button
+                            exploreCell = `
+                                <td class="px-6 py-4 text-right">
+                                    <a href="${dashboardBasePath}${specificFile}" target="_blank" class="inline-flex items-center gap-2 px-3 py-1.5 border border-transparent text-xs font-medium rounded-md shadow-sm text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-colors transform hover:scale-105">
+                                        Explore
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" /></svg>
+                                    </a>
+                                </td>
+                            `;
+                        } else {
+                            // Disabled/Grey Button if no link found
+                             exploreCell = `
+                                <td class="px-6 py-4 text-right">
+                                    <span class="inline-flex items-center px-3 py-1.5 border border-slate-200 text-xs font-medium rounded-md text-slate-300 bg-slate-50 cursor-not-allowed">
+                                        Pending
+                                    </span>
+                                </td>
+                            `;
+                        }
+                    } else {
+                        exploreCell = '<td class="hidden"></td>'; 
+                    }
+        
+                    let htmlContent = `
+                        <td class="px-6 py-4 font-mono text-xs text-slate-500">${p.year}</td>
+                        <td class="px-6 py-4">
+                            <div class="font-bold text-slate-800 group-hover:text-emerald-700 transition leading-snug">${p.title}</div>
+                            <div class="text-xs text-slate-500 mt-1">${p.authors}</div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="badge badge-source" title="${p.source}">${p.source}</span>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="badge ${badgeClass}">${p.category}</span>
+                        </td>
+                        <td class="px-6 py-4 text-xs">
+                            ${linkHtml}
+                        </td>
+                    `;
+                    
+                    if (currentTab === 'exact') {
+                        htmlContent += exploreCell;
+                    }
+        
+                    row.innerHTML = htmlContent;
+                    tbody.appendChild(row);
+                });
             }
-
-            row.innerHTML = htmlContent;
-            tbody.appendChild(row);
-        });
-    }
-}
+        }
 
         function updateCounts() {
             // Recalculate based on total papers
@@ -3128,5 +3217,16 @@
             });
         });
     </script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"version":"2024.11.0","token":"d888e74f0e0e4190bb7bc345c3f8162d","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 </body>
 </html>
