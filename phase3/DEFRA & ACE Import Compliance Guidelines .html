@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DEFRA & ACE Import Compliance Guidelines</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['Lora', 'serif'],
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            primary: '#059669',   /* Emerald 600 */
+                            secondary: '#0891b2', /* Cyan 600 */
+                            dark: '#0f172a',      /* Slate 900 */
+                            accent: '#f59e0b',    /* Amber 500 */
+                            light: '#f0fdf4',     /* Emerald 50 */
+                        }
+                    },
+                    animation: {
+                        'fade-in-up': 'fadeInUp 0.6s ease-out forwards',
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e0; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        .glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .checklist-row:hover {
+            background-color: #f8fafc;
+        }
+        
+        /* Custom Table Styles */
+        .ace-table th {
+            background-color: #f1f5f9;
+            color: #475569;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        .ace-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #f1f5f9;
+            vertical-align: top;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans selection:bg-emerald-200 relative">
+
+    <!-- HERO HEADER -->
+    <header class="relative bg-gradient-to-br from-slate-900 via-emerald-900 to-teal-800 text-white pt-20 pb-28 px-6 overflow-hidden shadow-2xl">
+        <!-- Abstract Background -->
+        <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 24px 24px;"></div>
+        
+        <div class="relative container mx-auto max-w-7xl text-center z-10 animate-fade-in-up">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-semibold tracking-wide mb-6 uppercase shadow-sm">
+                <span class="w-2 h-2 bg-amber-400 rounded-full animate-pulse"></span>
+                Protocol Guidance
+            </div>
+            
+            <h1 class="text-3xl md:text-5xl font-serif font-bold mb-4 leading-tight tracking-tight">
+                DEFRA & ACE<br/><span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-200 to-cyan-200">Import Compliance Guidelines</span>
+            </h1>
+            <p class="text-lg text-emerald-50 font-serif italic max-w-3xl mx-auto mb-2 font-light">
+                Regulatory framework for importing agricultural research materials into the UK.
+            </p>
+        </div>
+        
+        <!-- Curved Edge -->
+        <div class="absolute bottom-0 left-0 w-full h-12 bg-slate-50 rounded-t-[50%] transform scale-x-150 translate-y-6"></div>
+    </header>
+
+    <!-- NAVIGATION -->
+    <div class="sticky top-0 z-50 bg-white/90 backdrop-blur-xl border-b border-slate-200 shadow-sm">
+        <div class="container mx-auto max-w-7xl px-4">
+            <nav class="flex overflow-x-auto no-scrollbar space-x-1 md:space-x-8 text-sm font-semibold text-slate-600 py-3 md:justify-center">
+                <a href="#overview" class="whitespace-nowrap px-3 py-2 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition">Overview</a>
+                <a href="#defra" class="whitespace-nowrap px-3 py-2 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition">DEFRA Requirements</a>
+                <a href="#ace-checklist" class="whitespace-nowrap px-3 py-2 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition">ACE Section 3 Checklist</a>
+                <a href="#project-assessment" class="whitespace-nowrap px-3 py-2 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition">Project Assessment</a>
+                <a href="#faqs" class="whitespace-nowrap px-3 py-2 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition">FAQs</a>
+                <a href="#references" class="whitespace-nowrap px-3 py-2 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition">References</a>
+            </nav>
+        </div>
+    </div>
+
+    <main class="container mx-auto px-4 md:px-6 py-12 max-w-5xl space-y-16">
+
+        <!-- SECTION: OVERVIEW -->
+        <section id="overview" class="scroll-mt-32 animate-fade-in-up">
+            <div class="glass rounded-3xl p-8 border-l-4 border-brand-primary shadow-lg">
+                <h2 class="text-2xl font-serif font-bold text-slate-900 mb-4 flex items-center gap-3">
+                    <i class="fa-solid fa-circle-info text-emerald-600"></i> Purpose & Scope
+                </h2>
+                <p class="text-slate-600 leading-relaxed mb-4">
+                    This dashboard guides researchers in complying with <strong>UK DEFRA regulations</strong> and the <strong>University of Bath ACE (Architecture & Civil Engineering) form</strong> when importing dried agricultural wastes and poultry feathers for non-commercial research.
+                </p>
+                <div class="bg-slate-50 rounded-xl p-5 border border-slate-200">
+                    <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wide mb-3">Scope: Non-Commercial Research Samples</h3>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1 bg-white border border-slate-200 rounded-full text-xs font-semibold text-slate-600">🫒 Dried Olive Pomace</span>
+                        <span class="px-3 py-1 bg-white border border-slate-200 rounded-full text-xs font-semibold text-slate-600">🍌 Banana Fibres</span>
+                        <span class="px-3 py-1 bg-white border border-slate-200 rounded-full text-xs font-semibold text-slate-600">🌾 Wheat/Barley Straw</span>
+                        <span class="px-3 py-1 bg-white border border-slate-200 rounded-full text-xs font-semibold text-slate-600">🪶 Treated Feathers</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: DEFRA REQUIREMENTS -->
+        <section id="defra" class="scroll-mt-32 space-y-8 animate-fade-in-up">
+            <div class="flex items-center gap-4 border-b border-slate-200 pb-4">
+                <div class="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center text-emerald-600 text-xl">
+                    <i class="fa-solid fa-passport"></i>
+                </div>
+                <h2 class="text-2xl font-serif font-bold text-slate-900">DEFRA Requirements</h2>
+            </div>
+
+            <!-- 3.1 Risk Categories -->
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- Cat 1 -->
+                <div class="glass p-6 rounded-2xl border-t-4 border-emerald-500">
+                    <div class="flex justify-between items-start mb-3">
+                        <h3 class="font-bold text-emerald-800">Category 1 (Low Risk)</h3>
+                        <i class="fa-solid fa-check-circle text-emerald-500 text-xl"></i>
+                    </div>
+                    <p class="text-sm text-slate-600 mb-3">Materials posing minimal risk. May be imported without a specific Letter of Authority (LoA), but robust packaging is still mandatory.</p>
+                    <div class="text-xs font-mono bg-emerald-50 p-2 rounded text-emerald-700">Example: Fully processed/manufactured plant fibers.</div>
+                </div>
+                <!-- Cat 2 -->
+                <div class="glass p-6 rounded-2xl border-t-4 border-amber-500">
+                    <div class="flex justify-between items-start mb-3">
+                        <h3 class="font-bold text-amber-800">Category 2 (Medium Risk)</h3>
+                        <i class="fa-solid fa-exclamation-circle text-amber-500 text-xl"></i>
+                    </div>
+                    <p class="text-sm text-slate-600 mb-3">Materials that may host pests/diseases (e.g., raw plant wastes). <strong>Requires LoA</strong> from Plant Health Service + Triple Packaging.</p>
+                    <div class="text-xs font-mono bg-amber-50 p-2 rounded text-amber-700">Example: Dried Olive Pomace, Straw, Banana Fibers.</div>
+                </div>
+                <!-- Cat 3 -->
+                <div class="glass p-6 rounded-2xl border-t-4 border-rose-500">
+                    <div class="flex justify-between items-start mb-3">
+                        <h3 class="font-bold text-rose-800">Category 3 (High Risk)</h3>
+                        <i class="fa-solid fa-ban text-rose-500 text-xl"></i>
+                    </div>
+                    <p class="text-sm text-slate-600 mb-3">Soil, compost, or untreated animal by-products. Usually prohibited without strict justification & treatment.</p>
+                    <div class="text-xs font-mono bg-rose-50 p-2 rounded text-rose-700">Example: Raw/Untreated Poultry Feathers.</div>
+                </div>
+            </div>
+
+            <!-- 3.2 Packaging -->
+            <div class="bg-slate-50 rounded-3xl p-8 border border-slate-200">
+                <h3 class="font-bold text-slate-900 text-lg mb-6 flex items-center gap-2">
+                    <i class="fa-solid fa-box-open text-emerald-600"></i> Packaging & Labelling (Mandatory)
+                </h3>
+                <div class="grid md:grid-cols-3 gap-8 text-center relative">
+                    <!-- Connector Line -->
+                    <div class="hidden md:block absolute top-1/2 left-0 w-full h-1 bg-slate-200 -z-10 -translate-y-4"></div>
+                    
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100 z-10">
+                        <div class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-3 text-xl font-bold">1</div>
+                        <h4 class="font-bold text-slate-800 text-sm">Primary Container</h4>
+                        <p class="text-xs text-slate-500 mt-1">Sealed, leak-proof bag/jar containing the sample.</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100 z-10">
+                        <div class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-3 text-xl font-bold">2</div>
+                        <h4 class="font-bold text-slate-800 text-sm">Secondary Container</h4>
+                        <p class="text-xs text-slate-500 mt-1">Leak-proof box/bag acting as a barrier.</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100 z-10">
+                        <div class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-3 text-xl font-bold">3</div>
+                        <h4 class="font-bold text-slate-800 text-sm">Tertiary Container</h4>
+                        <p class="text-xs text-slate-500 mt-1">Strong outer box labeled with LoA Reference.</p>
+                    </div>
+                </div>
+                <div class="mt-6 bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-r-lg">
+                    <p class="text-sm text-yellow-800">
+                        <strong>Important:</strong> Shipments must travel <u>directly</u> to the authorised laboratory. No intermediate opening or repackaging allowed.
+                    </p>
+                </div>
+            </div>
+
+            <!-- 3.3, 3.4, 3.5, 3.6 Grid -->
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- LoA -->
+                <div class="glass p-6 rounded-2xl border border-slate-200">
+                    <h3 class="font-bold text-slate-900 mb-3">3.3 Letter of Authority (LoA)</h3>
+                    <ul class="text-sm text-slate-600 space-y-2 list-disc list-inside">
+                        <li>Formal authorisation from DEFRA/APHA for Cat 2 & 3.</li>
+                        <li>Must state research purpose, quantity, and specific conditions.</li>
+                        <li><strong>Customs:</strong> Evidence of LoA must be provided during clearance.</li>
+                    </ul>
+                </div>
+
+                <!-- Testing -->
+                <div class="glass p-6 rounded-2xl border border-slate-200">
+                    <h3 class="font-bold text-slate-900 mb-3">3.4 Pre-Shipment Screening</h3>
+                    <p class="text-sm text-slate-600 mb-2">Required data to demonstrate safety (the "Data Sheet"):</p>
+                    <div class="flex flex-wrap gap-2 mb-3">
+                        <span class="px-2 py-1 bg-slate-100 rounded text-xs">Moisture < 10%</span>
+                        <span class="px-2 py-1 bg-slate-100 rounded text-xs">pH</span>
+                        <span class="px-2 py-1 bg-slate-100 rounded text-xs">Microbio Screen</span>
+                        <span class="px-2 py-1 bg-slate-100 rounded text-xs">Water Activity (aw)</span>
+                    </div>
+                    <p class="text-xs text-slate-500">Materials must be dehydrated (e.g., 60°C to constant weight) to prevent mould.</p>
+                </div>
+
+                <!-- Transit -->
+                <div class="glass p-6 rounded-2xl border border-slate-200">
+                    <h3 class="font-bold text-slate-900 mb-3">3.5 Import Pathway</h3>
+                    <ul class="text-sm text-slate-600 space-y-2 list-disc list-inside">
+                        <li><strong>Direct Route:</strong> Origin &rarr; UK Authorised Facility.</li>
+                        <li><strong>Chain of Custody:</strong> Keep rigorous records.</li>
+                        <li><strong>Declaration:</strong> Label as "Research samples, non-commercial".</li>
+                    </ul>
+                </div>
+
+                <!-- Feathers -->
+                <div class="glass p-6 rounded-2xl border border-slate-200 bg-rose-50/50">
+                    <h3 class="font-bold text-rose-900 mb-3">3.6 Poultry Feathers (Special Rules)</h3>
+                    <p class="text-sm text-rose-800 mb-2">
+                        <strong>Untreated feathers are High Risk.</strong> Import is usually refused without an Export Health Certificate proving sterilisation.
+                    </p>
+                    <div class="bg-white p-3 rounded-lg border border-rose-100">
+                        <p class="text-xs text-rose-700 font-semibold">
+                            ✅ Recommendation: Source treated feathers domestically or from EU-approved facilities to avoid rejection.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: ACE CHECKLIST -->
+        <section id="ace-checklist" class="scroll-mt-32 animate-fade-in-up">
+            <div class="flex items-center gap-4 border-b border-slate-200 pb-4 mb-8">
+                <div class="w-10 h-10 bg-indigo-100 rounded-xl flex items-center justify-center text-indigo-600 text-xl">
+                    <i class="fa-solid fa-list-check"></i>
+                </div>
+                <h2 class="text-2xl font-serif font-bold text-slate-900">ACE Section 3 Checklist</h2>
+            </div>
+
+            <div class="glass rounded-3xl overflow-hidden shadow-lg border border-slate-200">
+                <div class="overflow-x-auto">
+                    <table class="w-full ace-table">
+                        <thead>
+                            <tr>
+                                <th class="w-1/3">Section 3 Question</th>
+                                <th>Interpretation & Recommended Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-sm text-slate-600">
+                            <tr class="checklist-row">
+                                <td class="font-semibold text-slate-800">Material description, origin & amount</td>
+                                <td>
+                                    <p class="mb-1"><strong>Action:</strong> Be precise. E.g., "Dried olive pomace (Olea europaea), Spain, 0.5 kg".</p>
+                                    <p class="text-xs text-slate-500">Keep quantities small (research-scale) to justify non-commercial status.</p>
+                                </td>
+                            </tr>
+                            <tr class="checklist-row">
+                                <td class="font-semibold text-slate-800">Is the material a controlled substance?</td>
+                                <td>
+                                    <p><strong>Answer: No</strong> (unless using hemp/poppy). Confirm materials are standard agricultural by-products.</p>
+                                </td>
+                            </tr>
+                            <tr class="checklist-row">
+                                <td class="font-semibold text-slate-800">Has the material been approved by customs?</td>
+                                <td>
+                                    <p><strong>Action:</strong> Attach the LoA from DEFRA/APHA. Cite the import reference number.</p>
+                                </td>
+                            </tr>
+                            <tr class="checklist-row">
+                                <td class="font-semibold text-slate-800">Contains fine particulate matter (<10µm)?</td>
+                                <td>
+                                    <p class="mb-1"><strong>Context:</strong> Dust inhalation risk. If milled, acknowledge potential for dust.</p>
+                                    <p class="text-xs text-slate-500">Action: Ensure packaging is dust-tight. For fibers/straw, note "Coarse material, minimal dust".</p>
+                                </td>
+                            </tr>
+                            <tr class="checklist-row">
+                                <td class="font-semibold text-slate-800">Has the material been sterilised/treated?</td>
+                                <td>
+                                    <p><strong>Action:</strong> Specify method. E.g., "Dehydrated at 60°C for 48h". For feathers: "Chemically sanitised & steam treated".</p>
+                                </td>
+                            </tr>
+                            <tr class="checklist-row">
+                                <td class="font-semibold text-slate-800">Recent pathogenic outbreaks in origin?</td>
+                                <td>
+                                    <p><strong>Action:</strong> Check DEFRA alerts. State "None known affecting this material" if accurate. Cite sources if possible.</p>
+                                </td>
+                            </tr>
+                            <tr class="checklist-row">
+                                <td class="font-semibold text-slate-800">Exposed to herbicides/pesticides?</td>
+                                <td>
+                                    <p><strong>Action:</strong> If organic, say "No". If unknown, state "Residual agricultural waste; standard food-safety limits apply".</p>
+                                </td>
+                            </tr>
+                            <tr class="checklist-row">
+                                <td class="font-semibold text-slate-800">Will product deteriorate with time?</td>
+                                <td>
+                                    <p><strong>Answer: No</strong> (if dried properly). Note: "Low moisture content (<10%) prevents decay".</p>
+                                </td>
+                            </tr>
+                            <tr class="checklist-row">
+                                <td class="font-semibold text-slate-800">Requires special storage conditions?</td>
+                                <td>
+                                    <p><strong>Action:</strong> Usually "Cool, dry place in sealed containers".</p>
+                                </td>
+                            </tr>
+                            <tr class="checklist-row">
+                                <td class="font-semibold text-slate-800">Contains common allergens?</td>
+                                <td>
+                                    <p><strong>Action:</strong> Flag if relevant (e.g., Wheat straw). Label containers with "Potential Allergen".</p>
+                                </td>
+                            </tr>
+                            <tr class="checklist-row">
+                                <td class="font-semibold text-slate-800">Cleaned of soil and debris?</td>
+                                <td>
+                                    <p><strong>Action:</strong> Confirm "Yes". Soil is High Risk (Cat 3). State materials were "sieved/washed prior to drying".</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: PROJECT ASSESSMENT (NEW) -->
+        <section id="project-assessment" class="scroll-mt-32 animate-fade-in-up">
+            <div class="flex items-center gap-4 border-b border-slate-200 pb-4 mb-8">
+                <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white text-xl shadow-lg">
+                    <i class="fa-solid fa-lock"></i>
+                </div>
+                <h2 class="text-2xl font-serif font-bold text-slate-900">Compliance Assessment – DEFRA & ACE (Project-Specific)</h2>
+            </div>
+
+            <!-- Summary -->
+            <div class="glass p-8 rounded-3xl mb-10 border-l-4 border-indigo-600">
+                <h3 class="font-bold text-slate-900 text-lg mb-2">Summary Statement</h3>
+                <p class="text-slate-600 leading-relaxed">
+                    For the scope of this fieldwork and the materials collected, the pre-shipment testing package conducted by <strong>RBML Food Labs</strong> is sufficient to meet the UK DEFRA import expectations and the University of Bath ACE (Non-Uniform Material) requirements for agricultural and plant-based research materials. 
+                    <br/><br/>
+                    No additional mandatory tests are required at this stage for customs clearance, laboratory acceptance, or institutional risk assessment.
+                </p>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-8">
+                
+                <!-- TESTS COMPLETED -->
+                <div class="space-y-6">
+                    <h3 class="font-bold text-emerald-800 flex items-center gap-2 uppercase tracking-wide text-sm border-b border-emerald-200 pb-2">
+                        <i class="fa-solid fa-circle-check"></i> Tests Completed & Regulatory Coverage
+                    </h3>
+
+                    <!-- Card 1 -->
+                    <div class="glass p-5 rounded-xl border-t-4 border-t-emerald-500 shadow-sm hover:shadow-md transition-all">
+                        <h4 class="font-bold text-slate-900 text-sm mb-2">Moisture Content & Water Activity (aw)</h4>
+                        <p class="text-xs text-slate-600 mb-2">
+                            Confirms materials are fully dried and biologically stable, significantly reducing risk of microbial growth, mould, and pest survival.
+                        </p>
+                        <div class="text-[10px] font-bold text-emerald-600 uppercase tracking-wider">
+                            DEFRA: Biosecurity Risk • ACE: Stability & Storage
+                        </div>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="glass p-5 rounded-xl border-t-4 border-t-emerald-500 shadow-sm hover:shadow-md transition-all">
+                        <h4 class="font-bold text-slate-900 text-sm mb-2">pH (Aqueous Suspension)</h4>
+                        <p class="text-xs text-slate-600 mb-2">
+                            Determined by suspending sample in distilled water. Standard for non-food, non-reactive materials.
+                        </p>
+                        <div class="text-[10px] font-bold text-emerald-600 uppercase tracking-wider">
+                            Compliance: Chemical Non-Reactivity
+                        </div>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="glass p-5 rounded-xl border-t-4 border-t-emerald-500 shadow-sm hover:shadow-md transition-all">
+                        <h4 class="font-bold text-slate-900 text-sm mb-2">Particle Size / Length Distribution</h4>
+                        <p class="text-xs text-slate-600 mb-2">
+                            Confirms materials are coarse agricultural residues and do not generate hazardous respirable dust. Addresses ACE thresholds (<200µm, <60µm, <10µm).
+                        </p>
+                        <div class="text-[10px] font-bold text-emerald-600 uppercase tracking-wider">
+                            ACE: Dust/Inhalation Risk • Transport Safety
+                        </div>
+                    </div>
+
+                    <!-- Card 4 -->
+                    <div class="glass p-5 rounded-xl border-t-4 border-t-emerald-500 shadow-sm hover:shadow-md transition-all">
+                        <h4 class="font-bold text-slate-900 text-sm mb-2">Bulk Density</h4>
+                        <p class="text-xs text-slate-600 mb-2">
+                            Provides practical info for packaging design, storage stability, and transport safety.
+                        </p>
+                        <div class="text-[10px] font-bold text-emerald-600 uppercase tracking-wider">
+                            ACE: Handling • Shipping: Containment
+                        </div>
+                    </div>
+
+                    <!-- Card 5 -->
+                    <div class="glass p-5 rounded-xl border-t-4 border-t-emerald-500 shadow-sm hover:shadow-md transition-all">
+                        <h4 class="font-bold text-slate-900 text-sm mb-2">Microbiological Screening</h4>
+                        <p class="text-xs text-slate-600 mb-2">
+                            Retained for all materials. Provides defensible evidence of biosafety and reassures customs authorities.
+                        </p>
+                        <div class="text-[10px] font-bold text-emerald-600 uppercase tracking-wider">
+                            Proactive Compliance: Contamination History
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TESTS NOT REQUIRED -->
+                <div class="space-y-6">
+                    <h3 class="font-bold text-slate-500 flex items-center gap-2 uppercase tracking-wide text-sm border-b border-slate-200 pb-2">
+                        <i class="fa-solid fa-circle-xmark"></i> Tests Not Required (With Justification)
+                    </h3>
+
+                    <!-- Card 1 -->
+                    <div class="bg-slate-50 p-5 rounded-xl border border-slate-200">
+                        <h4 class="font-bold text-slate-700 text-sm mb-2">Pesticide / Herbicide Residue</h4>
+                        <p class="text-xs text-slate-500 mb-2">
+                            Materials are non-food, non-commercial agricultural by-products from small-scale/organic sources. Drying further reduces risk.
+                        </p>
+                        <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                            Justification: ACE Declaration Acceptable
+                        </div>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="bg-slate-50 p-5 rounded-xl border border-slate-200">
+                        <h4 class="font-bold text-slate-700 text-sm mb-2">Heavy Metal / Advanced Chem</h4>
+                        <p class="text-xs text-slate-500 mb-2">
+                            Not required for import clearance or initial lab entry. More appropriate for later controlled experimentation at Bath.
+                        </p>
+                        <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                            Justification: Research Phase Specific
+                        </div>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="bg-slate-50 p-5 rounded-xl border border-slate-200">
+                        <h4 class="font-bold text-slate-700 text-sm mb-2">Additional Sterilisation</h4>
+                        <p class="text-xs text-slate-500 mb-2">
+                            Not required for dried plant materials with low moisture and clean microbio results. 
+                            <br/><span class="italic text-rose-400">(Poultry feathers were excluded to eliminate risk).</span>
+                        </p>
+                        <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                            Justification: Risk Elimination Strategy
+                        </div>
+                    </div>
+                
+                    <!-- VERDICT -->
+                    <div class="bg-emerald-600 text-white p-6 rounded-2xl shadow-lg mt-8">
+                        <div class="flex items-center gap-3 mb-3">
+                            <i class="fa-solid fa-magnifying-glass text-2xl text-emerald-200"></i>
+                            <h3 class="font-bold text-lg">Overall Compliance Verdict</h3>
+                        </div>
+                        <p class="text-sm text-emerald-50 mb-4">
+                            The RBML testing suite fully satisfies DEFRA biosecurity expectations, University of Bath ACE checklists, and laboratory safety requirements.
+                        </p>
+                        <div class="inline-block bg-white/20 px-3 py-1 rounded text-xs font-bold uppercase">
+                            ✔️ Ready for Import
+                        </div>
+                    </div>
+
+                    <!-- NOTES -->
+                    <div class="bg-indigo-50 border border-indigo-100 p-6 rounded-2xl mt-4">
+                        <h3 class="font-bold text-indigo-900 text-sm mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-compass"></i> Notes 
+                        </h3>
+                        <ul class="text-xs text-indigo-800 space-y-2 list-disc list-inside">
+                            <li>All materials are dried agricultural residues (not live plants/soil).</li>
+                            <li>Quantities are research-scale only.</li>
+                            <li>High-risk materials (untreated feathers) excluded to ensure compliance.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: FAQs -->
+        <section id="faqs" class="scroll-mt-32 animate-fade-in-up">
+            <h2 class="text-2xl font-serif font-bold text-slate-900 mb-6">Frequently Asked Questions</h2>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                    <h3 class="font-bold text-slate-800 mb-2">What is an LoA and how do I get one?</h3>
+                    <p class="text-sm text-slate-600">A Letter of Authority (LoA) is a licence from DEFRA allowing the import of prohibited material for research. You must apply via the PEACH system or IPAFFS, detailing the material, quantity, and research purpose.</p>
+                </div>
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                    <h3 class="font-bold text-slate-800 mb-2">Can I import untreated feathers?</h3>
+                    <p class="text-sm text-slate-600">Generally, no. They are high-risk Animal By-Products. You must have an Export Health Certificate proving sterilisation, or the shipment will likely be destroyed.</p>
+                </div>
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                    <h3 class="font-bold text-slate-800 mb-2">What if my packaging is damaged?</h3>
+                    <p class="text-sm text-slate-600">If the triple-layer seal is broken upon arrival, the lab may refuse acceptance to prevent contamination. Ensure tertiary packaging is heavy-duty.</p>
+                </div>
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                    <h3 class="font-bold text-slate-800 mb-2">Who helps with this at Bath?</h3>
+                    <p class="text-sm text-slate-600">Consult the Department Safety Officer (DSO) or the technical manager of the specific lab (e.g., BRE Building) before arranging shipment.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: OFFICIAL REFERENCES & COMPLIANCE -->
+        <section id="references" class="scroll-mt-32 animate-fade-in-up">
+            <h2 class="text-2xl font-serif font-bold text-slate-900 mb-6">Official References & University Compliance</h2>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- DEFRA / GOV.UK -->
+                <div class="space-y-4">
+                    <h3 class="font-bold text-slate-800 flex items-center gap-2 border-b border-slate-200 pb-2">
+                        <i class="fa-solid fa-crown text-indigo-600"></i> UK Government & DEFRA
+                    </h3>
+                    
+                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:border-indigo-300 transition-colors">
+                        <h4 class="font-bold text-indigo-900 text-sm mb-1">DEFRA — Import of plants for research</h4>
+                        <p class="text-xs text-slate-600 mb-3">
+                            UK Plant Health Information Portal: Categories for import and controls under DEFRA/Plant Health rules.
+                        </p>
+                        <div class="space-y-2">
+                            <a href="https://planthealthportal.defra.gov.uk/trade/imports/import-requirements/" target="_blank" class="flex items-center gap-2 text-xs font-bold text-indigo-600 hover:underline">
+                                <i class="fa-solid fa-external-link-alt"></i> Plant Health Portal Requirements
+                            </a>
+                            <a href="https://www.gov.uk/guidance/import-plants-and-plant-products-from-non-eu-countries-to-great-britain" target="_blank" class="flex items-center gap-2 text-xs font-bold text-indigo-600 hover:underline">
+                                <i class="fa-solid fa-external-link-alt"></i> Non-EU Import Guidance
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:border-indigo-300 transition-colors">
+                        <h4 class="font-bold text-indigo-900 text-sm mb-1">GOV.UK — Animal By-Product Controls</h4>
+                        <p class="text-xs text-slate-600 mb-3">
+                            Guidance on import risk categories for animal by-products (ABP) like feathers and tissues.
+                        </p>
+                        <a href="https://www.gov.uk/government/collections/import-risk-categories-for-animals-animal-products-plants-and-plant-products" target="_blank" class="flex items-center gap-2 text-xs font-bold text-indigo-600 hover:underline">
+                            <i class="fa-solid fa-external-link-alt"></i> ABP Import Risk Categories
+                        </a>
+                    </div>
+                </div>
+
+                <!-- University of Bath -->
+                <div class="space-y-4">
+                    <h3 class="font-bold text-slate-800 flex items-center gap-2 border-b border-slate-200 pb-2">
+                        <i class="fa-solid fa-university text-emerald-600"></i> University of Bath Internal Compliance
+                    </h3>
+
+                    <div class="bg-emerald-50/50 p-5 rounded-xl border border-emerald-100 shadow-sm hover:border-emerald-300 transition-colors">
+                        <h4 class="font-bold text-emerald-900 text-sm mb-1">Health & Safety Standards</h4>
+                        <p class="text-xs text-slate-600 mb-3">
+                            Official policy for laboratories, hazardous substances, and fieldwork.
+                        </p>
+                        <ul class="space-y-3">
+                            <li>
+                                <a href="https://www.bath.ac.uk/legal-information/safe-working-in-laboratories/" target="_blank" class="flex items-center gap-2 text-xs font-bold text-emerald-700 hover:underline">
+                                    <i class="fa-solid fa-flask"></i> Safe Working in Laboratories
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.bath.ac.uk/legal-information/using-hazardous-substances-safely/" target="_blank" class="flex items-center gap-2 text-xs font-bold text-emerald-700 hover:underline">
+                                    <i class="fa-solid fa-triangle-exclamation"></i> Using Hazardous Substances Safely (COSHH)
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.bath.ac.uk/publications/fieldwork-safety-standard-and-risk-assessment/attachments/25-03-04_Fieldwork_Safety_Standard_v4_1%282%29.pdf" target="_blank" class="flex items-center gap-2 text-xs font-bold text-emerald-700 hover:underline">
+                                    <i class="fa-solid fa-person-hiking"></i> Fieldwork Safety Standard (PDF)
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTER / CITATIONS -->
+        <footer class="bg-slate-900 text-slate-400 py-12 border-t border-slate-800 mt-12">
+            <div class="container mx-auto max-w-5xl px-4">
+                <div class="text-center">
+                    <span class="text-xl font-serif text-slate-200 font-bold tracking-tight">Mika Research Dashboard</span>
+                    <p class="text-xs text-slate-600 mt-2">Internal Compliance Tool • PhD Research Phase 4</p>
+                    <p class="text-xs text-slate-600 mt-4 leading-relaxed max-w-2xl mx-auto">
+                        This dashboard summarizes regulations as of 2026. Always verify the latest specific requirements via the official IPAFFS/PEACH portals before shipping.
+                    </p>
+                </div>
+            </div>
+        </footer>
+
+    </main>
+</body>
+</html>
